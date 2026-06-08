@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lin Alg · Abstract Spaces — Axioms</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    .recall-box { background:rgba(190,24,93,0.07); border:1px solid rgba(190,24,93,0.3); border-left:3px solid var(--la); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+    .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--la); margin-bottom:10px; }
+    .checklist { list-style:none; margin:6px 0 0; padding:0; }
+    .checklist li { padding:9px 0 9px 30px; position:relative; border-bottom:1px solid var(--border); font-size:0.95rem; line-height:1.55; }
+    .checklist li:last-child { border-bottom:none; }
+    .checklist li::before { content:'☐'; position:absolute; left:0; color:var(--la); font-size:1.05rem; }
+    .fcard { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+    .fcard h4 { color:var(--la); font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:6px; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ lin-alg / vector space axioms</span><span class="topbar-date">TUE · 16 JUN 2026</span></div>
+  <div class="hero">
+    <h1>Abstract Spaces <em>— Axioms</em></h1>
+    <p class="hero-meta">P5 · 18:10–19:00 · 50 min · from memory</p>
+    <div class="exam-pills"><span class="pill pill-la">Lin Alg</span><span class="pill pill-la">Final · 25 June 2026</span></div>
+  </div>
+  <div class="main"><div class="subject-block">
+    <div class="subject-header"><div class="subject-dot dot-la"></div><div><div class="subject-label">Self-Study · 50 min · recall</div><div class="subject-title" style="color:var(--la)">Vector Space Axioms</div></div><div class="subject-exam-date"><strong>Lin Alg Final</strong>25 June 2026</div></div>
+<div class="recall-box"><div class="rl">⌁ Write the 8 axioms from memory</div>A vector space is a set with addition and scalar multiplication satisfying 8 axioms. List all 8, then reveal.</div><div class="problem"><div class="problem-header"><span class="problem-num">The 8 axioms</span><span class="problem-topic">Vector space</span></div><div class="problem-body"><div class="context-box"></div><div class="ans-toggle"><button class="ans-btn" data-show="Reveal" data-hide="Hide" onclick="toggleAns(this)">Reveal</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span><strong>Addition:</strong> (1) commutative, (2) associative, (3) zero vector \(\mathbf 0\), (4) additive inverses. <strong>Scalar mult:</strong> (5) \(1\mathbf v=\mathbf v\), (6) \(a(b\mathbf v)=(ab)\mathbf v\), (7) \(a(\mathbf u+\mathbf v)=a\mathbf u+a\mathbf v\), (8) \((a+b)\mathbf v=a\mathbf v+b\mathbf v\).</div></div></div></div></div><div class="problem"><div class="problem-header"><span class="problem-num">Test it</span><span class="problem-topic">Is it a vector space?</span></div><div class="problem-body"><div class="context-box">Are polynomials of degree exactly 2 a vector space?</div><div class="ans-toggle"><button class="ans-btn" data-show="Reveal" data-hide="Hide" onclick="toggleAns(this)">Reveal</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>No — not closed under addition: \((x^2)+(-x^2+x)=x\) has degree 1. Fails the closure needed for axiom structure. (Degree \(\le2\) <em>is</em> a vector space.)</div></div></div></div></div>
+  </div>
+  <div class="footer-note">Lin Alg · Abstract Spaces — Axioms · Tuesday 16 June 2026 · Recall, don't re-read ✦</div></div>
+  <div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+  <script>
+    function toggleAns(btn){const a=btn.nextElementSibling;a.classList.toggle('open');const o=a.classList.contains('open');btn.textContent=o?btn.dataset.hide||'Hide Answer':btn.dataset.show||'Show Answer';}
+    window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+    const start=Date.now(),pad=n=>String(n).padStart(2,'0');
+    setInterval(()=>{const e=Math.floor((Date.now()-start)/1000);document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60);},1000);
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

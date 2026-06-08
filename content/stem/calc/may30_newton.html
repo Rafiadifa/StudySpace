@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Newton's Method · 30 May</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="pbar"></div>
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ calc-a2 / newton's method</span>
+    <span class="topbar-date">SAT · 30 MAY 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Newton's Method <em>in</em> ℝⁿ</h1>
+    <p class="hero-meta">
+      P1 · 08:00 – 09:35 · Ch.13.4 · Harder than last time.
+      Work each part fully before revealing the answer.
+    </p>
+    <div class="exam-pills">
+      <span class="pill pill-calc">∫ Calc A2</span>
+      <span class="pill pill-calc">Ch.13.4 Newton's Method</span>
+      <span class="pill pill-calc">Final · 23 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-calc"></div>
+        <div>
+          <div class="subject-label">Self-Study · 1.5 h · Week 1</div>
+          <div class="subject-title text-calc">Newton's Method · Ch.13.4</div>
+        </div>
+        <div class="subject-exam-date">
+          <strong>Calc A2 Final</strong>
+          23 June 2026
+        </div>
+      </div>
+
+      <div class="formula-ref">
+        <div class="formula-ref-label">Core Formula</div>
+        \[\mathbf{x}_{n+1} = \mathbf{x}_n - [DF(\mathbf{x}_n)]^{-1}\,F(\mathbf{x}_n)\]
+        <div class="formula-ref-sub">
+          2×2 inverse: \(\begin{pmatrix}a&b\\c&d\end{pmatrix}^{-1}=\dfrac{1}{ad-bc}\begin{pmatrix}d&-b\\-c&a\end{pmatrix}\) &nbsp;·&nbsp;
+          Differentiable if all partial derivatives are continuous &nbsp;·&nbsp;
+          Linear approx: \(F(\mathbf{x}_0+\mathbf{h})\approx F(\mathbf{x}_0)+[DF(\mathbf{x}_0)]\mathbf{h}\)
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-title">Two-Step Iteration &amp; Convergence</span>
+          <span class="pts">12 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">
+            We want to solve \(F(x,y)=\mathbf{0}\) where
+          </div>
+          <div class="define-block">
+            \[F(x,y)=\begin{pmatrix}x^2 - 2y \\ xy - 1\end{pmatrix}, \qquad \mathbf{x}_0 = (2,\,1).\]
+          </div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <span>Compute the Jacobian \([DF(x,y)]\) in general, then evaluate at \((2,1)\). Explain why \(F\) is differentiable everywhere. <span class="pts">3 pts</span></span>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <span>Evaluate \(F(2,1)\) and use linear approximation to estimate \(F(2.01,\,1.01)\). <span class="pts">2 pts</span></span>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <span>Perform one Newton step to find \(\mathbf{x}_1\). Compute \(F(\mathbf{x}_1)\) and confirm it is closer to \(\mathbf{0}\). <span class="pts">4 pts</span></span>
+            </li>
+            <li>
+              <span class="part-label">(d)</span>
+              <span>Perform a second Newton step from \(\mathbf{x}_1\) to find \(\mathbf{x}_2\). The true solution satisfies \(x^3=2\). How close is \(\mathbf{x}_2\)? <span class="pts">3 pts</span></span>
+            </li>
+          </ol>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns('a1')">Show Answer</button>
+            <div class="answer" id="a1">
+              <div class="ans-part">
+                <div class="ans-part-label">(a) Jacobian</div>
+                \[[DF(x,y)]=\begin{pmatrix}2x & -2 \\ y & x\end{pmatrix}, \qquad [DF(2,1)]=\begin{pmatrix}4 & -2 \\ 1 & 2\end{pmatrix}.\]
+                All entries are polynomials — continuous everywhere — so \(F\) is differentiable everywhere.
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(b) Linear Approximation</div>
+                \(F(2,1)=\begin{pmatrix}4-2\\2-1\end{pmatrix}=\begin{pmatrix}2\\1\end{pmatrix}\). With \(\mathbf{h}=(0.01,0.01)^T\):
+                <div class="key-result">
+                  \[F(2.01,1.01)\approx\begin{pmatrix}2\\1\end{pmatrix}+\begin{pmatrix}4&-2\\1&2\end{pmatrix}\begin{pmatrix}0.01\\0.01\end{pmatrix}=\begin{pmatrix}2.02\\1.03\end{pmatrix}.\]
+                </div>
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(c) First Newton Step</div>
+                \(\det[DF(2,1)]=4\cdot2-(-2)\cdot1=10.\)
+                \[[DF(2,1)]^{-1}=\frac{1}{10}\begin{pmatrix}2&2\\-1&4\end{pmatrix}.\]
+                \[[DF]^{-1}F(2,1)=\frac{1}{10}\begin{pmatrix}2&2\\-1&4\end{pmatrix}\begin{pmatrix}2\\1\end{pmatrix}=\frac{1}{10}\begin{pmatrix}6\\2\end{pmatrix}=\begin{pmatrix}0.6\\0.2\end{pmatrix}.\]
+                <div class="key-result">
+                  \[\mathbf{x}_1=(2,1)-(0.6,0.2)=(1.4,\;0.8).\]
+                </div>
+                Check: \(F(1.4,0.8)=\begin{pmatrix}0.36\\0.12\end{pmatrix}\). Norm \(\approx0.38\), far smaller than \(\|(2,1)^T\|\) ✓
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(d) Second Newton Step</div>
+                \([DF(1.4,0.8)]=\begin{pmatrix}2.8&-2\\0.8&1.4\end{pmatrix},\quad\det=3.92+1.6=5.52.\)
+                \[[DF]^{-1}=\frac{1}{5.52}\begin{pmatrix}1.4&2\\-0.8&2.8\end{pmatrix}.\]
+                Update: \(\frac{1}{5.52}\begin{pmatrix}0.744\\0.048\end{pmatrix}\approx\begin{pmatrix}0.1348\\0.0087\end{pmatrix}.\)
+                <div class="key-result">
+                  \[\mathbf{x}_2\approx(1.2652,\;0.7913).\]
+                </div>
+                <div class="ans-note">True solution \(x=2^{1/3}\approx1.2599\). Error at \(\mathbf{x}_2\) is \(\approx0.005\) — quadratic convergence ✓</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-title">3D System — Newton in \(\mathbb{R}^3\) <span class="badge-hard">HARD</span></span>
+          <span class="pts">11 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">
+            Find intersection points of a sphere and two planes. Define \(F:\mathbb{R}^3\to\mathbb{R}^3\):
+          </div>
+          <div class="define-block">
+            \[F(x,y,z)=\begin{pmatrix}x^2+y^2+z^2-3 \\ x+y-2 \\ y-z\end{pmatrix}, \qquad \mathbf{x}_0=(2,\,0,\,0).\]
+          </div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <span>Compute the \(3\times3\) Jacobian \([DF]\) and evaluate at \((2,0,0)\). <span class="pts">3 pts</span></span>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <span>Evaluate \(F(2,0,0)\). Is \((2,0,0)\) already a solution? <span class="pts">1 pt</span></span>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <span>Compute \([DF(2,0,0)]^{-1}\) by row-reducing \([A\,|\,I]\), then perform one Newton step to find \(\mathbf{x}_1\). <span class="pts">5 pts</span></span>
+            </li>
+            <li>
+              <span class="part-label">(d)</span>
+              <span>Find all exact solutions of \(F=\mathbf{0}\). Which one is \(\mathbf{x}_1\) converging toward? <span class="pts">2 pts</span></span>
+            </li>
+          </ol>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns('a2')">Show Answer</button>
+            <div class="answer" id="a2">
+              <div class="ans-part">
+                <div class="ans-part-label">(a) 3×3 Jacobian</div>
+                \[[DF(x,y,z)]=\begin{pmatrix}2x&2y&2z\\1&1&0\\0&1&-1\end{pmatrix}, \qquad [DF(2,0,0)]=\begin{pmatrix}4&0&0\\1&1&0\\0&1&-1\end{pmatrix}.\]
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(b) Value at guess</div>
+                \[F(2,0,0)=\begin{pmatrix}4-3\\2-2\\0\end{pmatrix}=\begin{pmatrix}1\\0\\0\end{pmatrix}\neq\mathbf{0}.\]
+                Not a solution — Newton must iterate.
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(c) Inverse + Newton Step</div>
+                \(A\) is lower triangular with \(\det=4\cdot1\cdot(-1)=-4\). Row reducing gives:
+                \[A^{-1}=\begin{pmatrix}1/4&0&0\\-1/4&1&0\\-1/4&1&-1\end{pmatrix}.\]
+                Update: \(A^{-1}\begin{pmatrix}1\\0\\0\end{pmatrix}=\begin{pmatrix}1/4\\-1/4\\-1/4\end{pmatrix}.\)
+                <div class="key-result">
+                  \[\mathbf{x}_1=\begin{pmatrix}2\\0\\0\end{pmatrix}-\begin{pmatrix}1/4\\-1/4\\-1/4\end{pmatrix}=\begin{pmatrix}7/4\\1/4\\1/4\end{pmatrix}=(1.75,\;0.25,\;0.25).\]
+                </div>
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(d) All Exact Solutions</div>
+                From \(y=z\) and \(x=2-y\), substitute into sphere: \((2-y)^2+2y^2=3\Rightarrow3y^2-4y+1=0\Rightarrow(3y-1)(y-1)=0.\)
+                <div class="key-result">
+                  Solutions: \(\bigl(\tfrac{5}{3},\tfrac{1}{3},\tfrac{1}{3}\bigr)\) and \((1,1,1)\).
+                </div>
+                \(\mathbf{x}_1=(1.75,0.25,0.25)\) is converging toward \((\tfrac53,\tfrac13,\tfrac13)\approx(1.667,0.333,0.333)\) ✓
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-title">Linear Approximation &amp; IFT — When Newton Fails</span>
+          <span class="pts">7 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">
+            Consider \(F(x,y)=\begin{pmatrix}x^2+y^2 \\ 2xy\end{pmatrix}\). Test Newton's method at two starting points.
+          </div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <span>Compute \([DF(x,y)]\). Is \([DF(0,0)]\) invertible? What goes wrong if we try Newton at \((0,0)\)? <span class="pts">2 pts</span></span>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <span>State the IFT condition for local invertibility. Find all points where it fails for this \(F\). <span class="pts">3 pts</span></span>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <span>At \(\mathbf{x}_0=(2,1)\), compute one Newton step toward \(G(x,y)=F(x,y)-\begin{pmatrix}5\\4\end{pmatrix}=\mathbf{0}\). <span class="pts">2 pts</span></span>
+            </li>
+          </ol>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns('a3')">Show Answer</button>
+            <div class="answer" id="a3">
+              <div class="ans-part">
+                <div class="ans-part-label">(a) Jacobian & Failure</div>
+                \[[DF(x,y)]=\begin{pmatrix}2x&2y\\2y&2x\end{pmatrix}, \qquad [DF(0,0)]=\begin{pmatrix}0&0\\0&0\end{pmatrix}.\]
+                \(\det=0\) — not invertible. The Newton step \(-[DF]^{-1}F\) is undefined at \((0,0)\); the method cannot proceed.
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(b) IFT Condition</div>
+                IFT requires \(\det[DF(\mathbf{x}_0)]\neq0\). Here \(\det[DF]=4x^2-4y^2=4(x-y)(x+y)\).
+                <div class="key-result">
+                  Fails on the lines \(x=y\) and \(x=-y\) — i.e. wherever \(|x|=|y|\).
+                </div>
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(c) Newton Step at (2,1)</div>
+                \([DG]=[DF]\). \(G(2,1)=F(2,1)-\begin{pmatrix}5\\4\end{pmatrix}=\begin{pmatrix}5\\4\end{pmatrix}-\begin{pmatrix}5\\4\end{pmatrix}=\begin{pmatrix}0\\0\end{pmatrix}.\)
+                <div class="key-result">
+                  \(G(2,1)=\mathbf{0}\) — already the exact solution. Newton terminates in 0 steps.
+                </div>
+                <div class="ans-note">Verify: \(F(2,1)=\begin{pmatrix}4+1\\2\cdot2\cdot1\end{pmatrix}=\begin{pmatrix}5\\4\end{pmatrix}\) ✓</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 4</span>
+          <span class="problem-title">Polar Coordinates &amp; Two-Step Iteration <span class="badge-hard">HARD</span></span>
+          <span class="pts">13 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">
+            Find the intersection of a circle and a parabola. Define
+          </div>
+          <div class="define-block">
+            \[F(x,y)=\begin{pmatrix}x^2+y^2-4 \\ x - y^2 + 1\end{pmatrix}, \qquad \mathbf{x}_0=(1,\,1).\]
+          </div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <span>Compute \([DF(1,1)]\) and explain why \(F\) is differentiable at \((1,1)\). <span class="pts">3 pts</span></span>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <span>Use linear approximation to estimate \(F(1.02,\,0.99)\). <span class="pts">2 pts</span></span>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <span>Express \(F\) in polar coordinates. Compute \(D_rF\) and \(D_\theta F\) at \((r,\theta)=(\sqrt{2},\,\pi/4)\). <span class="pts">4 pts</span></span>
+            </li>
+            <li>
+              <span class="part-label">(d)</span>
+              <span>Perform two Newton steps from \((1,1)\) to find \(\mathbf{x}_1\) and \(\mathbf{x}_2\). Is \(F(\mathbf{x}_2)\approx\mathbf{0}\)? <span class="pts">4 pts</span></span>
+            </li>
+          </ol>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns('a4')">Show Answer</button>
+            <div class="answer" id="a4">
+              <div class="ans-part">
+                <div class="ans-part-label">(a) Jacobian at (1,1)</div>
+                \[[DF(x,y)]=\begin{pmatrix}2x&2y\\1&-2y\end{pmatrix}, \qquad [DF(1,1)]=\begin{pmatrix}2&2\\1&-2\end{pmatrix}.\]
+                All partial derivatives are polynomials, hence continuous everywhere — \(F\) differentiable at \((1,1)\).
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(b) Linear Approximation</div>
+                \(F(1,1)=\begin{pmatrix}-2\\1\end{pmatrix}\). With \(\mathbf{h}=(0.02,-0.01)^T\):
+                <div class="key-result">
+                  \[F(1.02,0.99)\approx\begin{pmatrix}-2\\1\end{pmatrix}+\begin{pmatrix}2&2\\1&-2\end{pmatrix}\begin{pmatrix}0.02\\-0.01\end{pmatrix}=\begin{pmatrix}-1.98\\1.04\end{pmatrix}.\]
+                </div>
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(c) Polar Derivatives</div>
+                With \(x=r\cos\theta,\;y=r\sin\theta\):
+                \[F=\begin{pmatrix}r^2-4\\r\cos\theta-r^2\sin^2\theta+1\end{pmatrix}.\]
+                \[D_rF=\begin{pmatrix}2r\\\cos\theta-2r\sin^2\theta\end{pmatrix}, \quad D_\theta F=\begin{pmatrix}0\\-r\sin\theta-2r^2\sin\theta\cos\theta\end{pmatrix}.\]
+                At \((\sqrt{2},\pi/4)\) where \(\cos=\sin=\tfrac{1}{\sqrt2}\):
+                <div class="key-result">
+                  \[D_rF=\begin{pmatrix}2\sqrt{2}\\-1/\sqrt{2}\end{pmatrix}, \qquad D_\theta F=\begin{pmatrix}0\\-3\end{pmatrix}.\]
+                </div>
+              </div>
+              <div class="ans-part">
+                <div class="ans-part-label">(d) Two Newton Steps</div>
+                <strong>Step 1:</strong> \(\det[DF(1,1)]=2(-2)-2(1)=-6.\)
+                \[[DF(1,1)]^{-1}=\frac{1}{-6}\begin{pmatrix}-2&-2\\-1&2\end{pmatrix}=\begin{pmatrix}1/3&1/3\\1/6&-1/3\end{pmatrix}.\]
+                \[[DF]^{-1}F(1,1)=\begin{pmatrix}1/3&1/3\\1/6&-1/3\end{pmatrix}\begin{pmatrix}-2\\1\end{pmatrix}=\begin{pmatrix}-1/3\\-2/3\end{pmatrix}.\]
+                <div class="key-result">
+                  \[\mathbf{x}_1=(1,1)-(-1/3,-2/3)=(4/3,\;5/3)\approx(1.333,\;1.667).\]
+                </div>
+                <strong>Step 2:</strong> \(F(4/3,5/3)=\begin{pmatrix}5/9\\-4/9\end{pmatrix}.\)
+                \([DF(4/3,5/3)]=\begin{pmatrix}8/3&10/3\\1&-10/3\end{pmatrix}\), \(\det=-110/9.\)
+                Update \(\approx\begin{pmatrix}0.034\\0.143\end{pmatrix}.\)
+                <div class="key-result">
+                  \[\mathbf{x}_2\approx(1.299,\;1.524).\]
+                </div>
+                Check: \(F(1.299,1.524)\approx\begin{pmatrix}0.01\\-0.02\end{pmatrix}\approx\mathbf{0}\) ✓ Converging to a point on the circle \(x^2+y^2=4\).
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="footer-note">
+      Calc A2 · Newton's Method · Ch.13.4 · Saturday 30 May 2026 · Week 1 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(id) {
+      const el = document.getElementById(id);
+      const btn = el.previousElementSibling;
+      el.classList.toggle('open');
+      btn.textContent = el.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+
+    const SESSION = 50 * 60;
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+
+    setInterval(() => {
+      const elapsed = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(elapsed / 60)) + ':' + pad(elapsed % 60);
+      const chip = document.getElementById('timerChip');
+      chip.classList.remove('warn', 'urgent');
+      if (elapsed >= SESSION * 0.85) chip.classList.add('urgent');
+      else if (elapsed >= SESSION * 0.65) chip.classList.add('warn');
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

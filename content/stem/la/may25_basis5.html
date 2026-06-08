@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Lin Alg · Basis — 5 New Problems · 25 May</title>
+<link href="../../../style.css" rel="stylesheet"/>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+<div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ lin-alg / basis</span>
+  <span class="topbar-date">MON 25 MAY 2026 · P5</span>
+</header>
+<section class="hero">
+  <h1>Basis <em>— 5 New Problems</em></h1>
+  <p class="hero-meta">EZ.pdf Ch. 5.3. Five problems on deciding independence, finding a basis, and reading off dimension. Work each on paper, then reveal. Always justify.</p>
+  <div class="exam-pills">
+    <span class="pill pill-la">Lin Alg</span>
+    <span class="pill pill-la">Ch. 5.3</span>
+    <span class="pill pill-la">Final · 25 June 2026</span>
+  </div>
+</section>
+<main class="main">
+<div class="subject-block">
+  <div class="subject-header">
+    <span class="subject-dot dot-la"></span>
+    <div>
+      <div class="subject-label">Daily Practice · EZ Ch. 5.3</div>
+      <h2 class="subject-title" style="color:var(--la)">Basis &amp; Dimension</h2>
+    </div>
+    <div class="subject-exam-date"><strong>Final · 25 Jun</strong></div>
+  </div>
+
+  <div class="formula-ref">
+    <strong>Quick reference.</strong> A <strong>basis</strong> of \(V\) is a linearly independent spanning set. To test independence of vectors, form a matrix (as columns) and row-reduce — independent iff every column is a pivot column. \(\dim V\) = number of vectors in any basis = number of pivots. For a subspace defined by equations, the dimension drops by the number of independent constraints.
+  </div>
+
+  <!-- P1 -->
+  <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">Subspace → basis → rank-nullity → coordinates</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Let \(A=\begin{pmatrix}1&2&3\\2&4&8\end{pmatrix}\).<div class="conn-chain">chains: column/null space · basis · rank–nullity · coordinates</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Row-reduce and give bases for \(\operatorname{Col}(A)\) and \(\operatorname{Nul}(A)\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>RREF \(\to\begin{pmatrix}1&2&0\\0&0&1\end{pmatrix}\). Pivots in cols 1,3 ⇒ Col basis \(\{(1,2),(3,8)\}\); free \(x_2\): \(\operatorname{Nul}=\operatorname{span}\{(-2,1,0)\}\). <div class="key-result">rank 2, nullity 1.</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Verify rank–nullity.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(2+1=3=\) number of columns ✓. <div class="key-result">\(2+1=3\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Is \(b=(1,2)\) in \(\operatorname{Col}(A)\)? If so, give one solution of \(A\mathbf x=b\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(b=(1,2)\) is the first column, so yes; \(\mathbf x=(1,0,0)\) works. <div class="key-result">\(\mathbf x=(1,0,0)\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 1</span><span class="problem-topic">Independence test</span><span class="problem-pts">6 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Are \(\mathbf v_1=(1,2,3),\ \mathbf v_2=(2,5,7),\ \mathbf v_3=(1,3,5)\) linearly independent in \(\mathbb R^3\)?</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          Row-reduce \(\begin{pmatrix}1&2&1\\2&5&3\\3&7&5\end{pmatrix}\). \(R_2-2R_1=(0,1,1)\), \(R_3-3R_1=(0,1,2)\), then \(R_3-R_2=(0,0,1)\). Three pivots.
+          <div class="key-result">Independent — they form a basis of \(\mathbb R^3\).</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P2 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">Dependent set</span><span class="problem-pts">6 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Show \(\mathbf v_1=(1,1,0),\ \mathbf v_2=(0,1,1),\ \mathbf v_3=(1,2,1)\) are dependent and give the relation.</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          Notice \(\mathbf v_1+\mathbf v_2=(1,2,1)=\mathbf v_3\). So \(\mathbf v_1+\mathbf v_2-\mathbf v_3=\mathbf 0\).
+          <div class="key-result">Dependent; \(\mathbf v_3=\mathbf v_1+\mathbf v_2\). A basis of their span is \(\{\mathbf v_1,\mathbf v_2\}\), dimension 2.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P3 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 3</span><span class="problem-topic">Basis from a spanning set</span><span class="problem-pts">8 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">From \(\{(1,0,1),(2,0,2),(0,1,1),(1,1,0)\}\) extract a basis for the span.</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          Put as columns and row-reduce; the pivot columns pick the basis. Column 2 \(=2\times\)column 1 (dependent). Columns 1, 3, 4 are independent and span \(\mathbb R^3\).
+          <div class="key-result">Basis: \(\{(1,0,1),(0,1,1),(1,1,0)\}\), dimension 3.</div>
+          <div class="ans-note">Keep the <em>original</em> columns at pivot positions — not the reduced ones — when reporting a basis of the span.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P4 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 4</span><span class="problem-topic">Subspace dimension</span><span class="problem-pts">8 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Find a basis and the dimension of \(W=\{(x,y,z,w)\in\mathbb R^4 : x+y+z+w=0,\ x-z=0\}\).</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          From \(x=z\) and \(w=-x-y-z=-2x-y\). Free variables \(x,y\): \((x,y,z,w)=x(1,0,1,-2)+y(0,1,0,-1)\).
+          <div class="key-result">Basis \(\{(1,0,1,-2),(0,1,0,-1)\}\), \(\dim W=2\).</div>
+          <div class="ans-note">Two independent constraints on \(\mathbb R^4\) ⇒ dimension \(4-2=2\). Always re-check the constraints are independent.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P5 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 5</span><span class="problem-topic">Polynomial space</span><span class="problem-pts">8 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">In \(P_2\) (polynomials of degree \(\le2\)), are \(1+x,\ x+x^2,\ 1+x^2\) a basis?</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          Use coordinates in \(\{1,x,x^2\}\): \((1,1,0),(0,1,1),(1,0,1)\). Determinant \(=1(1)-0+1(-1)=\dots\) compute: \(\det\begin{pmatrix}1&0&1\\1&1&0\\0&1&1\end{pmatrix}=1(1)-0+1(1)=2\neq0\).
+          <div class="key-result">Nonzero determinant ⇒ independent; 3 vectors in 3-dim \(P_2\) ⇒ a basis.</div>
+          <div class="ans-note">Abstract vector spaces reduce to \(\mathbb R^n\) once you fix a coordinate basis — then it's ordinary matrix work.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="footer-note">Lin Alg · Basis — 5 Problems (Ch. 5.3) · Monday 25 May 2026 · Good luck Rafi ✦</div>
+</main>
+
+<div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+<script>
+  function toggleAns(btn){ const a=btn.nextElementSibling; a.classList.toggle('open'); btn.textContent=a.classList.contains('open')?'Hide Answer':'Show Answer'; }
+  window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
+  const start=Date.now(), pad=n=>String(n).padStart(2,'0');
+  setInterval(()=>{ const e=Math.floor((Date.now()-start)/1000); document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60); },1000);
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

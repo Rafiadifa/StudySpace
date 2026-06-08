@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++ Polymorphism Practice · May 27</title>
+<link rel="stylesheet" href="../../../style.css">
+<style>
+body { padding-bottom: 140px; }
+.page-hero { padding:48px 48px 36px; border-bottom:1px solid var(--border); }
+.page-hero-label { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+.page-hero h1 { font-family:'DM Serif Display',serif; font-size:clamp(1.8rem,4vw,2.8rem); letter-spacing:-0.03em; line-height:1.1; color:var(--text); }
+.page-hero h1 em { font-style:italic; color:var(--cpp); }
+.page-hero-meta { margin-top:12px; font-size:0.85rem; color:var(--text2); font-weight:300; line-height:1.6; max-width:620px; }
+.topic-pills { display:flex; gap:6px; margin-top:16px; flex-wrap:wrap; }
+.topic-pill { font-family:'DM Mono',monospace; font-size:0.68rem; padding:3px 10px; border-radius:99px; border:1px solid rgba(74,222,128,0.3); background:rgba(74,222,128,0.07); color:var(--cpp); }
+.score-bar { position:sticky; top:0; z-index:9; background:rgba(15,15,17,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:12px 48px; display:flex; align-items:center; gap:24px; }
+.score-num { font-family:'DM Mono',monospace; font-size:1.5rem; font-weight:500; color:var(--cpp); transition:all 0.3s; white-space:nowrap; }
+.score-denom { color:var(--text3); font-size:0.9rem; }
+.score-track { flex:1; height:4px; background:var(--bg3); border-radius:99px; overflow:hidden; max-width:500px; }
+.score-fill { height:100%; background:linear-gradient(90deg,var(--cpp),#a3e635); border-radius:99px; width:0%; transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.score-label { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--text3); white-space:nowrap; }
+.content { max-width:860px; margin:0 auto; padding:40px 48px; }
+.section { margin-bottom:56px; scroll-margin-top:80px; }
+.section-head { display:flex; align-items:center; gap:12px; margin-bottom:28px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+.section-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1rem; background:rgba(74,222,128,0.1); flex-shrink:0; }
+.section-name { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--text); }
+.section-pts { margin-left:auto; font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--text3); background:var(--bg2); border:1px solid var(--border); padding:3px 10px; border-radius:6px; }
+.qcard { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:14px; transition:border-color 0.2s; }
+.qcard:hover { border-color:#40464e; }
+.qmeta { display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+.qnum { font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--text3); background:var(--bg3); border:1px solid var(--border); padding:2px 8px; border-radius:4px; }
+.diff { font-family:'DM Mono',monospace; font-size:0.62rem; padding:2px 8px; border-radius:4px; border:1px solid; }
+.diff-easy   { color:var(--cpp);  border-color:rgba(74,222,128,0.3);  background:rgba(74,222,128,0.07); }
+.diff-med    { color:var(--calc); border-color:rgba(96,165,250,0.3);  background:rgba(96,165,250,0.07); }
+.diff-hard   { color:var(--la);   border-color:rgba(244,114,182,0.3); background:rgba(244,114,182,0.07); }
+.diff-expert { color:var(--dt);   border-color:rgba(251,146,60,0.3);  background:rgba(251,146,60,0.07); }
+.pts-badge { font-family:'DM Mono',monospace; font-size:0.62rem; padding:2px 8px; border-radius:4px; border:1px solid var(--border); color:var(--text2); background:var(--bg3); }
+.topic-tag-sm { font-size:0.62rem; font-family:'DM Mono',monospace; color:var(--text3); background:var(--bg3); border:1px solid var(--border); padding:2px 7px; border-radius:4px; }
+.qtext { font-size:0.92rem; line-height:1.65; color:var(--text); margin-bottom:16px; }
+.qtext code { font-family:'DM Mono',monospace; background:var(--bg3); padding:1px 5px; border-radius:4px; font-size:0.85rem; color:#79c0ff; }
+.code { background:#010409; border:1px solid var(--border); border-radius:8px; padding:16px 20px; font-family:'DM Mono',monospace; font-size:0.8rem; line-height:1.75; overflow-x:auto; margin:12px 0; white-space:pre; color:#e6edf3; }
+.kw{color:#ff7b72}.ty{color:#79c0ff}.fn{color:#d2a8ff}.st{color:#a5d6ff}.nm{color:#f2cc60}.cm{color:#8b949e;font-style:italic}
+.mc-opts { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+.mc-opt { display:flex; align-items:flex-start; gap:12px; padding:11px 15px; border:1px solid var(--border); border-radius:8px; cursor:pointer; background:var(--bg); transition:all 0.14s; user-select:none; }
+.mc-opt:hover:not(.locked) { border-color:var(--cpp); background:rgba(74,222,128,0.05); }
+.mc-opt.correct { border-color:var(--cpp)!important; background:rgba(74,222,128,0.12)!important; }
+.mc-opt.wrong   { border-color:var(--la)!important;  background:rgba(244,114,182,0.08)!important; }
+.mc-opt.locked  { cursor:default; }
+.mc-letter { width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; font-family:'DM Mono',monospace; background:var(--bg3); color:var(--text2); flex-shrink:0; transition:all 0.14s; }
+.mc-opt.correct .mc-letter { background:var(--cpp); color:#000; }
+.mc-opt.wrong   .mc-letter { background:var(--la);  color:#000; }
+.mc-text { font-size:0.86rem; line-height:1.5; padding-top:1px; }
+.mc-text code { font-family:'DM Mono',monospace; background:var(--bg3); padding:1px 5px; border-radius:4px; font-size:0.8rem; color:#79c0ff; }
+.mc-fb { display:none; padding:10px 14px; border-radius:7px; font-size:0.82rem; font-weight:600; margin-bottom:10px; align-items:center; gap:8px; }
+.mc-fb.show { display:flex; }
+.fb-ok  { background:rgba(74,222,128,0.1);  border:1px solid rgba(74,222,128,0.3);  color:var(--cpp); }
+.fb-bad { background:rgba(244,114,182,0.08); border:1px solid rgba(244,114,182,0.3); color:var(--la); }
+.ans-area { width:100%; background:#010409; border:1px solid var(--border); border-radius:8px; padding:13px 16px; font-family:'DM Mono',monospace; font-size:0.82rem; color:#79c0ff; resize:vertical; min-height:110px; outline:none; transition:border-color 0.2s; }
+.ans-area:focus { border-color:var(--cpp); }
+.ans-area.tall { min-height:180px; }
+.action-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:12px; }
+.btn-reveal { display:inline-flex; align-items:center; gap:6px; background:transparent; border:1px solid var(--border); color:var(--text2); padding:6px 14px; border-radius:7px; font-size:0.76rem; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-reveal:hover,.btn-reveal.open { border-color:var(--cpp); color:var(--cpp); }
+.grade-group { display:flex; gap:6px; align-items:center; }
+.grade-lbl { font-size:0.74rem; color:var(--text3); }
+.btn-grade { padding:5px 11px; border-radius:6px; font-size:0.72rem; font-weight:700; font-family:'DM Mono',monospace; cursor:pointer; border:1px solid var(--border); background:var(--bg3); color:var(--text2); transition:all 0.15s; }
+.btn-grade.full { border-color:rgba(74,222,128,0.4); color:var(--cpp); }
+.btn-grade.part { border-color:rgba(251,146,60,0.4);  color:var(--dt); }
+.btn-grade.none { border-color:rgba(244,114,182,0.4); color:var(--la); }
+.btn-grade.sel  { transform:scale(1.12); filter:brightness(1.3); }
+.ans-box { display:none; margin-top:14px; background:rgba(74,222,128,0.05); border:1px solid rgba(74,222,128,0.2); border-radius:8px; padding:16px 18px; font-size:0.84rem; line-height:1.7; color:#c3f0ca; }
+.ans-box.open { display:block; }
+.ans-lbl { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--cpp); margin-bottom:8px; display:block; }
+.ans-box pre { background:#010409; border:1px solid var(--border); border-radius:6px; padding:12px 14px; font-size:0.78rem; overflow-x:auto; margin-top:8px; color:var(--text); white-space:pre; }
+.ans-box code { font-family:'DM Mono',monospace; background:var(--bg3); padding:1px 5px; border-radius:4px; color:var(--cpp); }
+.summary { background:var(--bg2); border:1px solid var(--border); border-radius:16px; padding:36px; text-align:center; margin-top:48px; }
+.summary h2 { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--text2); margin-bottom:8px; font-weight:400; }
+.summary-big { font-family:'DM Mono',monospace; font-size:3.8rem; font-weight:500; color:var(--cpp); line-height:1; margin:8px 0; }
+.summary-sub { color:var(--text3); font-size:0.85rem; }
+.breakdown { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin-top:24px; }
+.bd-item { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:14px; }
+.bd-lbl { font-size:0.7rem; color:var(--text3); margin-bottom:4px; font-family:'DM Mono',monospace; }
+.bd-val { font-size:1.4rem; font-weight:700; font-family:'DM Mono',monospace; }
+.summary-msg { margin-top:18px; font-size:0.86rem; color:var(--text2); }
+.btn-primary { margin-top:20px; padding:11px 28px; background:var(--cpp); color:#000; border:none; border-radius:8px; font-size:0.88rem; font-weight:700; font-family:'DM Sans',sans-serif; cursor:pointer; transition:opacity 0.2s; }
+.btn-primary:hover { opacity:0.85; }
+.back-link { display:inline-flex; align-items:center; gap:6px; font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--text3); text-decoration:none; border-bottom:1px solid var(--border); padding-bottom:1px; transition:color 0.15s; margin-bottom:32px; }
+.back-link:hover { color:var(--text2); }
+@keyframes pop{0%{transform:scale(1)}30%{transform:scale(1.2)}100%{transform:scale(1)}}
+.pop{animation:pop 0.35s ease;}
+@media(max-width:600px){.content,.page-hero,.score-bar{padding-left:20px;padding-right:20px;}}
+</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+
+<div class="score-bar">
+  <div><span class="score-num" id="liveScore">0</span><span class="score-denom"> / 52 pts</span></div>
+  <div class="score-track"><div class="score-fill" id="scoreFill"></div></div>
+  <div class="score-label" id="scoreLabel">0 / 20 answered</div>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-label">C++ &middot; May 27 &middot; Coding practice</div>
+  <h1>Polymorphism<br><em>&amp; Inheritance</em></h1>
+  <p class="page-hero-meta">20 questions covering every testable case — virtual functions, pure virtual, abstract classes, object slicing, virtual destructors, constructor order, access specifiers, and the diamond problem. Difficulty rises steadily.</p>
+  <div class="topic-pills">
+    <span class="topic-pill">virtual functions</span>
+    <span class="topic-pill">override / final</span>
+    <span class="topic-pill">pure virtual = 0</span>
+    <span class="topic-pill">abstract class</span>
+    <span class="topic-pill">object slicing</span>
+    <span class="topic-pill">virtual destructor</span>
+    <span class="topic-pill">static vs dynamic binding</span>
+    <span class="topic-pill">access specifiers</span>
+    <span class="topic-pill">constructor order</span>
+    <span class="topic-pill">diamond problem</span>
+  </div>
+</div>
+
+<div class="content">
+<a href="../../../hub/stem.html" class="back-link">&#8592; Study Hub</a>
+
+<!-- SECTION 1 — MC -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon">&#128309;</div>
+    <div><div class="section-name">Multiple Choice &mdash; Concepts &amp; Output</div><div style="font-size:0.76rem;color:var(--text3);margin-top:2px;">Read the code carefully, pick the correct answer.</div></div>
+    <div class="section-pts">26 pts &middot; 13 questions &middot; 2 pts each</div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q1</span><span class="diff diff-easy">Easy</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">virtual keyword</span></div>
+  <div class="qtext">Without the <code>virtual</code> keyword, which function is called when you do <code>Base* p = new Derived(); p->show();</code>?</div>
+  <div class="mc-opts" data-correct="A" data-qid="q1" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>Base::show()</code> &mdash; the pointer type decides at compile time (static binding)</span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>Derived::show()</code> &mdash; the object type decides at runtime</span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text">Compile error &mdash; cannot assign <code>Derived*</code> to <code>Base*</code></span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text">It depends on the compiler</span></div>
+  </div><div class="mc-fb" id="fb-q1"></div></div>
+
+  <!-- Q2 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q2</span><span class="diff diff-easy">Easy</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">virtual &mdash; output trace</span></div>
+  <div class="qtext">What is the output?
+  <div class="code"><span class="kw">class</span> <span class="ty">Animal</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="ty">void</span> <span class="fn">speak</span>() { cout &lt;&lt; <span class="st">"..."</span>; }
+};
+<span class="kw">class</span> <span class="ty">Dog</span> : <span class="kw">public</span> <span class="ty">Animal</span> {
+<span class="kw">public</span>:
+    <span class="ty">void</span> <span class="fn">speak</span>() <span class="kw">override</span> { cout &lt;&lt; <span class="st">"Woof"</span>; }
+};
+<span class="ty">Animal</span>* a = <span class="kw">new</span> <span class="ty">Dog</span>();
+a-><span class="fn">speak</span>();</div></div>
+  <div class="mc-opts" data-correct="B" data-qid="q2" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>...</code></span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>Woof</code> &mdash; virtual dispatch picks <code>Dog::speak()</code> at runtime</span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text"><code>...Woof</code></span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text">Compile error</span></div>
+  </div><div class="mc-fb" id="fb-q2"></div></div>
+
+  <!-- Q3 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q3</span><span class="diff diff-easy">Easy</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">override specifier</span></div>
+  <div class="qtext">What does the <code>override</code> keyword actually do?</div>
+  <div class="mc-opts" data-correct="C" data-qid="q3" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text">Makes the function virtual in the derived class</span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text">Prevents the function from being overridden further</span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text">Tells the compiler to verify the function actually overrides a base virtual &mdash; compile error if signature doesn't match</span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text">Forces dynamic binding regardless of how the function is called</span></div>
+  </div><div class="mc-fb" id="fb-q3"></div></div>
+
+  <!-- Q4 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q4</span><span class="diff diff-easy">Easy</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">pure virtual syntax</span></div>
+  <div class="qtext">Which line correctly declares a <strong>pure virtual function</strong>?</div>
+  <div class="mc-opts" data-correct="D" data-qid="q4" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>virtual void draw();</code></span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>void draw() override;</code></span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text"><code>virtual void draw() {}</code></span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text"><code>virtual void draw() = 0;</code></span></div>
+  </div><div class="mc-fb" id="fb-q4"></div></div>
+
+  <!-- Q5 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q5</span><span class="diff diff-easy">Easy</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">abstract class instantiation</span></div>
+  <div class="qtext">What happens if you write <code>Shape s;</code> when <code>Shape</code> has a pure virtual function?</div>
+  <div class="mc-opts" data-correct="B" data-qid="q5" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text">It compiles fine; the pure virtual gets a default empty body</span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text">Compile error &mdash; abstract class cannot be instantiated directly</span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text">Runtime error only when the pure virtual is called</span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text">Compiles, but <code>s</code> has no vtable</span></div>
+  </div><div class="mc-fb" id="fb-q5"></div></div>
+
+  <!-- Q6 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q6</span><span class="diff diff-med">Medium</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">object slicing</span></div>
+  <div class="qtext">Classic trap. What is the output?
+  <div class="code"><span class="kw">class</span> <span class="ty">Base</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="ty">void</span> <span class="fn">who</span>() { cout &lt;&lt; <span class="st">"Base"</span>; }
+};
+<span class="kw">class</span> <span class="ty">Derived</span> : <span class="kw">public</span> <span class="ty">Base</span> {
+<span class="kw">public</span>:
+    <span class="ty">void</span> <span class="fn">who</span>() <span class="kw">override</span> { cout &lt;&lt; <span class="st">"Derived"</span>; }
+};
+<span class="ty">Derived</span> d;
+<span class="ty">Base</span> b = d;  <span class="cm">// copy by value</span>
+b.<span class="fn">who</span>();</div></div>
+  <div class="mc-opts" data-correct="A" data-qid="q6" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>Base</code> &mdash; object slicing: copy by value strips the Derived part and its vtable</span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>Derived</code> &mdash; virtual dispatch still works on value copies</span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text">Compile error &mdash; cannot copy Derived to Base</span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text"><code>BaseDerived</code></span></div>
+  </div><div class="mc-fb" id="fb-q6"></div></div>
+
+  <!-- Q7 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q7</span><span class="diff diff-med">Medium</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">non-virtual destructor bug</span></div>
+  <div class="qtext">What is printed when the base destructor is <strong>NOT</strong> virtual?
+  <div class="code"><span class="kw">class</span> <span class="ty">Base</span> {
+<span class="kw">public</span>:
+    ~<span class="ty">Base</span>() { cout &lt;&lt; <span class="st">"~Base "</span>; }
+};
+<span class="kw">class</span> <span class="ty">Derived</span> : <span class="kw">public</span> <span class="ty">Base</span> {
+<span class="kw">public</span>:
+    ~<span class="ty">Derived</span>() { cout &lt;&lt; <span class="st">"~Derived "</span>; }
+};
+<span class="ty">Base</span>* p = <span class="kw">new</span> <span class="ty">Derived</span>();
+<span class="kw">delete</span> p;</div></div>
+  <div class="mc-opts" data-correct="B" data-qid="q7" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>~Derived ~Base</code></span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>~Base</code> only &mdash; undefined behavior, derived destructor never called</span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text"><code>~Base ~Derived</code></span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text">Compile error</span></div>
+  </div><div class="mc-fb" id="fb-q7"></div></div>
+
+  <!-- Q8 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q8</span><span class="diff diff-med">Medium</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">virtual destructor &mdash; fixed</span></div>
+  <div class="qtext">Same code as Q7, but <code>~Base()</code> is now declared <code>virtual</code>. What is the output?</div>
+  <div class="mc-opts" data-correct="A" data-qid="q8" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>~Derived ~Base</code> &mdash; derived destructor runs first, then base (reverse construction order)</span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>~Base ~Derived</code></span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text"><code>~Base</code> only</span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text"><code>~Derived</code> only</span></div>
+  </div><div class="mc-fb" id="fb-q8"></div></div>
+
+  <!-- Q9 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q9</span><span class="diff diff-med">Medium</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">constructor order</span></div>
+  <div class="qtext">What is the output?
+  <div class="code"><span class="kw">class</span> <span class="ty">A</span> { <span class="kw">public</span>: <span class="ty">A</span>() { cout &lt;&lt; <span class="st">"A "</span>; } };
+<span class="kw">class</span> <span class="ty">B</span> : <span class="kw">public</span> <span class="ty">A</span> { <span class="kw">public</span>: <span class="ty">B</span>() { cout &lt;&lt; <span class="st">"B "</span>; } };
+<span class="kw">class</span> <span class="ty">C</span> : <span class="kw">public</span> <span class="ty">B</span> { <span class="kw">public</span>: <span class="ty">C</span>() { cout &lt;&lt; <span class="st">"C "</span>; } };
+<span class="ty">C</span> obj;</div></div>
+  <div class="mc-opts" data-correct="B" data-qid="q9" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>C B A</code></span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>A B C</code> &mdash; base constructors always run before derived (top-down)</span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text"><code>B A C</code></span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text"><code>C A B</code></span></div>
+  </div><div class="mc-fb" id="fb-q9"></div></div>
+
+  <!-- Q10 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q10</span><span class="diff diff-med">Medium</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">access specifiers from main()</span></div>
+  <div class="qtext">Which accesses compile from <code>main()</code>?
+  <div class="code"><span class="kw">class</span> <span class="ty">Base</span> {
+<span class="kw">private</span>:   <span class="ty">int</span> a = <span class="nm">1</span>;
+<span class="kw">protected</span>: <span class="ty">int</span> b = <span class="nm">2</span>;
+<span class="kw">public</span>:    <span class="ty">int</span> c = <span class="nm">3</span>;
+};
+<span class="kw">class</span> <span class="ty">Child</span> : <span class="kw">public</span> <span class="ty">Base</span> {};
+<span class="cm">// In main(): Child x;</span>
+<span class="cm">// x.a=1; x.b=2; x.c=3; — which compile?</span></div></div>
+  <div class="mc-opts" data-correct="C" data-qid="q10" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text">All three</span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text">Only <code>x.a</code> and <code>x.c</code></span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text">Only <code>x.c</code> &mdash; <code>a</code> is private (blocked everywhere outside class), <code>b</code> is protected (only accessible inside class hierarchy, not from <code>main()</code>)</span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text">Only <code>x.b</code> and <code>x.c</code></span></div>
+  </div><div class="mc-fb" id="fb-q10"></div></div>
+
+  <!-- Q11 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q11</span><span class="diff diff-hard">Hard</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">dynamic dispatch chain</span></div>
+  <div class="qtext">Trace carefully. What is the full output?
+  <div class="code"><span class="kw">class</span> <span class="ty">B1</span> { <span class="kw">public</span>: <span class="kw">virtual</span> <span class="ty">void</span> <span class="fn">f</span>() { cout &lt;&lt; <span class="st">"B1 "</span>; } };
+<span class="kw">class</span> <span class="ty">B2</span> : <span class="kw">public</span> <span class="ty">B1</span> { <span class="kw">public</span>: <span class="kw">virtual</span> <span class="ty">void</span> <span class="fn">f</span>() { cout &lt;&lt; <span class="st">"B2 "</span>; } };
+<span class="kw">class</span> <span class="ty">D</span>  : <span class="kw">public</span> <span class="ty">B2</span> { <span class="kw">public</span>: <span class="kw">virtual</span> <span class="ty">void</span> <span class="fn">f</span>() { cout &lt;&lt; <span class="st">"D "</span>; } };
+<span class="ty">B1</span>* p1 = <span class="kw">new</span> <span class="ty">B1</span>(); <span class="ty">B1</span>* p2 = <span class="kw">new</span> <span class="ty">B2</span>(); <span class="ty">B1</span>* p3 = <span class="kw">new</span> <span class="ty">D</span>();
+p1-><span class="fn">f</span>(); p2-><span class="fn">f</span>(); p3-><span class="fn">f</span>();</div></div>
+  <div class="mc-opts" data-correct="A" data-qid="q11" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>B1 B2 D</code> &mdash; vtable dispatches to the actual object type every time</span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>B1 B1 B1</code></span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text"><code>B1 B2 B2</code></span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text"><code>D D D</code></span></div>
+  </div><div class="mc-fb" id="fb-q11"></div></div>
+
+  <!-- Q12 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q12</span><span class="diff diff-hard">Hard</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">final specifier</span></div>
+  <div class="qtext">What happens when this is compiled?
+  <div class="code"><span class="kw">class</span> <span class="ty">Base</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="ty">void</span> <span class="fn">go</span>() <span class="kw">final</span> { cout &lt;&lt; <span class="st">"Base"</span>; }
+};
+<span class="kw">class</span> <span class="ty">Derived</span> : <span class="kw">public</span> <span class="ty">Base</span> {
+<span class="kw">public</span>:
+    <span class="ty">void</span> <span class="fn">go</span>() <span class="kw">override</span> { cout &lt;&lt; <span class="st">"Derived"</span>; }
+};</div></div>
+  <div class="mc-opts" data-correct="C" data-qid="q12" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text">Runs fine, prints <code>Derived</code></span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text">Runs fine, prints <code>Base</code></span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text">Compile error &mdash; <code>final</code> on <code>go()</code> prevents any further override</span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text">Runtime error</span></div>
+  </div><div class="mc-fb" id="fb-q12"></div></div>
+
+  <!-- Q13 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q13</span><span class="diff diff-hard">Hard</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">diamond &mdash; how many base copies</span></div>
+  <div class="qtext">Without <code>virtual</code> inheritance: <code>B : public A</code>, <code>C : public A</code>, <code>D : public B, public C</code>. How many copies of <code>A</code>'s data does <code>D</code> contain?</div>
+  <div class="mc-opts" data-correct="B" data-qid="q13" data-pts="2">
+    <div class="mc-opt" data-val="A"><span class="mc-letter">A</span><span class="mc-text">1 &mdash; C++ automatically deduplicates base classes</span></div>
+    <div class="mc-opt" data-val="B"><span class="mc-letter">B</span><span class="mc-text">2 &mdash; one via B's path, one via C's path; accessing A's members becomes ambiguous</span></div>
+    <div class="mc-opt" data-val="C"><span class="mc-letter">C</span><span class="mc-text">0 &mdash; compile error</span></div>
+    <div class="mc-opt" data-val="D"><span class="mc-letter">D</span><span class="mc-text">4</span></div>
+  </div><div class="mc-fb" id="fb-q13"></div></div>
+
+</div><!-- /s1 -->
+
+<!-- SECTION 2 — COMPLETE -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon">&#128994;</div>
+    <div><div class="section-name">Complete the Code</div><div style="font-size:0.76rem;color:var(--text3);margin-top:2px;">Fill in the blanks to make the program correct.</div></div>
+    <div class="section-pts">14 pts &middot; 4 questions</div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q14</span><span class="diff diff-easy">Easy</span><span class="pts-badge">2 pts</span><span class="topic-tag-sm">adding virtual</span></div>
+  <div class="qtext">Fill in both blanks so <code>draw()</code> uses dynamic dispatch and memory is cleaned up safely.</div>
+  <div class="code"><span class="kw">class</span> <span class="ty">Shape</span> {
+<span class="kw">public</span>:
+    _____ <span class="ty">void</span> <span class="fn">draw</span>() { cout &lt;&lt; <span class="st">"Shape"</span>; }
+    _____ ~<span class="ty">Shape</span>() = <span class="kw">default</span>;
+};</div>
+  <textarea class="ans-area" placeholder="Both blanks are the same keyword..." rows="2"></textarea>
+  <div class="action-row">
+    <button class="btn-reveal" onclick="toggleAns('a14',this)">&#128065; Show Answer</button>
+    <div class="grade-group"><span class="grade-lbl">Self-grade:</span>
+      <button class="btn-grade full" onclick="grade('q14',2,2,this)">&#10003; 2</button>
+      <button class="btn-grade part" onclick="grade('q14',1,2,this)">&#189; 1</button>
+      <button class="btn-grade none" onclick="grade('q14',0,2,this)">&#10007; 0</button>
+    </div>
+  </div>
+  <div class="ans-box" id="a14"><span class="ans-lbl">Answer</span>
+    Both blanks: <code>virtual</code><br><br>
+    <strong>Why both?</strong> <code>virtual</code> on <code>draw()</code> enables dynamic dispatch. <code>virtual</code> on <code>~Shape()</code> ensures that when you do <code>delete shapePtr</code> through a base pointer, C++ calls the correct derived destructor first &mdash; without it, the derived destructor is silently skipped (memory leak / UB).
+  </div></div>
+
+  <!-- Q15 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q15</span><span class="diff diff-easy">Easy</span><span class="pts-badge">3 pts</span><span class="topic-tag-sm">abstract class + override</span></div>
+  <div class="qtext">Make <code>Shape</code> abstract and complete <code>Circle</code>. Fill in the 3 blanks.</div>
+  <div class="code"><span class="kw">class</span> <span class="ty">Shape</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="ty">double</span> <span class="fn">area</span>() ____;   <span class="cm">// pure virtual</span>
+    <span class="kw">virtual</span> ~<span class="ty">Shape</span>() = <span class="kw">default</span>;
+};
+<span class="kw">class</span> <span class="ty">Circle</span> : ____ <span class="ty">Shape</span> {
+    <span class="ty">double</span> r;
+<span class="kw">public</span>:
+    <span class="ty">Circle</span>(<span class="ty">double</span> r) : r(r) {}
+    <span class="ty">double</span> <span class="fn">area</span>() ____ { <span class="kw">return</span> <span class="nm">3.14</span> * r * r; }
+};</div>
+  <textarea class="ans-area" placeholder="Blank 1 / Blank 2 / Blank 3" rows="2"></textarea>
+  <div class="action-row">
+    <button class="btn-reveal" onclick="toggleAns('a15',this)">&#128065; Show Answer</button>
+    <div class="grade-group"><span class="grade-lbl">Self-grade:</span>
+      <button class="btn-grade full" onclick="grade('q15',3,3,this)">&#10003; 3</button>
+      <button class="btn-grade part" onclick="grade('q15',1,3,this)">&#189; 1</button>
+      <button class="btn-grade none" onclick="grade('q15',0,3,this)">&#10007; 0</button>
+    </div>
+  </div>
+  <div class="ans-box" id="a15"><span class="ans-lbl">Answer</span>
+    Blank 1: <code>= 0</code> &nbsp;&middot;&nbsp; Blank 2: <code>public</code> &nbsp;&middot;&nbsp; Blank 3: <code>override</code><br><br>
+    <strong>= 0</strong> makes area() pure virtual &rarr; Shape becomes abstract (cannot be instantiated). <strong>public</strong> means Circle "is-a" Shape &mdash; the public interface is preserved. <strong>override</strong> asks the compiler to verify the signature matches exactly &mdash; catches typos like missing <code>const</code>.
+  </div></div>
+
+  <!-- Q16 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q16</span><span class="diff diff-med">Medium</span><span class="pts-badge">4 pts</span><span class="topic-tag-sm">polymorphic array + cleanup</span></div>
+  <div class="qtext">Complete <code>main()</code>: create two <code>Shape*</code> pointers, call <code>draw()</code> on each in a loop, then free memory. Fill in all 4 blanks.</div>
+  <div class="code"><span class="cm">// Shape, Circle, Rectangle defined with virtual draw() and virtual ~Shape()</span>
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">Shape</span>* s[<span class="nm">2</span>];
+    s[<span class="nm">0</span>] = ____________________;
+    s[<span class="nm">1</span>] = ____________________;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; <span class="nm">2</span>; i++) {
+        ___________________;   <span class="cm">// dynamic dispatch</span>
+        ___________________;   <span class="cm">// free memory</span>
+    }
+}</div>
+  <textarea class="ans-area" placeholder="Fill in 4 blanks..." rows="4"></textarea>
+  <div class="action-row">
+    <button class="btn-reveal" onclick="toggleAns('a16',this)">&#128065; Show Answer</button>
+    <div class="grade-group"><span class="grade-lbl">Self-grade:</span>
+      <button class="btn-grade full" onclick="grade('q16',4,4,this)">&#10003; 4</button>
+      <button class="btn-grade part" onclick="grade('q16',2,4,this)">&#189; 2</button>
+      <button class="btn-grade none" onclick="grade('q16',0,4,this)">&#10007; 0</button>
+    </div>
+  </div>
+  <div class="ans-box" id="a16"><span class="ans-lbl">Answer</span>
+    <pre>s[0] = new Circle();
+s[1] = new Rectangle();
+// loop body:
+s[i]->draw();
+delete s[i];</pre>
+    <strong>Key:</strong> <code>s[i]-&gt;draw()</code> uses dynamic dispatch &mdash; the correct override runs even though the pointer type is <code>Shape*</code>. <code>delete s[i]</code> works correctly because <code>~Shape()</code> is virtual, so the derived destructor runs first, then base. Every <code>new</code> must have a matching <code>delete</code>.
+  </div></div>
+
+  <!-- Q17 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q17</span><span class="diff diff-med">Medium</span><span class="pts-badge">5 pts</span><span class="topic-tag-sm">full hierarchy from scratch</span></div>
+  <div class="qtext">Fill every blank. <code>Animal</code> is abstract with a pure virtual <code>speak()</code>. <code>Dog</code> inherits it publicly, takes a name, and overrides <code>speak()</code>.</div>
+  <div class="code"><span class="kw">class</span> <span class="ty">Animal</span> {
+    string name_;
+<span class="kw">public</span>:
+    <span class="ty">Animal</span>(<span class="kw">const</span> string& n) : name_(n) {}
+    _____ string <span class="fn">name</span>() <span class="kw">const</span> { <span class="kw">return</span> name_; }
+    _____ <span class="ty">void</span> <span class="fn">speak</span>() _____;     <span class="cm">// pure virtual</span>
+    _____ ~<span class="ty">Animal</span>() = <span class="kw">default</span>;
+};
+<span class="kw">class</span> <span class="ty">Dog</span> : _____ <span class="ty">Animal</span> {
+<span class="kw">public</span>:
+    <span class="ty">Dog</span>(<span class="kw">const</span> string& n) : __________(n) {}
+    <span class="ty">void</span> <span class="fn">speak</span>() _____ { cout &lt;&lt; <span class="fn">name</span>() &lt;&lt; <span class="st">": Woof!"</span>; }
+};</div>
+  <textarea class="ans-area tall" placeholder="Fill in all blanks in order..." rows="6"></textarea>
+  <div class="action-row">
+    <button class="btn-reveal" onclick="toggleAns('a17',this)">&#128065; Show Answer</button>
+    <div class="grade-group"><span class="grade-lbl">Self-grade:</span>
+      <button class="btn-grade full" onclick="grade('q17',5,5,this)">&#10003; 5</button>
+      <button class="btn-grade part" onclick="grade('q17',3,5,this)">~3</button>
+      <button class="btn-grade none" onclick="grade('q17',0,5,this)">&#10007; 0</button>
+    </div>
+  </div>
+  <div class="ans-box" id="a17"><span class="ans-lbl">Answer</span>
+    <pre>virtual string name() const { ... }    // virtual (concrete)
+virtual void speak() = 0;              // pure virtual
+virtual ~Animal() = default;           // virtual destructor
+class Dog : public Animal              // public inheritance
+Dog(string n) : Animal(n) {}          // delegate to base ctor
+void speak() override { ... }          // override</pre>
+    <strong>Checklist:</strong> (1) <code>virtual</code> on <code>name()</code> allows subclasses to override it. (2) <code>= 0</code> makes Animal abstract. (3) <code>virtual ~Animal()</code> is mandatory for safe <code>delete</code> through base pointer. (4) <code>public Animal</code> preserves the is-a relationship. (5) Init list calls base ctor. (6) <code>override</code> catches signature mismatches.
+  </div></div>
+
+</div><!-- /s2 -->
+
+<!-- SECTION 3 — FIX -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon">&#128995;</div>
+    <div><div class="section-name">Fix the Bug</div><div style="font-size:0.76rem;color:var(--text3);margin-top:2px;">Identify what's wrong, explain why, write the fix.</div></div>
+    <div class="section-pts">12 pts &middot; 3 questions</div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q18</span><span class="diff diff-med">Medium</span><span class="pts-badge">3 pts</span><span class="topic-tag-sm">missing virtual destructor</span></div>
+  <div class="qtext">This code has a memory leak / undefined behavior. Find it, explain it, write the fix.</div>
+  <div class="code"><span class="kw">class</span> <span class="ty">Base</span> {
+<span class="kw">public</span>:
+    ~<span class="ty">Base</span>() { cout &lt;&lt; <span class="st">"~Base"</span>; }     <span class="cm">// &lt;-- problem here?</span>
+    <span class="kw">virtual</span> <span class="ty">void</span> <span class="fn">run</span>() = <span class="nm">0</span>;
+};
+<span class="kw">class</span> <span class="ty">Derived</span> : <span class="kw">public</span> <span class="ty">Base</span> {
+    <span class="ty">int</span>* data_ = <span class="kw">new</span> <span class="ty">int</span>[<span class="nm">100</span>];
+<span class="kw">public</span>:
+    ~<span class="ty">Derived</span>() { <span class="kw">delete</span>[] data_; }
+    <span class="ty">void</span> <span class="fn">run</span>() <span class="kw">override</span> {}
+};
+<span class="ty">Base</span>* p = <span class="kw">new</span> <span class="ty">Derived</span>();
+<span class="kw">delete</span> p;</div>
+  <textarea class="ans-area" placeholder="Bug:&#10;Why:&#10;Fix:" rows="5"></textarea>
+  <div class="action-row">
+    <button class="btn-reveal" onclick="toggleAns('a18',this)">&#128065; Show Answer</button>
+    <div class="grade-group"><span class="grade-lbl">Self-grade:</span>
+      <button class="btn-grade full" onclick="grade('q18',3,3,this)">&#10003; 3</button>
+      <button class="btn-grade part" onclick="grade('q18',1,3,this)">&#189; 1</button>
+      <button class="btn-grade none" onclick="grade('q18',0,3,this)">&#10007; 0</button>
+    </div>
+  </div>
+  <div class="ans-box" id="a18"><span class="ans-lbl">Answer</span>
+    <strong>Bug:</strong> <code>~Base()</code> is not <code>virtual</code>.<br><br>
+    <strong>Why it's wrong:</strong> <code>delete p</code> through a <code>Base*</code> uses static binding to find the destructor. Without <code>virtual</code>, only <code>~Base()</code> runs. <code>~Derived()</code> is never called, so <code>data_</code> (100 ints on the heap) is never freed &mdash; memory leak and undefined behavior.<br><br>
+    <strong>Fix:</strong> Add <code>virtual</code>: <code>virtual ~Base() { cout &lt;&lt; "~Base"; }</code><br>
+    Now <code>delete p</code> calls <code>~Derived()</code> first (frees <code>data_</code>), then <code>~Base()</code>.
+  </div></div>
+
+  <!-- Q19 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q19</span><span class="diff diff-hard">Hard</span><span class="pts-badge">4 pts</span><span class="topic-tag-sm">object slicing + missing const/override</span></div>
+  <div class="qtext">This code has <strong>two bugs</strong>. Find both, explain each, write the corrected code.</div>
+  <div class="code"><span class="kw">class</span> <span class="ty">Vehicle</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="ty">void</span> <span class="fn">describe</span>() <span class="kw">const</span> { cout &lt;&lt; <span class="st">"Vehicle"</span>; }
+    <span class="kw">virtual</span> ~<span class="ty">Vehicle</span>() = <span class="kw">default</span>;
+};
+<span class="kw">class</span> <span class="ty">Car</span> : <span class="kw">public</span> <span class="ty">Vehicle</span> {
+<span class="kw">public</span>:
+    <span class="ty">void</span> <span class="fn">describe</span>() { cout &lt;&lt; <span class="st">"Car"</span>; }  <span class="cm">// Bug 1?</span>
+};
+<span class="ty">Car</span> c;
+<span class="ty">Vehicle</span> v = c;   <span class="cm">// Bug 2?</span>
+v.<span class="fn">describe</span>();</div>
+  <textarea class="ans-area" placeholder="Bug 1:&#10;Bug 2:&#10;Fixed code:" rows="8"></textarea>
+  <div class="action-row">
+    <button class="btn-reveal" onclick="toggleAns('a19',this)">&#128065; Show Answer</button>
+    <div class="grade-group"><span class="grade-lbl">Self-grade:</span>
+      <button class="btn-grade full" onclick="grade('q19',4,4,this)">&#10003; 4</button>
+      <button class="btn-grade part" onclick="grade('q19',2,4,this)">&#189; 2</button>
+      <button class="btn-grade none" onclick="grade('q19',0,4,this)">&#10007; 0</button>
+    </div>
+  </div>
+  <div class="ans-box" id="a19"><span class="ans-lbl">Two Bugs</span>
+    <strong>Bug 1:</strong> <code>Car::describe()</code> is missing <code>const</code> and <code>override</code>. The base declares <code>describe() const</code>, so <code>Car</code>'s version with a different signature does NOT override it &mdash; it creates a brand new separate function. Adding <code>override</code> would have caught this at compile time.<br>
+    Fix: <code>void describe() const override { cout &lt;&lt; "Car"; }</code><br><br>
+    <strong>Bug 2:</strong> <code>Vehicle v = c;</code> is object slicing. Copying a derived object by value into a base variable strips all the Derived-specific data and replaces the vtable with Base's &mdash; <code>v</code> is now purely a <code>Vehicle</code>. <code>v.describe()</code> prints <code>Vehicle</code>.<br>
+    Fix: Use a pointer or reference: <code>Vehicle* v = &amp;c; v-&gt;describe();</code> &rarr; prints <code>Car</code>.
+  </div></div>
+
+  <!-- Q20 -->
+  <div class="qcard"><div class="qmeta"><span class="qnum">Q20</span><span class="diff diff-expert">Expert</span><span class="pts-badge">5 pts</span><span class="topic-tag-sm">diamond problem &mdash; full fix</span></div>
+  <div class="qtext">This code causes an ambiguity compile error. Identify the root cause and rewrite the three class declarations to fix it correctly.</div>
+  <div class="code"><span class="kw">class</span> <span class="ty">Person</span> {
+<span class="kw">public</span>:
+    string name;
+    <span class="ty">Person</span>(string n) : name(n) {}
+};
+<span class="kw">class</span> <span class="ty">Student</span> : <span class="kw">public</span> <span class="ty">Person</span> {        <span class="cm">// Bug</span>
+<span class="kw">public</span>: <span class="ty">Student</span>(string n) : <span class="ty">Person</span>(n) {}
+};
+<span class="kw">class</span> <span class="ty">Teacher</span> : <span class="kw">public</span> <span class="ty">Person</span> {        <span class="cm">// Bug</span>
+<span class="kw">public</span>: <span class="ty">Teacher</span>(string n) : <span class="ty">Person</span>(n) {}
+};
+<span class="kw">class</span> <span class="ty">TA</span> : <span class="kw">public</span> <span class="ty">Student</span>, <span class="kw">public</span> <span class="ty">Teacher</span> {
+<span class="kw">public</span>: <span class="ty">TA</span>(string n) : <span class="ty">Student</span>(n), <span class="ty">Teacher</span>(n) {}
+};
+<span class="ty">TA</span> ta(<span class="st">"Rafi"</span>);
+cout &lt;&lt; ta.name;   <span class="cm">// ambiguous: which Person?</span></div>
+  <textarea class="ans-area tall" placeholder="Root cause:&#10;Fixed class declarations:" rows="10"></textarea>
+  <div class="action-row">
+    <button class="btn-reveal" onclick="toggleAns('a20',this)">&#128065; Show Answer</button>
+    <div class="grade-group"><span class="grade-lbl">Self-grade:</span>
+      <button class="btn-grade full" onclick="grade('q20',5,5,this)">&#10003; 5</button>
+      <button class="btn-grade part" onclick="grade('q20',3,5,this)">~3</button>
+      <button class="btn-grade none" onclick="grade('q20',0,5,this)">&#10007; 0</button>
+    </div>
+  </div>
+  <div class="ans-box" id="a20"><span class="ans-lbl">Answer &mdash; Diamond Problem</span>
+    <strong>Root cause:</strong> Without <code>virtual</code> inheritance, <code>TA</code> contains two separate <code>Person</code> subobjects &mdash; one from <code>Student</code>'s path and one from <code>Teacher</code>'s path. <code>ta.name</code> is ambiguous: the compiler can't decide which copy to use.<br><br>
+    <strong>Fix &mdash; add <code>virtual</code> to both intermediate classes:</strong>
+    <pre>class Student : virtual public Person {
+public:
+    Student(string n) : Person(n) {}
+};
+class Teacher : virtual public Person {
+public:
+    Teacher(string n) : Person(n) {}
+};
+// TA must now initialize Person directly (most-derived rule):
+class TA : public Student, public Teacher {
+public:
+    TA(string n) : Person(n), Student(n), Teacher(n) {}
+};</pre>
+    With <code>virtual</code> inheritance there is exactly <strong>one</strong> shared <code>Person</code> subobject. <code>ta.name</code> is now unambiguous. The most-derived class (<code>TA</code>) is always responsible for constructing the virtual base &mdash; <code>Student</code> and <code>Teacher</code>'s calls to <code>Person(n)</code> are ignored.
+  </div></div>
+
+</div><!-- /s3 -->
+
+<!-- Summary -->
+<div class="summary" id="summary">
+  <h2>Session Score</h2>
+  <div class="summary-big" id="sumScore">0</div>
+  <div class="summary-sub">out of <strong>52</strong> points</div>
+  <div class="breakdown">
+    <div class="bd-item"><div class="bd-lbl">MC (Q1&ndash;13)</div><div class="bd-val" id="bd-mc" style="color:var(--calc);">0/26</div></div>
+    <div class="bd-item"><div class="bd-lbl">Complete (Q14&ndash;17)</div><div class="bd-val" id="bd-co" style="color:var(--cpp);">0/14</div></div>
+    <div class="bd-item"><div class="bd-lbl">Fix Bug (Q18&ndash;20)</div><div class="bd-val" id="bd-fx" style="color:var(--la);">0/12</div></div>
+  </div>
+  <div class="summary-msg" id="sumMsg"></div>
+  <button class="btn-primary" onclick="calcSummary()">&#128260; Update Summary</button>
+</div>
+
+</div><!-- /content -->
+
+<script>
+const S={scores:{},answered:0};
+const MAX=52;
+const SEC={q1:'mc',q2:'mc',q3:'mc',q4:'mc',q5:'mc',q6:'mc',q7:'mc',q8:'mc',q9:'mc',q10:'mc',q11:'mc',q12:'mc',q13:'mc',q14:'co',q15:'co',q16:'co',q17:'co',q18:'fx',q19:'fx',q20:'fx'};
+document.querySelectorAll('.mc-opts').forEach(opts=>{
+  const {correct,qid,pts}=opts.dataset;
+  opts.querySelectorAll('.mc-opt').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      if(opts.classList.contains('done'))return;
+      opts.classList.add('done');
+      const ok=opt.dataset.val===correct;
+      opts.querySelectorAll('.mc-opt').forEach(o=>{o.classList.add('locked');if(o.dataset.val===correct)o.classList.add('correct');});
+      if(!ok)opt.classList.add('wrong');
+      const fb=document.getElementById('fb-'+qid);
+      fb.classList.add('show');
+      if(ok){fb.classList.add('fb-ok');fb.innerHTML='&#10003; Correct! +'+pts+' pts';addScore(qid,parseInt(pts),parseInt(pts));}
+      else{fb.classList.add('fb-bad');fb.innerHTML='&#10007; Incorrect. Correct: <strong>'+correct+'</strong>';addScore(qid,0,parseInt(pts));}
+    });
+  });
+});
+function toggleAns(id,btn){
+  const el=document.getElementById(id);el.classList.toggle('open');btn.classList.toggle('open');
+  btn.textContent=el.classList.contains('open')?'\uD83D\uDE48 Hide':'&#128065; Show Answer';
+}
+function grade(qid,earned,max,btn){
+  addScore(qid,earned,max);
+  btn.closest('.qcard').querySelectorAll('.btn-grade').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+function addScore(qid,earned,max){
+  const isNew=!(qid in S.scores);
+  S.scores[qid]={earned,max,sec:SEC[qid]};
+  if(isNew)S.answered++;
+  const total=Object.values(S.scores).reduce((a,s)=>a+s.earned,0);
+  const el=document.getElementById('liveScore');
+  el.textContent=total;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');
+  document.getElementById('scoreFill').style.width=Math.round(total/MAX*100)+'%';
+  document.getElementById('scoreLabel').textContent=S.answered+' / 20 answered';
+}
+function calcSummary(){
+  let t={mc:0,co:0,fx:0},grand=0;
+  Object.values(S.scores).forEach(s=>{t[s.sec]=(t[s.sec]||0)+s.earned;grand+=s.earned;});
+  document.getElementById('sumScore').textContent=grand;
+  document.getElementById('bd-mc').textContent=(t.mc||0)+'/26';
+  document.getElementById('bd-co').textContent=(t.co||0)+'/14';
+  document.getElementById('bd-fx').textContent=(t.fx||0)+'/12';
+  const pct=Math.round(grand/MAX*100);
+  const msgs=[[90,'&#127942; Excellent &mdash; polymorphism mastered.'],[75,'&#10003; Strong. Review the ones you missed.'],[60,'&#128218; Decent. Re-read virtual destructor and slicing.'],[0,'&#128260; Keep at it &mdash; re-read Ch.11 and retry.']];
+  document.getElementById('sumMsg').innerHTML=msgs.find(([t])=>pct>=t)[1];
+  document.getElementById('summary').scrollIntoView({behavior:'smooth'});
+}
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

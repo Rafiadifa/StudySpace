@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Lin Alg · Full Mock Exam (3 hr) · 21 Jun</title>
+<link href="../../../style.css" rel="stylesheet"/>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  .exam-rules { background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--la); border-radius:0 12px 12px 0; padding:18px 22px; margin-bottom:28px; font-size:0.9rem; line-height:1.6; color:var(--text2); }
+  .exam-rules strong { color:var(--text); }
+  .pchain { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--la); margin-top:6px; }
+  .part-pts { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--text3); }
+</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+<div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+<header class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ lin-alg / full mock exam</span><span class="topbar-date">SUN · 21 JUN 2026</span></header>
+<section class="hero">
+  <h1>Full Mock <em>Exam · 3 Hours</em></h1>
+  <p class="hero-meta">P1 · Final simulation at past-paper difficulty. Six connected multi-part problems (Ch. 5–8), each chaining concepts the way the real final does — parametrized matrices, Cayley–Hamilton, spectral + polynomial algebra, SVD geometry, block matrices, and abstract linear maps. One A4 cheat sheet allowed. Countdown turns amber at 15 min left.</p>
+  <div class="exam-pills"><span class="pill pill-la">Lin Alg</span><span class="pill pill-la">180 min</span><span class="pill pill-la">6 problems · 62 pts</span><span class="pill pill-la">Final · 25 June 2026</span></div>
+</section>
+<main class="main"><div class="subject-block">
+  <div class="subject-header"><span class="subject-dot dot-la"></span><div><div class="subject-label">Mock Exam · 180 min · 6 connected problems</div><h2 class="subject-title" style="color:var(--la)">Cumulative Final Simulation</h2></div><div class="subject-exam-date"><strong>Lin Alg Final</strong>25 June 2026</div></div>
+
+  <div class="exam-rules"><strong>Exam conditions.</strong> 3 hours, 62 points. <strong>Always explain your answer.</strong> Partial credit given. Bring your A4 cheat sheet (build it first!). Work each chain fully before revealing — later parts lean on earlier ones.</div>
+
+  <!-- P1 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 1</span><span class="problem-topic">Basics</span><span class="problem-pts">6 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Warm-ups connecting eigenvalues, determinants, and dependence.<div class="pchain">chains: eigenvalues ↔ det/trace · determinant rules · linear dependence</div></div>
+      <ol class="parts">
+        <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">A \(3\times3\) real \(A\) has eigenvalues \(-1,1,2\). Find \(\det A\) and \(\operatorname{tr}(A^2)\). <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\det A=(-1)(1)(2)=-2\). \(A^2\) has eigenvalues \(1,1,4\), so \(\operatorname{tr}(A^2)=6\). <div class="key-result">\(\det A=-2,\ \operatorname{tr}(A^2)=6\).</div></div></div></div></div></li>
+        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">\(B\) is \(3\times3\) with \(\det B=4\). Find \(\det(2B^{-1})\). <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\det(2B^{-1})=2^3\det(B^{-1})=8\cdot\tfrac14=2\). <div class="key-result">\(2\).</div></div></div></div></div></li>
+        <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Find \(k\) making \(u=(1,0,1),v=(1,1,0),w=(0,k,1)\) linearly dependent. <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\det\begin{pmatrix}1&1&0\\0&1&k\\1&0&1\end{pmatrix}=1(1-0)-1(0-k)+0=1+k\). Dependent iff \(=0\Rightarrow k=-1\). <div class="key-result">\(k=-1\).</div></div></div></div></div></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- P2 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">The variable-parameter matrix</span><span class="problem-pts">10 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Let \(C_x=\begin{pmatrix}1&1&0&1\\0&2&0&0\\0&1&1&x\\1&1&-x&1\end{pmatrix}\) depend on a real \(x\).<div class="pchain">chains: determinant structure · characteristic polynomial · complex eigenvector · Cayley–Hamilton</div></div>
+      <ol class="parts">
+        <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Without full expansion, find the coefficient of \(x^2\) in \(\det(C_x)\). <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> The only \(x\)'s sit in positions \((3,4)=x\) and \((4,3)=-x\). A term reaching \(x^2\) must use both; the complementary \(2\times2\) minor from rows \(1,2\)/cols \(1,2\) is \(\det\begin{pmatrix}1&1\\0&2\end{pmatrix}=2\), and the two entries contribute \((x)(-x)\) with the appropriate sign giving \(+2x^2\). <div class="key-result">Coefficient of \(x^2\) is \(2\).</div></div></div></div></div></li>
+        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Show the characteristic polynomial is \(p(\lambda)=(\lambda-2)(\lambda-1)(\lambda^2-2\lambda+x^2)\). For which \(x\) is \(C_x\) singular? <span class="part-pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Cofactor-expand \(\det(\lambda I-C_x)\); the second row/column structure peels off factors \((\lambda-2)\) and \((\lambda-1)\), leaving the \(2\times2\) block on the \((1,4)\) coordinates giving \(\lambda^2-2\lambda+x^2\). Singular ⇔ \(0\) is an eigenvalue ⇔ \(p(0)=(-2)(-1)(x^2)=2x^2=0\Rightarrow x=0\). <div class="key-result">\(C_x\) singular iff \(x=0\).</div></div></div></div></div></li>
+        <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">For \(x=2\), find all four eigenvalues and a complex eigenvector for the one with positive imaginary part. <span class="part-pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Eigenvalues \(2,1\) and roots of \(\lambda^2-2\lambda+4=0\Rightarrow\lambda=1\pm i\sqrt3\). For \(\lambda=1+i\sqrt3\), solve \((C_2-\lambda I)\mathbf v=0\); a valid eigenvector is \(\mathbf v=(1,\,0,\,i\sqrt3,\,1)^{\!T}\) type — explicitly any nonzero solution of the reduced system (e.g. \(\mathbf v=( -1,\,0,\,1,\,\tfrac{1-i\sqrt3}{2})^T\) after row-reduction). <div class="key-result">\(\lambda\in\{2,1,1\pm i\sqrt3\}\).</div><div class="ans-note">Full credit: any nonzero \(\mathbf v\) with \((C_2-(1+i\sqrt3)I)\mathbf v=0\), shown by back-substitution.</div></div></div></div></div></li>
+        <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Let \(M=(2I-C_x)(I-C_x)\), \(N=C_x^2-2C_x+x^2I\). Compute \(MN\) <em>without</em> multiplying entrywise. <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(M=(2I-C_x)(I-C_x)=(C_x-2I)(C_x-I)\) and \(N=C_x^2-2C_x+x^2I\). So \(MN=(C_x-2I)(C_x-I)(C_x^2-2C_x+x^2I)=p(C_x)\). By Cayley–Hamilton \(p(C_x)=0\). <div class="key-result">\(MN=\mathbf 0\).</div></div></div></div></div></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- P3 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 3</span><span class="problem-topic">Symmetric structure &amp; polynomials of A</span><span class="problem-pts">11 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Let \(A=\begin{pmatrix}2&0&1\\0&c&0\\1&0&2\end{pmatrix}\) with real parameter \(c\).<div class="pchain">chains: spectral decomposition · definiteness · the algebra \(\{p(A)\}\) · inverse as a polynomial</div></div>
+      <ol class="parts">
+        <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">For generic \(c\), find \(Q\) orthogonal and \(\Lambda\) diagonal with \(A=Q\Lambda Q^T\). <span class="part-pts">4 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> The \((1,3)\) block \(\begin{pmatrix}2&1\\1&2\end{pmatrix}\) gives \(3\) with \((1,0,1)\) and \(1\) with \((1,0,-1)\); the middle gives \(c\) with \((0,1,0)\). Normalise: \[Q=\begin{pmatrix}\tfrac1{\sqrt2}&0&\tfrac1{\sqrt2}\\0&1&0\\\tfrac1{\sqrt2}&0&-\tfrac1{\sqrt2}\end{pmatrix},\ \Lambda=\operatorname{diag}(3,c,1).\] <div class="key-result">\(A=Q\Lambda Q^T\) as above.</div></div></div></div></div></li>
+        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">For which \(c\) is \(A\) indefinite? <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Eigenvalues \(3,1,c\). Two are positive, so \(A\) is indefinite iff the third is negative: \(c<0\). <div class="key-result">Indefinite iff \(c<0\).</div></div></div></div></div></li>
+        <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Let \(c=3\). Find a basis for \(V=\{p(A):p\text{ a polynomial}\}\) and prove it. <span class="part-pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> With \(c=3\), \(A\) has just two distinct eigenvalues \(\{3,1\}\), so its minimal polynomial \((\lambda-3)(\lambda-1)\) has degree \(2\). Every \(p(A)\) reduces mod the minimal polynomial to \(\alpha I+\beta A\). <em>Spanning:</em> by that reduction. <em>Independence:</em> \(\alpha I+\beta A=0\) forces \(\alpha+3\beta=0\) and \(\alpha+\beta=0\) (eigenvalue equations) \(\Rightarrow\alpha=\beta=0\). <div class="key-result">Basis \(\{I,A\}\), \(\dim V=2\).</div></div></div></div></div></li>
+        <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">For \(c=3\), find a degree-1 \(p\) with \((A+I)^{-1}=p(A)\). <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Want \(p(\lambda)=\alpha\lambda+\beta\) with \(p(\lambda)=\tfrac{1}{\lambda+1}\) at the eigenvalues \(3,1\): \(p(3)=\tfrac14,\ p(1)=\tfrac12\). Solve \(3\alpha+\beta=\tfrac14,\ \alpha+\beta=\tfrac12\Rightarrow\alpha=-\tfrac18,\ \beta=\tfrac58\). So \((A+I)^{-1}=\tfrac{5I-A}{8}\). <div class="key-result">\(p(x)=\tfrac{5-x}{8}\), i.e. \((A+I)^{-1}=\tfrac18(5I-A)\).</div></div></div></div></div></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- P4 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 4</span><span class="problem-topic">Signal recovery: SVD, QR, least squares</span><span class="problem-pts">14 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Recover \(\mathbf x\in\mathbb R^2\) from \(\mathbf b\in\mathbb R^3\) via \(A\mathbf x=\mathbf b\), \(A=\begin{pmatrix}1&1\\1&0\\1&-1\end{pmatrix},\ \mathbf b=\begin{pmatrix}3\\2\\t\end{pmatrix}.\) The columns of \(A\) happen to be orthogonal.<div class="pchain">chains: singular values · range/QR · projection · least squares · SVD ellipse geometry</div></div>
+      <ol class="parts">
+        <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Find the singular values of \(A\). <span class="part-pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(A^TA=\begin{pmatrix}3&0\\0&2\end{pmatrix}\) (columns orthogonal, norms \(\sqrt3,\sqrt2\)). Eigenvalues \(3,2\Rightarrow\sigma_1=\sqrt3,\ \sigma_2=\sqrt2\). <div class="key-result">\(\sigma=\sqrt3,\ \sqrt2\).</div></div></div></div></div></li>
+        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">When is \(\mathbf b\in\operatorname{Ran}(A)\)? Give a QR decomposition of \(A\). <span class="part-pts">4 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\operatorname{Ran}(A)\) is the plane spanned by the columns; its normal is \(a_1\times a_2=(1,1,1)\times(1,0,-1)=(-1,2,-1)\). \(\mathbf b\in\operatorname{Ran}(A)\) iff \((-1,2,-1)\cdot(3,2,t)=1-t=0\), i.e. \(t=1\). Since the columns are already orthogonal, \(A=QR\) with \[Q=\Big[\tfrac{1}{\sqrt3}(1,1,1)^T,\ \tfrac1{\sqrt2}(1,0,-1)^T\Big],\quad R=\begin{pmatrix}\sqrt3&0\\0&\sqrt2\end{pmatrix}.\] <div class="key-result">\(\mathbf b\in\operatorname{Ran}(A)\) iff \(t=1\); \(R=\operatorname{diag}(\sqrt3,\sqrt2)\).</div></div></div></div></div></li>
+        <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Find the orthogonal projection matrix \(P\) onto \(\operatorname{Ran}(A)\). <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(P=QQ^T=\tfrac13(1,1,1)^T(1,1,1)+\tfrac12(1,0,-1)^T(1,0,-1)=\begin{pmatrix}5/6&1/3&-1/6\\1/3&1/3&1/3\\-1/6&1/3&5/6\end{pmatrix}\). <div class="key-result">\(P=QQ^T\) (above). \(I-P\) projects onto the noise direction \((-1,2,-1)\).</div></div></div></div></div></li>
+        <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Find the least-squares solution \(\hat{\mathbf x}\) minimising \(\lVert A\mathbf x-\mathbf b\rVert^2\). <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Normal equations \(A^TA\hat{\mathbf x}=A^T\mathbf b\): \(A^T\mathbf b=(3+2+t,\ 3-t)=(5+t,\ 3-t)\). With \(A^TA=\operatorname{diag}(3,2)\): \(\hat{\mathbf x}=\big(\tfrac{5+t}{3},\ \tfrac{3-t}{2}\big)\). <div class="key-result">\(\hat{\mathbf x}=\big(\tfrac{5+t}{3},\tfrac{3-t}{2}\big)\).</div></div></div></div></div></li>
+        <li><span class="part-label">(e)</span><div class="part-content"><div class="part-question">(Hard) \(B=\begin{pmatrix}2&2\\1&0\\0&1\end{pmatrix}\). The image \(B(S)\) of the unit circle \(S\subset\mathbb R^2\) is an ellipse in \(\mathbb R^3\). Find the half-axis lengths and their direction vectors. <span class="part-pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Axis lengths = singular values of \(B\). \(B^TB=\begin{pmatrix}5&4\\4&5\end{pmatrix}\), eigenvalues \(9,1\Rightarrow\sigma=3,1\). Right singular vectors \(v_1=\tfrac1{\sqrt2}(1,1),\ v_2=\tfrac1{\sqrt2}(1,-1)\); directions in \(\mathbb R^3\) are \(u_i=\tfrac1{\sigma_i}Bv_i\): \(u_1=\tfrac{1}{3\sqrt2}(4,1,1)\), \(u_2=\tfrac1{\sqrt2}(0,1,-1)\). <div class="key-result">Long axis \(3\) along \((4,1,1)\); short axis \(1\) along \((0,1,-1)\).</div></div></div></div></div></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- P5 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 5</span><span class="problem-topic">A block matrix from polynomials of A</span><span class="problem-pts">12 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Let \(A\) be \(2\times2\) and \(K=\begin{pmatrix}A&A+I\\A+I&A+2I\end{pmatrix}\) (a \(4\times4\) block matrix).<div class="pchain">chains: block elimination (det) · block inverse · eigenvector structure · eigenvalues · definiteness</div></div>
+      <ol class="parts">
+        <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Compute \(\det K\) by block Gaussian elimination. <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Block \(R_2\to R_2-R_1\): \(\begin{pmatrix}A&A+I\\I&I\end{pmatrix}\). Block \(C_1\to C_1-C_2\): \(\begin{pmatrix}-I&A+I\\0&I\end{pmatrix}\), block upper-triangular. \(\det K=\det(-I)\det(I)=(-1)^2\cdot1=1\). <div class="key-result">\(\det K=1\) (for every \(A\)).</div></div></div></div></div></li>
+        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Find \(K^{-1}\) in block form in terms of \(A,I\). <span class="part-pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Solve \(K\binom{x}{y}=\binom{e}{f}\). Row\(_2-\)Row\(_1\): \(x+y=f-e\). Row\(_1\): \(A(x+y)+y=e\Rightarrow y=e-A(f-e)=(I+A)e-Af\), then \(x=(f-e)-y=-(2I+A)e+(I+A)f\). Hence \[K^{-1}=\begin{pmatrix}-(A+2I)&A+I\\A+I&-A\end{pmatrix}.\] <div class="key-result">\(K^{-1}=\begin{pmatrix}-(A+2I)&A+I\\A+I&-A\end{pmatrix}\).</div></div></div></div></div></li>
+        <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Let \(A\mathbf v=\lambda\mathbf v\) (\(\lambda\neq-1\)). Find all \(\alpha\) so that \(\mathbf w=\binom{\mathbf v}{\alpha\mathbf v}\) is an eigenvector of \(K\). <span class="part-pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(K\mathbf w=\binom{(\lambda+\alpha(\lambda+1))\mathbf v}{((\lambda+1)+\alpha(\lambda+2))\mathbf v}\). Eigenvector ⇒ second block \(=\alpha\cdot\)first: \((\lambda+1)+\alpha(\lambda+2)=\alpha(\lambda+\alpha(\lambda+1))\), giving \((\lambda+1)(1-\alpha^2)+2\alpha=0\), i.e. \((\lambda+1)\alpha^2-2\alpha-(\lambda+1)=0\). \[\alpha=\frac{1\pm\sqrt{1+(\lambda+1)^2}}{\lambda+1}.\] <div class="key-result">Two values \(\alpha=\dfrac{1\pm\sqrt{1+(\lambda+1)^2}}{\lambda+1}\); note \(\alpha_1\alpha_2=-1\).</div></div></div></div></div></li>
+        <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Let \(A=\begin{pmatrix}1&1\\0&0\end{pmatrix}\). Find all four eigenvalues of \(K\). <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(A\) has eigenvalues \(\lambda=1,0\). Each gives \(\mu=\lambda+\alpha(\lambda+1)\). For \(\lambda=1\): \(\alpha=\tfrac{1\pm\sqrt5}{2}\Rightarrow\mu=1+2\alpha=2\pm\sqrt5\). For \(\lambda=0\): \(\alpha=1\pm\sqrt2\Rightarrow\mu=\alpha=1\pm\sqrt2\). <div class="key-result">\(\{2+\sqrt5,\,2-\sqrt5,\,1+\sqrt2,\,1-\sqrt2\}\) (product \(=1=\det K\) ✓).</div></div></div></div></div></li>
+        <li><span class="part-label">(e)</span><div class="part-content"><div class="part-question">For which \(A\) is \(K\) positive definite? <span class="part-pts">2 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> From (c), for each eigenvalue \(\lambda\) of (symmetric) \(A\) the two eigenvalues of \(K\) satisfy \(\mu_1\mu_2=-1\) — one positive, one negative. So \(K\) always has a negative eigenvalue. <div class="key-result">\(K\) is positive definite for <strong>no</strong> \(A\) — the \(\mu_1\mu_2=-1\) pairing forbids it.</div></div></div></div></div></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- P6 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 6</span><span class="problem-topic">A linear map on trace-zero matrices</span><span class="problem-pts">9 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">\(V=\{2\times2\) real \(X:\operatorname{tr}X=0\}\), \(L(X)=JX-XJ\) with \(J=\begin{pmatrix}0&1\\0&0\end{pmatrix}\). Basis \(\mathcal B=(E,H,F)\): \(E=\begin{pmatrix}0&1\\0&0\end{pmatrix},H=\begin{pmatrix}1&0\\0&-1\end{pmatrix},F=\begin{pmatrix}0&0\\1&0\end{pmatrix}\).<div class="pchain">chains: matrix of a linear map · eigenvalues/multiplicity/diagonalizability · change of basis</div></div>
+      <ol class="parts">
+        <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Find \([L]_{\mathcal B}\). <span class="part-pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(L(E)=JE-EJ=0\). \(L(H)=JH-HJ=\begin{pmatrix}0&-2\\0&0\end{pmatrix}=-2E\). \(L(F)=JF-FJ=\begin{pmatrix}1&0\\0&-1\end{pmatrix}=H\). Columns in \(\mathcal B\): \[[L]_{\mathcal B}=\begin{pmatrix}0&-2&0\\0&0&1\\0&0&0\end{pmatrix}.\] <div class="key-result">Strictly upper-triangular as above.</div></div></div></div></div></li>
+        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Eigenvalues with algebraic &amp; geometric multiplicities. Is \(L\) diagonalizable? <span class="part-pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Strictly upper-triangular ⇒ only eigenvalue \(0\), algebraic multiplicity \(3\). Geometric multiplicity \(=3-\operatorname{rank}=3-2=1\). Since \(1<3\), <strong>not diagonalizable</strong> (\(L\) is nilpotent — a single Jordan block). <div class="key-result">\(\lambda=0\): alg \(3\), geom \(1\); not diagonalizable.</div></div></div></div></div></li>
+        <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">\(\mathcal C=(E',H',F')\), \(E'=E,H'=E+H,F'=E+H+F\). Find \(P_{\mathcal B\leftarrow\mathcal C}\) and \([L]_{\mathcal C}\). <span class="part-pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Columns are \(\mathcal C\)-vectors in \(\mathcal B\): \(P_{\mathcal B\leftarrow\mathcal C}=\begin{pmatrix}1&1&1\\0&1&1\\0&0&1\end{pmatrix}\), \(P^{-1}=\begin{pmatrix}1&-1&0\\0&1&-1\\0&0&1\end{pmatrix}\). Then \([L]_{\mathcal C}=P^{-1}[L]_{\mathcal B}P=\begin{pmatrix}0&-2&-3\\0&0&1\\0&0&0\end{pmatrix}\). <div class="key-result">\([L]_{\mathcal C}=\begin{pmatrix}0&-2&-3\\0&0&1\\0&0&0\end{pmatrix}\) (still nilpotent — similarity preserves it).</div></div></div></div></div></li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+<div class="footer-note">Lin Alg · Full Mock Exam · 3 hours · 6 connected problems · Sunday 21 June 2026 · Exam conditions ✦</div>
+</main>
+<div class="timer-chip" id="timerChip"><span class="timer-label">remaining</span><span class="timer-display" id="timerDisplay">180:00</span></div>
+<script>
+  function toggleAns(btn){const a=btn.nextElementSibling;a.classList.toggle('open');btn.textContent=a.classList.contains('open')?'Hide Answer':'Show Answer';}
+  window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+  const SESSION=180*60,start=Date.now(),pad=n=>String(n).padStart(2,'0');
+  setInterval(()=>{const el=Math.floor((Date.now()-start)/1000);const L=Math.max(0,SESSION-el);document.getElementById('timerDisplay').textContent=pad(Math.floor(L/60))+':'+pad(L%60);const c=document.getElementById('timerChip');c.classList.remove('warn','urgent');if(L===0)c.classList.add('urgent');else if(L<=15*60)c.classList.add('warn');},1000);
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

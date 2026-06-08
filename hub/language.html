@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Language · Study Hub</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    body.subject-lang{ --accent:#c0392b; --accent-08:rgba(192,57,43,.07); }
+    .lang-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:8px; }
+    .lang-card{ display:block; text-decoration:none; background:var(--bg2); border:1px solid var(--border);
+      border-left:3px solid #c0392b; border-radius:14px; padding:28px 26px; transition:.18s; position:relative; }
+    .lang-card:hover{ transform:translateY(-4px); background:var(--bg3); }
+    .lang-card.soon{ opacity:.5; pointer-events:none; border-left-color:var(--text3); }
+    .lc-char{ font-family:'Noto Serif SC','DM Serif Display',serif; font-size:2.6rem; color:#c0392b; line-height:1; }
+    .lang-card.soon .lc-char{ color:var(--text3); }
+    .lc-name{ font-family:'DM Serif Display',serif; font-size:1.5rem; margin-top:12px; color:var(--text); }
+    .lc-sub{ font-size:0.84rem; color:var(--text3); margin-top:6px; line-height:1.5; }
+    .lc-stat{ font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--text2); margin-top:16px; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600&display=swap" rel="stylesheet">
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs" style="font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--text3); padding:14px 48px 0;">
+    <a href="../index.html" style="color:var(--text3); text-decoration:none; border-bottom:1px solid var(--border);">← All domains</a>
+    <span style="margin:0 6px;">/</span> Language
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">Study Hub</span>
+    <span class="topbar-sub">/ Language</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="hero">
+    <h1>Language <em>library</em></h1>
+    <p class="hero-meta">Each language gets its own space — vocabulary, flashcards with spaced repetition, grammar, and exam-style practice.</p>
+  </div>
+
+  <div class="main" style="padding-top:48px;">
+    <div class="lang-grid">
+      <a href="../content/language/chinese/index.html" class="lang-card">
+        <div class="lc-char">汉</div>
+        <div class="lc-name">Chinese · 中文</div>
+        <div class="lc-sub">Pre-intermediate · Zijing College 2026 Spring</div>
+        <div class="lc-stat">Lessons 11–16 · 144 words · 19 grammar points</div>
+      </a>
+      <a href="#" class="lang-card soon">
+        <div class="lc-char">A</div>
+        <div class="lc-name">Add a language</div>
+        <div class="lc-sub">Duplicate the Chinese folder and swap in new data to start another.</div>
+        <div class="lc-stat">Coming soon</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-note">RAFI ADIFA MAULANA · STUDY HUB · 2026</div>
+
+  <script>
+    const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],D=['SUN','MON','TUE','WED','THU','FRI','SAT'],d=new Date();
+    document.getElementById('topbar-date').textContent=`${D[d.getDay()]} · ${d.getDate()} ${M[d.getMonth()].toUpperCase()} ${d.getFullYear()}`;
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

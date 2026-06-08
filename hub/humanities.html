@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Humanities · Study Hub</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    body.subject-mgmt { --accent: var(--mgmt); }
+    .hum-hero h1 em { color: var(--mgmt); }
+    .subject-card {
+      background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--mgmt);
+      border-radius: 16px; padding: 30px 32px; margin-bottom: 28px;
+    }
+    .subject-card-head { display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap; }
+    .subject-card-eyebrow { font-family:'DM Mono',monospace; font-size:0.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--text3); }
+    .subject-card-title { font-family:'DM Serif Display',serif; font-size:1.9rem; letter-spacing:-.02em; color:var(--mgmt); margin-top:4px; }
+    .subject-card-meta { font-size:0.88rem; color:var(--text2); font-weight:300; margin-top:8px; max-width:560px; line-height:1.6; }
+    .exam-flag { margin-left:auto; font-family:'DM Mono',monospace; font-size:0.7rem; color:#b45309; background:rgba(180,83,9,.08); border:1px solid rgba(180,83,9,.25); border-radius:99px; padding:6px 14px; white-space:nowrap; }
+
+    .sec-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:26px; }
+    .sec-card { display:block; text-decoration:none; background:var(--bg); border:1px solid var(--border); border-radius:13px; padding:22px 22px 20px; transition:.16s; position:relative; }
+    .sec-card:hover { transform:translateY(-3px); border-color:var(--mgmt); background:var(--bg2); }
+    .sec-icon { font-size:1.3rem; }
+    .sec-name { font-family:'DM Sans',sans-serif; font-weight:600; font-size:1.02rem; color:var(--text); margin-top:12px; }
+    .sec-desc { font-size:0.82rem; color:var(--text2); font-weight:300; line-height:1.55; margin-top:6px; }
+    .sec-go { font-family:'DM Mono',monospace; font-size:0.66rem; color:var(--text3); margin-top:14px; display:inline-block; }
+    .sec-card:hover .sec-go { color:var(--mgmt); }
+    .sec-card.featured { border-color:var(--mgmt); background:color-mix(in oklab,var(--mgmt) 5%,transparent); }
+    .sec-badge { position:absolute; top:16px; right:16px; font-family:'DM Mono',monospace; font-size:0.56rem; letter-spacing:.06em; padding:3px 8px; border-radius:99px; background:var(--mgmt); color:#fff; }
+    @supports not (background:color-mix(in oklab,red 50%,blue)){ .sec-card.featured{ background:var(--bg2);} }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-mgmt">
+
+  <div class="topbar">
+    <span class="topbar-title">Study Hub</span>
+    <span class="topbar-sub">/ Rafi Adifa Maulana</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="hero hum-hero">
+    <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text3);margin-bottom:16px;">
+      <a href="../index.html" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">← All domains</a>
+      <span style="margin:0 6px;">/</span> Humanities
+    </div>
+    <h1>Read, frame, <em>apply</em></h1>
+    <p class="hero-meta">Humanities reward understanding and application, not drilling. Each subject here is built around a concept library, worked case applications, written-answer practice, and your own session notes.</p>
+  </div>
+
+  <div class="main" style="padding-top:44px;">
+
+    <!-- ═══ General Management ═══ -->
+    <div class="subject-card">
+      <div class="subject-card-head">
+        <div>
+          <div class="subject-card-eyebrow">Subject 01 · Organizational Behavior</div>
+          <div class="subject-card-title">General Management</div>
+          <div class="subject-card-meta">Dr. Liuxin Yan · Fundamentals of Management. Open-book, short-answer final on the course's theories — decision biases, group dynamics, culture, motivation, conflict, leadership, and change.</div>
+        </div>
+        <span class="exam-flag">Final · 2-hr · open book</span>
+      </div>
+
+      <div class="sec-grid">
+        <a href="../content/humanities/management/mock.html" class="sec-card featured">
+          <span class="sec-badge">START HERE</span>
+          <div class="sec-icon">📝</div>
+          <div class="sec-name">Mock Exam</div>
+          <div class="sec-desc">Full 2-hour written simulation. Type your answers in the box, reveal key points to self-check, then export everything for AI analysis.</div>
+          <span class="sec-go">Begin exam →</span>
+        </a>
+
+        <a href="../content/humanities/management/concepts.html" class="sec-card">
+          <div class="sec-icon">📚</div>
+          <div class="sec-name">Concept Library</div>
+          <div class="sec-desc">Every key framework and theory from class, with a crisp definition and what it's for. Searchable, grouped by session.</div>
+          <span class="sec-go">Browse concepts →</span>
+        </a>
+
+        <a href="../content/humanities/management/cases.html" class="sec-card">
+          <div class="sec-icon">🔍</div>
+          <div class="sec-name">Case Applications</div>
+          <div class="sec-desc">The recurring exam cases — Challenger &amp; Groupthink, Blockbuster vs Netflix, Zimbardo, Asch — and which framework cracks each.</div>
+          <span class="sec-go">Study cases →</span>
+        </a>
+
+        <a href="../content/humanities/management/notes.html" class="sec-card">
+          <div class="sec-icon">🗒️</div>
+          <div class="sec-name">Session Notes</div>
+          <div class="sec-desc">One-screen summaries of Sessions 1–14, with links to the original slides for a deeper read.</div>
+          <span class="sec-go">Open notes →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ═══ Add more ═══ -->
+    <div class="subject-card" style="border-left-color:var(--border); opacity:.6;">
+      <div class="subject-card-head">
+        <div>
+          <div class="subject-card-eyebrow">Subject 02</div>
+          <div class="subject-card-title" style="color:var(--text3);">+ Add a subject</div>
+          <div class="subject-card-meta">History, philosophy, design thinking, writing — any reading-heavy course can slot in here with the same concept/case/mock structure.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-note">RAFI ADIFA MAULANA · STUDY HUB · 2026</div>
+
+  <script>
+    const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const D=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const d=new Date();
+    document.getElementById('topbar-date').textContent =
+      `${D[d.getDay()]} · ${d.getDate()} ${M[d.getMonth()].toUpperCase()} ${d.getFullYear()}`;
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

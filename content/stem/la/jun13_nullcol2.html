@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lin Alg · Null &amp; Column Space II</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    .recall-box { background:rgba(190,24,93,0.07); border:1px solid rgba(190,24,93,0.3); border-left:3px solid var(--la); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+    .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--la); margin-bottom:10px; }
+    .checklist { list-style:none; margin:6px 0 0; padding:0; }
+    .checklist li { padding:9px 0 9px 30px; position:relative; border-bottom:1px solid var(--border); font-size:0.95rem; line-height:1.55; }
+    .checklist li:last-child { border-bottom:none; }
+    .checklist li::before { content:'☐'; position:absolute; left:0; color:var(--la); font-size:1.05rem; }
+    .fcard { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+    .fcard h4 { color:var(--la); font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:6px; }
+  </style>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ lin-alg / null & column space</span><span class="topbar-date">SAT · 13 JUN 2026</span></div>
+  <div class="hero">
+    <h1>Null &amp; <em>Column Space II</em></h1>
+    <p class="hero-meta">P4 · 15:20–16:55 · 95 min · more practice</p>
+    <div class="exam-pills"><span class="pill pill-la">Lin Alg</span><span class="pill pill-la">Final · 25 June 2026</span></div>
+  </div>
+  <div class="main"><div class="subject-block">
+    <div class="subject-header"><div class="subject-dot dot-la"></div><div><div class="subject-label">Daily Practice · 95 min</div><div class="subject-title" style="color:var(--la)">Null &amp; Column Space</div></div><div class="subject-exam-date"><strong>Lin Alg Final</strong>25 June 2026</div></div>
+<div class="formula-ref"><strong>Quick reference.</strong> Row-reduce \(A\). <strong>Column space</strong> basis = original columns at pivot positions; \(\dim=\)rank. <strong>Null space</strong> = solutions of \(Ax=0\); basis from free variables; \(\dim=n-\)rank. (Rank–Nullity.)</div><div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">Subspace → basis → rank-nullity → coordinates</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Let \(A=\begin{pmatrix}1&2&3\\2&4&8\end{pmatrix}\).<div class="conn-chain">chains: column/null space · basis · rank–nullity · coordinates</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Row-reduce and give bases for \(\operatorname{Col}(A)\) and \(\operatorname{Nul}(A)\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>RREF \(\to\begin{pmatrix}1&2&0\\0&0&1\end{pmatrix}\). Pivots in cols 1,3 ⇒ Col basis \(\{(1,2),(3,8)\}\); free \(x_2\): \(\operatorname{Nul}=\operatorname{span}\{(-2,1,0)\}\). <div class="key-result">rank 2, nullity 1.</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Verify rank–nullity.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(2+1=3=\) number of columns ✓. <div class="key-result">\(2+1=3\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Is \(b=(1,2)\) in \(\operatorname{Col}(A)\)? If so, give one solution of \(A\mathbf x=b\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(b=(1,2)\) is the first column, so yes; \(\mathbf x=(1,0,0)\) works. <div class="key-result">\(\mathbf x=(1,0,0)\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem"><div class="problem-header"><span class="problem-num">Problem 1</span><span class="problem-topic">Both spaces</span><span class="problem-pts">12 pts</span></div><div class="problem-body"><div class="context-box">\(A=\begin{pmatrix}1&2&1\\2&4&3\end{pmatrix}\). Bases for Col and Nul.</div><div class="ans-toggle"><button class="ans-btn" data-show="Show Answer" data-hide="Hide Answer" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>RREF: \(R_2-2R_1=(0,0,1)\Rightarrow\begin{pmatrix}1&2&0\\0&0&1\end{pmatrix}\). Pivots in cols 1,3 ⇒ Col basis \(\{(1,2),(1,3)\}\), rank 2. Free var \(x_2\): \(x_1=-2x_2,x_3=0\) ⇒ Nul basis \(\{(-2,1,0)\}\).<div class="key-result">rank 2; Col \(=\{(1,2),(1,3)\}\); Nul \(=\{(-2,1,0)\}\).</div></div></div></div></div></div><div class="problem"><div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">Rank–Nullity check</span><span class="problem-pts">8 pts</span></div><div class="problem-body"><div class="context-box">Verify rank + nullity = number of columns for the matrix above.</div><div class="ans-toggle"><button class="ans-btn" data-show="Show Answer" data-hide="Hide Answer" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>rank 2 + nullity 1 = 3 = number of columns ✓.<div class="key-result">\(2+1=3\) ✓.</div></div></div></div></div></div>
+  </div>
+  <div class="footer-note">Lin Alg · Null &amp; Column Space · Saturday 13 June 2026 · Good luck Rafi ✦</div></div>
+  <div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+  <script>
+    function toggleAns(btn){const a=btn.nextElementSibling;a.classList.toggle('open');const o=a.classList.contains('open');btn.textContent=o?btn.dataset.hide||'Hide Answer':btn.dataset.show||'Show Answer';}
+    window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+    const start=Date.now(),pad=n=>String(n).padStart(2,'0');
+    setInterval(()=>{const e=Math.floor((Date.now()-start)/1000);document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60);},1000);
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

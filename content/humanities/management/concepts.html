@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Concept Library · General Management</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    body.subject-mgmt { --accent: var(--mgmt); }
+    .crumbs { font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--text3); padding:14px 48px 0; }
+    .crumbs a { color:var(--text3); text-decoration:none; border-bottom:1px solid var(--border); }
+    .crumbs span { margin:0 6px; }
+    .tools { padding:14px 48px; border-bottom:1px solid var(--border); background:var(--bg2); position:sticky; top:0; z-index:20; display:flex; flex-direction:column; gap:12px; }
+    .tools-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .search { font-family:'DM Mono',monospace; font-size:0.82rem; padding:9px 14px; border:1px solid var(--border); border-radius:9px; background:var(--bg); color:var(--text); outline:none; width:300px; }
+    .search:focus { border-color:var(--mgmt); }
+    .count { font-family:'DM Mono',monospace; font-size:0.66rem; color:var(--text3); margin-left:auto; }
+    .pill { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:.05em; padding:6px 13px; border-radius:99px; border:1px solid var(--border); background:var(--bg); color:var(--text3); cursor:pointer; transition:.15s; }
+    .pill:hover { color:var(--text); border-color:var(--text3); }
+    .pill.active { background:var(--mgmt); color:#fff; border-color:var(--mgmt); }
+    .lib { max-width:1100px; margin:0 auto; padding:28px 48px 60px; }
+    .grp-label { font-family:'DM Mono',monospace; font-size:0.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--mgmt); margin:26px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+    .c-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
+    .c { background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--mgmt); border-radius:11px; padding:16px 18px; }
+    .c-term { font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.98rem; color:var(--text); }
+    .c-sess { font-family:'DM Mono',monospace; font-size:0.58rem; color:var(--text3); margin-left:6px; }
+    .c-def { font-size:0.85rem; color:var(--text2); line-height:1.55; margin-top:6px; }
+    .c.hide { display:none; }
+    .grp.hide { display:none; }
+    .empty { font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--text3); text-align:center; padding:40px 0; }
+    @media(max-width:640px){ .crumbs,.tools,.lib{ padding-left:18px; padding-right:18px;} .search{width:100%;} }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-mgmt">
+  <div class="crumbs"><a href="../../../index.html">Domains</a><span>/</span><a href="../../../hub/humanities.html">Humanities</a><span>/</span>General Management<span>/</span>Concept Library</div>
+  <div class="topbar"><span class="topbar-title">Concept Library</span><span class="topbar-sub">/ general management</span><span class="topbar-date" id="td"></span></div>
+  <div class="hero" style="padding:36px 48px 24px;">
+    <h1 style="font-size:clamp(1.9rem,4vw,2.8rem);">Every framework, <em style="color:var(--mgmt)">one place</em></h1>
+    <p class="hero-meta">The named theories from class with a crisp definition and what each is for. Search a term or filter by topic. On the exam, <em>name the framework</em> — that's what earns the marks.</p>
+  </div>
+  <div class="tools">
+    <div class="tools-row">
+      <input class="search" id="q" placeholder="Search a concept…" autocomplete="off">
+      <span class="count" id="count"></span>
+    </div>
+    <div class="tools-row" id="pills"></div>
+  </div>
+  <div class="lib" id="lib"></div>
+  <div class="footer-note">RAFI ADIFA MAULANA · GENERAL MANAGEMENT · CONCEPT LIBRARY</div>
+
+  <script>
+  const C=[
+    // Decision Making (S12)
+    ['Rational decision model','S12','Decision Making','The ideal 6-step process: define the problem → identify criteria → weight them → develop alternatives → evaluate → select the optimum. A normative benchmark, rarely achieved in practice.'],
+    ['Bounded rationality','S12','Decision Making','Simon’s idea that real decisions are limited by information, time, and cognitive capacity, so we build simplified models of the world rather than optimise.'],
+    ['Satisficing','S12','Decision Making','Choosing the first alternative that is "good enough" rather than searching for the best — the practical output of bounded rationality.'],
+    ['System 1 vs System 2','S12','Decision Making','Kahneman’s two modes: System 1 is fast, automatic, intuitive (and bias-prone); System 2 is slow, effortful, reflective — a check on System 1.'],
+    ['Overconfidence bias','S12','Decision Making','Systematically overestimating one’s own ability or accuracy (e.g. Svenson: 93% of drivers rate themselves above average).'],
+    ['Dunning–Kruger effect','S12','Decision Making','The "unskilled and unaware" pattern: low-competence people overestimate themselves because they lack the metacognition to see their gaps. Links to rationalising unethical acts.'],
+    ['Availability bias','S12','Decision Making','Judging likelihood by how easily examples come to mind, so vivid or recent events feel more probable than they are.'],
+    ['Anchoring bias','S12','Decision Making','Over-relying on the first piece of information (the anchor) when estimating, so later judgments stay too close to it.'],
+    ['Confirmation bias','S12','Decision Making','Seeking and weighting information that confirms existing beliefs while discounting contradictory evidence.'],
+    ['Escalation of commitment','S12','Decision Making','Sticking with — or increasing investment in — a failing course of action to justify prior decisions ("throwing good money after bad").'],
+    // Groups & Teams (S7-8, S11)
+    ['Social Identity Theory','S7','Groups & Teams','Explains when/why people define themselves by group membership; in-group favouritism and self-esteem from group belonging.'],
+    ['Role & role conflict','S7','Groups & Teams','A role is the expected behaviour for a position; role conflict is facing divergent role expectations at once.'],
+    ['Norms','S7','Groups & Teams','Shared, acceptable standards of behaviour in a group. Positive norms (reciprocity, helping) can compound into strong positive outcomes.'],
+    ['Asch conformity','S7','Groups & Teams','Classic experiment showing people conform to an obviously wrong group judgment under social pressure.'],
+    ['Zimbardo prison experiment','S7','Groups & Teams','Stanford study on role play and assimilation — how assigned roles powerfully shape behaviour.'],
+    ['Status','S7','Groups & Teams','A socially defined rank given to members; status hierarchies affect communication and team functioning.'],
+    ['Social loafing','S7','Groups & Teams','The tendency to exert less effort working collectively than alone (diffusion of responsibility). Countered by identifiable contributions and accountability.'],
+    ['Cohesiveness','S7','Groups & Teams','Degree members are attracted to and motivated to stay in the group; boosts productivity most when paired with positive performance norms.'],
+    ['Surface vs deep-level diversity','S11','Groups & Teams','Surface = observable (age, gender); deep = unobservable (values, personality). Deep-level diversity matters more over time for team process.'],
+    ['Complementary vs supplementary fit','S11','Groups & Teams','Supplementary fit = members are similar; complementary fit = members differ and supply what others lack (e.g. supplementary for conscientiousness, complementary for extraversion).'],
+    ['Groupthink','S12','Groups & Teams','In cohesive groups, the drive for unanimity overrides realistic appraisal. Symptoms: illusion of invulnerability, collective rationalisation, self-censorship, illusion of unanimity, mindguards (e.g. Challenger).'],
+    // Conflict
+    ['Task vs relationship conflict','S11','Conflict','Task conflict is disagreement about the work content (moderate amounts can help); relationship conflict is interpersonal/emotional (almost always harmful).'],
+    ['Process conflict','S11','Conflict','Disagreement about how the work should be done (delegation, roles) — destructive when it lingers.'],
+    // Culture (S13)
+    ['Organizational culture','S13','Culture','A system of shared values, norms, and assumptions that guides members’ attitudes and behaviour; experienced as a shared perception.'],
+    ['Schein’s levels (Iceberg)','S13','Culture','Three layers: artifacts (visible) → espoused values → basic underlying assumptions (invisible, taken-for-granted).'],
+    ['Strong vs weak culture','S13','Culture','Strong = core values intensely held AND widely shared → more behavioural influence, cohesion, lower turnover.'],
+    ['Culture as a liability','S13','Culture','Strong culture can block change, diversity, and M&A (institutionalisation; ~58% of mergers fail on culture clash).'],
+    ['ASA model','S13','Culture','Attraction–Selection–Attrition: organisations become homogeneous as similar people are attracted, selected, and those who don’t fit leave.'],
+    ['Culture types','S13','Culture','Control ("better and better"), Performance ("market share"), Relationship ("concern for people"), Responsive ("innovation and growth").'],
+    ['Hofstede’s dimensions','S13','Culture','National-culture dimensions (power distance, individualism–collectivism, uncertainty avoidance, masculinity–femininity, long-term orientation) used to compare cultures.'],
+    // Change (S14)
+    ['Organizational change','S14','Change','Any alteration in people, structure, or technology; driven by external or internal forces and usually necessary.'],
+    ['Planned vs unplanned change','S14','Change','Planned = proactive, deliberate; unplanned = reactive. Netflix led change proactively; Blockbuster reacted too late.'],
+    ['Kotter’s 8-step model','S14','Change','Create urgency → build a coalition → form a vision → communicate it → empower action → short-term wins → consolidate gains → anchor in culture.'],
+    ['Resistance to change','S14','Change','Individual/organisational sources (habit, security, fear, structural inertia); overcome via communication, participation, support.'],
+    // Motivation (S5-6)
+    ['Intrinsic vs extrinsic motivation','S5','Motivation','Intrinsic = doing a task for its inherent interest; extrinsic = doing it for separable rewards.'],
+    ['Crowding-out / over-justification','S5','Motivation','Extrinsic rewards for an already-interesting task can undermine intrinsic motivation by re-attributing behaviour to the reward.'],
+    ['SMART goals','S6','Motivation','Effective goals are Specific, Measurable, Agreed-upon, Reasonable, Time-bound (use the class-specific criteria, not a generic definition).'],
+    ['Temporal landmarks','S6','Motivation','Salient dates (new year, birthdays, a new semester) that demarcate time and trigger fresh-start motivation.'],
+    // Personality / Values / Emotion (S1-4)
+    ['Big Five (OCEAN)','S3','Personality','Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism — the dominant evidence-based personality framework.'],
+    ['Person–organization fit','S3','Personality','How well an individual’s values/personality match the organisation; predicts satisfaction and turnover.'],
+    ['Terminal vs instrumental values','S1','Values & Ethics','Rokeach: terminal values are desired end-states; instrumental values are preferred modes of behaviour to reach them.'],
+    ['Affect, emotions & moods','S2','Emotion','Affect is the umbrella; emotions are intense and directed at something, moods are milder and diffuse. PANAS measures positive/negative affect.'],
+    // Leadership (S9)
+    ['Transactional leadership','S9','Leadership','Exchange-based: contingent reward and management-by-exception; clarifies roles and tasks. Suits stable, routine settings.'],
+    ['Transformational leadership','S9','Leadership','The "4 I’s": idealised influence, inspirational motivation, intellectual stimulation, individualised consideration. Suits change and innovation.'],
+  ];
+  const TOPICS=['All','Decision Making','Groups & Teams','Conflict','Culture','Change','Motivation','Personality','Values & Ethics','Emotion','Leadership'];
+  let activeTopic='All', query='';
+
+  const pills=document.getElementById('pills');
+  pills.innerHTML=TOPICS.map(t=>`<button class="pill${t==='All'?' active':''}" data-t="${t}">${t}</button>`).join('');
+  pills.addEventListener('click',e=>{ const b=e.target.closest('.pill'); if(!b)return; activeTopic=b.dataset.t; pills.querySelectorAll('.pill').forEach(p=>p.classList.toggle('active',p===b)); render(); });
+  document.getElementById('q').addEventListener('input',e=>{ query=e.target.value.trim().toLowerCase(); render(); });
+
+  function render(){
+    const lib=document.getElementById('lib');
+    const groups={};
+    let shown=0;
+    C.forEach(([term,sess,topic,def])=>{
+      const matchT = activeTopic==='All'||topic===activeTopic;
+      const matchQ = !query || (term+' '+def+' '+topic).toLowerCase().includes(query);
+      if(matchT&&matchQ){ (groups[topic]=groups[topic]||[]).push([term,sess,def]); shown++; }
+    });
+    document.getElementById('count').textContent=shown+' concept'+(shown===1?'':'s');
+    if(shown===0){ lib.innerHTML='<div class="empty">No concepts match — try another search.</div>'; return; }
+    const order=TOPICS.slice(1);
+    lib.innerHTML=order.filter(t=>groups[t]).map(t=>`
+      <div class="grp">
+        <div class="grp-label">${t}</div>
+        <div class="c-grid">${groups[t].map(([term,sess,def])=>`
+          <div class="c"><div class="c-term">${term}<span class="c-sess">${sess}</span></div><div class="c-def">${def}</div></div>`).join('')}</div>
+      </div>`).join('');
+  }
+  const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],D=['SUN','MON','TUE','WED','THU','FRI','SAT'],d=new Date();
+  document.getElementById('td').textContent=`${D[d.getDay()]} · ${d.getDate()} ${M[d.getMonth()].toUpperCase()} ${d.getFullYear()}`;
+  render();
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

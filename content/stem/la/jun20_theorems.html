@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lin Alg · Key Theorems Reconstruct</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    .recall-box { background:rgba(190,24,93,0.07); border:1px solid rgba(190,24,93,0.3); border-left:3px solid var(--la); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+    .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--la); margin-bottom:10px; }
+    .checklist { list-style:none; margin:6px 0 0; padding:0; }
+    .checklist li { padding:9px 0 9px 30px; position:relative; border-bottom:1px solid var(--border); font-size:0.95rem; line-height:1.55; }
+    .checklist li:last-child { border-bottom:none; }
+    .checklist li::before { content:'☐'; position:absolute; left:0; color:var(--la); font-size:1.05rem; }
+    .fcard { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+    .fcard h4 { color:var(--la); font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:6px; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ lin-alg / key theorems</span><span class="topbar-date">SAT · 20 JUN 2026</span></div>
+  <div class="hero">
+    <h1>Key Theorems <em>Reconstruct</em></h1>
+    <p class="hero-meta">P4 · 15:20–16:55 · 95 min · final pass</p>
+    <div class="exam-pills"><span class="pill pill-la">Lin Alg</span><span class="pill pill-la">Final · 25 June 2026</span></div>
+  </div>
+  <div class="main"><div class="subject-block">
+    <div class="subject-header"><div class="subject-dot dot-la"></div><div><div class="subject-label">Self-Study · 95 min · recall</div><div class="subject-title" style="color:var(--la)">Key Theorems Reconstruct</div></div><div class="subject-exam-date"><strong>Lin Alg Final</strong>25 June 2026</div></div>
+<div class="recall-box"><div class="rl">⌁ Reconstruct each theorem cold</div>State each theorem precisely AND give the one-line idea of its proof. No notes. Reveal to check.</div><div class="problem"><div class="problem-header"><span class="problem-num">Theorem 1</span><span class="problem-topic">Rank–Nullity</span></div><div class="problem-body"><div class="context-box"></div><div class="ans-toggle"><button class="ans-btn" data-show="Reveal" data-hide="Hide" onclick="toggleAns(this)">Reveal</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\dim(\mathrm{im}T)+\dim(\ker T)=\dim V\). <em>Idea:</em> extend a kernel basis; images of the extension vectors form a basis of the image.</div></div></div></div></div><div class="problem"><div class="problem-header"><span class="problem-num">Theorem 2</span><span class="problem-topic">Spectral Theorem</span></div><div class="problem-body"><div class="context-box"></div><div class="ans-toggle"><button class="ans-btn" data-show="Reveal" data-hide="Hide" onclick="toggleAns(this)">Reveal</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>Real symmetric \(A=Q\Lambda Q^T\), \(Q\) orthonormal eigenvectors, real \(\lambda\). <em>Idea:</em> distinct-eigenvalue eigenvectors are orthogonal; repeated ones can be orthonormalised.</div></div></div></div></div><div class="problem"><div class="problem-header"><span class="problem-num">Theorem 3</span><span class="problem-topic">Invertible Matrix Theorem</span></div><div class="problem-body"><div class="context-box"></div><div class="ans-toggle"><button class="ans-btn" data-show="Reveal" data-hide="Hide" onclick="toggleAns(this)">Reveal</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>For square \(A\): invertible ⇔ \(\det\neq0\) ⇔ rank \(n\) ⇔ \(\mathrm{Nul}A=\{0\}\) ⇔ columns independent ⇔ \(\lambda=0\) not an eigenvalue. <em>Idea:</em> all are equivalent restatements of "full rank".</div></div></div></div></div><div class="problem"><div class="problem-header"><span class="problem-num">Theorem 4</span><span class="problem-topic">Gram–Schmidt / QR</span></div><div class="problem-body"><div class="context-box"></div><div class="ans-toggle"><button class="ans-btn" data-show="Reveal" data-hide="Hide" onclick="toggleAns(this)">Reveal</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>Any independent set has an orthonormal set with the same span; matrix form \(A=QR\), \(Q\) orthonormal, \(R\) upper-triangular. <em>Idea:</em> subtract projections onto previous vectors.</div></div></div></div></div>
+  </div>
+  <div class="footer-note">Lin Alg · Key Theorems Reconstruct · Saturday 20 June 2026 · Recall, don't re-read ✦</div></div>
+  <div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+  <script>
+    function toggleAns(btn){const a=btn.nextElementSibling;a.classList.toggle('open');const o=a.classList.contains('open');btn.textContent=o?btn.dataset.hide||'Hide Answer':btn.dataset.show||'Show Answer';}
+    window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+    const start=Date.now(),pad=n=>String(n).padStart(2,'0');
+    setInterval(()=>{const e=Math.floor((Date.now()-start)/1000);document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60);},1000);
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

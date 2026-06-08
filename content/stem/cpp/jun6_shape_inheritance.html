@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ · Inheritance: Shape → Circle · 6 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    pre.code { background:#1a1a2e; color:#e2e8f0; padding:18px 20px; border-radius:10px; overflow-x:auto; font-family:'DM Mono',monospace; font-size:0.8rem; line-height:1.65; margin-top:12px; }
+    pre.code .cm { color:#7d8db5; font-style:italic; }
+    pre.code .kw { color:#c792ea; }
+    pre.code .st { color:#c3e88d; }
+    pre.code .fn { color:#82aaff; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-cpp">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ c++ / inheritance shape→circle</span>
+    <span class="topbar-date">SAT · 6 JUN 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Inheritance <em>· Shape → Circle</em></h1>
+    <p class="hero-meta">P3 · The single most-tested OOP pattern: an abstract base with a pure virtual method, concrete derived classes, and runtime dispatch through base pointers. Build the whole hierarchy step by step.</p>
+    <div class="exam-pills">
+      <span class="pill pill-cpp">C++</span>
+      <span class="pill pill-cpp">virtual / override</span>
+      <span class="pill pill-cpp">Final · 10 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-cpp"></div>
+        <div>
+          <div class="subject-label">Daily Practice · 40 min</div>
+          <div class="subject-title" style="color:var(--cpp)">Building the Shape Hierarchy</div>
+        </div>
+        <div class="subject-exam-date"><strong>C++ Final</strong>10 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>The four moving parts.</strong> (1) An <strong>abstract base</strong> = a class with at least one <em>pure virtual</em> <code>= 0</code> method — it can't be instantiated. (2) <strong>Override</strong> in each derived class. (3) A <strong>virtual destructor</strong> so <code>delete base_ptr</code> destroys the full object. (4) <strong>Dynamic dispatch</strong>: calling through a <code>Shape*</code> runs the derived <code>area()</code> via the vtable.
+      </div>
+
+      <!-- ══ Problem 1 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">The abstract base</span>
+          <span class="problem-pts">Step 1</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Write <code>Shape</code> with a protected <code>name</code>, a pure virtual <code>area()</code>, and a virtual destructor. Why can't you write <code>Shape s("x");</code>?</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                <pre class="code"><span class="kw">class</span> <span class="fn">Shape</span> {
+<span class="kw">protected</span>:
+    string name;
+<span class="kw">public</span>:
+    <span class="fn">Shape</span>(<span class="kw">const</span> string&amp; n) : name(n) {}
+    <span class="kw">virtual</span> <span class="kw">double</span> <span class="fn">area</span>() <span class="kw">const</span> = 0;  <span class="cm">// pure virtual ⇒ abstract</span>
+    <span class="kw">virtual</span> ~<span class="fn">Shape</span>() {}                 <span class="cm">// virtual dtor</span>
+};</pre>
+                <div class="ans-note">The <code>= 0</code> makes <code>Shape</code> <strong>abstract</strong> — it has no complete implementation, so it can't be instantiated. It exists only to be inherited and to provide a common interface pointer type.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">Circle &amp; Rectangle override</span>
+          <span class="problem-pts">Step 2</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Derive <code>Circle</code> (radius) and <code>Rectangle</code> (w, h). Override <code>area()</code> in each. Use the <code>override</code> keyword and explain what it protects against.</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                <pre class="code"><span class="kw">class</span> <span class="fn">Circle</span> : <span class="kw">public</span> Shape {
+    <span class="kw">double</span> r;
+<span class="kw">public</span>:
+    <span class="fn">Circle</span>(<span class="kw">const</span> string&amp; n, <span class="kw">double</span> r) : Shape(n), r(r) {}
+    <span class="kw">double</span> <span class="fn">area</span>() <span class="kw">const</span> <span class="kw">override</span> { <span class="kw">return</span> 3.14159265358979 * r * r; }
+};
+<span class="kw">class</span> <span class="fn">Rectangle</span> : <span class="kw">public</span> Shape {
+    <span class="kw">double</span> w, h;
+<span class="kw">public</span>:
+    <span class="fn">Rectangle</span>(<span class="kw">const</span> string&amp; n, <span class="kw">double</span> w, <span class="kw">double</span> h) : Shape(n), w(w), h(h) {}
+    <span class="kw">double</span> <span class="fn">area</span>() <span class="kw">const</span> <span class="kw">override</span> { <span class="kw">return</span> w * h; }
+};</pre>
+                <div class="ans-note"><code>override</code> tells the compiler "this must be replacing a virtual base method." If you mistype the signature (e.g. forget <code>const</code>), you'd silently create a <em>new</em> method instead of overriding — <code>override</code> turns that into a compile error.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 3 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-topic">Dynamic dispatch</span>
+          <span class="problem-pts">Step 3</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Store mixed shapes in <code>vector&lt;Shape*&gt;</code> and print each area. What does <code>s-&gt;area()</code> actually call, and what makes that work?</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                <pre class="code">vector&lt;Shape*&gt; shapes;
+shapes.push_back(<span class="kw">new</span> Circle(<span class="st">"C1"</span>, 2));
+shapes.push_back(<span class="kw">new</span> Rectangle(<span class="st">"R1"</span>, 3, 4));
+<span class="kw">for</span> (Shape* s : shapes)
+    cout &lt;&lt; s-&gt;name() &lt;&lt; <span class="st">" "</span> &lt;&lt; s-&gt;area() &lt;&lt; <span class="st">"\n"</span>;
+<span class="kw">for</span> (Shape* s : shapes) <span class="kw">delete</span> s;   <span class="cm">// virtual dtor cleans up fully</span></pre>
+                <div class="ans-note">Even though the static type is <code>Shape*</code>, <code>area()</code> is <code>virtual</code>, so the call dispatches at runtime to the real object's override (Circle's or Rectangle's). This is polymorphism — one loop, many area formulas. Without the virtual destructor, <code>delete s</code> would only run <code>~Shape</code> and leak the derived part.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 4 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 4</span>
+          <span class="problem-topic">Object slicing trap</span>
+          <span class="problem-pts">Trap</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">What goes wrong with <code>vector&lt;Shape&gt;</code> (by value) instead of <code>vector&lt;Shape*&gt;</code>? Why does dispatch break?</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                You can't even hold <code>Shape</code> by value (it's abstract) — but the deeper lesson is <strong>object slicing</strong>: copying a <code>Circle</code> into a <code>Shape</code> variable keeps only the base part and discards <code>r</code>. Polymorphism needs a <em>pointer or reference</em> to the base, never a by-value base object.
+                <div class="ans-note">Rule: store polymorphic objects via <code>Shape*</code> (or better, <code>unique_ptr&lt;Shape&gt;</code>). By-value containers slice and freeze the type.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      C++ · Inheritance: Shape → Circle · Saturday 6 June 2026 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

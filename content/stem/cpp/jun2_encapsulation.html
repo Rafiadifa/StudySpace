@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ · Encapsulation &amp; Operator Overloading · 2 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    pre.code { background:#1a1a2e; color:#e2e8f0; padding:18px 20px; border-radius:10px; overflow-x:auto; font-family:'DM Mono',monospace; font-size:0.8rem; line-height:1.65; margin-top:12px; }
+    pre.code .cm { color:#7d8db5; font-style:italic; }
+    pre.code .kw { color:#c792ea; }
+    pre.code .st { color:#c3e88d; }
+    pre.code .fn { color:#82aaff; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-cpp">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ c++ / encapsulation &amp; operators</span>
+    <span class="topbar-date">TUE · 2 JUN 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Encapsulation &amp; <em>Operator Overloading</em></h1>
+    <p class="hero-meta">P4 · How to bundle and protect state, and how to make your own types behave like built-ins. Four problems building up to a complete overloaded <code>Vector2D</code>.</p>
+    <div class="exam-pills">
+      <span class="pill pill-cpp">C++</span>
+      <span class="pill pill-cpp">operator+ / &lt;&lt;</span>
+      <span class="pill pill-cpp">Final · 10 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-cpp"></div>
+        <div>
+          <div class="subject-label">Daily Practice · 50 min</div>
+          <div class="subject-title" style="color:var(--cpp)">Encapsulation &amp; Operator Overloading</div>
+        </div>
+        <div class="subject-exam-date"><strong>C++ Final</strong>10 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>Two ways to overload.</strong> As a <strong>member</strong>: <code>T operator+(const T&amp; rhs) const</code> — the left operand is <code>*this</code>. As a <strong>non-member / friend</strong>: <code>T operator+(const T&amp; a, const T&amp; b)</code> — needed when the left operand isn't your class (e.g. <code>operator&lt;&lt;</code> with <code>ostream</code> on the left). Return by value for arithmetic, by reference (<code>ostream&amp;</code>) for streaming.
+      </div>
+
+      <!-- ══ Problem 1 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">Why encapsulate?</span>
+          <span class="problem-pts">Concept</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">A teammate makes <code>balance</code> public "to keep it simple." Give two concrete bugs this invites, and rewrite the class to prevent them.</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                (1) Anyone can set <code>balance = -9999</code>, breaking the invariant "balance ≥ 0". (2) If you later change how balance is stored (cents vs dollars), every external caller breaks. Encapsulation fixes both — the invariant is enforced in one place and the representation can change freely.
+                <pre class="code"><span class="kw">class</span> <span class="fn">Account</span> {
+    <span class="kw">double</span> balance = 0;            <span class="cm">// private: invariant guarded</span>
+<span class="kw">public</span>:
+    <span class="kw">bool</span> <span class="fn">withdraw</span>(<span class="kw">double</span> a) {
+        <span class="kw">if</span> (a &lt;= 0 || a &gt; balance) <span class="kw">return</span> <span class="kw">false</span>;
+        balance -= a; <span class="kw">return</span> <span class="kw">true</span>;
+    }
+    <span class="kw">double</span> <span class="fn">get</span>() <span class="kw">const</span> { <span class="kw">return</span> balance; }
+};</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">Overload operator+ (member)</span>
+          <span class="problem-pts">Member</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Give <code>Vector2D{x,y}</code> a member <code>operator+</code> so that <code>a + b</code> adds componentwise. Why should it be <code>const</code> and return by value?</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                <pre class="code"><span class="kw">class</span> <span class="fn">Vector2D</span> {
+    <span class="kw">double</span> x, y;
+<span class="kw">public</span>:
+    <span class="fn">Vector2D</span>(<span class="kw">double</span> x=0, <span class="kw">double</span> y=0) : x(x), y(y) {}
+    Vector2D <span class="fn">operator+</span>(<span class="kw">const</span> Vector2D&amp; r) <span class="kw">const</span> {
+        <span class="kw">return</span> Vector2D(x + r.x, y + r.y);
+    }
+};</pre>
+                <div class="ans-note"><code>const</code> — adding two vectors mustn't mutate either. <strong>Return by value</strong> — the sum is a brand-new vector, not a reference to an existing one (returning a reference to a local is a dangling-reference bug).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 3 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-topic">Overload operator&lt;&lt; (friend)</span>
+          <span class="problem-pts">Non-member</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Make <code>cout &lt;&lt; v</code> print <code>(x, y)</code>. Why can't this be a member function?</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                The left operand of <code>&lt;&lt;</code> is an <code>ostream</code>, not your class — so it can't be a member of <code>Vector2D</code>. Make it a non-member (a <code>friend</code> so it can read private <code>x,y</code>), take <code>ostream&amp;</code> and return it to allow chaining.
+                <pre class="code"><span class="kw">friend</span> ostream&amp; <span class="fn">operator&lt;&lt;</span>(ostream&amp; os, <span class="kw">const</span> Vector2D&amp; v) {
+    os &lt;&lt; <span class="st">"("</span> &lt;&lt; v.x &lt;&lt; <span class="st">", "</span> &lt;&lt; v.y &lt;&lt; <span class="st">")"</span>;
+    <span class="kw">return</span> os;          <span class="cm">// return ostream& so cout &lt;&lt; a &lt;&lt; b chains</span>
+}</pre>
+                <div class="ans-note">Returning <code>os</code> by reference is what makes <code>cout &lt;&lt; v1 &lt;&lt; v2 &lt;&lt; "\n"</code> work — each <code>&lt;&lt;</code> hands the same stream to the next.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 4 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 4</span>
+          <span class="problem-topic">operator== and operator*</span>
+          <span class="problem-pts">Apply</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Add equality and a scalar product: <code>v == w</code> and <code>v * 3.0</code> (scale both components). Write both signatures.</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                <pre class="code"><span class="kw">bool</span> <span class="fn">operator==</span>(<span class="kw">const</span> Vector2D&amp; r) <span class="kw">const</span> {
+    <span class="kw">return</span> x == r.x &amp;&amp; y == r.y;
+}
+Vector2D <span class="fn">operator*</span>(<span class="kw">double</span> s) <span class="kw">const</span> {
+    <span class="kw">return</span> Vector2D(x * s, y * s);
+}</pre>
+                <div class="ans-note">Note <code>v * 3.0</code> works as a member (left operand is the vector), but <code>3.0 * v</code> would need a <em>non-member</em> overload with the scalar on the left. Mentioning that asymmetry scores the conceptual point.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      C++ · Encapsulation &amp; Operator Overloading · Tuesday 2 June 2026 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

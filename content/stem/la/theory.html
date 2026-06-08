@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lin Alg · Theory Summary · Ch. 3–8</title>
+<link rel="stylesheet" href="../../../style.css">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" async></script>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ lin-alg / theory summary</span>
+  <span class="topbar-date">FINAL · 25 JUN 2026</span>
+</header>
+
+<section class="hero">
+  <h1>Theory Summary <em>· Ch. 3–8</em></h1>
+  <p class="hero-meta">
+    Definitions, theorems, and proof intuitions — one page per chapter, the absolute minimum
+    you must hold in your head before the final. Tap a card to reveal the proof sketch or
+    deeper note. Source: EZ.pdf (Yang's notes). Pair this with the Computational Summary for
+    the algorithmic recipes.
+  </p>
+  <div class="exam-pills">
+    <a href="#ch3" class="pill pill-la" style="text-decoration:none">Ch.3</a>
+    <a href="#ch4" class="pill pill-la" style="text-decoration:none">Ch.4</a>
+    <a href="#ch5" class="pill pill-la" style="text-decoration:none">Ch.5</a>
+    <a href="#ch6" class="pill pill-la" style="text-decoration:none">Ch.6</a>
+    <a href="#ch7" class="pill pill-la" style="text-decoration:none">Ch.7</a>
+    <a href="#ch8" class="pill pill-la" style="text-decoration:none">Ch.8</a>
+  </div>
+</section>
+
+<main class="main">
+
+  <!-- ════════════ CH. 3 ════════════ -->
+  <div class="subject-block" id="ch3">
+    <div class="subject-header">
+      <span class="subject-dot dot-la"></span>
+      <div>
+        <div class="subject-label">Chapter 3 · Theory</div>
+        <h2 class="subject-title text-la">Gaussian Elimination &amp; Pre-image</h2>
+      </div>
+      <div class="subject-exam-date"><strong>EZ pp. 60–95</strong>pre-image · RREF</div>
+    </div>
+
+    <div class="formula-ref">
+      <strong>Big idea.</strong> Every linear system \(A\mathbf x=\mathbf b\) is a pre-image problem.
+      Gaussian elimination is a sequence of <em>solution-preserving</em> row operations that brings
+      the augmented matrix to a unique RREF — from which existence, uniqueness, and the general solution can be read off immediately.
+    </div>
+
+    <div class="flash-grid">
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Pre-image problem</span>
+      </summary><div class="flash-a">
+        Given a linear map \(L\) and a target \(\mathbf b\), find every \(\mathbf x\) with \(L(\mathbf x)=\mathbf b\).
+        In matrix form: solve \(A\mathbf x=\mathbf b\). The set of solutions is either empty, a single point, or an affine subspace
+        (a translate of \(\operatorname{Ker}(L)\) — the homogeneous solution).
+      </div></details>
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">"Jectivity" — injective, surjective, bijective</span>
+      </summary><div class="flash-a">
+        Injective: distinct inputs go to distinct outputs (\(L(\mathbf x)=L(\mathbf y)\Rightarrow\mathbf x=\mathbf y\)).
+        Surjective: every target is achievable (\(\operatorname{Ran}(L)=W\)).
+        Bijective: both. For linear maps, injective \(\iff\operatorname{Ker}(L)=\{0\}\).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Three elementary row operations preserve solutions</span>
+      </summary><div class="flash-a">
+        Swap, scale by \(c\ne 0\), and \(R_i\to R_i+cR_j\) all give equivalent systems. Each is invertible (swap is self-inverse; the others undo by negating the multiplier),
+        so the solution set is unchanged. This is what licenses the whole Gaussian-elimination machinery.
+      </div></details>
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Reduced Row Echelon Form (RREF)</span>
+      </summary><div class="flash-a">
+        Four conditions: (R1) zero rows at the bottom; (R2) each pivot is \(1\); (R3) pivots step strictly to the right going down; (R4) each pivot is the <strong>only</strong> nonzero entry in its column.
+        Echelon form (REF) is (R1)–(R3); reducing further to (R4) makes it <em>reduced</em>.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Uniqueness of RREF (the central result of Ch.3)</span>
+      </summary><div class="flash-a">
+        Every matrix \(A\) has a <strong>unique</strong> RREF — independent of which row operations you use to get there.
+        <strong>Proof idea.</strong> The pivot columns are exactly those columns of \(A\) that are linearly independent from all earlier columns — an intrinsic property of \(A\).
+        For each non-pivot column, its RREF entries are the unique coefficients expressing it as a combination of earlier pivot columns — also intrinsic. So both pivot pattern and entries are determined.
+      </div></details>
+
+      <details class="flash cat-crit"><summary>
+        <span class="flash-tag">Criterion</span>
+        <span class="flash-q">Existence &amp; uniqueness from rank</span>
+      </summary><div class="flash-a">
+        For \(A\mathbf x=\mathbf b\), augment to \([A\,|\,\mathbf b]\) and reduce.
+        <strong>No solution</strong> iff \(\operatorname{rank}(A)<\operatorname{rank}[A|\mathbf b]\) (a row \([0\cdots0\,|\,c\ne0]\) appears).
+        <strong>Unique</strong> iff ranks equal and \(=n\) (no free variables).
+        <strong>Infinitely many</strong> iff ranks equal and \(<n\); solution set has dimension \(n-\operatorname{rank}(A)\).
+      </div></details>
+
+    </div>
+  </div>
+
+  <!-- ════════════ CH. 4 ════════════ -->
+  <div class="subject-block" id="ch4">
+    <div class="subject-header">
+      <span class="subject-dot dot-la"></span>
+      <div>
+        <div class="subject-label">Chapter 4 · Theory</div>
+        <h2 class="subject-title text-la">Algebra of Linear Maps</h2>
+      </div>
+      <div class="subject-exam-date"><strong>EZ pp. 96–140</strong>matrices · LU</div>
+    </div>
+
+    <div class="formula-ref">
+      <strong>Big idea.</strong> Function composition is matrix multiplication. Gaussian elimination secretly factors \(A=LU\) (or \(PA=LU\)):
+      the multipliers you use during elimination fill the lower triangle of \(L\), and the resulting echelon matrix is \(U\). This bridges the algorithmic view (Ch.3) and the algebraic view.
+    </div>
+
+    <div class="flash-grid">
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Matrix mult \(=\) function composition</span>
+      </summary><div class="flash-a">
+        If \(L_A:\mathbb R^n\to\mathbb R^m\) and \(L_B:\mathbb R^p\to\mathbb R^n\) are linear maps with matrices \(A\) and \(B\), then \(L_A\circ L_B\) has matrix \(AB\).
+        The \((i,j)\) entry of \(AB\) is the dot product of row \(i\) of \(A\) with column \(j\) of \(B\).
+      </div></details>
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Elementary matrices &amp; block matrices</span>
+      </summary><div class="flash-a">
+        An <strong>elementary matrix</strong> performs one row operation by left-multiplication. <strong>Block matrices</strong> partition rows/columns so that products factor block-by-block, identical-looking formulas to scalar matrices —
+        provided the blocks have compatible sizes. This is the key trick behind LU.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">LU existence (when no pivoting needed)</span>
+      </summary><div class="flash-a">
+        If Gaussian elimination on \(A\) never needs a row swap, then \(A=LU\) where \(L\) is unit lower triangular (the multipliers) and \(U\) is the resulting upper triangular matrix.
+        Equivalent condition: every leading principal minor \(\det(A^{(k)})\) is nonzero.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">PLU decomposition (general case)</span>
+      </summary><div class="flash-a">
+        For <em>any</em> square \(A\), there exists a permutation \(P\) such that \(PA=LU\). \(P\) records the row swaps performed during elimination; \(L,U\) are as before but built from the pivoted rows.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Uniqueness of LU (with diagonal normalisation)</span>
+      </summary><div class="flash-a">
+        If \(A=LU\) where \(L\) is unit lower triangular and \(U\) is upper triangular, the factorisation is <strong>unique</strong>.
+        Proof: \(L_1U_1=L_2U_2\Rightarrow L_2^{-1}L_1=U_2U_1^{-1}\). The left side is unit lower triangular and the right is upper triangular — only the identity matrix is both. So \(L_1=L_2\) and \(U_1=U_2\). \(\blacksquare\)
+      </div></details>
+
+    </div>
+  </div>
+
+  <!-- ════════════ CH. 5 ════════════ -->
+  <div class="subject-block" id="ch5">
+    <div class="subject-header">
+      <span class="subject-dot dot-la"></span>
+      <div>
+        <div class="subject-label">Chapter 5 · Theory</div>
+        <h2 class="subject-title text-la">Abstract Vector Spaces</h2>
+      </div>
+      <div class="subject-exam-date"><strong>EZ pp. 141–180</strong>basis · rank-nullity</div>
+    </div>
+
+    <div class="formula-ref">
+      <strong>Big idea.</strong> Linear algebra is not about \(\mathbb R^n\) specifically — polynomial spaces, matrix spaces, and function spaces obey the same rules.
+      A choice of basis gives an <strong>isomorphism</strong> (the coordinate map) to \(\mathbb R^{\dim V}\), turning every abstract problem into a concrete one in \(\mathbb R^n\).
+    </div>
+
+    <div class="flash-grid">
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Vector space axioms (the 8 rules)</span>
+      </summary><div class="flash-a">
+        A set \(V\) with \(+\) and scalar multiplication is a vector space if: (1) \(+\) commutative, (2) \(+\) associative, (3) \(0\) exists, (4) inverses \(-v\), (5) \(1\cdot v=v\),
+        (6) \((ab)v=a(bv)\), (7) \(a(u+v)=au+av\), (8) \((a+b)v=av+bv\). Examples: \(\mathbb R^n\), \(P_n\), \(M_{m\times n}\), \(C[a,b]\) (continuous functions on \([a,b]\)).
+      </div></details>
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Linear independence, spanning, basis, dimension</span>
+      </summary><div class="flash-a">
+        \(\{v_i\}\) is <strong>independent</strong> if \(\sum c_iv_i=0\Rightarrow\) all \(c_i=0\); <strong>spanning</strong> if every \(v\in V\) is \(\sum c_iv_i\); a <strong>basis</strong> is both.
+        <strong>Dimension</strong> = the common cardinality of every basis (unique by the dimension theorem).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Dimension is well-defined</span>
+      </summary><div class="flash-a">
+        Any two bases of a finite-dimensional vector space have the same number of elements.
+        <strong>Proof idea (Steinitz exchange).</strong> Given bases \(B,C\), swap out elements of \(B\) for elements of \(C\) one at a time; independence forces \(|C|\le|B|\), and symmetrically \(|B|\le|C|\).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Coordinate map is an isomorphism</span>
+      </summary><div class="flash-a">
+        For a basis \(\mathcal B\) of \(V\) (\(\dim V=n\)), the map \([\,\cdot\,]_{\mathcal B}:V\to\mathbb R^n\) sending \(v\mapsto\) its coordinate vector is a bijective linear map.
+        So every \(n\)-dim space is \emph{isomorphic} to \(\mathbb R^n\); abstract problems reduce to concrete ones.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Change of basis formula</span>
+      </summary><div class="flash-a">
+        \([v]_{\mathcal C}=I_{\mathcal C\leftarrow\mathcal B}\,[v]_{\mathcal B}\) where \(I_{\mathcal C\leftarrow\mathcal B}\) has the \(\mathcal B\)-vectors written in \(\mathcal C\)-coordinates as its columns.
+        For a linear map \(T:V\to V\): \([T]_{\mathcal C}=I_{\mathcal C\leftarrow\mathcal B}\,[T]_{\mathcal B}\,I_{\mathcal B\leftarrow\mathcal C}\) (similarity transformation).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Rank-Nullity</span>
+      </summary><div class="flash-a">
+        For linear \(L:V\to W\) with \(\dim V<\infty\): \(\dim V=\operatorname{rank}(L)+\text{nullity}(L)\).
+        <strong>Proof.</strong> Take a basis of \(\operatorname{Ker}(L)\) and extend to a basis of \(V\). The images of the extension vectors form a basis of \(\operatorname{Ran}(L)\): they span (because the kernel vectors vanish) and are independent (any combination summing to 0 lifts to a kernel vector). \(\blacksquare\)
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Row rank \(=\) column rank</span>
+      </summary><div class="flash-a">
+        For any matrix \(A\), \(\dim\operatorname{Row}(A)=\dim\operatorname{Col}(A)=\operatorname{rank}(A)\). Both count the number of pivots in RREF — proved via the pivot column characterisation from Ch.3.
+      </div></details>
+
+      <details class="flash cat-crit"><summary>
+        <span class="flash-tag">Criterion</span>
+        <span class="flash-q">Injective ↔ surjective for square matrices</span>
+      </summary><div class="flash-a">
+        If \(L:V\to V\) with \(\dim V<\infty\): injective \(\iff\) surjective \(\iff\) invertible. Direct corollary of rank-nullity. In matrix terms: \(\operatorname{rank}(A)=n\iff\) full rank \(\iff\) \(A\) invertible.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Dimension formula for subspace algebra</span>
+      </summary><div class="flash-a">
+        For subspaces \(U,W\subseteq V\): \(\dim(U+W)=\dim U+\dim W-\dim(U\cap W)\).
+        Special case: \(U\oplus W\) (direct sum) means \(U\cap W=\{0\}\), so \(\dim(U+W)=\dim U+\dim W\).
+      </div></details>
+
+    </div>
+  </div>
+
+  <!-- ════════════ CH. 6 ════════════ -->
+  <div class="subject-block" id="ch6">
+    <div class="subject-header">
+      <span class="subject-dot dot-la"></span>
+      <div>
+        <div class="subject-label">Chapter 6 · Theory</div>
+        <h2 class="subject-title text-la">Inner Product Spaces</h2>
+      </div>
+      <div class="subject-exam-date"><strong>EZ pp. 181–230</strong>orthogonality · projections</div>
+    </div>
+
+    <div class="formula-ref">
+      <strong>Big idea.</strong> An inner product is a way to <em>measure</em> angles and lengths inside an abstract vector space.
+      Every finite-dim inner product space is isomorphic to \(\mathbb R^n\) with the dot product (via Cholesky) —
+      so orthonormal bases let us pretend we're always in Euclidean space.
+    </div>
+
+    <div class="flash-grid">
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Inner product (4 axioms)</span>
+      </summary><div class="flash-a">
+        \(\langle\cdot,\cdot\rangle:V\times V\to\mathbb R\) satisfying: (1) symmetric \(\langle u,v\rangle=\langle v,u\rangle\); (2) linear in first slot \(\langle au+bw,v\rangle=a\langle u,v\rangle+b\langle w,v\rangle\);
+        (3) positive \(\langle v,v\rangle\ge0\); (4) definite \(\langle v,v\rangle=0\iff v=0\). Induces norm \(\|v\|=\sqrt{\langle v,v\rangle}\).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Cauchy–Schwarz inequality</span>
+      </summary><div class="flash-a">
+        \(|\langle u,v\rangle|\le\|u\|\cdot\|v\|\), with equality iff \(u,v\) collinear.
+        <strong>Proof.</strong> The polynomial \(p(t)=\|u-tv\|^2=\|u\|^2-2t\langle u,v\rangle+t^2\|v\|^2\) is \(\ge 0\) for all \(t\), so its discriminant \(4\langle u,v\rangle^2-4\|u\|^2\|v\|^2\le0\). \(\blacksquare\)
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Fundamental Theorem of Linear Algebra (FTLA)</span>
+      </summary><div class="flash-a">
+        For any matrix \(A\):
+        \(\operatorname{Row}(A)\perp\operatorname{Null}(A)\) and \(\operatorname{Col}(A)\perp\operatorname{LeftNull}(A)\),
+        and these give orthogonal direct-sum decompositions: \(\mathbb R^n=\operatorname{Row}(A)\oplus\operatorname{Null}(A)\), \(\mathbb R^m=\operatorname{Col}(A)\oplus\operatorname{LeftNull}(A)\).
+        Dimensions: \(\dim\operatorname{Row}=\dim\operatorname{Col}=r\); \(\dim\operatorname{Null}=n-r\); \(\dim\operatorname{LeftNull}=m-r\).
+      </div></details>
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Gram matrix &amp; positive definiteness</span>
+      </summary><div class="flash-a">
+        For columns \(\mathbf a_1,\dots,\mathbf a_n\) of \(A\), the <strong>Gram matrix</strong> is \(G=A^TA\) with \(G_{ij}=\mathbf a_i\cdot\mathbf a_j\).
+        \(G\) is always symmetric positive semi-definite; <strong>positive definite</strong> iff the \(\mathbf a_i\) are linearly independent (\(A\) has independent columns).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Cholesky decomposition</span>
+      </summary><div class="flash-a">
+        Every positive-definite matrix \(G\) factors uniquely as \(G=LL^T\) where \(L\) is invertible lower triangular with positive diagonal entries.
+        <strong>Why it matters:</strong> any finite-dim inner-product space is isomorphic (via change of basis) to Euclidean space with the dot product. Equivalently, every positive-definite \(G\) is the Gram matrix of some basis.
+      </div></details>
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Orthonormal basis (ONB) &amp; orthogonal matrix</span>
+      </summary><div class="flash-a">
+        An <strong>ONB</strong> \(q_1,\dots,q_n\) has \(\|q_i\|=1\) and \(q_i\perp q_j\) for \(i\neq j\). An <strong>orthogonal matrix</strong> \(Q\) is one whose columns form an ONB; equivalently, \(Q^TQ=I\), i.e., \(Q^{-1}=Q^T\).
+        Orthogonal matrices preserve inner products: \(\langle Q\mathbf x,Q\mathbf y\rangle=\langle\mathbf x,\mathbf y\rangle\) — they are <em>isometries</em>.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Gram-Schmidt → QR decomposition</span>
+      </summary><div class="flash-a">
+        Every matrix \(A\) with independent columns factors as \(A=QR\), with \(Q\) orthogonal (its columns are the Gram-Schmidt orthonormalised columns of \(A\)) and \(R\) upper triangular with positive diagonal.
+        Three proof perspectives in EZ: row-by-row construction; column-shearing producing \(R\); and the algebraic \(R=Q^TA\) once \(Q\) is known.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Orthogonal projection theorem &amp; least squares</span>
+      </summary><div class="flash-a">
+        For a subspace \(U\subseteq V\), every \(v\) decomposes uniquely as \(v=v_U+v_{U^\perp}\) with \(v_U\in U\) minimising \(\|v-u\|\) over all \(u\in U\).
+        Matrix form: project onto \(\operatorname{Col}(A)\) using \(P=A(A^TA)^{-1}A^T\). The least-squares solution to (possibly inconsistent) \(A\mathbf x=\mathbf b\) is the exact solution to \(A^TA\mathbf x=A^T\mathbf b\) — the <strong>normal equations</strong>.
+      </div></details>
+
+    </div>
+  </div>
+
+  <!-- ════════════ CH. 7 ════════════ -->
+  <div class="subject-block" id="ch7">
+    <div class="subject-header">
+      <span class="subject-dot dot-la"></span>
+      <div>
+        <div class="subject-label">Chapter 7 · Theory</div>
+        <h2 class="subject-title text-la">Determinants</h2>
+      </div>
+      <div class="subject-exam-date"><strong>EZ pp. 231–270</strong>multilinear · volume</div>
+    </div>
+
+    <div class="formula-ref">
+      <strong>Big idea.</strong> The determinant is the <em>unique</em> multilinear, alternating function of the columns of a square matrix that equals \(1\) on the identity. Geometrically, it's the signed volume of the parallelepiped spanned by the columns.
+    </div>
+
+    <div class="flash-grid">
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Determinant by three axioms</span>
+      </summary><div class="flash-a">
+        \(\det:M_{n\times n}\to\mathbb R\) satisfying: (1) <em>multilinear</em> in each column; (2) <em>alternating</em>: \(\det=0\) if two columns are equal (equivalently: sign flips on column swap); (3) <em>normalised</em>: \(\det(I)=1\).
+        These three uniquely determine \(\det\).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Existence: permutation formula</span>
+      </summary><div class="flash-a">
+        \(\det(A)=\sum_{\sigma\in S_n}\operatorname{sgn}(\sigma)\,a_{1,\sigma(1)}\cdots a_{n,\sigma(n)}\) — Leibniz formula.
+        Sum over all \(n!\) permutations; \(\operatorname{sgn}\) is \(+1\) for even, \(-1\) for odd. Proves existence; satisfies the three axioms.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Multiplicativity</span>
+      </summary><div class="flash-a">
+        \(\det(AB)=\det(A)\det(B)\) for square \(A,B\). Consequence: \(A\) is invertible iff \(\det(A)\neq0\), and \(\det(A^{-1})=1/\det(A)\). Also \(\det(A^T)=\det(A)\).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Volume interpretation</span>
+      </summary><div class="flash-a">
+        \(|\det(A)|\) is the \(n\)-dimensional volume of the parallelepiped spanned by the columns of \(A\). Sign tells you orientation (positive = right-handed). This is why row operations rescale or sign-flip the determinant:
+        scaling a row by \(c\) scales \(\det\) by \(c\); a row swap flips the sign; adding a multiple of one row to another doesn't change \(\det\) (the parallelepiped has the same base and height).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Cofactor expansion</span>
+      </summary><div class="flash-a">
+        Pick any row (or column) \(i\): \(\det(A)=\sum_j (-1)^{i+j}\,a_{ij}\,M_{ij}\), where \(M_{ij}\) is the \((n-1)\times(n-1)\) minor (delete row \(i\), col \(j\)).
+        Best when a row/column has many zeros. Specialises to base-times-height interpretation in 2D, scalar triple product in 3D.
+      </div></details>
+
+    </div>
+  </div>
+
+  <!-- ════════════ CH. 8 ════════════ -->
+  <div class="subject-block" id="ch8">
+    <div class="subject-header">
+      <span class="subject-dot dot-la"></span>
+      <div>
+        <div class="subject-label">Chapter 8 · Theory</div>
+        <h2 class="subject-title text-la">Eigenstuff, Spectral Thm, SVD</h2>
+      </div>
+      <div class="subject-exam-date"><strong>EZ pp. 271–349</strong>the final-exam centerpiece</div>
+    </div>
+
+    <div class="formula-ref">
+      <strong>Big idea.</strong> An eigenbasis turns a linear map into a diagonal matrix. Not every matrix has one — but every matrix admits at least a Schur form,
+      every symmetric matrix admits a clean spectral decomposition with an orthonormal eigenbasis, and <em>every</em> matrix (even rectangular) admits an SVD.
+    </div>
+
+    <div class="flash-grid">
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Eigenvalue, eigenvector, eigenspace</span>
+      </summary><div class="flash-a">
+        \(\lambda\in\mathbb C\) is an eigenvalue of \(A\) if \(A\mathbf v=\lambda\mathbf v\) for some \(\mathbf v\ne0\) (an <strong>eigenvector</strong>). The set of eigenvectors for a fixed \(\lambda\) plus \(\mathbf 0\) is the <strong>eigenspace</strong> \(E_\lambda=\operatorname{Ker}(A-\lambda I)\).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Characteristic polynomial</span>
+      </summary><div class="flash-a">
+        Eigenvalues are exactly the roots of \(p_A(\lambda)=\det(\lambda I-A)\). For \(n\times n\) matrices, \(p_A\) has degree \(n\); by FTA it has \(n\) roots over \(\mathbb C\) (counting multiplicity). Real matrices can have complex-conjugate eigenvalue pairs.
+      </div></details>
+
+      <details class="flash cat-def"><summary>
+        <span class="flash-tag">Definition</span>
+        <span class="flash-q">Algebraic vs geometric multiplicity</span>
+      </summary><div class="flash-a">
+        <strong>Algebraic multiplicity</strong> of \(\lambda\) = its multiplicity as a root of \(p_A\). <strong>Geometric multiplicity</strong> = \(\dim E_\lambda\).
+        Always \(1\le\) geometric \(\le\) algebraic. Equality (for all \(\lambda\)) iff \(A\) is diagonalisable.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Diagonalisability</span>
+      </summary><div class="flash-a">
+        \(A\) is diagonalisable iff it has \(n\) linearly independent eigenvectors. Then \(A=PDP^{-1}\) with \(D\) diagonal of eigenvalues and \(P\) whose columns are eigenvectors.
+        Sufficient condition: \(n\) distinct eigenvalues (eigenvectors for distinct eigenvalues are automatically independent).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Schur decomposition</span>
+      </summary><div class="flash-a">
+        Every square matrix \(A\) (over \(\mathbb C\)) admits \(A=QTQ^*\) where \(Q\) is unitary and \(T\) is upper triangular. The diagonal of \(T\) contains the eigenvalues. Real-Schur form: over \(\mathbb R\), \(T\) is block upper triangular with \(1\times1\) (real eigenvalues) and \(2\times2\) (conjugate pairs) blocks.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Spectral Theorem (symmetric matrices)</span>
+      </summary><div class="flash-a">
+        If \(A=A^T\) (real symmetric), then \(A=Q\Lambda Q^T\) for an <strong>orthogonal</strong> \(Q\) and diagonal \(\Lambda\). Real symmetric matrices have:
+        all real eigenvalues; an <em>orthonormal</em> eigenbasis; and the spectral decomposition exists for <em>every</em> symmetric matrix (no diagonalisability obstruction).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Singular Value Decomposition (SVD)</span>
+      </summary><div class="flash-a">
+        For <em>any</em> \(m\times n\) matrix \(A\) (square or not), \(A=U\Sigma V^T\) with \(U\in O(m)\), \(V\in O(n)\), and \(\Sigma\) diagonal-rectangular with non-negative <strong>singular values</strong> \(\sigma_1\ge\sigma_2\ge\cdots\ge\sigma_r>0\), where \(r=\operatorname{rank}(A)\).
+        The \(\sigma_i^2\) are the nonzero eigenvalues of \(A^TA\) (which is symmetric PSD), \(V\) holds the eigenvectors of \(A^TA\), and \(U\) holds those of \(AA^T\).
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Eckart-Young: best low-rank approximation</span>
+      </summary><div class="flash-a">
+        Given \(A=U\Sigma V^T\), the rank-\(k\) matrix \(A_k=\sum_{i=1}^k\sigma_iu_iv_i^T\) (truncated SVD) is the closest rank-\(k\) matrix to \(A\) in both Frobenius and operator norms.
+        This is the foundation of PCA, image compression, and noise reduction.
+      </div></details>
+
+      <details class="flash cat-thm"><summary>
+        <span class="flash-tag">Theorem</span>
+        <span class="flash-q">Classification of quadratic forms</span>
+      </summary><div class="flash-a">
+        A quadratic form \(q(\mathbf x)=\mathbf x^TA\mathbf x\) (with \(A\) symmetric) is classified by the signs of \(A\)'s eigenvalues:
+        all positive → positive-definite (ellipsoid); all negative → negative-definite; mixed → indefinite (hyperboloid/saddle); some zero → degenerate (paraboloid/cylinder).
+        Sylvester's law of inertia: this signature is invariant under any change of basis.
+      </div></details>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer-note">
+  RAFI'S STUDY HUB · LINEAR ALGEBRA · THEORY SUMMARY · CH. 3–8
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 || 0;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+</script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

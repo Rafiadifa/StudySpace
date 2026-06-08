@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inheritance & UML Midterm Review (English)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1f2937;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 6px;
+            background: linear-gradient(90deg, #22c55e, #14b8a6);
+            z-index: 1000;
+            transition: width 0.2s ease;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        header {
+            background: linear-gradient(135deg, #5b6df5 0%, #7e57c2 100%);
+            color: #ffffff;
+            padding: 28px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: #2f3f9c;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin: 10px 0;
+            color: #334155;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+            border-left: 4px solid #6366f1;
+            border-radius: 10px;
+            padding: 14px;
+            margin: 10px 0;
+        }
+
+        .warning {
+            background: #fff1f2;
+            border-left: 4px solid #e11d48;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .tip {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tab-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 14px;
+            cursor: pointer;
+            background: #e2e8f0;
+            color: #1f2937;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #5b6df5 0%, #7e57c2 100%);
+            color: #ffffff;
+        }
+
+        .tab-panel {
+            display: none;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px;
+            background: #fcfcff;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 10px 0;
+            white-space: pre;
+            overflow-x: auto;
+            tab-size: 4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #eef2ff;
+            color: #1e293b;
+        }
+
+        .exercise {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 14px 0;
+        }
+
+        .difficulty {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            color: #ffffff;
+        }
+
+        .basic { background: #16a34a; }
+        .core { background: #ea580c; }
+        .challenge { background: #dc2626; }
+
+        .answer-btn {
+            margin-top: 8px;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #5b6df5 0%, #7e57c2 100%);
+        }
+
+        .answer-section {
+            display: none;
+            margin-top: 10px;
+            border-radius: 10px;
+            padding: 12px;
+            background: #ecfdf5;
+            border: 1px solid #86efac;
+        }
+
+        .answer-section.show {
+            display: block;
+            animation: slideDown 0.25s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 14px; }
+            h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <div class="container">
+        <header>
+            <h1>Inheritance & UML Midterm Review</h1>
+            <p class="subtitle">Fast, beginner-friendly English review for students with about 2 months of C++ study.</p>
+        </header>
+
+        <main class="content">
+            <section class="card">
+                <h2>A. Exam Focus in 60 Seconds</h2>
+                <div class="highlight-box">
+                    <ul>
+                        <li>Know the difference between <strong>is-a</strong> (inheritance) and <strong>has-a</strong> (composition / aggregation).</li>
+                        <li>Remember access control: <strong>public / protected / private</strong> and the friend exception.</li>
+                        <li>Master constructor and destructor sequence: <strong>base first, reverse on destruction</strong>.</li>
+                        <li>Use initialization lists correctly: call base constructor and initialize members.</li>
+                        <li>Understand public/protected/private inheritance effects on base members.</li>
+                        <li>Recognize UML symbols: <strong>+ - #</strong>, hollow triangle, diamond types.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>B. Concept Cheat Sheets</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('tab-access', this)">Access Control</button>
+                    <button class="tab-btn" onclick="showTab('tab-uml', this)">UML Relations</button>
+                    <button class="tab-btn" onclick="showTab('tab-inherit', this)">Inheritance Types</button>
+                    <button class="tab-btn" onclick="showTab('tab-order', this)">Ctor/Dtor Order</button>
+                    <button class="tab-btn" onclick="showTab('tab-friend', this)">Friend</button>
+                </div>
+
+                <div id="tab-access" class="tab-panel active">
+                    <table>
+                        <tr>
+                            <th>Keyword</th>
+                            <th>Inside Class</th>
+                            <th>Derived Class</th>
+                            <th>Outside</th>
+                            <th>Memory Image</th>
+                        </tr>
+                        <tr>
+                            <td>public</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                            <td>Public park</td>
+                        </tr>
+                        <tr>
+                            <td>protected</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                            <td>No</td>
+                            <td>Family living room</td>
+                        </tr>
+                        <tr>
+                            <td>private</td>
+                            <td>Yes</td>
+                            <td>No</td>
+                            <td>No</td>
+                            <td>Private bedroom</td>
+                        </tr>
+                    </table>
+                    <div class="warning"><strong>Common trap:</strong> Derived classes cannot access base private members directly.</div>
+                </div>
+
+                <div id="tab-uml" class="tab-panel">
+                    <table>
+                        <tr>
+                            <th>Relationship</th>
+                            <th>Meaning</th>
+                            <th>UML Visual</th>
+                            <th>Example</th>
+                        </tr>
+                        <tr>
+                            <td>Inheritance</td>
+                            <td>is-a</td>
+                            <td>Solid line + hollow triangle</td>
+                            <td>Dog -> Animal</td>
+                        </tr>
+                        <tr>
+                            <td>Composition</td>
+                            <td>strong has-a</td>
+                            <td>Solid diamond</td>
+                            <td>House has Rooms</td>
+                        </tr>
+                        <tr>
+                            <td>Aggregation</td>
+                            <td>weak has-a</td>
+                            <td>Hollow diamond</td>
+                            <td>Team has Players</td>
+                        </tr>
+                    </table>
+                    <div class="tip"><strong>Exam tip:</strong> If child object lifetime depends on parent, think composition.</div>
+                </div>
+
+                <div id="tab-inherit" class="tab-panel">
+                    <table>
+                        <tr>
+                            <th>Derived Syntax</th>
+                            <th>Base public becomes</th>
+                            <th>Base protected becomes</th>
+                            <th>Typical Use</th>
+                        </tr>
+                        <tr>
+                            <td><code>class D : public B</code></td>
+                            <td>public</td>
+                            <td>protected</td>
+                            <td>True is-a modeling</td>
+                        </tr>
+                        <tr>
+                            <td><code>class D : protected B</code></td>
+                            <td>protected</td>
+                            <td>protected</td>
+                            <td>Rare internal hierarchy</td>
+                        </tr>
+                        <tr>
+                            <td><code>class D : private B</code></td>
+                            <td>private</td>
+                            <td>private</td>
+                            <td>Implementation reuse</td>
+                        </tr>
+                    </table>
+                    <div class="warning"><strong>Common trap:</strong> Private inheritance is not equivalent to composition in design meaning.</div>
+                </div>
+
+                <div id="tab-order" class="tab-panel">
+                    <div class="highlight-box">
+                        <p><strong>Construction:</strong> Base constructors -> member objects -> derived constructor body.</p>
+                        <p><strong>Destruction:</strong> Reverse order of construction.</p>
+                    </div>
+                    <div class="tip"><strong>Memory tip:</strong> Build from ground up; tear down from roof down.</div>
+                </div>
+
+                <div id="tab-friend" class="tab-panel">
+                    <ul>
+                        <li><strong>friend function</strong>: a non-member that can access private/protected members.</li>
+                        <li><strong>friend class</strong>: all methods in that class get access.</li>
+                        <li>Friendship is <strong>not inherited</strong> and <strong>not transitive</strong>.</li>
+                    </ul>
+                    <div class="warning"><strong>Common trap:</strong> “friend” does not make the function a member function.</div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>C. Must-Know Code Templates</h2>
+                <h3>Public inheritance + initialization list</h3>
+                <pre class="code-block">class Animal {
+public:
+    Animal(const string& n) : name(n) {}
+protected:
+    string name;
+};
+
+class Dog : public Animal {
+public:
+    Dog(const string& n, int a)
+        : Animal(n), age(a) {}
+private:
+    int age;
+};</pre>
+
+                <h3>Friend function</h3>
+                <pre class="code-block">class Box {
+private:
+    int secret = 42;
+    friend void reveal(const Box& b);
+};
+
+void reveal(const Box& b) {
+    cout << b.secret << endl;
+}</pre>
+
+                <h3>Virtual base for diamond problem</h3>
+                <pre class="code-block">class A { public: int x = 1; };
+class B : virtual public A {};
+class C : virtual public A {};
+class D : public B, public C {};
+
+// D has only one A subobject.</pre>
+            </section>
+
+            <section class="card">
+                <h2>C2. static / const / static const (Quick Review)</h2>
+                <table>
+                    <tr>
+                        <th>Keyword</th>
+                        <th>Core Meaning</th>
+                        <th>Where Stored / Shared</th>
+                        <th>Exam Trap</th>
+                    </tr>
+                    <tr>
+                        <td><code>static</code> member</td>
+                        <td>Belongs to class, not each object</td>
+                        <td>One shared copy for all objects</td>
+                        <td>Must define it outside class (for non-inline form)</td>
+                    </tr>
+                    <tr>
+                        <td><code>const</code> member</td>
+                        <td>Value cannot change after initialization</td>
+                        <td>Stored in each object</td>
+                        <td>Must initialize in constructor init list</td>
+                    </tr>
+                    <tr>
+                        <td><code>static const</code> member</td>
+                        <td>Shared constant at class level</td>
+                        <td>One class-level constant value</td>
+                        <td>Confusing it with object-level const member</td>
+                    </tr>
+                </table>
+
+                <h3>Minimal Example</h3>
+                <pre class="code-block">class Student {
+public:
+    Student(int id) : id_(id) { ++count_; }
+
+    static int getCount() { return count_; }
+    int getId() const { return id_; }
+
+    static const int maxScore = 100;
+
+private:
+    static int count_;
+    const int id_;
+};
+
+int Student::count_ = 0;</pre>
+
+                <div class="tip">
+                    <strong>Fast memory rule:</strong> <code>static</code> = one shared box, <code>const</code> = locked value, <code>static const</code> = shared locked value.
+                </div>
+                <div class="warning">
+                    <strong>Common mistakes:</strong> forgetting init list for const member, and forgetting external definition for static data member.
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>D. Hard Parts & Common Mistakes</h2>
+                <div class="warning">
+                    <strong>Hard Point 1:</strong> Confusing actual initialization order with the order written in initialization list.
+                    Real rule: member initialization follows declaration order in class definition.
+                </div>
+                <div class="warning">
+                    <strong>Hard Point 2:</strong> Thinking derived constructor body runs before base constructor.
+                    Real rule: base construction always happens first.
+                </div>
+                <div class="warning">
+                    <strong>Hard Point 3:</strong> Using private inheritance when the model should be “has-a”.
+                    Use composition if ownership/object containment is the real design.
+                </div>
+                <div class="tip">
+                    <strong>Quick anti-mistake checklist:</strong> confirm relationship type, confirm access level, trace constructor chain.
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>E. Practice Zone</h2>
+
+                <article class="exercise">
+                    <h3>Q1. Access Control Judgment <span class="difficulty basic">Basic</span></h3>
+                    <p>In public inheritance, can a derived method directly use base private members?</p>
+                    <button class="answer-btn" onclick="toggleAnswer('a1', this)">Show Answer</button>
+                    <div id="a1" class="answer-section">
+                        <p><strong>Answer:</strong> No.</p>
+                        <p><strong>Why:</strong> Private members stay accessible only inside the base class itself.</p>
+                        <p><strong>Memory Tip:</strong> Private = bedroom, children cannot enter directly.</p>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q2. Constructor Order <span class="difficulty core">Core</span></h3>
+                    <p>Given <code>class D : public B</code> with member object <code>M m;</code>, choose order:</p>
+                    <p>A) D body -> B -> M<br>B) B -> M -> D body<br>C) M -> B -> D body</p>
+                    <button class="answer-btn" onclick="toggleAnswer('a2', this)">Show Answer</button>
+                    <div id="a2" class="answer-section">
+                        <p><strong>Answer:</strong> B) B -> M -> D body</p>
+                        <p><strong>Memory Tip:</strong> Foundation first, decoration later.</p>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q3. Code Correction <span class="difficulty core">Core</span></h3>
+                    <p>Fix the derived constructor:</p>
+                    <pre class="code-block">class Base {
+public:
+    Base(int id) {}
+};
+class Derived : public Base {
+public:
+    Derived(int id, int score) { /* ... */ } // wrong
+};</pre>
+                    <button class="answer-btn" onclick="toggleAnswer('a3', this)">Show Answer</button>
+                    <div id="a3" class="answer-section">
+                        <pre class="code-block">class Derived : public Base {
+public:
+    Derived(int id, int score)
+        : Base(id), score_(score) {}
+private:
+    int score_;
+};</pre>
+                        <p><strong>Why:</strong> Base has no default constructor, so it must be called in init list.</p>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q4. UML Mapping <span class="difficulty basic">Basic</span></h3>
+                    <p>“Car has Engine, and Engine lifetime is controlled by Car.” Which relation?</p>
+                    <button class="answer-btn" onclick="toggleAnswer('a4', this)">Show Answer</button>
+                    <div id="a4" class="answer-section">
+                        <p><strong>Answer:</strong> Composition (strong has-a, solid diamond).</p>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q5. Friend Concept <span class="difficulty core">Core</span></h3>
+                    <p>True or False: if class A is friend of B, all subclasses of A are automatically friend of B.</p>
+                    <button class="answer-btn" onclick="toggleAnswer('a5', this)">Show Answer</button>
+                    <div id="a5" class="answer-section">
+                        <p><strong>Answer:</strong> False.</p>
+                        <p><strong>Why:</strong> Friendship is not inherited.</p>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q6. Diamond Problem <span class="difficulty challenge">Challenge</span></h3>
+                    <p>Why use virtual inheritance in diamond structures?</p>
+                    <button class="answer-btn" onclick="toggleAnswer('a6', this)">Show Answer</button>
+                    <div id="a6" class="answer-section">
+                        <p><strong>Answer:</strong> To keep only one shared base subobject and remove ambiguity / duplication.</p>
+                        <pre class="code-block">class B : virtual public A {};
+class C : virtual public A {};
+class D : public B, public C {};</pre>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q7. static vs const vs static const <span class="difficulty core">Core</span></h3>
+                    <p>Choose the correct statement:</p>
+                    <p>
+                        A) <code>const</code> data member can be assigned in constructor body.<br>
+                        B) <code>static</code> data member has one copy per object.<br>
+                        C) <code>static const</code> expresses a class-level constant.<br>
+                        D) <code>static</code> member can only be accessed by object.
+                    </p>
+                    <button class="answer-btn" onclick="toggleAnswer('a7', this)">Show Answer</button>
+                    <div id="a7" class="answer-section">
+                        <p><strong>Answer:</strong> C is correct.</p>
+                        <p><strong>Why:</strong> const member needs init list; static is shared by class and can be accessed with <code>ClassName::member</code>.</p>
+                    </div>
+                </article>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        function showTab(tabId, button) {
+            const panels = document.querySelectorAll(".tab-panel");
+            const buttons = document.querySelectorAll(".tab-btn");
+
+            panels.forEach((panel) => panel.classList.remove("active"));
+            buttons.forEach((btn) => btn.classList.remove("active"));
+
+            const target = document.getElementById(tabId);
+            if (target) {
+                target.classList.add("active");
+            }
+            button.classList.add("active");
+        }
+
+        function toggleAnswer(answerId, button) {
+            const ans = document.getElementById(answerId);
+            if (!ans) {
+                return;
+            }
+            ans.classList.toggle("show");
+            button.textContent = ans.classList.contains("show") ? "Hide Answer" : "Show Answer";
+        }
+
+        window.addEventListener("scroll", () => {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollTop = window.scrollY;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            document.getElementById("scrollProgress").style.width = progress + "%";
+        });
+    </script>
+</body>
+</html>

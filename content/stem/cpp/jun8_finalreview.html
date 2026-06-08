@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ · Light Final Review · 8 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    .recall-box { background:rgba(21,128,61,0.07); border:1px solid rgba(21,128,61,0.3); border-left:3px solid var(--cpp); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+    .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--cpp); margin-bottom:10px; }
+    .checklist { list-style:none; margin:6px 0 0; padding:0; }
+    .checklist li { padding:9px 0 9px 30px; position:relative; border-bottom:1px solid var(--border); font-size:0.95rem; line-height:1.5; }
+    .checklist li:last-child { border-bottom:none; }
+    .checklist li::before { content:'☐'; position:absolute; left:0; color:var(--cpp); font-size:1.05rem; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-cpp">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ c++ / light final review</span>
+    <span class="topbar-date">MON · 8 JUN 2026</span>
+  </div>
+  <div class="hero">
+    <h1>Light Final <em>Review</em></h1>
+    <p class="hero-meta">P1 · 08:00–09:35 · 95 min · No new material — two days out from the final. Skim every concept, do quick self-checks, and flag what still feels shaky for one last targeted pass.</p>
+    <div class="exam-pills">
+      <span class="pill pill-cpp">C++</span>
+      <span class="pill pill-cpp">Consolidation</span>
+      <span class="pill pill-cpp">Final · 10 June 2026</span>
+    </div>
+  </div>
+  <div class="main">
+    <div class="subject-block">
+      <div class="subject-header">
+        <div class="subject-dot dot-cpp"></div>
+        <div>
+          <div class="subject-label">Self-Study · 95 min · no new material</div>
+          <div class="subject-title" style="color:var(--cpp)">Final Consolidation Pass</div>
+        </div>
+        <div class="subject-exam-date"><strong>C++ Final</strong>10 June 2026</div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Pass 1</span><span class="problem-topic">Concept checklist</span></div>
+        <div class="problem-body">
+          <div class="recall-box">
+            <div class="rl">⌁ Tick what you can explain without notes</div>
+            <ul class="checklist">
+              <li>Value vs reference parameters; when each mutates the caller</li>
+              <li>Pointers: <code>*p</code> vs <code>p</code>, <code>*(p+i)</code> vs <code>*p+i</code>, <code>new</code>/<code>delete</code></li>
+              <li>Class anatomy: private data, public methods, <code>const</code> getters</li>
+              <li>Constructor initializer list — and the three cases that require it</li>
+              <li>Inheritance: <code>: public Base</code>, calling the base constructor</li>
+              <li>Virtual functions, <code>override</code>, the vtable, dynamic dispatch</li>
+              <li>Pure virtual <code>= 0</code> → abstract class; can't instantiate</li>
+              <li>Virtual destructor — why <code>delete base_ptr</code> needs it</li>
+              <li>Operator overloading: member vs friend; <code>operator&lt;&lt;</code> must be non-member</li>
+              <li><code>friend</code> functions and private access</li>
+              <li>Exceptions: <code>throw</code>/<code>try</code>/<code>catch</code>, catch order, stack unwinding</li>
+              <li>Object slicing — why polymorphism needs pointers/references</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Pass 2</span><span class="problem-topic">90-second self-checks</span></div>
+        <div class="problem-body">
+          <div class="context-box">Answer each in one line; reveal to confirm.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answers</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Quick answers</span>
+              <strong>Why <code>const</code> on a getter?</strong> Promises no mutation; callable on <code>const</code> objects.<br>
+              <strong>What makes a class abstract?</strong> At least one pure virtual (<code>= 0</code>).<br>
+              <strong>Why virtual destructor?</strong> So deleting through a base pointer runs the derived destructor too.<br>
+              <strong>Member or friend for <code>operator&lt;&lt;</code>?</strong> Friend/non-member — left operand is <code>ostream</code>.<br>
+              <strong>Catch order?</strong> Most-derived first, base last.<br>
+              <strong>What is slicing?</strong> Copying a derived object into a base value loses the derived part.
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Pass 3</span><span class="problem-topic">Revisit your weak spots</span></div>
+        <div class="problem-body">
+          <div class="recall-box">
+            <div class="rl">⌁ From your error log</div>
+            Open the Study Log on the hub, hit "Export for AI analysis", and look at any C++ sessions you graded <em>Again</em> or <em>Hard</em>. Redo one problem from each weak topic now — cold, no notes. If it's still shaky, that's your single highest-value thing to review tonight.
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="footer-note">C++ · Light Final Review · Monday 8 June 2026 · Rest well before the final ✦</div>
+  </div>
+  <div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+  <script>
+    function toggleAns(btn){ const a=btn.nextElementSibling; a.classList.toggle('open'); btn.textContent=a.classList.contains('open')?'Hide Answers':'Show Answers'; }
+    window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
+    const start=Date.now(), pad=n=>String(n).padStart(2,'0');
+    setInterval(()=>{ const e=Math.floor((Date.now()-start)/1000); document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60); },1000);
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

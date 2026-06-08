@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>General Management · Mock Exam (2 hr)</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    body.subject-mgmt { --accent: var(--mgmt); }
+    .crumbs { font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--text3); padding:14px 48px 0; }
+    .crumbs a { color:var(--text3); text-decoration:none; border-bottom:1px solid var(--border); }
+    .crumbs span { margin:0 6px; }
+
+    .exam-rules { background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--mgmt); border-radius:0 12px 12px 0; padding:18px 22px; margin-bottom:8px; font-size:0.9rem; line-height:1.6; color:var(--text2); }
+    .exam-rules strong { color:var(--text); }
+
+    /* Control bar */
+    .ctrl { position:sticky; top:0; z-index:30; background:var(--topbar-bg); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:12px 48px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+    .ctrl-timer { font-family:'DM Mono',monospace; font-size:1.1rem; color:var(--text); letter-spacing:.04em; padding:6px 16px; border:1px solid var(--border); border-radius:10px; background:var(--bg2); }
+    .ctrl-timer.warn { border-color:rgba(180,83,9,.5); color:#b45309; }
+    .ctrl-timer.urgent { border-color:rgba(220,38,38,.5); color:#dc2626; }
+    .ctrl-timer.done { background:#dc2626; color:#fff; border-color:#dc2626; }
+    .btn { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:.06em; padding:9px 16px; border-radius:8px; border:1px solid var(--border); background:none; cursor:pointer; color:var(--text2); transition:.15s; }
+    .btn:hover { background:var(--bg3); color:var(--text); }
+    .btn.primary { background:var(--mgmt); color:#fff; border-color:var(--mgmt); }
+    .btn.primary:hover { opacity:.88; }
+    .ctrl-status { font-family:'DM Mono',monospace; font-size:0.66rem; color:var(--text3); margin-left:auto; display:flex; align-items:center; gap:14px; }
+    .save-dot { width:7px; height:7px; border-radius:50%; background:#16a34a; display:inline-block; opacity:0; transition:opacity .3s; }
+    .save-dot.show { opacity:1; }
+
+    /* Question cards */
+    .q { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:24px 26px; margin-bottom:20px; }
+    .q-head { display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+    .q-num { font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--mgmt); font-weight:500; }
+    .q-type { font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:.08em; text-transform:uppercase; padding:3px 9px; border-radius:99px; }
+    .t-define { background:rgba(29,78,216,.1); color:var(--calc); }
+    .t-compare { background:rgba(109,40,217,.12); color:var(--mgmt); }
+    .t-apply { background:rgba(21,128,61,.1); color:var(--cpp); }
+    .q-marks { margin-left:auto; font-family:'DM Mono',monospace; font-size:0.66rem; color:var(--text3); }
+    .q-prompt { font-size:1rem; line-height:1.6; color:var(--text); margin-bottom:6px; }
+    .q-prompt .scenario { display:block; background:var(--bg3); border-radius:8px; padding:12px 14px; font-size:0.92rem; color:var(--text2); margin-bottom:10px; font-style:italic; }
+    textarea.ans { width:100%; min-height:130px; font-family:'DM Sans',sans-serif; font-size:0.95rem; line-height:1.6; padding:14px 16px; border:1px solid var(--border); border-radius:10px; background:var(--bg); color:var(--text); resize:vertical; outline:none; transition:border-color .15s; }
+    textarea.ans:focus { border-color:var(--mgmt); }
+    .ans-meta { display:flex; align-items:center; gap:14px; margin-top:8px; }
+    .wc { font-family:'DM Mono',monospace; font-size:0.62rem; color:var(--text3); }
+    .kp-toggle { font-family:'DM Mono',monospace; font-size:0.64rem; color:var(--mgmt); background:none; border:none; cursor:pointer; padding:0; }
+    .kp-toggle:hover { text-decoration:underline; }
+    .kp { display:none; margin-top:12px; padding:14px 16px; background:color-mix(in oklab,var(--mgmt) 6%,transparent); border-left:3px solid var(--mgmt); border-radius:0 8px 8px 0; }
+    .kp.show { display:block; }
+    .kp-label { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--mgmt); margin-bottom:8px; }
+    .kp ul { margin:0 0 0 18px; font-size:0.86rem; line-height:1.7; color:var(--text2); }
+    .kp ul strong { color:var(--text); }
+    @supports not (background:color-mix(in oklab,red 50%,blue)){ .kp{ background:rgba(109,40,217,.07);} }
+
+    /* Start overlay */
+    .start-veil { position:fixed; inset:0; background:var(--bg); z-index:200; display:flex; align-items:center; justify-content:center; padding:24px; }
+    .start-card { max-width:520px; text-align:center; }
+    .start-card h2 { font-family:'DM Serif Display',serif; font-size:2rem; color:var(--text); margin-bottom:12px; }
+    .start-card p { font-size:0.92rem; color:var(--text2); line-height:1.7; margin-bottom:10px; }
+    .start-card .big { font-family:'DM Mono',monospace; font-size:0.7rem; color:#b45309; background:rgba(180,83,9,.08); border:1px solid rgba(180,83,9,.25); border-radius:10px; padding:12px 16px; margin:18px 0; }
+    @media (max-width:640px){ .crumbs,.ctrl{ padding-left:18px; padding-right:18px; } }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-mgmt">
+
+  <!-- Start overlay -->
+  <div class="start-veil" id="veil">
+    <div class="start-card">
+      <div style="font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);">General Management · Final Simulation</div>
+      <h2>2-Hour Mock Exam</h2>
+      <p>Ten short-answer questions across the whole course — define, compare, and apply. Open book, in one sitting, just like the real assessment.</p>
+      <p>Your answers <strong>autosave</strong> as you type and survive a refresh. The timer starts when you click below and keeps running across reloads.</p>
+      <div class="big">⏱ Once started, a 2-hour countdown begins. Treat it like the real thing — no AI while answering. Export to AI only afterward, for feedback.</div>
+      <button class="btn primary" style="font-size:0.8rem;padding:12px 28px;" onclick="startExam()">Start the 2-hour timer →</button>
+      <div style="margin-top:14px;"><button class="btn" onclick="browseOnly()">Just browse (don't start timer)</button></div>
+    </div>
+  </div>
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/humanities.html">Humanities</a><span>/</span>
+    General Management <span>/</span> Mock Exam
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">Mock Exam</span>
+    <span class="topbar-sub">/ general management</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <!-- Control bar -->
+  <div class="ctrl">
+    <span class="ctrl-timer" id="timer">2:00:00</span>
+    <button class="btn primary" onclick="exportAnswers()">⬇ Export for AI analysis</button>
+    <button class="btn" onclick="restartTimer()">Restart timer</button>
+    <button class="btn" onclick="clearAll()">Clear answers</button>
+    <span class="ctrl-status">
+      <span id="answered">0 / 10 answered</span>
+      <span><span class="save-dot" id="savedot"></span> <span id="savetext">autosaved</span></span>
+    </span>
+  </div>
+
+  <div class="hero" style="padding:40px 48px 28px;">
+    <h1 style="font-size:clamp(2rem,4vw,3rem);">Final Assessment <em style="color:var(--mgmt)">Simulation</em></h1>
+    <p class="hero-meta">Short-answer questions on Dr. Yan's Fundamentals of Management. Answer in your own words, grounded in the named frameworks — that's exactly what the rubric rewards.</p>
+  </div>
+
+  <div class="main" style="padding-top:24px;">
+    <div class="exam-rules">
+      <strong>How to use this.</strong> Write each answer in its box (autosaved). Don't open "key points" until you've written your answer — it's a self-check rubric, not a model answer. When finished, hit <strong>Export for AI analysis</strong> to copy every question + your answer (plus the rubric) into a single block you can paste into an AI for grading.
+    </div>
+
+    <div id="questions"></div>
+
+    <div style="text-align:center; margin:36px 0 8px;">
+      <button class="btn primary" style="font-size:0.8rem;padding:13px 30px;" onclick="exportAnswers()">⬇ Export all answers for AI analysis</button>
+      <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text3);margin-top:10px;">copies a graded-feedback prompt + your answers to the clipboard</div>
+    </div>
+  </div>
+
+  <div class="footer-note">RAFI ADIFA MAULANA · GENERAL MANAGEMENT · MOCK EXAM · 2026</div>
+
+  <script>
+  /* ═══════════ QUESTION BANK ═══════════ */
+  const QUESTIONS = [
+    { id:'q1', type:'apply', marks:'10', topic:'Decision Making',
+      scenario:'A regional manager, under heavy time pressure and with incomplete information, picks the first supplier that "seems fine" rather than comparing all options.',
+      prompt:'Explain this behaviour using <strong>bounded rationality</strong> and <strong>satisficing</strong>. Why do managers rarely reach the fully "rational" ideal?',
+      kp:['The <strong>rational model</strong> is the ideal: define problem → criteria → weight them → generate alternatives → evaluate → pick the optimum.',
+          '<strong>Bounded rationality (Simon):</strong> real cognition is limited by information, time, and processing capacity.',
+          '<strong>Satisficing:</strong> the manager simplifies the problem, scans a limited set of options, and stops at the first "good enough" one — not the optimum.',
+          'Tie to <strong>System 1 vs System 2</strong> (Kahneman): time pressure pushes toward fast, automatic judgment.'] },
+    { id:'q2', type:'define', marks:'10', topic:'Decision Biases / Ethics',
+      prompt:'Define <strong>overconfidence bias</strong> and the <strong>Dunning–Kruger effect</strong> ("unskilled and unaware"). Explain why a manager might fail to recognise their own ethical lapse.',
+      kp:['<strong>Overconfidence:</strong> systematically overestimating one’s ability/accuracy (e.g. Svenson — 93% rate themselves above-average drivers).',
+          '<strong>Dunning–Kruger:</strong> low-skill individuals overestimate competence because they lack the metacognition to see their own gaps.',
+          '<strong>Ethics link:</strong> being "unskilled and unaware" lets people rationalise unethical acts and not perceive the lapse as wrong.',
+          'Mention self-serving bias / motivated reasoning as reinforcing it.'] },
+    { id:'q3', type:'apply', marks:'12', topic:'Group Decision Making',
+      scenario:'Engineers raised O-ring concerns before the Challenger launch, but the group pressed ahead and approved the launch.',
+      prompt:'Use <strong>Groupthink</strong> to explain the Challenger disaster. Identify at least three symptoms and how the pressure for consensus produced a catastrophic decision.',
+      kp:['<strong>Groupthink:</strong> in highly cohesive groups the drive for unanimity overrides realistic appraisal of alternatives.',
+          'Symptoms (name ≥3): <strong>illusion of invulnerability, collective rationalisation, self-censorship, illusion of unanimity, direct pressure on dissenters, mindguards</strong>.',
+          'Application: dissenting engineers self-censored / were pressured; the group rationalised away the risk to preserve consensus and schedule.',
+          'Note the antecedents: cohesion + external pressure + directive leadership.'] },
+    { id:'q4', type:'apply', marks:'10', topic:'Groups',
+      prompt:'Define <strong>social loafing</strong>. Using group properties (size, cohesiveness, norms), explain <strong>two</strong> concrete ways a manager could reduce it.',
+      kp:['<strong>Social loafing:</strong> individuals exert less effort working collectively than alone (Ringelmann) — diffusion of responsibility.',
+          'Fix 1: make individual contributions <strong>identifiable / accountable</strong> (measure individual output).',
+          'Fix 2: smaller groups, meaningful tasks, and strong <strong>positive norms + cohesiveness</strong> so effort is socially expected.',
+          'Bonus: equity perceptions — people loaf if they feel others free-ride.'] },
+    { id:'q5', type:'compare', marks:'10', topic:'Teams / Personality',
+      prompt:'Explain <strong>complementary</strong> vs <strong>supplementary</strong> fit. Why might a team need complementary fit for <strong>extraversion</strong> but supplementary fit for <strong>conscientiousness</strong>?',
+      kp:['<strong>Supplementary fit:</strong> members are similar / share the trait. <strong>Complementary fit:</strong> members differ and supply what others lack.',
+          '<strong>Conscientiousness → supplementary:</strong> you want everyone reliable; one low-conscientiousness member becomes a weak link.',
+          '<strong>Extraversion → complementary:</strong> too many extraverts compete for airtime/status; a mix balances leading and listening.',
+          'Frame as team composition / deep-level diversity.'] },
+    { id:'q6', type:'apply', marks:'10', topic:'Motivation',
+      prompt:'Explain the <strong>"crowding out"</strong> effect. Why can rewarding an intrinsically interesting task actually <strong>undermine</strong> motivation?',
+      kp:['<strong>Intrinsic motivation:</strong> doing a task for its inherent interest/enjoyment.',
+          '<strong>Crowding out / over-justification:</strong> an extrinsic reward leads people to re-attribute their behaviour to the reward, not the interest.',
+          'Controlling rewards reduce <strong>autonomy</strong> (self-determination); when the reward is removed, motivation can fall below the original baseline.',
+          'Managerial implication: use rewards carefully for already-interesting work; informational > controlling rewards.'] },
+    { id:'q7', type:'compare', marks:'10', topic:'Conflict',
+      prompt:'Distinguish <strong>task conflict</strong> from <strong>relationship conflict</strong>. When is task conflict beneficial, and when does it turn harmful?',
+      kp:['<strong>Task conflict:</strong> disagreement about the content/goals of the work. <strong>Relationship conflict:</strong> interpersonal, emotional incompatibility.',
+          '<strong>Moderate</strong> task conflict can improve decision quality and creativity, especially on <strong>non-routine</strong> tasks.',
+          'It becomes harmful when it is <strong>intense</strong> or escalates into relationship conflict; relationship conflict is almost always destructive.',
+          'Optional: process conflict (about how to do the work).'] },
+    { id:'q8', type:'define', marks:'10', topic:'Organizational Culture',
+      prompt:'Define <strong>organizational culture</strong> and outline <strong>Schein’s three levels</strong> (the iceberg). Explain <strong>strong vs weak</strong> culture and give one way a strong culture can be a <strong>liability</strong>.',
+      kp:['<strong>Culture:</strong> a system of shared values, norms, and assumptions that guides members’ attitudes and behaviour; a shared <em>perception</em>.',
+          '<strong>Schein:</strong> artifacts (visible) → espoused values → basic underlying assumptions (invisible, taken for granted).',
+          '<strong>Strong culture:</strong> core values intensely held <em>and</em> widely shared → more behavioural influence, cohesion, lower turnover.',
+          '<strong>Liability:</strong> barrier to change/diversity/M&A; institutionalisation (58% of mergers fail on culture clash).'] },
+    { id:'q9', type:'apply', marks:'12', topic:'Change Management',
+      prompt:'Using <strong>planned vs unplanned change</strong> and <strong>Kotter’s 8-step model</strong>, explain Blockbuster’s failure and Netflix’s rise.',
+      kp:['<strong>Unplanned (reactive)</strong> vs <strong>planned (proactive)</strong> change. Blockbuster reacted too late; Netflix led the change (mail → streaming).',
+          'Blockbuster: complacency, no sense of urgency, clung to the late-fee model — strong culture as a barrier to change.',
+          '<strong>Kotter steps</strong> (use several): create urgency, build a coalition, form a vision, communicate it, empower action, short-term wins, consolidate, anchor in culture.',
+          'Mention resistance to change and how to overcome it.'] },
+    { id:'q10', type:'compare', marks:'10', topic:'Leadership',
+      prompt:'Compare <strong>transactional</strong> and <strong>transformational</strong> leadership, and give a situation where each is appropriate.',
+      kp:['<strong>Transactional:</strong> exchange-based — contingent reward, management-by-exception, clarifies roles/tasks. Good for stable, routine settings.',
+          '<strong>Transformational:</strong> the "4 I’s" — idealised influence, inspirational motivation, intellectual stimulation, individualised consideration.',
+          'Transformational suits <strong>change, innovation, engagement</strong>; transactional suits predictable operations.',
+          'They are often <strong>complementary</strong> (augmentation effect), not mutually exclusive.'] },
+  ];
+
+  const PREFIX='gm_mock_';
+  const TYPE_LABEL={define:'Define',compare:'Compare',apply:'Apply'};
+
+  /* ── render ── */
+  function render(){
+    const wrap=document.getElementById('questions');
+    wrap.innerHTML=QUESTIONS.map((q,i)=>`
+      <div class="q" id="${q.id}">
+        <div class="q-head">
+          <span class="q-num">Question ${i+1}</span>
+          <span class="q-type t-${q.type}">${TYPE_LABEL[q.type]}</span>
+          <span class="q-type" style="background:var(--bg3);color:var(--text3);">${q.topic}</span>
+          <span class="q-marks">${q.marks} marks</span>
+        </div>
+        <div class="q-prompt">${q.scenario?`<span class="scenario">${q.scenario}</span>`:''}${q.prompt}</div>
+        <textarea class="ans" data-qid="${q.id}" placeholder="Type your answer here… (autosaves)"></textarea>
+        <div class="ans-meta">
+          <span class="wc" id="wc-${q.id}">0 words</span>
+          <button class="kp-toggle" onclick="toggleKP('${q.id}')">▸ Show key points to hit</button>
+        </div>
+        <div class="kp" id="kp-${q.id}">
+          <div class="kp-label">Key points a strong answer hits</div>
+          <ul>${q.kp.map(p=>`<li>${p}</li>`).join('')}</ul>
+        </div>
+      </div>`).join('');
+
+    // restore + wire textareas
+    QUESTIONS.forEach(q=>{
+      const ta=document.querySelector(`textarea[data-qid="${q.id}"]`);
+      ta.value = localStorage.getItem(PREFIX+'ans_'+q.id) || '';
+      updateWC(q.id);
+      ta.addEventListener('input', ()=>{ save(q.id, ta.value); updateWC(q.id); });
+    });
+    updateAnswered();
+  }
+
+  let saveTimer=null;
+  function save(id,val){
+    localStorage.setItem(PREFIX+'ans_'+id, val);
+    const dot=document.getElementById('savedot'), txt=document.getElementById('savetext');
+    dot.classList.add('show'); txt.textContent='saving…';
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(()=>{ txt.textContent='all saved'; setTimeout(()=>dot.classList.remove('show'),600); updateAnswered(); },350);
+  }
+  function updateWC(id){
+    const ta=document.querySelector(`textarea[data-qid="${id}"]`);
+    const w=(ta.value.trim().match(/\S+/g)||[]).length;
+    document.getElementById('wc-'+id).textContent=w+' word'+(w===1?'':'s');
+  }
+  function updateAnswered(){
+    const n=QUESTIONS.filter(q=>(localStorage.getItem(PREFIX+'ans_'+q.id)||'').trim().length>0).length;
+    document.getElementById('answered').textContent=`${n} / ${QUESTIONS.length} answered`;
+  }
+  function toggleKP(id){
+    const kp=document.getElementById('kp-'+id);
+    const btn=event.target;
+    kp.classList.toggle('show');
+    btn.textContent=(kp.classList.contains('show')?'▾ Hide key points':'▸ Show key points to hit');
+  }
+
+  /* ── timer ── */
+  let tick=null;
+  function fmt(s){ const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60; return h+':'+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0'); }
+  function runTimer(){
+    clearInterval(tick);
+    tick=setInterval(()=>{
+      const start=+localStorage.getItem(PREFIX+'start');
+      const el=document.getElementById('timer');
+      if(!start){ el.textContent='2:00:00'; return; }
+      const left=Math.max(0, 120*60 - Math.floor((Date.now()-start)/1000));
+      el.textContent=fmt(left);
+      el.classList.toggle('warn', left<=15*60 && left>5*60);
+      el.classList.toggle('urgent', left<=5*60 && left>0);
+      if(left===0){ el.classList.add('done'); el.textContent="TIME'S UP"; clearInterval(tick); }
+    },1000);
+  }
+  function startExam(){ localStorage.setItem(PREFIX+'start', Date.now()); document.getElementById('veil').style.display='none'; runTimer(); }
+  function browseOnly(){ document.getElementById('veil').style.display='none'; }
+  function restartTimer(){ if(!confirm('Restart the 2-hour countdown from now? (Your answers are kept.)'))return; localStorage.setItem(PREFIX+'start',Date.now()); runTimer(); }
+  function clearAll(){ if(!confirm('Erase all your typed answers? This cannot be undone.'))return; QUESTIONS.forEach(q=>localStorage.removeItem(PREFIX+'ans_'+q.id)); render(); }
+
+  /* ── export ── */
+  function exportAnswers(){
+    const date=new Date().toLocaleString('en-GB',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const L=[];
+    L.push('GENERAL MANAGEMENT — MOCK EXAM ANSWERS (for AI grading)');
+    L.push('Student: Rafi Adifa Maulana');
+    L.push('Course: Dr. Liuxin Yan — Fundamentals of Management (Organizational Behavior)');
+    L.push('Exported: '+date);
+    L.push('');
+    L.push('INSTRUCTIONS TO THE AI:');
+    L.push('Grade each answer strictly against the course concepts. For EACH question give: (1) a mark out of the stated marks, (2) the named frameworks/terms I applied correctly, (3) the key points I MISSED, (4) one concrete sentence on how to strengthen it. Answers must be grounded in the specific named theories — penalise generic, ungrounded responses.');
+    L.push('');
+    L.push('='.repeat(64));
+    QUESTIONS.forEach((q,i)=>{
+      const ans=(localStorage.getItem(PREFIX+'ans_'+q.id)||'').trim();
+      const prompt=q.prompt.replace(/<[^>]+>/g,'');
+      const scen=q.scenario?('Scenario: '+q.scenario+'\n'):'';
+      L.push('');
+      L.push(`Q${i+1}. [${TYPE_LABEL[q.type]} · ${q.topic} · ${q.marks} marks]`);
+      L.push(scen+prompt);
+      L.push('');
+      L.push('MY ANSWER:');
+      L.push(ans || '(left blank)');
+      L.push('');
+      L.push('Key points expected: '+q.kp.map(p=>p.replace(/<[^>]+>/g,'')).join(' | '));
+      L.push('-'.repeat(64));
+    });
+    const text=L.join('\n');
+    // copy + offer download
+    const done=()=>{
+      const blob=new Blob([text],{type:'text/plain'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+      a.download='gm-mock-answers.txt'; document.body.appendChild(a); a.click(); a.remove();
+      alert('Copied to clipboard ✓  (and downloaded as gm-mock-answers.txt)\n\nPaste it into your AI chat for grading.');
+    };
+    navigator.clipboard.writeText(text).then(done).catch(()=>{
+      const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); done();
+    });
+  }
+
+  /* ── init ── */
+  const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const D=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const d=new Date();
+  document.getElementById('topbar-date').textContent=`${D[d.getDay()]} · ${d.getDate()} ${M[d.getMonth()].toUpperCase()} ${d.getFullYear()}`;
+  render();
+  runTimer();
+  // if a timer is already running (resumed sitting), skip the veil
+  if(localStorage.getItem(PREFIX+'start')) document.getElementById('veil').style.display='none';
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

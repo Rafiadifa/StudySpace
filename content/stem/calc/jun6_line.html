@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Work &amp; Line Integrals · 6 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ calc-a2 / work &amp; line integrals</span>
+    <span class="topbar-date">SAT · 6 JUN 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Work &amp; <em>Line Integrals</em></h1>
+    <p class="hero-meta">P5 · Ch. 15.2 · Gradient Theorem. Compute work along a curve, test for conservative fields, and use the potential shortcut when it applies.</p>
+    <div class="exam-pills">
+      <span class="pill pill-calc">∫ Calc A2</span>
+      <span class="pill pill-calc">Ch. 15.2</span>
+      <span class="pill pill-calc">Final · 23 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-calc"></div>
+        <div>
+          <div class="subject-label">Daily Practice · 50 min · Ch. 15.2</div>
+          <div class="subject-title" style="color:var(--calc)">Work &amp; Line Integrals</div>
+        </div>
+        <div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>Quick reference.</strong> Work \(=\displaystyle\int_\gamma \mathbf F\cdot d\mathbf r=\int_a^b \mathbf F(\gamma(t))\cdot\gamma'(t)\,dt\). <strong>Curl test (2-D):</strong> \(\mathbf F=(P,Q)\) is conservative on a simply-connected domain iff \(P_y=Q_x\). If conservative, find a potential \(\phi\) and use the <strong>Gradient Theorem</strong>: \(\int_\gamma\mathbf F\cdot d\mathbf r=\phi(\text{end})-\phi(\text{start})\) — path-independent, no parametrisation needed.
+      </div>
+
+      <!-- ══ Problem 1 ══ -->
+      <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">Is the field conservative?</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Let \(\mathbf F=(2xy+y,\ x^2+x)\) and let \(\gamma\) go from \((0,0)\) to \((1,1)\).<div class="conn-chain">chains: curl test · potential function · Gradient Theorem · path-independence</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Apply the curl test.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(P_y=2x+1=Q_x=2x+1\) ✓ conservative (on all of \(\mathbb R^2\), simply connected). <div class="key-result">Conservative.</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Find a potential \(\phi\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\int(2xy+y)\,dx=x^2y+xy+g(y)\); \(\partial_y=x^2+x+g'=x^2+x\Rightarrow g'=0\). <div class="key-result">\(\phi=x^2y+xy\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Compute the work along \(\gamma\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\phi(1,1)-\phi(0,0)=(1+1)-0=2\). <div class="key-result">Work \(=2\).</div></div></div></div></div></li><li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Would a different path from \((0,0)\) to \((1,1)\) change the answer?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>No — conservative on a simply-connected domain ⇒ path-independent. <div class="key-result">Same value \(2\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">Direct parametrisation</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Evaluate \(\displaystyle\int_\gamma \mathbf F\cdot d\mathbf r\) for \(\mathbf F=(y,x^2)\) along \(\gamma(t)=(t,t^2)\), \(t:0\to1\).</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \(\gamma'(t)=(1,2t)\). \(\mathbf F(\gamma)=(t^2,t^2)\). Dot: \(t^2\cdot1+t^2\cdot2t=t^2+2t^3\).
+              \(\int_0^1(t^2+2t^3)\,dt=\tfrac13+\tfrac12=\tfrac56\).
+              <div class="key-result">Work \(=\tfrac56\).</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">Curl test + potential</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">\(\mathbf F=(2xy,\;x^2)\). Show it's conservative, find \(\phi\), and evaluate \(\int_\gamma\mathbf F\cdot d\mathbf r\) from \((0,0)\) to \((1,2)\) along <em>any</em> path.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              Curl test: \(P_y=2x=Q_x=2x\) ✓ conservative. Find \(\phi\): \(\int2xy\,dx=x^2y+g(y)\); \(\partial_y(x^2y+g)=x^2+g'(y)=x^2\Rightarrow g'=0\). So \(\phi=x^2y\).
+              Gradient Theorem: \(\phi(1,2)-\phi(0,0)=2-0=2\).
+              <div class="key-result">\(\int_\gamma\mathbf F\cdot d\mathbf r=2\) (path-independent).</div>
+              <div class="ans-note">Always run the curl test first — if it passes, the potential shortcut saves the entire parametrisation.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 3 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-topic">Scalar line integral</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Mass of a wire: \(\displaystyle\int_\gamma (x+y)\,ds\) where \(\gamma\) is the line from \((0,0)\) to \((1,1)\). (Recall \(ds=\lVert\gamma'\rVert\,dt\).)</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \(\gamma(t)=(t,t)\), \(t:0\to1\), \(\gamma'=(1,1)\), \(\lVert\gamma'\rVert=\sqrt2\). Integrand \(x+y=2t\).
+              \(\int_0^1 2t\cdot\sqrt2\,dt=\sqrt2\,[t^2]_0^1=\sqrt2\).
+              <div class="key-result">\(\int_\gamma(x+y)\,ds=\sqrt2\).</div>
+              <div class="ans-note">Scalar (arc-length) integrals use \(ds=\lVert\gamma'\rVert dt\) — don't confuse with the vector work integral, which uses \(\gamma'\,dt\) directly.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 4 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 4</span>
+          <span class="problem-topic">The vortex trap</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">\(\mathbf F=\left(\frac{-y}{x^2+y^2},\frac{x}{x^2+y^2}\right)\) passes the curl test, yet \(\oint\) around the unit circle is \(2\pi\neq0\). Explain.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              The curl is 0 everywhere the field is defined, but the domain has a <strong>hole</strong> at the origin — it's <em>not simply connected</em>. The Gradient Theorem requires a simply-connected domain, so curl-free does not imply path-independent here.
+              <div class="key-result">Conservative ⇏ from curl alone when the domain has a hole; \(\oint=2\pi\).</div>
+              <div class="ans-note">This is the canonical counterexample: the hypothesis "simply connected" is doing real work.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      Calc A2 · Work &amp; Line Integrals (Ch. 15.2) · Saturday 6 June 2026 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

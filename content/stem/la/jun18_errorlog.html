@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lin Alg · Error Log Review</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    .recall-box { background:rgba(190,24,93,0.07); border:1px solid rgba(190,24,93,0.3); border-left:3px solid var(--la); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+    .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--la); margin-bottom:10px; }
+    .checklist { list-style:none; margin:6px 0 0; padding:0; }
+    .checklist li { padding:9px 0 9px 30px; position:relative; border-bottom:1px solid var(--border); font-size:0.95rem; line-height:1.55; }
+    .checklist li:last-child { border-bottom:none; }
+    .checklist li::before { content:'☐'; position:absolute; left:0; color:var(--la); font-size:1.05rem; }
+    .fcard { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+    .fcard h4 { color:var(--la); font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:6px; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ lin-alg / error log</span><span class="topbar-date">THU · 18 JUN 2026</span></div>
+  <div class="hero">
+    <h1>Error Log <em>Review</em></h1>
+    <p class="hero-meta">P6 · 19:10–20:00 · 50 min · weak spots</p>
+    <div class="exam-pills"><span class="pill pill-la">Lin Alg</span><span class="pill pill-la">Final · 25 June 2026</span></div>
+  </div>
+  <div class="main"><div class="subject-block">
+    <div class="subject-header"><div class="subject-dot dot-la"></div><div><div class="subject-label">Self-Study · 50 min · weak spots</div><div class="subject-title" style="color:var(--la)">Error Log Review</div></div><div class="subject-exam-date"><strong>Lin Alg Final</strong>25 June 2026</div></div>
+<div class="recall-box"><div class="rl">⌁ Pull your real mistakes</div>Study Hub → Study Log → "Export for AI analysis". Copy every Lin Alg session graded <em>Again</em> or <em>Hard</em>, with your notes. Work the patterns below.</div><div class="problem"><div class="problem-header"><span class="problem-num">Step 1</span><span class="problem-topic">Categorise</span></div><div class="problem-body"><div class="context-box">Sort each mistake into a bucket.</div><div class="ans-toggle"><button class="ans-btn" data-show="Reveal" data-hide="Hide" onclick="toggleAns(this)">Reveal</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span><strong>Conceptual</strong> (wrong theorem) · <strong>Computation</strong> (row-reduce / determinant slip) · <strong>Setup</strong> (wrong matrix, forgot to normalise) · <strong>Careless</strong>. Whichever bucket dominates gets the hour.</div></div></div></div></div><div class="problem"><div class="problem-header"><span class="problem-num">Common LA traps</span><span class="problem-topic">Reference</span></div><div class="problem-body"><div class="context-box">The usual suspects.</div><div class="ans-toggle"><button class="ans-btn" data-show="Reveal Traps" data-hide="Hide" onclick="toggleAns(this)">Reveal Traps</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>Reporting reduced columns instead of original for a Col basis · forgetting geometric vs algebraic multiplicity (defective) · sign errors in cofactor expansion · not normalising eigenvectors for an orthogonal \(Q\) · mixing up \(P_{C\leftarrow B}\) direction.</div></div></div></div></div>
+  </div>
+  <div class="footer-note">Lin Alg · Error Log Review · Thursday 18 June 2026 · Fix the patterns ✦</div></div>
+  <div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+  <script>
+    function toggleAns(btn){const a=btn.nextElementSibling;a.classList.toggle('open');const o=a.classList.contains('open');btn.textContent=o?btn.dataset.hide||'Hide Answer':btn.dataset.show||'Show Answer';}
+    window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+    const start=Date.now(),pad=n=>String(n).padStart(2,'0');
+    setInterval(()=>{const e=Math.floor((Date.now()-start)/1000);document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60);},1000);
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Review · Chinese</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span> Review
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">复习 Review</span>
+    <span class="topbar-sub">/ spaced repetition</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="main" style="padding-top:24px;">
+
+    <!-- SETUP -->
+    <div class="panel" id="setup">
+      <h3>Start a review session</h3>
+      <p style="font-size:0.86rem;color:var(--text2);margin-bottom:16px;line-height:1.6;">
+        Cards you've never seen are <strong>new</strong>; cards whose time has come are <strong>due</strong>.
+        Grade each card honestly — the schedule spaces easy cards further out and brings hard ones back soon.
+      </p>
+      <div class="field-row">
+        <div class="field">
+          <label>Lessons</label>
+          <select id="r-lesson" class="flt"></select>
+        </div>
+        <div class="field">
+          <label>New cards this session</label>
+          <select id="r-new" class="flt">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="40">40</option>
+            <option value="0">0 (review only)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Front shows</label>
+          <select id="r-mode" class="flt">
+            <option value="hz">Character → meaning</option>
+            <option value="en">Meaning → character</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" id="r-start">Start</button>
+        </div>
+      </div>
+      <div class="count" id="r-avail" style="margin-top:16px;"></div>
+
+      <h3 style="margin-top:24px;font-size:1rem;">Next 14 days</h3>
+      <div class="forecast" id="forecast"></div>
+      <div style="margin-top:34px;">
+        <button class="btn btn-ghost btn-sm" id="r-reset">Reset all progress</button>
+      </div>
+    </div>
+
+    <!-- STUDY -->
+    <div id="study" style="display:none;">
+      <div class="fc-stage">
+        <div class="fc-progress" id="r-progress"></div>
+        <div class="flashcard" id="card">
+          <div class="fc-inner">
+            <div class="fc-face front" id="front"></div>
+            <div class="fc-face back"  id="back"></div>
+          </div>
+          <span class="fc-hint">click to flip</span>
+        </div>
+
+        <div id="flip-hint">
+          <button class="btn btn-primary" id="show-btn">Show answer</button>
+        </div>
+
+        <div class="grade-row" id="grades" style="display:none;">
+          <button class="grade again" data-g="0">Again<small id="lab0"></small></button>
+          <button class="grade hard"  data-g="1">Hard<small id="lab1"></small></button>
+          <button class="grade good"  data-g="2">Good<small id="lab2"></small></button>
+          <button class="grade easy"  data-g="3">Easy<small id="lab3"></small></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div id="done" class="panel done-card" style="display:none;">
+      <div class="big">Session complete 🎉</div>
+      <p style="color:var(--text2);margin-top:8px;" id="done-msg"></p>
+      <div style="margin-top:20px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="again-btn">Review more</button>
+        <a class="btn btn-ghost" href="index.html">Back to menu</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    setTopbarDate();
+    const rL=$("#r-lesson"); fillLessonSelect(rL);
+    let queue=[], cur=null, mode="hz", graded=0;
+
+    function refreshSetup(){
+      const c=srsCounts(rL.value, +$("#r-new").value||0);
+      $("#r-avail").textContent = `In scope: ${c.due} due · ${c.freshTotal} new available`;
+      drawForecast();
+    }
+    rL.addEventListener("change",refreshSetup);
+    $("#r-new").addEventListener("change",refreshSetup);
+
+    function drawForecast(){
+      const srs=getSRS(); const now=Date.now();
+      const days=Array(14).fill(0);
+      Object.values(srs).forEach(r=>{
+        const diff=Math.floor((r.due-now)/86400000);
+        if(diff>=0 && diff<14) days[diff]++;
+        else if(diff<0) days[0]++;
+      });
+      const max=Math.max(1,...days);
+      const fc=$("#forecast"); fc.innerHTML="";
+      days.forEach((n,i)=>{
+        const b=el("div","bar"); b.style.height=(n/max*100)+"%";
+        b.title=`${n} card${n!==1?"s":""}`;
+        if(i===0||i===7) b.appendChild(el("span",null,i===0?"today":"+7d"));
+        fc.appendChild(b);
+      });
+    }
+
+    function buildQueue(){
+      const {due,fresh}=srsBuckets(rL.value);
+      const newCap=+$("#r-new").value||0;
+      const chosen=[...shuffle(due), ...shuffle(fresh).slice(0,newCap)];
+      return shuffle(chosen);
+    }
+
+    $("#r-start").addEventListener("click",()=>{
+      queue=buildQueue(); mode=$("#r-mode").value; graded=0;
+      if(!queue.length){ alert("Nothing to review in this scope right now. Try adding new cards or a different lesson."); return; }
+      $("#setup").style.display="none"; $("#done").style.display="none"; $("#study").style.display="block";
+      next();
+    });
+
+    function renderCard(w){
+      $("#card").classList.remove("flipped");
+      $("#grades").style.display="none"; $("#flip-hint").style.display="block";
+      $("#r-progress").textContent = `${graded} done · ${queue.length} left — ${lessonName(w.lesson)}`;
+      if(mode==="hz"){
+        $("#front").innerHTML=`<div class="big-hz">${w.hanzi}</div>`;
+        $("#back").innerHTML =`<div class="mid-py">${w.pinyin}</div><div class="mid-en">${w.en}</div><div class="sub">${POS_LABELS[w.pos]||w.pos}</div>${w.ex?`<div class="sub-ex">${w.ex}</div>`:""}`;
+      } else {
+        $("#front").innerHTML=`<div class="mid-en">${w.en}</div><div class="sub">${POS_LABELS[w.pos]||w.pos}</div>`;
+        $("#back").innerHTML =`<div class="big-hz">${w.hanzi}</div><div class="mid-py">${w.pinyin}</div>${w.ex?`<div class="sub-ex">${w.ex}</div>`:""}`;
+      }
+    }
+    function next(){
+      if(!queue.length){ finish(); return; }
+      cur=queue.shift(); renderCard(cur);
+    }
+    function reveal(){
+      $("#card").classList.add("flipped");
+      $("#flip-hint").style.display="none";
+      for(let g=0;g<4;g++) $("#lab"+g).textContent = nextLabel(cur.hanzi,g);
+      $("#grades").style.display="flex";
+    }
+    $("#show-btn").addEventListener("click",reveal);
+    $("#card").addEventListener("click",()=>{ if(!$("#card").classList.contains("flipped")) reveal(); });
+
+    $("#grades").addEventListener("click",e=>{
+      const b=e.target.closest(".grade"); if(!b) return;
+      const g=+b.dataset.g;
+      gradeWord(cur.hanzi,g);
+      graded++;
+      if(g===0) queue.splice(Math.min(queue.length,4),0,cur); // re-show "again" soon
+      next();
+    });
+
+    function finish(){
+      $("#study").style.display="none"; $("#done").style.display="block";
+      $("#done-msg").textContent = `You graded ${graded} card${graded!==1?"s":""}. Come back when more are due.`;
+    }
+    $("#again-btn").addEventListener("click",()=>{ $("#done").style.display="none"; $("#setup").style.display="block"; refreshSetup(); });
+    $("#r-reset").addEventListener("click",()=>{ if(confirm("Reset ALL Chinese review progress? This cannot be undone.")){ resetSRS(); refreshSetup(); } });
+
+    refreshSetup();
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

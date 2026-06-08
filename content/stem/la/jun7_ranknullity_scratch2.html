@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Lin Alg · Rank-Nullity from Scratch II · 7 Jun</title>
+<link href="../../../style.css" rel="stylesheet"/>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  .recall-box { background:rgba(190,24,93,0.07); border:1px solid rgba(190,24,93,0.3); border-left:3px solid var(--la); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+  .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--la); margin-bottom:10px; }
+</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+<div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ lin-alg / rank-nullity II</span>
+  <span class="topbar-date">SUN 7 JUN 2026 · P2</span>
+</header>
+<section class="hero">
+  <h1>Rank–Nullity <em>from Scratch II</em></h1>
+  <p class="hero-meta">Second pass — go deeper. You proved it on Jun 3; now reconstruct it cold again and push into the harder consequences: invertibility, the four subspaces, and tricky dimension counts.</p>
+  <div class="exam-pills">
+    <span class="pill pill-la">Lin Alg</span>
+    <span class="pill pill-la">Active Recall · Round 2</span>
+    <span class="pill pill-la">Final · 25 June 2026</span>
+  </div>
+</section>
+<main class="main">
+<div class="subject-block">
+  <div class="subject-header">
+    <span class="subject-dot dot-la"></span>
+    <div>
+      <div class="subject-label">Self-Study · recall, harder</div>
+      <h2 class="subject-title" style="color:var(--la)">The Consequences</h2>
+    </div>
+    <div class="subject-exam-date"><strong>Final · 25 Jun</strong></div>
+  </div>
+
+  <!-- R1 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Recall 1</span><span class="problem-topic">Cold reconstruction</span></div>
+    <div class="problem-body">
+      <div class="recall-box">
+        <div class="rl">⌁ No notes — write the whole proof</div>
+        Without looking at Wednesday's session, write the statement and full proof again. Time yourself: aim for under 8 minutes. Then reveal to check you didn't skip the independence step.
+      </div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Reveal Model Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Model (compressed)</span>
+          \(T:V\to W\), \(\dim V=n\). Take a kernel basis \(\{u_1,\dots,u_k\}\), extend to \(\{u_i\}\cup\{w_1,\dots,w_{n-k}\}\) for \(V\). Show \(\{T(w_j)\}\) spans \(\operatorname{im}T\) (kernel terms die) and is independent (a dependence pulls \(\sum c_j w_j\) into \(\ker T\), contradicting basis independence unless all \(c_j=0\)). So \(\operatorname{rank}=n-k\), giving \(\operatorname{rank}+\operatorname{nullity}=n\). \(\blacksquare\)
+          <div class="ans-note">If you skipped independence and only argued spanning, you proved \(\operatorname{rank}\le n-k\), not equality. Both halves are required.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- R2 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Recall 2</span><span class="problem-topic">Square-matrix corollary</span></div>
+    <div class="problem-body">
+      <div class="recall-box">
+        <div class="rl">⌁ Derive, don't memorise</div>
+        Use rank–nullity to prove: for a square \(A\in\mathbb R^{n\times n}\), \(A\) is invertible \(\iff \operatorname{Nul}A=\{0\}\) \(\iff\) rank \(=n\).
+      </div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Reveal Model Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Model</span>
+          \(\operatorname{rank}+\operatorname{nullity}=n\). If \(\operatorname{Nul}A=\{0\}\) then nullity \(=0\Rightarrow\) rank \(=n\Rightarrow\) columns span \(\mathbb R^n\Rightarrow A\) is onto and (being square) one-to-one \(\Rightarrow\) invertible. Conversely invertible \(\Rightarrow\) only trivial kernel. All three conditions are equivalent.
+          <div class="key-result">Invertible \(\iff\) nullity 0 \(\iff\) full rank \(n\) — the heart of the Invertible Matrix Theorem.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- R3 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Recall 3</span><span class="problem-topic">Tricky counts</span></div>
+    <div class="problem-body">
+      <div class="recall-box">
+        <div class="rl">⌁ Reason it out</div>
+        \(T:\mathbb R^7\to\mathbb R^4\) is onto. (a) rank? (b) nullity? (c) Could a map \(\mathbb R^4\to\mathbb R^7\) be onto? Why does rank–nullity forbid it?
+      </div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Reveal Model Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Model</span>
+          (a) Onto into \(\mathbb R^4\Rightarrow\) rank \(=4\). (b) nullity \(=7-4=3\). (c) No: for \(\mathbb R^4\to\mathbb R^7\), rank \(\le\dim(\text{domain})=4<7\), so the image can never fill \(\mathbb R^7\). Rank is capped by the <em>smaller</em> of domain/codomain dimension.
+          <div class="key-result">rank 4, nullity 3; a map can't be onto a space of larger dimension than its domain.</div>
+          <div class="ans-note">Key ceiling: \(\operatorname{rank}\le\min(\dim\text{domain},\dim\text{codomain})\) — falls straight out of rank–nullity.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="footer-note">Lin Alg · Rank–Nullity from Scratch II · Sunday 7 June 2026 · Recall, don't re-read ✦</div>
+</main>
+
+<div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+<script>
+  function toggleAns(btn){ const a=btn.nextElementSibling; a.classList.toggle('open'); btn.textContent=a.classList.contains('open')?'Hide Model Answer':'Reveal Model Answer'; }
+  window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
+  const start=Date.now(), pad=n=>String(n).padStart(2,'0');
+  setInterval(()=>{ const e=Math.floor((Date.now()-start)/1000); document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60); },1000);
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

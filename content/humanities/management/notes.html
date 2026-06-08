@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session Notes · General Management</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    body.subject-mgmt { --accent: var(--mgmt); }
+    .crumbs { font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--text3); padding:14px 48px 0; }
+    .crumbs a { color:var(--text3); text-decoration:none; border-bottom:1px solid var(--border); }
+    .crumbs span { margin:0 6px; }
+    .wrap { max-width:880px; margin:0 auto; padding:28px 48px 60px; }
+    .note { background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--mgmt); border-radius:12px; padding:20px 24px; margin-bottom:16px; }
+    .note-head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+    .note-s { font-family:'DM Mono',monospace; font-size:0.7rem; color:#fff; background:var(--mgmt); padding:3px 9px; border-radius:6px; }
+    .note-title { font-family:'DM Serif Display',serif; font-size:1.25rem; color:var(--text); }
+    .note-pdf { margin-left:auto; font-family:'DM Mono',monospace; font-size:0.64rem; color:var(--mgmt); text-decoration:none; border:1px solid var(--mgmt); border-radius:7px; padding:5px 11px; transition:.15s; }
+    .note-pdf:hover { background:var(--mgmt); color:#fff; }
+    .note-body { font-size:0.9rem; color:var(--text2); line-height:1.65; margin-top:10px; }
+    .note-body strong { color:var(--text); }
+    .note-terms { display:flex; flex-wrap:wrap; gap:5px; margin-top:12px; }
+    .term { font-family:'DM Mono',monospace; font-size:0.58rem; padding:3px 9px; border-radius:99px; border:1px solid var(--border); color:var(--text3); }
+    @media(max-width:640px){ .crumbs,.wrap{ padding-left:18px; padding-right:18px;} .note-pdf{margin-left:0;} }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-mgmt">
+  <div class="crumbs"><a href="../../../index.html">Domains</a><span>/</span><a href="../../../hub/humanities.html">Humanities</a><span>/</span>General Management<span>/</span>Session Notes</div>
+  <div class="topbar"><span class="topbar-title">Session Notes</span><span class="topbar-sub">/ general management</span><span class="topbar-date" id="td"></span></div>
+  <div class="hero" style="padding:36px 48px 24px;">
+    <h1 style="font-size:clamp(1.9rem,4vw,2.8rem);">The course, <em style="color:var(--mgmt)">one screen each</em></h1>
+    <p class="hero-meta">A fast recap of every session with the key concepts to know, plus a link to the original slides for a deeper read. Use these to refresh before the concept library and the mock.</p>
+  </div>
+  <div class="wrap" id="wrap"></div>
+  <div class="footer-note">RAFI ADIFA MAULANA · GENERAL MANAGEMENT · SESSION NOTES</div>
+
+  <script>
+  const BASE='../../../General_Management_Material/';
+
+  /* ════════════════════════════════════════════════════════════════
+     SHARING THE SLIDES ON GITHUB
+     The PDFs live in a local folder that isn't pushed to GitHub, so the
+     links below would break for anyone else. To share:
+       1. Upload each slide PDF to Google Drive.
+       2. Right-click → Share → "Anyone with the link" → Copy link.
+       3. Paste that link next to its session key below.
+     Leave a key as '' to fall back to the local file (works when you
+     open this page from your own Finder). Once a Drive link is set,
+     it is used everywhere — including the GitHub-hosted site.
+     ════════════════════════════════════════════════════════════════ */
+  const DRIVE = {
+    'S1':'', 'S2':'', 'S3':'', 'S4':'', 'S5':'', 'S6':'',
+    'S7–8':'', 'S9':'', 'S11':'', 'S12':'', 'S13':'', 'S14':''
+  };
+
+  const NOTES=[
+    ['S1','Values & Ethics','Session 1 Values and Ethics_posted.pdf',
+      'Course intro + the foundations of behaviour. Values are stable beliefs that guide what we judge as right; the session frames how values underpin ethical decisions at work and why "unskilled and unaware" people rationalise lapses.',
+      ['Terminal vs instrumental values','Ethical decision making','Rationalising misconduct']],
+    ['S2','Emotion & Mood','Session 2 emotion and mood_posted.pdf',
+      'How affect shapes behaviour. Distinguishes emotions (intense, directed) from moods (mild, diffuse), measured with the PANAS model, and contrasts thinking vs feeling in judgments.',
+      ['Affect','Emotions vs moods','PANAS','Emotional labour']],
+    ['S3','Personality','Session 3 Personality_posted.pdf',
+      'Evidence-based view of personality and why it predicts behaviour. Centres on the Big Five and the importance of measurement over intuition.',
+      ['Big Five (OCEAN)','Evidence-based thinking','Person–organization fit']],
+    ['S4','Personality Part II','Session 4 Personality Part II_posted.pdf',
+      'Deeper traits and how personality interacts with situations and roles — setting up later team-composition and fit discussions.',
+      ['Trait interactions','Situation strength','Self-monitoring']],
+    ['S5','Motivation & Well-being','Session 5_posted.pdf',
+      'What actually motivates people. Intrinsic vs extrinsic motivation, the crowding-out / over-justification effect, and evidence that money’s effect on well-being is limited (Kahneman & Deaton).',
+      ['Intrinsic vs extrinsic','Crowding-out','Money & well-being']],
+    ['S6','Goals & Temporal Landmarks','Session 6_posted.pdf',
+      'Turning motivation into action. SMART goals (using the class criteria) and how temporal landmarks — new year, birthdays, a new semester — trigger fresh-start motivation.',
+      ['SMART goals','Goal-setting','Temporal landmarks','Fresh-start effect']],
+    ['S7–8','Groups','Session 7 and Session 8_posted.pdf',
+      'Group dynamics in depth. Group properties — roles, norms, status, size, cohesiveness, diversity — plus the classic studies: Zimbardo (roles), Asch (conformity), social loafing, and Social Identity Theory.',
+      ['Social Identity','Roles & norms','Asch','Zimbardo','Social loafing','Cohesiveness']],
+    ['S9','Leadership','Session 9_posted.pdf',
+      'What leadership is and where it comes from. Leadership is more than big decisions; explores the partly heritable basis of leadership emergence and trait/behaviour approaches, including transactional vs transformational styles.',
+      ['Transactional','Transformational (4 I’s)','Leadership emergence']],
+    ['S11','Teams & Diversity','Session 11_posted.pdf',
+      'Building effective teams. Surface- vs deep-level diversity, task- vs relations-oriented diversity, complementary vs supplementary fit, and task vs relationship conflict.',
+      ['Surface/deep diversity','Complementary vs supplementary fit','Task vs relationship conflict']],
+    ['S12','Decision Making','Session 12_posted.pdf',
+      'Why decisions go wrong. The rational model vs bounded rationality and satisficing (Simon), System 1/2 (Kahneman), and biases — overconfidence, availability, anchoring, Dunning–Kruger — plus groupthink.',
+      ['Bounded rationality','Satisficing','System 1/2','Overconfidence','Dunning–Kruger','Groupthink']],
+    ['S13','Organizational Culture','Session 13_posted.pdf',
+      'Culture as shared meaning. Schein’s iceberg (artifacts → values → assumptions), strong vs weak culture and its liabilities, the ASA model, and the four culture types.',
+      ['Schein’s levels','Strong vs weak culture','ASA model','Culture types','Hofstede']],
+    ['S14','Organizational Change','Session 14_uploaded.pdf',
+      'Leading change. Change in people/structure/technology, internal vs external forces, planned vs unplanned change, Kotter’s 8 steps, and overcoming resistance (Blockbuster vs Netflix).',
+      ['Planned vs unplanned','Kotter’s 8 steps','Resistance to change']],
+  ];
+  document.getElementById('wrap').innerHTML=NOTES.map(([s,title,pdf,body,terms])=>{
+    const href = (DRIVE[s] && DRIVE[s].trim()) ? DRIVE[s].trim() : BASE+encodeURI(pdf);
+    const onDrive = !!(DRIVE[s] && DRIVE[s].trim());
+    return `
+    <div class="note">
+      <div class="note-head">
+        <span class="note-s">${s}</span>
+        <span class="note-title">${title}</span>
+        <a class="note-pdf" href="${href}" target="_blank" rel="noopener">open slides ↗</a>
+      </div>
+      <div class="note-body">${body}</div>
+      <div class="note-terms">${terms.map(t=>`<span class="term">${t}</span>`).join('')}</div>
+    </div>`;}).join('');
+
+  /* gentle heads-up if the page is served from GitHub but no Drive links are set yet */
+  (function(){
+    const anyDrive = Object.values(DRIVE).some(v=>v && v.trim());
+    const local = ['localhost','127.0.0.1',''].includes(location.hostname);
+    if(!anyDrive && !local){
+      const b=document.createElement('div');
+      b.style.cssText='max-width:880px;margin:0 auto 18px;padding:12px 16px;border:1px solid rgba(180,83,9,.3);background:rgba(180,83,9,.07);border-radius:10px;font-size:0.82rem;color:#b45309;line-height:1.5;';
+      b.innerHTML='ℹ️ <strong>Slides not shared yet.</strong> These "open slides" links point to local files that aren\'t on this hosted copy. To make them work for everyone, paste Google Drive share links into the <code>DRIVE</code> config near the top of <code>notes.html</code>.';
+      document.getElementById('wrap').prepend(b);
+    }
+  })();
+  const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],D=['SUN','MON','TUE','WED','THU','FRI','SAT'],d=new Date();
+  document.getElementById('td').textContent=`${D[d.getDay()]} · ${d.getDate()} ${M[d.getMonth()].toUpperCase()} ${d.getFullYear()}`;
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

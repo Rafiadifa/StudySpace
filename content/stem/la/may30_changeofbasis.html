@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Lin Alg · Change of Basis &amp; Coordinate Map · 30 May</title>
+<link href="../../../style.css" rel="stylesheet"/>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+<div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ lin-alg / change of basis</span>
+  <span class="topbar-date">SAT 30 MAY 2026 · P2</span>
+</header>
+<section class="hero">
+  <h1>Change of Basis <em>&amp; Coordinate Map</em></h1>
+  <p class="hero-meta">EZ.pdf Ch. 5.4. Coordinate vectors, change-of-basis matrices, and how a vector's coordinates transform between bases. Build the matrix, then convert.</p>
+  <div class="exam-pills">
+    <span class="pill pill-la">Lin Alg</span>
+    <span class="pill pill-la">Ch. 5.4</span>
+    <span class="pill pill-la">Final · 25 June 2026</span>
+  </div>
+</section>
+<main class="main">
+<div class="subject-block">
+  <div class="subject-header">
+    <span class="subject-dot dot-la"></span>
+    <div>
+      <div class="subject-label">Daily Practice · EZ Ch. 5.4</div>
+      <h2 class="subject-title" style="color:var(--la)">Change of Basis</h2>
+    </div>
+    <div class="subject-exam-date"><strong>Final · 25 Jun</strong></div>
+  </div>
+
+  <div class="formula-ref">
+    <strong>Quick reference.</strong> The coordinate vector \([\mathbf v]_B\) lists the coefficients of \(\mathbf v\) in basis \(B\). The change-of-basis matrix \(P_{B}\) (columns = basis vectors of \(B\) in standard coords) satisfies \(\mathbf v=P_B[\mathbf v]_B\), so \([\mathbf v]_B=P_B^{-1}\mathbf v\). Between two bases: \([\mathbf v]_C=P_C^{-1}P_B[\mathbf v]_B\); the matrix \(P_{C\leftarrow B}=P_C^{-1}P_B\).
+  </div>
+
+  <!-- P1 -->
+  <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">Subspace → basis → rank-nullity → coordinates</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Let \(A=\begin{pmatrix}1&2&3\\2&4&8\end{pmatrix}\).<div class="conn-chain">chains: column/null space · basis · rank–nullity · coordinates</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Row-reduce and give bases for \(\operatorname{Col}(A)\) and \(\operatorname{Nul}(A)\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>RREF \(\to\begin{pmatrix}1&2&0\\0&0&1\end{pmatrix}\). Pivots in cols 1,3 ⇒ Col basis \(\{(1,2),(3,8)\}\); free \(x_2\): \(\operatorname{Nul}=\operatorname{span}\{(-2,1,0)\}\). <div class="key-result">rank 2, nullity 1.</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Verify rank–nullity.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(2+1=3=\) number of columns ✓. <div class="key-result">\(2+1=3\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Is \(b=(1,2)\) in \(\operatorname{Col}(A)\)? If so, give one solution of \(A\mathbf x=b\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(b=(1,2)\) is the first column, so yes; \(\mathbf x=(1,0,0)\) works. <div class="key-result">\(\mathbf x=(1,0,0)\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 1</span><span class="problem-topic">Coordinates in a basis</span><span class="problem-pts">8 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Basis \(B=\{(1,1),(1,-1)\}\) of \(\mathbb R^2\). Find \([\mathbf v]_B\) for \(\mathbf v=(4,2)\).</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          Solve \(a(1,1)+b(1,-1)=(4,2)\): \(a+b=4,\ a-b=2\Rightarrow a=3,\ b=1\).
+          <div class="key-result">\([\mathbf v]_B=(3,1)\).</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P2 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">Build P and invert</span><span class="problem-pts">10 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">For the same \(B\), write \(P_B\) and \(P_B^{-1}\), and verify \([\mathbf v]_B=P_B^{-1}\mathbf v\) for \(\mathbf v=(4,2)\).</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          \(P_B=\begin{pmatrix}1&1\\1&-1\end{pmatrix}\), \(\det=-2\), \(P_B^{-1}=\dfrac{1}{-2}\begin{pmatrix}-1&-1\\-1&1\end{pmatrix}=\begin{pmatrix}1/2&1/2\\1/2&-1/2\end{pmatrix}\).
+          \(P_B^{-1}(4,2)^T=(3,1)^T\) ✓.
+          <div class="key-result">Matches Problem 1: \([\mathbf v]_B=(3,1)\).</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P3 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 3</span><span class="problem-topic">Between two bases</span><span class="problem-pts">10 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">\(B=\{(1,0),(1,1)\}\), \(C=\{(2,1),(1,1)\}\). Find the change-of-basis matrix \(P_{C\leftarrow B}\).</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          \(P_B=\begin{pmatrix}1&1\\0&1\end{pmatrix}\), \(P_C=\begin{pmatrix}2&1\\1&1\end{pmatrix}\), \(\det P_C=1\), \(P_C^{-1}=\begin{pmatrix}1&-1\\-1&2\end{pmatrix}\).
+          \(P_{C\leftarrow B}=P_C^{-1}P_B=\begin{pmatrix}1&-1\\-1&2\end{pmatrix}\begin{pmatrix}1&1\\0&1\end{pmatrix}=\begin{pmatrix}1&0\\-1&1\end{pmatrix}\).
+          <div class="key-result">\(P_{C\leftarrow B}=\begin{pmatrix}1&0\\-1&1\end{pmatrix}\).</div>
+          <div class="ans-note">Direction matters: \(P_{C\leftarrow B}=P_C^{-1}P_B\) converts \(B\)-coords into \(C\)-coords. Swapping the order gives the inverse transformation.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P4 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 4</span><span class="problem-topic">Apply the conversion</span><span class="problem-pts">8 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Using Problem 3, if \([\mathbf v]_B=(2,3)\), find \([\mathbf v]_C\).</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          \([\mathbf v]_C=P_{C\leftarrow B}[\mathbf v]_B=\begin{pmatrix}1&0\\-1&1\end{pmatrix}\begin{pmatrix}2\\3\end{pmatrix}=\begin{pmatrix}2\\1\end{pmatrix}\).
+          <div class="key-result">\([\mathbf v]_C=(2,1)\).</div>
+          <div class="ans-note">Sanity check via standard coords: \(\mathbf v=2(1,0)+3(1,1)=(5,3)\); and \(2(2,1)+1(1,1)=(5,3)\) ✓.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="footer-note">Lin Alg · Change of Basis (Ch. 5.4) · Saturday 30 May 2026 · Good luck Rafi ✦</div>
+</main>
+
+<div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+<script>
+  function toggleAns(btn){ const a=btn.nextElementSibling; a.classList.toggle('open'); btn.textContent=a.classList.contains('open')?'Hide Answer':'Show Answer'; }
+  window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
+  const start=Date.now(), pad=n=>String(n).padStart(2,'0');
+  setInterval(()=>{ const e=Math.floor((Date.now()-start)/1000); document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60); },1000);
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Lin Alg · Basis &amp; Dimensions — Feynman · 5 Jun</title>
+<link href="../../../style.css" rel="stylesheet"/>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  .recall-box { background:rgba(190,24,93,0.07); border:1px solid rgba(190,24,93,0.3); border-left:3px solid var(--la); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+  .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--la); margin-bottom:10px; }
+</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+<div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ lin-alg / basis feynman</span>
+  <span class="topbar-date">FRI 5 JUN 2026 · P4</span>
+</header>
+<section class="hero">
+  <h1>Basis &amp; Dimensions <em>— Feynman</em></h1>
+  <p class="hero-meta">Explain-aloud session. For each prompt, talk through the idea as if teaching someone who's never seen it — out loud, no notes. Then reveal the "good explanation" to grade yourself on clarity and correctness.</p>
+  <div class="exam-pills">
+    <span class="pill pill-la">Lin Alg</span>
+    <span class="pill pill-la">Feynman Technique</span>
+    <span class="pill pill-la">Final · 25 June 2026</span>
+  </div>
+</section>
+<main class="main">
+<div class="subject-block">
+  <div class="subject-header">
+    <span class="subject-dot dot-la"></span>
+    <div>
+      <div class="subject-label">Self-Study · explain aloud</div>
+      <h2 class="subject-title" style="color:var(--la)">Teach It to Understand It</h2>
+    </div>
+    <div class="subject-exam-date"><strong>Final · 25 Jun</strong></div>
+  </div>
+
+  <!-- F1 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Explain 1</span><span class="problem-topic">What is a basis, really?</span></div>
+    <div class="problem-body">
+      <div class="recall-box">
+        <div class="rl">⌁ Say it out loud</div>
+        Explain to a friend what a basis is and why we care — without using the words "independent" or "span" until you've given an intuition first.
+      </div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Reveal Good Explanation</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">A good explanation</span>
+          "A basis is a minimal set of building-block directions: every vector in the space is built from them in exactly <em>one</em> way. 'Minimal' means no redundancy (independence); 'every vector' means they reach everywhere (span). The 'exactly one way' is the magic — it's what lets us use coordinates at all."
+          <div class="ans-note">Strong sign you understand it: you mentioned <em>uniqueness</em> of representation, which is what independence buys you.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- F2 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Explain 2</span><span class="problem-topic">Why is dimension well-defined?</span></div>
+    <div class="problem-body">
+      <div class="recall-box">
+        <div class="rl">⌁ Say it out loud</div>
+        Why does <em>every</em> basis of a space have the same number of vectors? What would break if two bases had different sizes?
+      </div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Reveal Good Explanation</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">A good explanation</span>
+          "The replacement (Steinitz exchange) lemma says any independent set can be no bigger than any spanning set. A basis is both independent and spanning, so given two bases each is \(\le\) the other in size — forcing them equal. That common number is the dimension. If sizes could differ, 'coordinates' wouldn't be consistent and \(\mathbb R^n\cong\mathbb R^m\) for \(n\neq m\) — nonsense."
+          <div class="ans-note">The keystone is the exchange lemma: independent \(\le\) spanning. Everything about dimension rests on it.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- F3 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Explain 3</span><span class="problem-topic">Spanning vs independent</span></div>
+    <div class="problem-body">
+      <div class="recall-box">
+        <div class="rl">⌁ Say it out loud</div>
+        In \(\mathbb R^3\): can 2 vectors span it? Can 4 vectors be independent? Explain the asymmetry intuitively.
+      </div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Reveal Good Explanation</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">A good explanation</span>
+          "Two vectors can only reach a plane — too few to span 3-D. Four vectors in 3-D must have a redundancy — too many to stay independent. Spanning needs <em>at least</em> 3; independence allows <em>at most</em> 3. They meet exactly at 3 — and a set of exactly 3 that does either one automatically does both. That's why \(\dim=3\)."
+          <div class="key-result">Span needs \(\ge n\); independence allows \(\le n\); a basis is the tight case \(=n\).</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="footer-note">Lin Alg · Basis &amp; Dimensions — Feynman · Friday 5 June 2026 · Explain aloud ✦</div>
+</main>
+
+<div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+<script>
+  function toggleAns(btn){ const a=btn.nextElementSibling; a.classList.toggle('open'); btn.textContent=a.classList.contains('open')?'Hide Explanation':'Reveal Good Explanation'; }
+  window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
+  const start=Date.now(), pad=n=>String(n).padStart(2,'0');
+  setInterval(()=>{ const e=Math.floor((Date.now()-start)/1000); document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60); },1000);
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

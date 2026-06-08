@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Lin Alg · Cholesky Decomposition · 7 Jun</title>
+<link href="../../../style.css" rel="stylesheet"/>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+<div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ lin-alg / cholesky</span>
+  <span class="topbar-date">SUN 7 JUN 2026 · P3</span>
+</header>
+<section class="hero">
+  <h1>Cholesky <em>Decomposition</em></h1>
+  <p class="hero-meta">EZ.pdf Ch. 6.4. Factor a symmetric positive-definite matrix as \(G=LL^{T}\). Check definiteness first, then solve for the lower-triangular \(L\) entry by entry.</p>
+  <div class="exam-pills">
+    <span class="pill pill-la">Lin Alg</span>
+    <span class="pill pill-la">Ch. 6.4</span>
+    <span class="pill pill-la">Final · 25 June 2026</span>
+  </div>
+</section>
+<main class="main">
+<div class="subject-block">
+  <div class="subject-header">
+    <span class="subject-dot dot-la"></span>
+    <div>
+      <div class="subject-label">Daily Practice · EZ Ch. 6.4 · \(G=LL^{T}\)</div>
+      <h2 class="subject-title" style="color:var(--la)">Cholesky Decomposition</h2>
+    </div>
+    <div class="subject-exam-date"><strong>Final · 25 Jun</strong></div>
+  </div>
+
+  <div class="formula-ref">
+    <strong>Quick reference.</strong> A symmetric matrix \(G\) is <strong>positive-definite</strong> iff all leading principal minors are \(>0\) (Sylvester's criterion). Then \(G=LL^{T}\) with \(L\) lower-triangular, positive diagonal. Entry formulas: \(L_{jj}=\sqrt{G_{jj}-\sum_{k<j}L_{jk}^2}\) and \(L_{ij}=\frac{1}{L_{jj}}\!\left(G_{ij}-\sum_{k<j}L_{ik}L_{jk}\right)\) for \(i>j\).
+  </div>
+
+  <!-- P1 -->
+  <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">Symmetric matrix: spectral, definiteness, quadratic form</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Let \(A=\begin{pmatrix}2&1\\1&2\end{pmatrix}\) and \(Q(\mathbf x)=\mathbf x^TA\mathbf x\).<div class="conn-chain">chains: spectral decomposition · definiteness · quadratic form · application</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Orthogonally diagonalise \(A=Q\Lambda Q^T\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\lambda=3,(1,1);\ 1,(1,-1)\); \(Q=\tfrac1{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix},\Lambda=\operatorname{diag}(3,1)\). <div class="key-result">as shown.</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Classify the quadratic form \(Q\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>Eigenvalues \(3,1>0\Rightarrow\) positive definite. <div class="key-result">Positive definite.</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Give the Cholesky factor \(A=LL^T\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(L_{11}=\sqrt2,\ L_{21}=\tfrac1{\sqrt2},\ L_{22}=\sqrt{2-\tfrac12}=\sqrt{\tfrac32}\). <div class="key-result">\(L=\begin{pmatrix}\sqrt2&0\\1/\sqrt2&\sqrt{3/2}\end{pmatrix}\).</div></div></div></div></div></li><li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">What are the singular values of \(A\)?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(A\) symmetric positive definite ⇒ singular values \(=\) eigenvalues \(=3,1\). <div class="key-result">\(\sigma=3,1\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 1</span><span class="problem-topic">Check positive-definiteness</span><span class="problem-pts">8 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Is \(G=\begin{pmatrix}4&2\\2&3\end{pmatrix}\) positive-definite? Use leading minors.</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          \(1\times1\) minor: \(4>0\) ✓. \(2\times2\) minor: \(\det=12-4=8>0\) ✓.
+          <div class="key-result">Both minors positive ⇒ positive-definite; Cholesky exists.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P2 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">2×2 factorisation</span><span class="problem-pts">10 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Find \(L\) such that \(\begin{pmatrix}4&2\\2&3\end{pmatrix}=LL^{T}\).</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          \(L_{11}=\sqrt4=2\). \(L_{21}=G_{21}/L_{11}=2/2=1\). \(L_{22}=\sqrt{G_{22}-L_{21}^2}=\sqrt{3-1}=\sqrt2\).
+          <div class="key-result">\(L=\begin{pmatrix}2&0\\1&\sqrt2\end{pmatrix}\). Check: \(LL^{T}=\begin{pmatrix}4&2\\2&3\end{pmatrix}\) ✓.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P3 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 3</span><span class="problem-topic">3×3 factorisation</span><span class="problem-pts">12 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Factor \(G=\begin{pmatrix}4&2&-2\\2&5&-3\\-2&-3&6\end{pmatrix}=LL^{T}\).</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          Column 1: \(L_{11}=\sqrt4=2\), \(L_{21}=2/2=1\), \(L_{31}=-2/2=-1\).<br>
+          Column 2: \(L_{22}=\sqrt{5-1^2}=2\), \(L_{32}=\frac{1}{2}(-3-(-1)(1))=\frac{1}{2}(-2)=-1\).<br>
+          Column 3: \(L_{33}=\sqrt{6-((-1)^2+(-1)^2)}=\sqrt{6-2}=2\).
+          <div class="key-result">\(L=\begin{pmatrix}2&0&0\\1&2&0\\-1&-1&2\end{pmatrix}\).</div>
+          <div class="ans-note">Work column by column, top to bottom. Each diagonal subtracts the squares already placed in that row; each below-diagonal subtracts the dot of the two partial rows.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- P4 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Problem 4</span><span class="problem-topic">When it fails</span><span class="problem-pts">8 pts</span></div>
+    <div class="problem-body">
+      <div class="context-box">Why does Cholesky fail for \(\begin{pmatrix}1&2\\2&1\end{pmatrix}\)? Show where the algorithm breaks.</div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          \(L_{11}=1\), \(L_{21}=2\). Then \(L_{22}=\sqrt{1-2^2}=\sqrt{-3}\) — a negative under the root. The \(2\times2\) minor is \(1-4=-3<0\), so the matrix is <em>not</em> positive-definite.
+          <div class="key-result">Fails: \(\det=-3<0\) ⇒ not positive-definite ⇒ no real Cholesky factor.</div>
+          <div class="ans-note">A negative under the diagonal square root is exactly the algorithm detecting non-positive-definiteness.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="footer-note">Lin Alg · Cholesky Decomposition (Ch. 6.4) · Sunday 7 June 2026 · Good luck Rafi ✦</div>
+</main>
+
+<div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+<script>
+  function toggleAns(btn){ const a=btn.nextElementSibling; a.classList.toggle('open'); btn.textContent=a.classList.contains('open')?'Hide Answer':'Show Answer'; }
+  window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
+  const start=Date.now(), pad=n=>String(n).padStart(2,'0');
+  setInterval(()=>{ const e=Math.floor((Date.now()-start)/1000); document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60); },1000);
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Vector Fields · 1 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ calc-a2 / vector fields</span>
+    <span class="topbar-date">MON · 1 JUN 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Vector Fields <em>&amp;</em> Their Derivatives</h1>
+    <p class="hero-meta">P5 · 18:10–19:00 · Ch.13.7 intro · 50-minute session. Two problems — fixed points, the Jacobian, divergence and curl.</p>
+    <div class="exam-pills">
+      <span class="pill pill-calc">∫ Calc A2</span>
+      <span class="pill pill-calc">Ch.13.7 Vector Fields</span>
+      <span class="pill pill-calc">Final · 23 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-calc"></div>
+        <div>
+          <div class="subject-label">Self-Study · 50 min · Week 2</div>
+          <div class="subject-title" style="color:var(--calc)">Vector Fields &amp; Their Derivatives · Ch.13.7</div>
+        </div>
+        <div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>Quick reference.</strong> A vector field \(F:U\to\mathbb R^n\) attaches an arrow to each point. A <strong>fixed point</strong> satisfies \(F(p)=\mathbf 0\). Near it, the field is locally linear: \(\mathbf x'=[DF(p)]\mathbf x\), and its type follows from the eigenvalues of the Jacobian — <strong>source</strong> (all \(\mathrm{Re}>0\)), <strong>sink</strong> (all \(\mathrm{Re}<0\)), <strong>saddle</strong> (mixed signs), <strong>spiral/orbit</strong> (complex).<br><br>
+        <strong>Divergence</strong> \(\nabla\!\cdot\!F=\operatorname{trace}[DF]=D_1F_1+D_2F_2+\cdots\) (a scalar; source if \(>0\), sink if \(<0\), solenoidal if \(=0\)). <strong>Curl</strong> in 2D is the scalar \(\nabla\times F=D_1F_2-D_2F_1\); in 3D it is the vector \(\big(D_2F_3-D_3F_2,\;D_3F_1-D_1F_3,\;D_1F_2-D_2F_1\big)\). Two identities: \(\nabla\times(\nabla f)=\mathbf 0\) and \(\nabla\!\cdot\!(\nabla\times F)=0\).
+      </div>
+
+      <!-- ══ Problem 1 (math) ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">Fixed Points &amp; Local Linearization</span>
+          <span class="problem-pts">12 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Consider the planar vector field</div>
+          <div class="define-block">\[F(x,y)=\begin{pmatrix} x - xy \\ -y + xy \end{pmatrix}.\]</div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <div class="part-content">
+                <div class="part-question">Find all fixed points of \(F\) (points where \(F=\mathbf 0\)). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      Set \(x-xy=x(1-y)=0\) and \(-y+xy=y(x-1)=0\). From the first: \(x=0\) or \(y=1\). From the second: \(y=0\) or \(x=1\). Pairing consistently: \((x,y)=(0,0)\) or \((1,1)\).
+                      <div class="key-result">Fixed points: \((0,0)\) and \((1,1)\).</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <div class="part-content">
+                <div class="part-question">Compute the Jacobian \([DF(x,y)]\) and explain why \(F\) is differentiable everywhere. <span class="pts">2 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(F_1=x-xy,\;F_2=-y+xy\), so
+                      <div class="key-result">\([DF(x,y)]=\begin{pmatrix} 1-y & -x \\ y & -1+x \end{pmatrix}.\)</div>
+                      Every entry is a polynomial, hence continuous everywhere, so \(F\) is differentiable on all of \(\mathbb R^2\).
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <div class="part-content">
+                <div class="part-question">Classify the fixed point \((0,0)\) using the eigenvalues of \([DF(0,0)]\). <span class="pts">4 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \([DF(0,0)]=\begin{pmatrix}1&0\\0&-1\end{pmatrix}\). This is diagonal, so eigenvalues are \(\lambda_1=1\) and \(\lambda_2=-1\). One positive, one negative.
+                      <div class="key-result">Mixed-sign real eigenvalues \(\Rightarrow\) \((0,0)\) is a <strong>saddle</strong>.</div>
+                      <div class="ans-note">The flow repels along the \(x\)-axis (\(\lambda=1\)) and attracts along the \(y\)-axis (\(\lambda=-1\)).</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(d)</span>
+              <div class="part-content">
+                <div class="part-question">Classify the fixed point \((1,1)\). (Find the eigenvalues of \([DF(1,1)]\) — they may be complex.) <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \([DF(1,1)]=\begin{pmatrix}1-1 & -1\\ 1 & -1+1\end{pmatrix}=\begin{pmatrix}0&-1\\1&0\end{pmatrix}\). Characteristic equation: \(\lambda^2+1=0\Rightarrow\lambda=\pm i\).
+                      <div class="key-result">Purely imaginary eigenvalues \(\pm i\) \(\Rightarrow\) \((1,1)\) is an <strong>orbit center</strong> (closed circulating field lines).</div>
+                      <div class="ans-note">Re\((\lambda)=0\) means neither attracting nor repelling — the linearization predicts rotation around \((1,1)\).</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 (flavor) ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">Desert Wind — Divergence, Curl &amp; the Cloud</span>
+          <span class="problem-pts">12 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">
+            Standing in the desert, you feel the wind shift the dunes and shape the clouds — both are pictures of the same wind field's derivative. Model the wind velocity (in 3D) by
+          </div>
+          <div class="define-block">\[F(x,y,z)=\begin{pmatrix} x^2 - z \\ xy \\ -2xz + y \end{pmatrix}.\]</div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <div class="part-content">
+                <div class="part-question">Compute the divergence \(\nabla\cdot F\). At the point \((1,2,1)\), will a cloud disperse, gather, or stay stable? <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(\nabla\cdot F=D_1F_1+D_2F_2+D_3F_3=2x + x + (-2x)=x\).
+                      At \((1,2,1)\): \(\nabla\cdot F=1>0\).
+                      <div class="key-result">\(\nabla\cdot F=x\); at \((1,2,1)\) it equals \(+1>0\) — the wind pushes outward, so the cloud <strong>disperses</strong>.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <div class="part-content">
+                <div class="part-question">Compute the curl \(\nabla\times F\) at the point \((1,2,1)\). <span class="pts">4 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      With \(F_1=x^2-z,\;F_2=xy,\;F_3=-2xz+y\):
+                      \[\nabla\times F=\begin{pmatrix}D_2F_3-D_3F_2\\ D_3F_1-D_1F_3\\ D_1F_2-D_2F_1\end{pmatrix}=\begin{pmatrix}1-0\\ -1-(-2z)\\ y-0\end{pmatrix}=\begin{pmatrix}1\\ 2z-1\\ y\end{pmatrix}.\]
+                      At \((1,2,1)\):
+                      <div class="key-result">\(\nabla\times F(1,2,1)=\begin{pmatrix}1\\ 1\\ 2\end{pmatrix}.\)</div>
+                      The wind spins locally around the axis \((1,1,2)\).
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <div class="part-content">
+                <div class="part-question">Is \(F\) a gradient field (i.e. \(F=\nabla\phi\) for some \(\phi\))? Justify using the curl. <span class="pts">2 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      A gradient field is always curl-free: \(\nabla\times(\nabla\phi)=\mathbf 0\). Here \(\nabla\times F=(1,\,2z-1,\,y)\), which is not the zero vector (e.g. the first component is \(1\neq0\) everywhere).
+                      <div class="key-result">Since \(\nabla\times F\neq\mathbf 0\), \(F\) is <strong>not</strong> a gradient field.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(d)</span>
+              <div class="part-content">
+                <div class="part-question">Verify the identity \(\nabla\cdot(\nabla\times F)=0\) for this field. <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      From (b), \(\nabla\times F=(1,\;2z-1,\;y)\). Its divergence:
+                      \[\nabla\cdot(\nabla\times F)=D_1(1)+D_2(2z-1)+D_3(y)=0+0+0=0.\]
+                      <div class="key-result">\(\nabla\cdot(\nabla\times F)=0\) ✓ — confirming the "curls are solenoidal" identity (Clairaut's theorem in disguise).</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      Calc A2 · Vector Fields &amp; Their Derivatives · Ch.13.7 · Monday 1 June 2026 · Week 2 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const SESSION = 50 * 60;  // 50-minute session (P5 18:10–19:00)
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+      const chip = document.getElementById('timerChip');
+      chip.classList.remove('warn','urgent');
+      if (e >= SESSION) chip.classList.add('urgent');
+      else if (e >= SESSION*0.85) chip.classList.add('warn');
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

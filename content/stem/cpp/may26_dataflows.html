@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++ Practice — May 26 · Data Types & Flow Control</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #1f2937;
+    --border: #30363d;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #f78166;
+    --accent4: #d2a8ff;
+    --warn: #e3b341;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --code-bg: #0d1117;
+    --correct: #1a4731;
+    --correct-border: #3fb950;
+    --wrong: #4d1117;
+    --wrong-border: #f78166;
+    --neutral: #1c2333;
+    --neutral-border: #30363d;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 120px;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 48px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+
+  .header h1 span { color: var(--text2); font-weight: 300; }
+
+  .session-badge {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--warn);
+  }
+
+  /* ── Score bar ── */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .score-display {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .score-display .pts {
+    font-size: 2.4rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    line-height: 1;
+    transition: all 0.3s ease;
+  }
+
+  .score-display .total {
+    font-size: 1rem;
+    color: var(--text2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .progress-wrap {
+    flex: 1;
+    min-width: 200px;
+    max-width: 400px;
+  }
+
+  .progress-track {
+    height: 8px;
+    background: var(--bg3);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent4));
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: 0%;
+  }
+
+  .progress-label {
+    font-size: 0.72rem;
+    color: var(--text2);
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .answered-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+
+  /* ── Section nav ── */
+  .section-nav {
+    display: flex;
+    gap: 8px;
+    padding: 16px 48px 0;
+    flex-wrap: wrap;
+    background: var(--header-bg, var(--bg));
+  }
+
+  .nav-pill {
+    padding: 5px 14px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    transition: all 0.2s;
+    font-family: 'Sora', sans-serif;
+  }
+
+  .nav-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-pill[data-active="true"] { background: var(--accent); color: #000; border-color: var(--accent); }
+
+  /* ── Main container ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 40px 24px; }
+
+  /* ── Section headers ── */
+  .section {
+    margin-bottom: 48px;
+    scroll-margin-top: 120px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .section-icon.mc  { background: #1a2a4a; }
+  .section-icon.fix { background: #2a1a2a; }
+  .section-icon.complete { background: #1a2a1a; }
+  .section-icon.scratch { background: #2a2418; }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .section-pts {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text2);
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+
+  /* ── Question card ── */
+  .q-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .q-card:hover { border-color: #40464e; }
+
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text2);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .q-pts-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid;
+  }
+
+  .pts-1 { color: #8b949e; border-color: #30363d; background: #161b22; }
+  .pts-2 { color: var(--warn); border-color: #443a1a; background: #1a1500; }
+  .pts-3 { color: var(--accent); border-color: #1a3050; background: #001020; }
+  .pts-5 { color: var(--accent4); border-color: #3a2060; background: #150040; }
+  .pts-8 { color: var(--accent2); border-color: #1a4020; background: #002010; }
+
+  .q-difficulty {
+    font-size: 0.68rem;
+    color: var(--text2);
+    margin-left: auto;
+  }
+
+  .q-text {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  /* ── Code blocks ── */
+  pre, code {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .code-block {
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 12px 0;
+    color: #e6edf3;
+    white-space: pre;
+  }
+
+  .kw  { color: #ff7b72; }
+  .ty  { color: #79c0ff; }
+  .fn  { color: #d2a8ff; }
+  .str { color: #a5d6ff; }
+  .num { color: #f2cc60; }
+  .cmt { color: #8b949e; font-style: italic; }
+  .op  { color: #ff7b72; }
+  .blank { 
+    display: inline-block;
+    background: #1f2937;
+    border: 1px solid var(--warn);
+    border-radius: 4px;
+    min-width: 80px;
+    height: 20px;
+    vertical-align: middle;
+    color: var(--warn);
+    padding: 0 6px;
+    font-size: 0.8rem;
+  }
+
+  /* ── MC Options ── */
+  .mc-options { display: flex; flex-direction: column; gap: 8px; }
+
+  .mc-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg);
+    user-select: none;
+  }
+
+  .mc-option:hover:not(.locked) {
+    border-color: var(--accent);
+    background: #0d2040;
+  }
+
+  .mc-option.selected { border-color: var(--accent); background: #0d2040; }
+  .mc-option.correct  { border-color: var(--correct-border) !important; background: var(--correct) !important; }
+  .mc-option.wrong    { border-color: var(--wrong-border) !important; background: var(--wrong) !important; }
+  .mc-option.locked   { cursor: default; }
+
+  .mc-letter {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg3);
+    color: var(--text2);
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .mc-option.selected .mc-letter { background: var(--accent); color: #000; }
+  .mc-option.correct  .mc-letter { background: var(--accent2); color: #000; }
+  .mc-option.wrong    .mc-letter { background: var(--accent3); color: #000; }
+
+  .mc-text { font-size: 0.88rem; line-height: 1.5; padding-top: 2px; }
+  .mc-text code { 
+    background: var(--bg3); 
+    padding: 1px 5px; 
+    border-radius: 4px; 
+    font-size: 0.82rem;
+    color: var(--accent4);
+  }
+
+  /* ── Text areas ── */
+  .answer-area {
+    width: 100%;
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text);
+    resize: vertical;
+    min-height: 90px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .answer-area:focus { border-color: var(--accent); }
+
+  .answer-area.code-answer {
+    min-height: 150px;
+    color: #79c0ff;
+  }
+
+  .answer-area.long-code {
+    min-height: 240px;
+  }
+
+  /* ── Hint / reveal ── */
+  .reveal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 12px;
+  }
+
+  .reveal-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .reveal-btn.revealed { border-color: var(--accent2); color: var(--accent2); }
+
+  .answer-reveal {
+    display: none;
+    margin-top: 14px;
+    background: #0a1a0a;
+    border: 1px solid var(--correct-border);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: #c3f0ca;
+  }
+
+  .answer-reveal.visible { display: block; }
+
+  .answer-reveal .ans-label {
+    font-weight: 700;
+    color: var(--accent2);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .answer-reveal pre {
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    margin-top: 8px;
+    color: var(--text);
+  }
+
+  /* ── Check answer (MC) feedback ── */
+  .mc-feedback {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 7px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    display: none;
+  }
+
+  .mc-feedback.show { display: flex; align-items: center; gap: 8px; }
+  .mc-feedback.correct-fb { background: var(--correct); border: 1px solid var(--correct-border); color: #56d364; }
+  .mc-feedback.wrong-fb   { background: var(--wrong);   border: 1px solid var(--wrong-border);   color: #f85149; }
+
+  /* ── Self-grade ── */
+  .self-grade {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .self-grade label {
+    font-size: 0.78rem;
+    color: var(--text2);
+    font-weight: 600;
+  }
+
+  .grade-btn {
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--text2);
+    transition: all 0.2s;
+  }
+
+  .grade-btn:hover { opacity: 0.85; }
+  .grade-btn.full  { border-color: var(--correct-border); color: var(--accent2); }
+  .grade-btn.half  { border-color: var(--warn); color: var(--warn); }
+  .grade-btn.none  { border-color: var(--accent3); color: var(--accent3); }
+
+  .grade-btn.selected-grade { transform: scale(1.1); filter: brightness(1.3); }
+
+  /* ── Bottom score summary ── */
+  .summary-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 48px;
+    text-align: center;
+  }
+
+  .summary-card h2 {
+    font-size: 1.2rem;
+    color: var(--text2);
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+
+  .summary-big {
+    font-size: 4rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    line-height: 1;
+    margin: 8px 0;
+  }
+
+  .summary-sub { color: var(--text2); font-size: 0.88rem; }
+
+  .summary-breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .breakdown-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+
+  .breakdown-item .b-label { font-size: 0.72rem; color: var(--text2); margin-bottom: 4px; }
+  .breakdown-item .b-val   { font-size: 1.4rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+  .btn-primary {
+    margin-top: 24px;
+    padding: 12px 32px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* ── Tooltip info ── */
+  .topic-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+
+  @keyframes scoreUp {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.25); color: var(--accent2); }
+    100% { transform: scale(1); }
+  }
+  .score-pop { animation: scoreUp 0.4s ease; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <div class="header-top">
+    <h1>C++ Practice <span>/ Data Types &amp; Flow Control</span></h1>
+    <div class="session-badge">📅 May 26 · 18:10 – 19:00</div>
+  </div>
+  <div class="score-bar">
+    <div class="score-display">
+      <span class="pts" id="liveScore">0</span>
+      <span class="total">/ <span id="totalPts">50</span> pts</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">0% · 0 questions answered</div>
+    </div>
+    <div class="answered-count" id="answeredCount">0 / 18 done</div>
+  </div>
+</div>
+
+<!-- ═══ SECTION NAV ═══ -->
+<div style="background:#0d1117; padding: 12px 48px 0; border-bottom: 1px solid #30363d; display:flex; gap:8px; flex-wrap:wrap; position:sticky; top:108px; z-index:99;">
+  <a href="#sec-mc"       class="nav-pill" style="text-decoration:none;">🔵 Multiple Choice</a>
+  <a href="#sec-complete" class="nav-pill" style="text-decoration:none;">🟢 Complete the Code</a>
+  <a href="#sec-fix"      class="nav-pill" style="text-decoration:none;">🟣 Fix the Bug</a>
+  <a href="#sec-scratch"  class="nav-pill" style="text-decoration:none;">🟠 Code from Scratch</a>
+  <a href="#sec-summary"  class="nav-pill" style="text-decoration:none;">📊 Summary</a>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="container">
+
+  <!-- ════════════════════════════════════
+       PART 1 — MULTIPLE CHOICE (18 pts)
+  ════════════════════════════════════ -->
+  <div class="section" id="sec-mc">
+    <div class="section-header">
+      <div class="section-icon mc">🔵</div>
+      <div>
+        <div class="section-title">Part 1 — Multiple Choice</div>
+        <div style="font-size:0.78rem; color:var(--text2); margin-top:2px;">Theory, data types, and control flow concepts</div>
+      </div>
+      <div class="section-pts">18 pts · 9 questions · 2 pts each</div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-card" id="q1">
+      <div class="q-meta">
+        <span class="q-num">Q1</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">data types</span>
+        <span class="q-difficulty">★☆☆</span>
+      </div>
+      <div class="q-text">What is the output of <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--accent4);">sizeof(char)</code> in C++?</div>
+      <div class="mc-options" data-correct="A" data-qid="q1" data-pts="2">
+        <div class="mc-option" data-val="A"><span class="mc-letter">A</span><span class="mc-text">1</span></div>
+        <div class="mc-option" data-val="B"><span class="mc-letter">B</span><span class="mc-text">2</span></div>
+        <div class="mc-option" data-val="C"><span class="mc-letter">C</span><span class="mc-text">4</span></div>
+        <div class="mc-option" data-val="D"><span class="mc-letter">D</span><span class="mc-text">Depends on the compiler</span></div>
+      </div>
+      <div class="mc-feedback" id="fb-q1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card" id="q2">
+      <div class="q-meta">
+        <span class="q-num">Q2</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">data types</span>
+        <span class="q-difficulty">★☆☆</span>
+      </div>
+      <div class="q-text">Which of the following variable declarations is <strong>invalid</strong> in C++?</div>
+      <div class="mc-options" data-correct="C" data-qid="q2" data-pts="2">
+        <div class="mc-option" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>int _count = 0;</code></span></div>
+        <div class="mc-option" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>double pi = 3.14;</code></span></div>
+        <div class="mc-option" data-val="C"><span class="mc-letter">C</span><span class="mc-text"><code>int 1stNumber = 5;</code></span></div>
+        <div class="mc-option" data-val="D"><span class="mc-letter">D</span><span class="mc-text"><code>char letter = 'Z';</code></span></div>
+      </div>
+      <div class="mc-feedback" id="fb-q2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card" id="q3">
+      <div class="q-meta">
+        <span class="q-num">Q3</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">type conversion</span>
+        <span class="q-difficulty">★★☆</span>
+      </div>
+      <div class="q-text">What will be the value of <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--accent4);">result</code> after this code runs?
+      <div class="code-block"><span class="ty">int</span> a = <span class="num">7</span>;
+<span class="ty">int</span> b = <span class="num">2</span>;
+<span class="ty">double</span> result = a / b;</div>
+      </div>
+      <div class="mc-options" data-correct="B" data-qid="q3" data-pts="2">
+        <div class="mc-option" data-val="A"><span class="mc-letter">A</span><span class="mc-text">3.5</span></div>
+        <div class="mc-option" data-val="B"><span class="mc-letter">B</span><span class="mc-text">3.0</span></div>
+        <div class="mc-option" data-val="C"><span class="mc-letter">C</span><span class="mc-text">3</span></div>
+        <div class="mc-option" data-val="D"><span class="mc-letter">D</span><span class="mc-text">Compile error</span></div>
+      </div>
+      <div class="mc-feedback" id="fb-q3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card" id="q4">
+      <div class="q-meta">
+        <span class="q-num">Q4</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">if-else</span>
+        <span class="q-difficulty">★☆☆</span>
+      </div>
+      <div class="q-text">How many times will <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--accent4);">"Hello"</code> be printed?
+      <div class="code-block"><span class="ty">int</span> x = <span class="num">10</span>;
+<span class="kw">if</span> (x > <span class="num">5</span>)
+    cout &lt;&lt; <span class="str">"Hello"</span>;
+<span class="kw">if</span> (x > <span class="num">8</span>)
+    cout &lt;&lt; <span class="str">"Hello"</span>;
+<span class="kw">if</span> (x > <span class="num">12</span>)
+    cout &lt;&lt; <span class="str">"Hello"</span>;</div>
+      </div>
+      <div class="mc-options" data-correct="C" data-qid="q4" data-pts="2">
+        <div class="mc-option" data-val="A"><span class="mc-letter">A</span><span class="mc-text">1</span></div>
+        <div class="mc-option" data-val="B"><span class="mc-letter">B</span><span class="mc-text">1</span></div>
+        <div class="mc-option" data-val="C"><span class="mc-letter">C</span><span class="mc-text">2</span></div>
+        <div class="mc-option" data-val="D"><span class="mc-letter">D</span><span class="mc-text">3</span></div>
+      </div>
+      <div class="mc-feedback" id="fb-q4"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card" id="q5">
+      <div class="q-meta">
+        <span class="q-num">Q5</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">loops</span>
+        <span class="q-difficulty">★★☆</span>
+      </div>
+      <div class="q-text">What is the output of this code?
+      <div class="code-block"><span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+    <span class="kw">if</span> (i == <span class="num">3</span>) <span class="kw">break</span>;
+    cout &lt;&lt; i &lt;&lt; <span class="str">" "</span>;
+}</div>
+      </div>
+      <div class="mc-options" data-correct="B" data-qid="q5" data-pts="2">
+        <div class="mc-option" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>0 1 2 3 4</code></span></div>
+        <div class="mc-option" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>0 1 2</code></span></div>
+        <div class="mc-option" data-val="C"><span class="mc-letter">C</span><span class="mc-text"><code>0 1 2 3</code></span></div>
+        <div class="mc-option" data-val="D"><span class="mc-letter">D</span><span class="mc-text"><code>1 2 3</code></span></div>
+      </div>
+      <div class="mc-feedback" id="fb-q5"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="q-card" id="q6">
+      <div class="q-meta">
+        <span class="q-num">Q6</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">loops</span>
+        <span class="q-difficulty">★★☆</span>
+      </div>
+      <div class="q-text">What is the key difference between a <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--accent4);">while</code> loop and a <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--accent4);">do-while</code> loop in C++?</div>
+      <div class="mc-options" data-correct="A" data-qid="q6" data-pts="2">
+        <div class="mc-option" data-val="A"><span class="mc-letter">A</span><span class="mc-text">A <code>do-while</code> loop always executes its body at least once; a <code>while</code> loop may execute zero times.</span></div>
+        <div class="mc-option" data-val="B"><span class="mc-letter">B</span><span class="mc-text">A <code>while</code> loop always executes its body at least once; a <code>do-while</code> loop may execute zero times.</span></div>
+        <div class="mc-option" data-val="C"><span class="mc-letter">C</span><span class="mc-text">They are identical in behavior.</span></div>
+        <div class="mc-option" data-val="D"><span class="mc-letter">D</span><span class="mc-text">A <code>do-while</code> loop cannot use <code>break</code>.</span></div>
+      </div>
+      <div class="mc-feedback" id="fb-q6"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="q-card" id="q7">
+      <div class="q-meta">
+        <span class="q-num">Q7</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">constants / const</span>
+        <span class="q-difficulty">★☆☆</span>
+      </div>
+      <div class="q-text">Which statement about <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--accent4);">const</code> variables in C++ is TRUE?</div>
+      <div class="mc-options" data-correct="D" data-qid="q7" data-pts="2">
+        <div class="mc-option" data-val="A"><span class="mc-letter">A</span><span class="mc-text">A <code>const</code> variable can be modified after declaration if cast to a pointer.</span></div>
+        <div class="mc-option" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>const</code> variables are stored on the heap.</span></div>
+        <div class="mc-option" data-val="C"><span class="mc-letter">C</span><span class="mc-text">A <code>const</code> variable does not need to be initialized at declaration.</span></div>
+        <div class="mc-option" data-val="D"><span class="mc-letter">D</span><span class="mc-text">A <code>const</code> variable must be initialized at the point of declaration and cannot be reassigned.</span></div>
+      </div>
+      <div class="mc-feedback" id="fb-q7"></div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="q-card" id="q8">
+      <div class="q-meta">
+        <span class="q-num">Q8</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">arrays / bounds</span>
+        <span class="q-difficulty">★★☆</span>
+      </div>
+      <div class="q-text">Given <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--accent4);">int arr[5];</code>, which index access causes undefined behavior?</div>
+      <div class="mc-options" data-correct="D" data-qid="q8" data-pts="2">
+        <div class="mc-option" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>arr[0]</code></span></div>
+        <div class="mc-option" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>arr[4]</code></span></div>
+        <div class="mc-option" data-val="C"><span class="mc-letter">C</span><span class="mc-text"><code>arr[2]</code></span></div>
+        <div class="mc-option" data-val="D"><span class="mc-letter">D</span><span class="mc-text"><code>arr[5]</code></span></div>
+      </div>
+      <div class="mc-feedback" id="fb-q8"></div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="q-card" id="q9">
+      <div class="q-meta">
+        <span class="q-num">Q9</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">switch statement</span>
+        <span class="q-difficulty">★★☆</span>
+      </div>
+      <div class="q-text">What is printed by this code?
+      <div class="code-block"><span class="ty">int</span> x = <span class="num">2</span>;
+<span class="kw">switch</span> (x) {
+    <span class="kw">case</span> <span class="num">1</span>: cout &lt;&lt; <span class="str">"One"</span>;
+    <span class="kw">case</span> <span class="num">2</span>: cout &lt;&lt; <span class="str">"Two"</span>;
+    <span class="kw">case</span> <span class="num">3</span>: cout &lt;&lt; <span class="str">"Three"</span>; <span class="kw">break</span>;
+    <span class="kw">default</span>: cout &lt;&lt; <span class="str">"Other"</span>;
+}</div>
+      </div>
+      <div class="mc-options" data-correct="C" data-qid="q9" data-pts="2">
+        <div class="mc-option" data-val="A"><span class="mc-letter">A</span><span class="mc-text"><code>Two</code></span></div>
+        <div class="mc-option" data-val="B"><span class="mc-letter">B</span><span class="mc-text"><code>TwoThreeOther</code></span></div>
+        <div class="mc-option" data-val="C"><span class="mc-letter">C</span><span class="mc-text"><code>TwoThree</code></span></div>
+        <div class="mc-option" data-val="D"><span class="mc-letter">D</span><span class="mc-text">Compile error</span></div>
+      </div>
+      <div class="mc-feedback" id="fb-q9"></div>
+    </div>
+
+  </div><!-- /sec-mc -->
+
+  <!-- ════════════════════════════════════
+       PART 2 — COMPLETE THE CODE (14 pts)
+  ════════════════════════════════════ -->
+  <div class="section" id="sec-complete">
+    <div class="section-header">
+      <div class="section-icon complete">🟢</div>
+      <div>
+        <div class="section-title">Part 2 — Complete the Code</div>
+        <div style="font-size:0.78rem; color:var(--text2); margin-top:2px;">Fill in the missing parts to make the program work correctly</div>
+      </div>
+      <div class="section-pts">14 pts · 4 questions</div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="q-card" id="q10">
+      <div class="q-meta">
+        <span class="q-num">Q10</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">short answer</span>
+        <span class="topic-tag">type casting</span>
+        <span class="q-difficulty">★★☆</span>
+      </div>
+      <div class="q-text">Fill in the blank so that <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--accent4);">result</code> equals <strong>3.5</strong> (not 3).</div>
+      <div class="code-block"><span class="ty">int</span> a = <span class="num">7</span>, b = <span class="num">2</span>;
+<span class="ty">double</span> result = ___________;</div>
+      <textarea class="answer-area" placeholder="Write your answer here..." rows="2"></textarea>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <button class="reveal-btn" onclick="toggleReveal('rev-q10', this)">👁 Show Answer</button>
+        <div class="self-grade">
+          <label>Self-grade:</label>
+          <button class="grade-btn full" onclick="selfGrade('q10', 2, 2, this)">✅ Full (2)</button>
+          <button class="grade-btn half" onclick="selfGrade('q10', 1, 2, this)">½ Half (1)</button>
+          <button class="grade-btn none" onclick="selfGrade('q10', 0, 2, this)">❌ None (0)</button>
+        </div>
+      </div>
+      <div class="answer-reveal" id="rev-q10">
+        <span class="ans-label">✅ Model Answer</span>
+        Fill in: <code style="color:var(--accent2);">(double)a / b</code> &nbsp;or&nbsp; <code style="color:var(--accent2);">a / (double)b</code><br><br>
+        <strong>Why:</strong> Integer division truncates. Casting <em>either</em> operand to <code>double</code> forces floating-point division. Both options yield 3.5.
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="q-card" id="q11">
+      <div class="q-meta">
+        <span class="q-num">Q11</span>
+        <span class="q-pts-badge pts-3">3 pts</span>
+        <span class="topic-tag">short answer</span>
+        <span class="topic-tag">for loop</span>
+        <span class="q-difficulty">★★☆</span>
+      </div>
+      <div class="q-text">Complete the for loop so it prints the sum of all integers from 1 to 100.</div>
+      <div class="code-block"><span class="ty">int</span> sum = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="ty">int</span> i = ___; ___________; ___) {
+    sum += i;
+}
+cout &lt;&lt; sum;</div>
+      <textarea class="answer-area" placeholder="Write the three loop parts: initializer ; condition ; increment" rows="2"></textarea>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <button class="reveal-btn" onclick="toggleReveal('rev-q11', this)">👁 Show Answer</button>
+        <div class="self-grade">
+          <label>Self-grade:</label>
+          <button class="grade-btn full" onclick="selfGrade('q11', 3, 3, this)">✅ Full (3)</button>
+          <button class="grade-btn half" onclick="selfGrade('q11', 1, 3, this)">½ Partial (1)</button>
+          <button class="grade-btn none" onclick="selfGrade('q11', 0, 3, this)">❌ None (0)</button>
+        </div>
+      </div>
+      <div class="answer-reveal" id="rev-q11">
+        <span class="ans-label">✅ Model Answer</span>
+        <pre><span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">100</span>; i++)</span></pre>
+        Output: <code>5050</code><br>
+        <strong>Marks breakdown:</strong> 1 pt for correct initializer, 1 pt for correct condition (<code>i &lt;= 100</code>), 1 pt for increment.
+      </div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="q-card" id="q12">
+      <div class="q-meta">
+        <span class="q-num">Q12</span>
+        <span class="q-pts-badge pts-3">3 pts</span>
+        <span class="topic-tag">short answer</span>
+        <span class="topic-tag">if-else if</span>
+        <span class="q-difficulty">★★☆</span>
+      </div>
+      <div class="q-text">Complete the grade function. <strong>A ≥ 90, B ≥ 80, C ≥ 70, otherwise F.</strong></div>
+      <div class="code-block"><span class="ty">char</span> <span class="fn">getGrade</span>(<span class="ty">int</span> score) {
+    <span class="kw">if</span> (score >= <span class="num">90</span>) <span class="kw">return</span> <span class="str">'A'</span>;
+    ___ ___ (score >= <span class="num">80</span>) <span class="kw">return</span> <span class="str">'B'</span>;
+    ___ ___ (score >= <span class="num">70</span>) <span class="kw">return</span> <span class="str">'C'</span>;
+    ___ <span class="kw">return</span> <span class="str">'F'</span>;
+}</div>
+      <textarea class="answer-area" placeholder="Fill in the 3 blanks (keywords)..." rows="3"></textarea>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <button class="reveal-btn" onclick="toggleReveal('rev-q12', this)">👁 Show Answer</button>
+        <div class="self-grade">
+          <label>Self-grade:</label>
+          <button class="grade-btn full" onclick="selfGrade('q12', 3, 3, this)">✅ Full (3)</button>
+          <button class="grade-btn half" onclick="selfGrade('q12', 1, 3, this)">½ Partial (1)</button>
+          <button class="grade-btn none" onclick="selfGrade('q12', 0, 3, this)">❌ None (0)</button>
+        </div>
+      </div>
+      <div class="answer-reveal" id="rev-q12">
+        <span class="ans-label">✅ Model Answer</span>
+        Line 2: <code>else if</code> — Line 3: <code>else if</code> — Line 4: <code>else</code><br><br>
+        Using <code>if</code> instead of <code>else if</code> for lines 2–3 is wrong: all conditions would be evaluated independently (not as a chain), and the function might return the wrong grade.
+      </div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="q-card" id="q13">
+      <div class="q-meta">
+        <span class="q-num">Q13</span>
+        <span class="q-pts-badge pts-5">5 pts</span>
+        <span class="topic-tag">long answer</span>
+        <span class="topic-tag">while + arrays</span>
+        <span class="q-difficulty">★★★</span>
+      </div>
+      <div class="q-text">Complete the function that returns the <strong>maximum value</strong> in an integer array. Fill in the body — the function signature is given.</div>
+      <div class="code-block"><span class="ty">int</span> <span class="fn">findMax</span>(<span class="ty">int</span> arr[], <span class="ty">int</span> size) {
+    <span class="cmt">// Your code here</span>
+    <span class="cmt">// Must handle size >= 1</span>
+    <span class="cmt">// Return the largest element</span>
+
+}</div>
+      <textarea class="answer-area code-answer" placeholder="Write the complete function body here..." rows="8"></textarea>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <button class="reveal-btn" onclick="toggleReveal('rev-q13', this)">👁 Show Answer</button>
+        <div class="self-grade">
+          <label>Self-grade:</label>
+          <button class="grade-btn full" onclick="selfGrade('q13', 5, 5, this)">✅ Full (5)</button>
+          <button class="grade-btn half" onclick="selfGrade('q13', 3, 5, this)">~Half (3)</button>
+          <button class="grade-btn none" onclick="selfGrade('q13', 0, 5, this)">❌ None (0)</button>
+        </div>
+      </div>
+      <div class="answer-reveal" id="rev-q13">
+        <span class="ans-label">✅ Model Answer</span>
+        <pre><span class="ty">int</span> <span class="fn">findMax</span>(<span class="ty">int</span> arr[], <span class="ty">int</span> size) {
+    <span class="ty">int</span> maxVal = arr[<span class="num">0</span>];           <span class="cmt">// start with first element</span>
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">1</span>; i &lt; size; i++) {
+        <span class="kw">if</span> (arr[i] &gt; maxVal)
+            maxVal = arr[i];
+    }
+    <span class="kw">return</span> maxVal;
+}</pre>
+        <strong>Key ideas (partial credit):</strong><br>
+        ✔ Initialize max to arr[0] (not 0 or INT_MIN)<br>
+        ✔ Loop from index 1 (not 0)<br>
+        ✔ Compare and update maxVal correctly<br>
+        ✔ Return outside the loop
+      </div>
+    </div>
+
+  </div><!-- /sec-complete -->
+
+  <!-- ════════════════════════════════════
+       PART 3 — FIX THE BUG (10 pts)
+  ════════════════════════════════════ -->
+  <div class="section" id="sec-fix">
+    <div class="section-header">
+      <div class="section-icon fix">🟣</div>
+      <div>
+        <div class="section-title">Part 3 — Fix the Bug</div>
+        <div style="font-size:0.78rem; color:var(--text2); margin-top:2px;">Identify the error, explain it, and write the corrected code</div>
+      </div>
+      <div class="section-pts">10 pts · 3 questions</div>
+    </div>
+
+    <!-- Q14 -->
+    <div class="q-card" id="q14">
+      <div class="q-meta">
+        <span class="q-num">Q14</span>
+        <span class="q-pts-badge pts-2">2 pts</span>
+        <span class="topic-tag">short · fix</span>
+        <span class="topic-tag">loop off-by-one</span>
+        <span class="q-difficulty">★★☆</span>
+      </div>
+      <div class="q-text">This code is <strong>supposed to print numbers 1 through 5</strong> but has a bug. Identify the bug and write the fix.</div>
+      <div class="code-block"><span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">1</span>; i &lt; <span class="num">5</span>; i++) {
+    cout &lt;&lt; i &lt;&lt; <span class="str">" "</span>;
+}</div>
+      <textarea class="answer-area" placeholder="1. What is the bug?  2. Write the corrected line." rows="3"></textarea>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <button class="reveal-btn" onclick="toggleReveal('rev-q14', this)">👁 Show Answer</button>
+        <div class="self-grade">
+          <label>Self-grade:</label>
+          <button class="grade-btn full" onclick="selfGrade('q14', 2, 2, this)">✅ Full (2)</button>
+          <button class="grade-btn half" onclick="selfGrade('q14', 1, 2, this)">½ Half (1)</button>
+          <button class="grade-btn none" onclick="selfGrade('q14', 0, 2, this)">❌ None (0)</button>
+        </div>
+      </div>
+      <div class="answer-reveal" id="rev-q14">
+        <span class="ans-label">✅ Model Answer</span>
+        <strong>Bug:</strong> Off-by-one error. The condition <code>i &lt; 5</code> stops at 4 (never prints 5).<br><br>
+        <strong>Fix:</strong> Change condition to <code>i &lt;= 5</code>.<br>
+        <pre><span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">5</span>; i++) { ... }</pre>
+      </div>
+    </div>
+
+    <!-- Q15 -->
+    <div class="q-card" id="q15">
+      <div class="q-meta">
+        <span class="q-num">Q15</span>
+        <span class="q-pts-badge pts-3">3 pts</span>
+        <span class="topic-tag">short · fix</span>
+        <span class="topic-tag">array bounds</span>
+        <span class="q-difficulty">★★★</span>
+      </div>
+      <div class="q-text">This code has <strong>two bugs</strong>. Find both, explain why they are bugs, and write the corrected version.</div>
+      <div class="code-block"><span class="ty">int</span> arr[<span class="num">5</span>] = {<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>};
+<span class="ty">int</span> sum = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i &lt;= <span class="num">5</span>; i++) {  <span class="cmt">// Bug 1?</span>
+    sum += arr[i];
+}
+cout &lt;&lt; sum / <span class="num">4</span>;  <span class="cmt">// Bug 2?</span></div>
+      <textarea class="answer-area" placeholder="Bug 1: ...  Bug 2: ...  Fixed code: ..." rows="5"></textarea>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <button class="reveal-btn" onclick="toggleReveal('rev-q15', this)">👁 Show Answer</button>
+        <div class="self-grade">
+          <label>Self-grade:</label>
+          <button class="grade-btn full" onclick="selfGrade('q15', 3, 3, this)">✅ Full (3)</button>
+          <button class="grade-btn half" onclick="selfGrade('q15', 1, 3, this)">½ Partial (1)</button>
+          <button class="grade-btn none" onclick="selfGrade('q15', 0, 3, this)">❌ None (0)</button>
+        </div>
+      </div>
+      <div class="answer-reveal" id="rev-q15">
+        <span class="ans-label">✅ Model Answer</span>
+        <strong>Bug 1:</strong> <code>i &lt;= 5</code> causes <code>arr[5]</code> to be accessed. Array has valid indices 0–4; index 5 is out-of-bounds → undefined behavior.<br>
+        Fix: <code>i &lt; 5</code><br><br>
+        <strong>Bug 2:</strong> Divides by 4 to compute "average" but the array has 5 elements.<br>
+        Fix: <code>sum / 5</code><br><br>
+        <pre><span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) { sum += arr[i]; }
+cout &lt;&lt; sum / <span class="num">5</span>;</pre>
+      </div>
+    </div>
+
+    <!-- Q16 -->
+    <div class="q-card" id="q16">
+      <div class="q-meta">
+        <span class="q-num">Q16</span>
+        <span class="q-pts-badge pts-5">5 pts</span>
+        <span class="topic-tag">long · fix</span>
+        <span class="topic-tag">logic errors</span>
+        <span class="q-difficulty">★★★</span>
+      </div>
+      <div class="q-text">This function is supposed to <strong>count how many even numbers are in an array</strong>. It has <strong>three logic errors</strong>. Identify all three and write the fully corrected function.</div>
+      <div class="code-block"><span class="ty">int</span> <span class="fn">countEvens</span>(<span class="ty">int</span> arr[], <span class="ty">int</span> size) {
+    <span class="ty">int</span> count = <span class="num">1</span>;            <span class="cmt">// error?</span>
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i &lt;= size; i++) { <span class="cmt">// error?</span>
+        <span class="kw">if</span> (arr[i] % <span class="num">2</span> == <span class="num">1</span>)    <span class="cmt">// error?</span>
+            count++;
+    }
+    <span class="kw">return</span> count;
+}</div>
+      <textarea class="answer-area code-answer long-code" placeholder="Error 1: ...&#10;Error 2: ...&#10;Error 3: ...&#10;&#10;Fixed function:&#10;int countEvens(int arr[], int size) {&#10;    &#10;}" rows="12"></textarea>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <button class="reveal-btn" onclick="toggleReveal('rev-q16', this)">👁 Show Answer</button>
+        <div class="self-grade">
+          <label>Self-grade:</label>
+          <button class="grade-btn full" onclick="selfGrade('q16', 5, 5, this)">✅ Full (5)</button>
+          <button class="grade-btn half" onclick="selfGrade('q16', 3, 5, this)">~Half (3)</button>
+          <button class="grade-btn none" onclick="selfGrade('q16', 0, 5, this)">❌ None (0)</button>
+        </div>
+      </div>
+      <div class="answer-reveal" id="rev-q16">
+        <span class="ans-label">✅ Model Answer — 3 Errors</span>
+        <strong>Error 1:</strong> <code>count = 1</code> should be <code>count = 0</code>. Counter must start at 0; initializing to 1 means every call is off by 1.<br><br>
+        <strong>Error 2:</strong> <code>i &lt;= size</code> should be <code>i &lt; size</code>. When i == size, arr[i] is out-of-bounds → undefined behavior.<br><br>
+        <strong>Error 3:</strong> <code>arr[i] % 2 == 1</code> checks for <em>odd</em> numbers, not even. Should be <code>arr[i] % 2 == 0</code>.<br><br>
+        <pre><span class="ty">int</span> <span class="fn">countEvens</span>(<span class="ty">int</span> arr[], <span class="ty">int</span> size) {
+    <span class="ty">int</span> count = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i &lt; size; i++) {
+        <span class="kw">if</span> (arr[i] % <span class="num">2</span> == <span class="num">0</span>)
+            count++;
+    }
+    <span class="kw">return</span> count;
+}</pre>
+      </div>
+    </div>
+
+  </div><!-- /sec-fix -->
+
+  <!-- ════════════════════════════════════
+       PART 4 — CODE FROM SCRATCH (18 pts)
+  ════════════════════════════════════ -->
+  <div class="section" id="sec-scratch">
+    <div class="section-header">
+      <div class="section-icon scratch">🟠</div>
+      <div>
+        <div class="section-title">Part 4 — Code from Scratch</div>
+        <div style="font-size:0.78rem; color:var(--text2); margin-top:2px;">Write complete, working C++ functions or programs</div>
+      </div>
+      <div class="section-pts">18 pts · 2 questions</div>
+    </div>
+
+    <!-- Q17 -->
+    <div class="q-card" id="q17">
+      <div class="q-meta">
+        <span class="q-num">Q17</span>
+        <span class="q-pts-badge pts-8">8 pts</span>
+        <span class="topic-tag">code from scratch</span>
+        <span class="topic-tag">loops · conditions</span>
+        <span class="q-difficulty">★★★</span>
+      </div>
+      <div class="q-text">
+        Write a complete C++ function called <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--accent4);">isPrime</code> that:<br><br>
+        • Takes a single <code>int</code> parameter <code>n</code><br>
+        • Returns <code>true</code> if <code>n</code> is a prime number, <code>false</code> otherwise<br>
+        • Must handle edge cases: n ≤ 1 is NOT prime<br><br>
+        <em>Then write a <code>main()</code> that uses your function to print all primes from 1 to 30.</em>
+      </div>
+      <textarea class="answer-area code-answer long-code" placeholder="#include <iostream>&#10;using namespace std;&#10;&#10;bool isPrime(int n) {&#10;    // your code here&#10;}&#10;&#10;int main() {&#10;    // your code here&#10;}" rows="16"></textarea>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <button class="reveal-btn" onclick="toggleReveal('rev-q17', this)">👁 Show Answer</button>
+        <div class="self-grade">
+          <label>Self-grade:</label>
+          <button class="grade-btn full" onclick="selfGrade('q17', 8, 8, this)">✅ Full (8)</button>
+          <button class="grade-btn half" onclick="selfGrade('q17', 5, 8, this)">~Half (5)</button>
+          <button class="grade-btn none" onclick="selfGrade('q17', 0, 8, this)">❌ None (0)</button>
+        </div>
+      </div>
+      <div class="answer-reveal" id="rev-q17">
+        <span class="ans-label">✅ Model Answer</span>
+        <pre><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">bool</span> <span class="fn">isPrime</span>(<span class="ty">int</span> n) {
+    <span class="kw">if</span> (n &lt;= <span class="num">1</span>) <span class="kw">return</span> <span class="kw">false</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">2</span>; i &lt; n; i++) {
+        <span class="kw">if</span> (n % i == <span class="num">0</span>) <span class="kw">return</span> <span class="kw">false</span>;
+    }
+    <span class="kw">return</span> <span class="kw">true</span>;
+}
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">30</span>; i++) {
+        <span class="kw">if</span> (<span class="fn">isPrime</span>(i))
+            cout &lt;&lt; i &lt;&lt; <span class="str">" "</span>;
+    }
+    cout &lt;&lt; endl;
+    <span class="kw">return</span> <span class="num">0</span>;
+}
+<span class="cmt">// Output: 2 3 5 7 11 13 17 19 23 29</span></pre>
+        <strong>Marking rubric:</strong><br>
+        2 pts — Correct function signature + return type<br>
+        2 pts — Edge case n ≤ 1 handled<br>
+        2 pts — Loop logic correct (tests divisors from 2 to n-1)<br>
+        2 pts — Correct main() printing primes 2–29
+      </div>
+    </div>
+
+    <!-- Q18 -->
+    <div class="q-card" id="q18">
+      <div class="q-meta">
+        <span class="q-num">Q18</span>
+        <span class="q-pts-badge pts-8">10 pts</span>
+        <span class="topic-tag">code from scratch</span>
+        <span class="topic-tag">arrays · loops · functions</span>
+        <span class="q-difficulty">★★★</span>
+      </div>
+      <div class="q-text">
+        Write a complete C++ program that:<br><br>
+        1. Declares an integer array of size 8 and fills it with values: <code>{4, 15, 7, 22, 3, 9, 18, 1}</code><br>
+        2. Has a function <code>bubbleSort(int arr[], int size)</code> that sorts the array in ascending order using bubble sort<br>
+        3. Has a function <code>printArray(int arr[], int size)</code> that prints all elements separated by spaces<br>
+        4. In <code>main()</code>, prints the array before and after sorting<br><br>
+        <em>Recall: Bubble sort compares adjacent elements and swaps if out of order. Repeat until no swaps occur.</em>
+      </div>
+      <textarea class="answer-area code-answer long-code" placeholder="Write your full program here..." rows="20"></textarea>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <button class="reveal-btn" onclick="toggleReveal('rev-q18', this)">👁 Show Answer</button>
+        <div class="self-grade">
+          <label>Self-grade:</label>
+          <button class="grade-btn full" onclick="selfGrade('q18', 10, 10, this)">✅ Full (10)</button>
+          <button class="grade-btn half" onclick="selfGrade('q18', 6, 10, this)">~Half (6)</button>
+          <button class="grade-btn none" onclick="selfGrade('q18', 0, 10, this)">❌ None (0)</button>
+        </div>
+      </div>
+      <div class="answer-reveal" id="rev-q18">
+        <span class="ans-label">✅ Model Answer</span>
+        <pre><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">void</span> <span class="fn">printArray</span>(<span class="ty">int</span> arr[], <span class="ty">int</span> size) {
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i &lt; size; i++)
+        cout &lt;&lt; arr[i] &lt;&lt; <span class="str">" "</span>;
+    cout &lt;&lt; endl;
+}
+
+<span class="ty">void</span> <span class="fn">bubbleSort</span>(<span class="ty">int</span> arr[], <span class="ty">int</span> size) {
+    <span class="kw">for</span> (<span class="ty">int</span> pass = <span class="num">0</span>; pass &lt; size - <span class="num">1</span>; pass++) {
+        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i &lt; size - <span class="num">1</span> - pass; i++) {
+            <span class="kw">if</span> (arr[i] &gt; arr[i + <span class="num">1</span>]) {
+                <span class="ty">int</span> temp = arr[i];
+                arr[i] = arr[i + <span class="num">1</span>];
+                arr[i + <span class="num">1</span>] = temp;
+            }
+        }
+    }
+}
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> arr[<span class="num">8</span>] = {<span class="num">4</span>, <span class="num">15</span>, <span class="num">7</span>, <span class="num">22</span>, <span class="num">3</span>, <span class="num">9</span>, <span class="num">18</span>, <span class="num">1</span>};
+    cout &lt;&lt; <span class="str">"Before: "</span>;  <span class="fn">printArray</span>(arr, <span class="num">8</span>);
+    <span class="fn">bubbleSort</span>(arr, <span class="num">8</span>);
+    cout &lt;&lt; <span class="str">"After:  "</span>;  <span class="fn">printArray</span>(arr, <span class="num">8</span>);
+    <span class="kw">return</span> <span class="num">0</span>;
+}
+<span class="cmt">// Before: 4 15 7 22 3 9 18 1
+// After:  1 3 4 7 9 15 18 22</span></pre>
+        <strong>Marking rubric (10 pts):</strong><br>
+        2 pts — printArray correct<br>
+        3 pts — bubbleSort outer loop correct<br>
+        3 pts — bubbleSort inner loop + swap correct<br>
+        2 pts — main() correct with before/after output
+      </div>
+    </div>
+
+  </div><!-- /sec-scratch -->
+
+  <!-- ════════════════════════════════════
+       SUMMARY
+  ════════════════════════════════════ -->
+  <div class="summary-card" id="sec-summary">
+    <h2>Session Score</h2>
+    <div class="summary-big" id="summaryScore">0</div>
+    <div class="summary-sub">out of <strong>50</strong> points</div>
+
+    <div class="summary-breakdown">
+      <div class="breakdown-item">
+        <div class="b-label">Part 1 · MC</div>
+        <div class="b-val" id="sb-mc" style="color:var(--accent);">0 / 18</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-label">Part 2 · Complete</div>
+        <div class="b-val" id="sb-complete" style="color:var(--accent2);">0 / 13</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-label">Part 3 · Fix Bug</div>
+        <div class="b-val" id="sb-fix" style="color:var(--accent4);">0 / 10</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-label">Part 4 · Scratch</div>
+        <div class="b-val" id="sb-scratch" style="color:var(--warn);">0 / 18</div>
+      </div>
+    </div>
+
+    <div id="scoreMessage" style="margin-top:20px; font-size:0.88rem; color:var(--text2);"></div>
+
+    <button class="btn-primary" onclick="computeSummary()">🔄 Update Summary</button>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ─── State ───────────────────────────────
+const state = {
+  scores: {},    // qid → { earned, max, section }
+  mc: {},        // qid → { answered, correct }
+  totalAnswered: 0,
+};
+
+const SECTION_MAP = {
+  q1:'mc',q2:'mc',q3:'mc',q4:'mc',q5:'mc',q6:'mc',q7:'mc',q8:'mc',q9:'mc',
+  q10:'complete',q11:'complete',q12:'complete',q13:'complete',
+  q14:'fix',q15:'fix',q16:'fix',
+  q17:'scratch',q18:'scratch',
+};
+
+const MAX_TOTAL = 50;
+
+// ─── MC click handler ─────────────────────
+document.querySelectorAll('.mc-options').forEach(opts => {
+  const qid     = opts.dataset.qid;
+  const correct = opts.dataset.correct;
+  const pts     = parseInt(opts.dataset.pts);
+
+  opts.querySelectorAll('.mc-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if (opts.classList.contains('done')) return;
+      opts.classList.add('done');
+
+      const chosen = opt.dataset.val;
+      const isRight = chosen === correct;
+
+      opts.querySelectorAll('.mc-option').forEach(o => {
+        o.classList.add('locked');
+        if (o.dataset.val === correct) o.classList.add('correct');
+      });
+      if (!isRight) opt.classList.add('wrong');
+      else opt.classList.add('correct');
+
+      const fb = document.getElementById(`fb-${qid}`);
+      fb.classList.add('show');
+      if (isRight) {
+        fb.classList.add('correct-fb');
+        fb.innerHTML = `<span>✅</span> Correct! +${pts} pts`;
+        addScore(qid, pts, pts, 'mc');
+      } else {
+        fb.classList.add('wrong-fb');
+        fb.innerHTML = `<span>❌</span> Incorrect. Correct answer: <strong>${correct}</strong>`;
+        addScore(qid, 0, pts, 'mc');
+      }
+    });
+  });
+});
+
+// ─── Reveal button ────────────────────────
+function toggleReveal(id, btn) {
+  const el = document.getElementById(id);
+  el.classList.toggle('visible');
+  btn.classList.toggle('revealed');
+  btn.textContent = el.classList.contains('visible') ? '🙈 Hide Answer' : '👁 Show Answer';
+}
+
+// ─── Self-grade handler ───────────────────
+function selfGrade(qid, earned, max, btn) {
+  const section = SECTION_MAP[qid];
+  addScore(qid, earned, max, section);
+
+  // Highlight the pressed button
+  const card = document.getElementById(qid);
+  card.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('selected-grade'));
+  btn.classList.add('selected-grade');
+}
+
+// ─── Add / update score ────────────────────
+function addScore(qid, earned, max, section) {
+  const isNew = !(qid in state.scores);
+  state.scores[qid] = { earned, max, section };
+  if (isNew) state.totalAnswered++;
+  updateUI();
+}
+
+// ─── Update all live UI elements ──────────
+function updateUI() {
+  let total = 0;
+  Object.values(state.scores).forEach(s => total += s.earned);
+
+  // Score counter
+  const pts = document.getElementById('liveScore');
+  pts.textContent = total;
+  pts.classList.remove('score-pop');
+  void pts.offsetWidth;
+  pts.classList.add('score-pop');
+
+  // Progress bar
+  const pct = Math.round((total / MAX_TOTAL) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent =
+    `${pct}% · ${state.totalAnswered} question${state.totalAnswered !== 1 ? 's' : ''} answered`;
+  document.getElementById('answeredCount').textContent =
+    `${state.totalAnswered} / 18 done`;
+}
+
+// ─── Summary button ───────────────────────
+function computeSummary() {
+  let totals = { mc: 0, complete: 0, fix: 0, scratch: 0 };
+  let grand = 0;
+  Object.values(state.scores).forEach(s => {
+    totals[s.section] = (totals[s.section] || 0) + s.earned;
+    grand += s.earned;
+  });
+
+  document.getElementById('summaryScore').textContent = grand;
+  document.getElementById('sb-mc').textContent       = `${totals.mc || 0} / 18`;
+  document.getElementById('sb-complete').textContent = `${totals.complete || 0} / 13`;
+  document.getElementById('sb-fix').textContent      = `${totals.fix || 0} / 10`;
+  document.getElementById('sb-scratch').textContent  = `${totals.scratch || 0} / 18`;
+
+  const pct = Math.round((grand / MAX_TOTAL) * 100);
+  let msg = '';
+  if (pct >= 90)      msg = '🏆 Excellent! You\'re exam-ready for C++.';
+  else if (pct >= 75) msg = '✅ Strong session! A few gaps to review.';
+  else if (pct >= 60) msg = '📚 Good effort. Focus on the bugs you missed.';
+  else if (pct >= 40) msg = '💪 Keep going — review the answers and retry.';
+  else                msg = '🔄 Revisit the material and try again tomorrow.';
+
+  document.getElementById('scoreMessage').textContent = msg;
+
+  document.getElementById('sec-summary').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>

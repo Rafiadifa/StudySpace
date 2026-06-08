@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Implicit Function Theorem · 7 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ calc-a2 / implicit function theorem</span>
+    <span class="topbar-date">SUN · 7 JUN 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Implicit <em>Function Theorem</em></h1>
+    <p class="hero-meta">P4 · Ch. 13.6. When does \(g(x,y)=c\) define \(y\) as a function of \(x\)? Get the implicit derivative and find the non-smooth points.</p>
+    <div class="exam-pills">
+      <span class="pill pill-calc">∇ Calc A2</span>
+      <span class="pill pill-calc">Ch. 13.6</span>
+      <span class="pill pill-calc">Final · 23 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-calc"></div>
+        <div>
+          <div class="subject-label">Daily Practice · 50 min · Ch. 13.6</div>
+          <div class="subject-title" style="color:var(--calc)">Implicit Function Theorem</div>
+        </div>
+        <div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>Quick reference.</strong> \(g(x,y)=c\) defines \(y=y(x)\) locally near a point iff \(g_y\neq0\) there. The implicit derivative is \(\dfrac{dy}{dx}=-\dfrac{g_x}{g_y}\). Where \(g_y=0\), the curve has a vertical tangent and \(y\) is <em>not</em> a function of \(x\). Yang's signature question: "where does the surface fail to be smooth?" → set the relevant partial (or Jacobian) to 0 and solve.
+      </div>
+
+      <!-- ══ Problem 1 ══ -->
+      <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">The folium of Descartes</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">The curve is \(g(x,y)=x^3+y^3-6xy=0\).<div class="conn-chain">chains: implicit FT · implicit derivative · vertical tangent · tangent line</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Compute \(g_x,g_y\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(g_x=3x^2-6y,\ g_y=3y^2-6x\). <div class="key-result">as shown.</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Give \(dy/dx\) by the implicit-FT formula.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\dfrac{dy}{dx}=-\dfrac{g_x}{g_y}=-\dfrac{x^2-2y}{y^2-2x}\). <div class="key-result">\(-\dfrac{x^2-2y}{y^2-2x}\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Where does the curve have a vertical tangent?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>Where \(g_y=0\Rightarrow y^2=2x\) (and on the curve). <div class="key-result">\(y^2=2x\) points.</div></div></div></div></div></li><li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Find the tangent line at \((3,3)\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(dy/dx=-\dfrac{9-6}{9-6}=-1\); line \(y-3=-(x-3)\). <div class="key-result">\(y=6-x\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">Implicit derivative</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">For each curve, find \(dy/dx\) by the implicit-FT formula.</div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <div class="part-content">
+                <div class="part-question">Circle: \(x^2+y^2=25\). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+                    \(g=x^2+y^2-25\), \(g_x=2x\), \(g_y=2y\). \(\dfrac{dy}{dx}=-\dfrac{2x}{2y}=-\dfrac{x}{y}\).
+                    <div class="key-result">\(dy/dx=-x/y\), undefined at \((\pm5,0)\).</div>
+                  </div></div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <div class="part-content">
+                <div class="part-question">Folium: \(x^3+y^3=6xy\). <span class="pts">4 pts</span></div>
+                <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+                    \(g=x^3+y^3-6xy\), \(g_x=3x^2-6y\), \(g_y=3y^2-6x\). \(\dfrac{dy}{dx}=-\dfrac{3x^2-6y}{3y^2-6x}=-\dfrac{x^2-2y}{y^2-2x}\).
+                    <div class="key-result">\(dy/dx=-\dfrac{x^2-2y}{y^2-2x}\).</div>
+                  </div></div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <div class="part-content">
+                <div class="part-question">\(e^{xy}+x=y\). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+                    \(g=e^{xy}+x-y\), \(g_x=ye^{xy}+1\), \(g_y=xe^{xy}-1\). \(\dfrac{dy}{dx}=-\dfrac{ye^{xy}+1}{xe^{xy}-1}\).
+                    <div class="key-result">\(dy/dx=-\dfrac{ye^{xy}+1}{xe^{xy}-1}\).</div>
+                  </div></div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">Where does it fail to be smooth?</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">The curve \(y^2=x^3-x\) (an elliptic curve). Find every point where \(y\) fails to be a smooth function of \(x\).</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \(g=y^2-x^3+x\), \(g_y=2y\). IFT fails where \(g_y=0\Rightarrow y=0\). On the curve, \(y=0\Rightarrow x^3-x=0\Rightarrow x=0,\pm1\).
+              <div class="key-result">Non-smooth (vertical-tangent) points: \((0,0),(1,0),(-1,0)\).</div>
+              <div class="ans-note">At these points the tangent is vertical, so \(x\) is locally a function of \(y\) instead — swap roles when \(g_y=0\) but \(g_x\neq0\).</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 3 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-topic">Solve for a parameter</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">For \(g(x,y)=x^2+\alpha y^2-1=0\), find the value(s) of \(\alpha\) and the point where the curve has a single horizontal-tangent failure of "\(x\) as a function of \(y\)" at \((0,1)\).</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              "\(x\) as a function of \(y\)" needs \(g_x\neq0\); it fails where \(g_x=2x=0\Rightarrow x=0\). At \((0,1)\) the constraint gives \(\alpha(1)^2=1\Rightarrow\alpha=1\).
+              <div class="key-result">\(\alpha=1\); failure point \((0,1)\) (and \((0,-1)\)).</div>
+              <div class="ans-note">The recipe: set the relevant partial to 0, then use the equation \(g=0\) to pin the constant. This is exactly the 2025-final style.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      Calc A2 · Implicit Function Theorem (Ch. 13.6) · Sunday 7 June 2026 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C++ · Code Reference · TUOJ Problem Patterns</title>
+<link rel="stylesheet" href="../../../style.css">
+<style>
+  .doc-wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+  .progress-wrap { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: transparent; z-index: 30; }
+  .progress-bar { height: 100%; width: 0%; background: var(--cpp); transition: width 0.1s; }
+
+  .chapter-tabs { position: sticky; top: 0; z-index: 20; display: flex; gap: 6px; flex-wrap: wrap; padding: 14px 32px; background: rgba(15,15,17,0.95); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+  .ch-tab { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.03em; padding: 9px 15px; border-radius: 9px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+  .ch-tab:hover { color: var(--text); border-color: var(--text3); }
+  .ch-tab.active { background: var(--cpp); color: #000; border-color: var(--cpp); }
+
+  .topic-bar { display: flex; gap: 8px; flex-wrap: wrap; padding: 22px 0 4px; }
+  .topic-btn { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 8px 16px; border-radius: 99px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; transition: all 0.15s; }
+  .topic-btn:hover { color: var(--text); border-color: var(--cpp); transform: translateY(-1px); }
+  .topic-btn.active { background: rgba(74,222,128,0.12); color: var(--cpp); border-color: var(--cpp); }
+
+  .topic-panel { display: none; padding: 16px 0 56px; animation: fadeUp 0.3s ease both; }
+  .topic-panel.active { display: block; }
+
+  .method-title { font-family: 'DM Serif Display', serif; font-size: 1.9rem; letter-spacing: -0.02em; color: var(--text); margin: 22px 0 6px; }
+  .method-subtitle { font-family: 'DM Mono', monospace; font-size: 0.74rem; color: var(--text3); margin-bottom: 22px; padding-bottom: 14px; border-bottom: 2px solid var(--cpp); letter-spacing: 0.04em; }
+
+  .method-section { margin-bottom: 30px; }
+  .method-label { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cpp); margin-bottom: 12px; }
+  .hint-inline { color: var(--text3); text-transform: none; letter-spacing: 0; }
+  .method-section p { font-size: 0.96rem; line-height: 1.75; color: var(--text2); max-width: 960px; }
+
+  ol.proc { margin: 0; padding-left: 0; counter-reset: step; list-style: none; max-width: 960px; }
+  ol.proc li { position: relative; padding: 12px 0 12px 44px; font-size: 0.95rem; line-height: 1.7; color: var(--text); border-bottom: 1px solid var(--border); }
+  ol.proc li:last-child { border-bottom: none; }
+  ol.proc li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 12px; width: 26px; height: 26px; border-radius: 50%; background: rgba(74,222,128,0.12); color: var(--cpp); font-family: 'DM Mono', monospace; font-size: 0.78rem; display: flex; align-items: center; justify-content: center; }
+
+  /* Code blocks */
+  pre.code, code.inline {
+    font-family: 'DM Mono', monospace;
+  }
+  pre.code {
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 12px 0;
+    color: #e6edf3;
+    white-space: pre;
+  }
+  code.inline {
+    background: var(--bg3);
+    color: #79c0ff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.84rem;
+  }
+  .kw { color: #ff7b72; }
+  .ty { color: #79c0ff; }
+  .fn { color: #d2a8ff; }
+  .st { color: #a5d6ff; }
+  .nm { color: #f2cc60; }
+  .cm { color: #8b949e; font-style: italic; }
+
+  /* Problem card */
+  .problem-card { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--cpp); border-radius: 0 12px 12px 0; padding: 22px 24px; max-width: 960px; margin-bottom: 14px; }
+  .prob-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .prob-link {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--text3);
+    transition: all 0.15s;
+  }
+  .prob-link:hover { color: var(--cpp); border-bottom-color: var(--cpp); }
+  .prob-link::after { content: ' ↗'; font-size: 0.78rem; color: var(--text3); }
+  .prob-meta { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--text3); letter-spacing: 0.04em; }
+
+  .prob-section { margin-top: 14px; }
+  .prob-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+  .prob-section-body {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--text2);
+  }
+
+  /* Solution reveal */
+  .sol-controls { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 10px; }
+  .sol-btn { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.04em; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--cpp); background: var(--cpp); color: #000; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+  .sol-btn:hover { filter: brightness(1.1); }
+  .sol-btn.ghost { background: transparent; color: var(--text2); border-color: var(--border); font-weight: 500; }
+  .sol-btn.ghost:hover { color: var(--text); border-color: var(--text3); }
+
+  .solution { display: none; margin-top: 8px; animation: fadeUp 0.25s ease both; }
+  .solution.open { display: block; }
+
+  .why-it-works {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(74,222,128,0.05);
+    border-left: 2px solid var(--cpp);
+    border-radius: 4px;
+    font-size: 0.86rem;
+    line-height: 1.65;
+    color: var(--text2);
+  }
+  .why-it-works strong { color: var(--cpp); }
+
+  .pitfall-box {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(251,146,60,0.06);
+    border-left: 2px solid var(--dt);
+    border-radius: 4px;
+    font-size: 0.86rem;
+    line-height: 1.65;
+    color: var(--text2);
+  }
+  .pitfall-box strong { color: var(--dt); }
+
+  .method-section.pitfalls p, .method-section.exam p {
+    padding: 16px 18px;
+    border-radius: 10px;
+    max-width: 960px;
+  }
+  .method-section.pitfalls p { background: rgba(251,146,60,0.08); }
+  .method-section.exam p { background: rgba(74,222,128,0.07); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 640px) {
+    .doc-wrap { padding: 0 18px; }
+    .chapter-tabs { padding: 12px 18px; flex-wrap: nowrap; overflow-x: auto; }
+    .method-title { font-size: 1.5rem; }
+  }
+</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ c++ / code reference</span>
+  <span class="topbar-date">FINAL · 10 JUN 2026</span>
+</header>
+
+<section class="hero">
+  <h1>C++ Code <em>Reference</em></h1>
+  <p class="hero-meta">
+    Every pattern Prof. Ma's TUOJ problems test, organized by category. Each problem has the
+    approach, working code, why it works, and the common pitfalls. The exam mirrors these
+    patterns — recognize the shape and the solution writes itself.
+  </p>
+</section>
+
+<nav class="chapter-tabs">
+  <button class="ch-tab active" data-ch="basics" onclick="selectChapter('basics')">Basics · I/O</button>
+  <button class="ch-tab" data-ch="numeric" onclick="selectChapter('numeric')">Numeric &amp; Math</button>
+  <button class="ch-tab" data-ch="loops" onclick="selectChapter('loops')">Loops &amp; Arrays</button>
+  <button class="ch-tab" data-ch="classes" onclick="selectChapter('classes')">Classes &amp; OOP</button>
+</nav>
+
+<div class="doc-wrap">
+<div class="topic-bar" id="topic-bar"></div>
+
+<!-- ════════════════ BASICS ════════════════ -->
+<section class="topic-panel" data-ch="basics" data-topic="aplusb">
+  <h3 class="method-title">A + B Problem</h3>
+  <div class="method-subtitle">PATTERN · cin / cout · basic arithmetic · two int read</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>The simplest possible C++ program — read two integers, print their sum. Every exam starts here to warm up. The point is to confirm you can read multiple values from stdin and produce one line of output.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Include <code class="inline">&lt;iostream&gt;</code> and <code class="inline">using namespace std;</code>.</li>
+      <li>Declare two <code class="inline">int</code>s (or <code class="inline">long long</code> if values may be huge).</li>
+      <li>Read both with <code class="inline">cin &gt;&gt; a &gt;&gt; b;</code> — <code class="inline">cin</code> skips whitespace.</li>
+      <li>Output <code class="inline">a + b</code> followed by a newline.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/63/problem/0" target="_blank">Problem · A + B</a>
+      <span class="prob-meta">Contest 63 · #0</span>
+    </div>
+    <div class="prob-section-body">Read two integers <em>a</em> and <em>b</em>, output <em>a + b</em>.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> a, b;
+    cin &gt;&gt; a &gt;&gt; b;
+    cout &lt;&lt; a + b &lt;&lt; endl;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why it works:</strong> <code class="inline">cin &gt;&gt; a &gt;&gt; b</code> reads tokens separated by any whitespace (space, tab, newline). <code class="inline">endl</code> prints a newline AND flushes the buffer — for competitive problems <code class="inline">"\n"</code> is faster but both work.
+      </div>
+      <div class="pitfall-box">
+        <strong>Watch out:</strong> if values can exceed ±2,147,483,647 (about 2×10⁹), use <code class="inline">long long</code> not <code class="inline">int</code>, or the sum overflows silently.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/75/problem/4" target="_blank">Problem · a + b (Contest 75)</a>
+      <span class="prob-meta">Contest 75 · #4</span>
+    </div>
+    <div class="prob-section-body">Same pattern, possibly with a different input format (multiple test cases, or until EOF). The approach is identical.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">// If the problem asks for multiple test cases until EOF:</span>
+<span class="cm">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">long long</span> a, b;
+    <span class="kw">while</span> (cin &gt;&gt; a &gt;&gt; b) {
+        cout &lt;&lt; a + b &lt;&lt; <span class="st">"\n"</span>;
+    }
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why <code class="inline">while(cin &gt;&gt; a &gt;&gt; b)</code> works:</strong> the expression evaluates to the stream itself, which converts to <code class="inline">false</code> on EOF or read failure. The loop ends cleanly when input runs out.
+      </div>
+    </div>
+  </div>
+
+  <div class="method-section pitfalls">
+    <div class="method-label">Common pitfalls</div>
+    <p>Forgetting <code class="inline">return 0</code> (gives a warning, not an error in modern compilers but still bad form). Using <code class="inline">scanf/printf</code> mixed with <code class="inline">cin/cout</code> without <code class="inline">ios_base::sync_with_stdio(false)</code> — produces out-of-order output.</p>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="basics" data-topic="honor">
+  <h3 class="method-title">Honor Code</h3>
+  <div class="method-subtitle">PATTERN · string literal output · no input</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>A "Hello World" variant: print a fixed multi-line string. Tests that you can write a literal with <code class="inline">cout</code> and handle escape sequences correctly.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>No input. Just print the required text exactly — character for character.</li>
+      <li>Use <code class="inline">"\n"</code> inside the string for line breaks, or chain multiple <code class="inline">cout &lt;&lt;</code> calls with <code class="inline">endl</code>.</li>
+      <li>Match output spec exactly: a trailing newline is usually required, and double-check capitalization &amp; punctuation.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/63/problem/1" target="_blank">Problem · Honor Code</a>
+      <span class="prob-meta">Contest 63 · #1</span>
+    </div>
+    <div class="prob-section-body">Print the university's honor code statement, multiple lines, exact wording.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    cout &lt;&lt; <span class="st">"I will not cheat on this exam."</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="st">"I will report any violations I witness."</span> &lt;&lt; endl;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+
+<span class="cm">// Or with a single multi-line string:</span>
+<span class="cm">// cout &lt;&lt; "Line one\nLine two\n";</span></pre>
+      <div class="why-it-works">
+        <strong>Why it works:</strong> <code class="inline">cout</code> just writes its argument to stdout. Multiple chained <code class="inline">&lt;&lt;</code> operations are evaluated left-to-right, so the lines come out in order.
+      </div>
+      <div class="pitfall-box">
+        <strong>Watch out:</strong> the judge compares output byte-for-byte. A single extra space or missing trailing newline will fail. Copy-paste the expected output if shown.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="basics" data-topic="life">
+  <h3 class="method-title">Life, the Universe, and Everything</h3>
+  <div class="method-subtitle">PATTERN · loop until sentinel value</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Read integers one at a time, print each one, but stop when you read 42. This is the standard "loop with sentinel" pattern — process input until you hit a magic terminator value.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Read one integer at a time inside a <code class="inline">while</code> loop.</li>
+      <li>Before printing, check if it equals the sentinel (42). If yes, <code class="inline">break</code>.</li>
+      <li>Otherwise, print it. Repeat.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/64/problem/0" target="_blank">Problem · Life, the Universe, and Everything</a>
+      <span class="prob-meta">Contest 64 · #0</span>
+    </div>
+    <div class="prob-section-body">Read integers, print each, stop when you read 42 (don't print the 42).</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> x;
+    <span class="kw">while</span> (cin &gt;&gt; x) {
+        <span class="kw">if</span> (x == <span class="nm">42</span>) <span class="kw">break</span>;
+        cout &lt;&lt; x &lt;&lt; <span class="st">"\n"</span>;
+    }
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why this order matters:</strong> the <code class="inline">break</code> must come BEFORE the print, or the 42 would get printed and the loop would still exit. Test on the boundary: the very first input being 42 should produce zero output.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ NUMERIC ════════════════ -->
+<section class="topic-panel" data-ch="numeric" data-topic="floatcmp">
+  <h3 class="method-title">Floating-Point Comparison</h3>
+  <div class="method-subtitle">PATTERN · epsilon comparison · iomanip formatting</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Comparing floats with <code class="inline">==</code> is broken because of binary representation rounding (e.g. <code class="inline">0.1 + 0.2 != 0.3</code>). The fix is to check whether the difference is smaller than a tiny tolerance <em>ε</em> (epsilon).</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Read the two doubles.</li>
+      <li>Compute <code class="inline">fabs(a - b)</code> from <code class="inline">&lt;cmath&gt;</code>.</li>
+      <li>If the difference is below ε (typically <code class="inline">1e-6</code> or whatever the problem specifies), they're "equal".</li>
+      <li>For formatted output use <code class="inline">cout &lt;&lt; fixed &lt;&lt; setprecision(n)</code> from <code class="inline">&lt;iomanip&gt;</code>.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/63/problem/2" target="_blank">Problem · Floating-Point Comparison</a>
+      <span class="prob-meta">Contest 63 · #2</span>
+    </div>
+    <div class="prob-section-body">Determine whether two real numbers are equal within a given precision.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="cm">#include &lt;cmath&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">double</span> a, b;
+    cin &gt;&gt; a &gt;&gt; b;
+
+    <span class="kw">const</span> <span class="ty">double</span> EPS = <span class="nm">1e-6</span>;
+    <span class="kw">if</span> (<span class="fn">fabs</span>(a - b) &lt; EPS) {
+        cout &lt;&lt; <span class="st">"Equal"</span> &lt;&lt; endl;
+    } <span class="kw">else</span> {
+        cout &lt;&lt; <span class="st">"Not Equal"</span> &lt;&lt; endl;
+    }
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why epsilon works:</strong> doubles store ~15–16 significant decimal digits. Operations introduce tiny rounding errors well below 1e-9. Any "real" difference between intended-equal numbers will be smaller than ε, while any "real" inequality will be larger.
+      </div>
+      <div class="pitfall-box">
+        <strong>Watch out:</strong> never use <code class="inline">a == b</code> for doubles. Also never test <code class="inline">a - b &lt; EPS</code> without absolute value — that misses cases where b &gt; a.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="numeric" data-topic="gpa">
+  <h3 class="method-title">GPA Calculation</h3>
+  <div class="method-subtitle">PATTERN · weighted average · score → grade mapping</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Read N courses with their credit hours and percentage scores. Map each percentage to a GPA point (typically 4.0 / 3.7 / 3.3 / 3.0 / ... / 0.0), then compute the credit-weighted average.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Read N.</li>
+      <li>For each course: read credit and score. Convert score to GPA point with an if/else chain or a lookup table.</li>
+      <li>Accumulate <code class="inline">totalWeighted += credit * gpaPoint</code> and <code class="inline">totalCredits += credit</code>.</li>
+      <li>Output <code class="inline">totalWeighted / totalCredits</code> with the specified precision.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/64/problem/2" target="_blank">Problem · GPA</a>
+      <span class="prob-meta">Contest 64 · #2</span>
+    </div>
+    <div class="prob-section-body">Given N courses with credits and scores (0–100), compute the weighted GPA.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="cm">#include &lt;iomanip&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">double</span> <span class="fn">scoreToGPA</span>(<span class="ty">int</span> score) {
+    <span class="kw">if</span> (score &gt;= <span class="nm">90</span>) <span class="kw">return</span> <span class="nm">4.0</span>;
+    <span class="kw">if</span> (score &gt;= <span class="nm">85</span>) <span class="kw">return</span> <span class="nm">3.7</span>;
+    <span class="kw">if</span> (score &gt;= <span class="nm">80</span>) <span class="kw">return</span> <span class="nm">3.3</span>;
+    <span class="kw">if</span> (score &gt;= <span class="nm">75</span>) <span class="kw">return</span> <span class="nm">3.0</span>;
+    <span class="kw">if</span> (score &gt;= <span class="nm">70</span>) <span class="kw">return</span> <span class="nm">2.7</span>;
+    <span class="kw">if</span> (score &gt;= <span class="nm">60</span>) <span class="kw">return</span> <span class="nm">2.0</span>;
+    <span class="kw">return</span> <span class="nm">0.0</span>;
+}
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> n; cin &gt;&gt; n;
+    <span class="ty">double</span> totalWeighted = <span class="nm">0</span>, totalCredits = <span class="nm">0</span>;
+
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+        <span class="ty">int</span> credit, score;
+        cin &gt;&gt; credit &gt;&gt; score;
+        totalWeighted += credit * <span class="fn">scoreToGPA</span>(score);
+        totalCredits  += credit;
+    }
+    cout &lt;&lt; fixed &lt;&lt; setprecision(<span class="nm">2</span>)
+         &lt;&lt; totalWeighted / totalCredits &lt;&lt; endl;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why if-chain in descending order:</strong> by checking the highest bracket first, you don't need an upper bound on each <code class="inline">if</code>. Once a condition matches, you <code class="inline">return</code> and skip the rest. Reversing the order (low to high) would always return 0.0.
+      </div>
+      <div class="pitfall-box">
+        <strong>Watch out:</strong> use the EXACT bracket boundaries the problem gives — different schools use different cutoffs. Read the problem carefully.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="numeric" data-topic="prime">
+  <h3 class="method-title">Prime Number Judgement</h3>
+  <div class="method-subtitle">PATTERN · trial division up to √n</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Decide if N is prime. Brute-force checks every divisor 2..N-1 — that's O(N). The standard optimization is to only check up to <em>√N</em>, because if N = a·b with a ≤ b, then a ≤ √N. That makes it O(√N), fast enough for any exam input.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Handle base cases: <code class="inline">n &lt; 2</code> is not prime; <code class="inline">n == 2</code> is prime.</li>
+      <li>If <code class="inline">n</code> is even and &gt; 2, not prime.</li>
+      <li>Loop <code class="inline">i</code> from 3 to <code class="inline">√n</code>, step 2 (skip even divisors).</li>
+      <li>If any <code class="inline">i</code> divides <code class="inline">n</code> evenly, return false. If loop finishes, return true.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/75/problem/0" target="_blank">Problem · Prime Number Judgement</a>
+      <span class="prob-meta">Contest 75 · #0</span>
+    </div>
+    <div class="prob-section-body">Read an integer N, print whether it is prime.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="cm">#include &lt;cmath&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">bool</span> <span class="fn">isPrime</span>(<span class="ty">int</span> n) {
+    <span class="kw">if</span> (n &lt; <span class="nm">2</span>) <span class="kw">return</span> <span class="kw">false</span>;
+    <span class="kw">if</span> (n == <span class="nm">2</span>) <span class="kw">return</span> <span class="kw">true</span>;
+    <span class="kw">if</span> (n % <span class="nm">2</span> == <span class="nm">0</span>) <span class="kw">return</span> <span class="kw">false</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">3</span>; i * i &lt;= n; i += <span class="nm">2</span>) {
+        <span class="kw">if</span> (n % i == <span class="nm">0</span>) <span class="kw">return</span> <span class="kw">false</span>;
+    }
+    <span class="kw">return</span> <span class="kw">true</span>;
+}
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> n; cin &gt;&gt; n;
+    cout &lt;&lt; (<span class="fn">isPrime</span>(n) ? <span class="st">"Yes"</span> : <span class="st">"No"</span>) &lt;&lt; endl;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why <code class="inline">i * i &lt;= n</code> instead of <code class="inline">i &lt;= sqrt(n)</code>:</strong> it's purely integer math — no floating-point imprecision, no <code class="inline">&lt;cmath&gt;</code> required for that line. It's also slightly faster.<br><br>
+        <strong>Why step by 2:</strong> after handling 2 separately, all remaining even numbers are non-prime, so checking them wastes time.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="numeric" data-topic="palindrome">
+  <h3 class="method-title">Palindrome Number Judgement</h3>
+  <div class="method-subtitle">PATTERN · reverse digits via modulo · or string compare</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Check whether a number reads the same forwards and backwards (121 yes, 123 no). Two approaches: (a) reverse the digits using <code class="inline">% 10</code> and <code class="inline">/ 10</code>, compare to original; (b) convert to string and compare to its reverse.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach (numeric)</div>
+    <ol class="proc">
+      <li>Save the original value: <code class="inline">int orig = n;</code></li>
+      <li>Loop while <code class="inline">n &gt; 0</code>: extract last digit with <code class="inline">n % 10</code>, append to <code class="inline">reversed</code> via <code class="inline">reversed = reversed * 10 + (n % 10)</code>, then <code class="inline">n /= 10</code>.</li>
+      <li>Return whether <code class="inline">reversed == orig</code>.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/75/problem/1" target="_blank">Problem · Palindrome Number Judgement</a>
+      <span class="prob-meta">Contest 75 · #1</span>
+    </div>
+    <div class="prob-section-body">Read an integer, check if it reads the same forwards and backwards.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">bool</span> <span class="fn">isPalindrome</span>(<span class="ty">int</span> n) {
+    <span class="kw">if</span> (n &lt; <span class="nm">0</span>) <span class="kw">return</span> <span class="kw">false</span>;  <span class="cm">// negatives can't be palindromes</span>
+    <span class="ty">int</span> orig = n, reversed = <span class="nm">0</span>;
+    <span class="kw">while</span> (n &gt; <span class="nm">0</span>) {
+        reversed = reversed * <span class="nm">10</span> + (n % <span class="nm">10</span>);
+        n /= <span class="nm">10</span>;
+    }
+    <span class="kw">return</span> reversed == orig;
+}
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> n; cin &gt;&gt; n;
+    cout &lt;&lt; (<span class="fn">isPalindrome</span>(n) ? <span class="st">"Yes"</span> : <span class="st">"No"</span>) &lt;&lt; endl;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why <code class="inline">reversed * 10 + digit</code>:</strong> each iteration shifts the existing digits left (multiply by 10) and puts the new digit in the ones place. After processing 121: reversed grows 0 → 1 → 12 → 121. Then we compare to the original.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="numeric" data-topic="goldbach">
+  <h3 class="method-title">Goldbach's Conjecture</h3>
+  <div class="method-subtitle">PATTERN · iterate &amp; check pair primality</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>For any even N &gt; 2, find primes <em>p</em> and <em>q</em> such that <em>p + q = N</em>. Loop <code class="inline">p</code> from 2 to N/2; if <code class="inline">p</code> is prime AND <code class="inline">N - p</code> is prime, you've found a valid pair.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Write a helper <code class="inline">isPrime(int)</code> — the trial-division one from the previous topic.</li>
+      <li>Loop <code class="inline">p</code> from 2 to N/2.</li>
+      <li>If <code class="inline">isPrime(p) &amp;&amp; isPrime(N - p)</code>, output the pair (or count it, depending on the problem variant).</li>
+      <li>If the problem wants the first such pair, <code class="inline">break</code> after finding one.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/64/problem/3" target="_blank">Problem · Goldbach's Conjecture</a>
+      <span class="prob-meta">Contest 64 · #3</span>
+    </div>
+    <div class="prob-section-body">Given an even N &gt; 2, find a way to express it as the sum of two primes.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">bool</span> <span class="fn">isPrime</span>(<span class="ty">int</span> n) {
+    <span class="kw">if</span> (n &lt; <span class="nm">2</span>) <span class="kw">return</span> <span class="kw">false</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">2</span>; i * i &lt;= n; i++)
+        <span class="kw">if</span> (n % i == <span class="nm">0</span>) <span class="kw">return</span> <span class="kw">false</span>;
+    <span class="kw">return</span> <span class="kw">true</span>;
+}
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> n; cin &gt;&gt; n;
+    <span class="kw">for</span> (<span class="ty">int</span> p = <span class="nm">2</span>; p &lt;= n / <span class="nm">2</span>; p++) {
+        <span class="kw">if</span> (<span class="fn">isPrime</span>(p) &amp;&amp; <span class="fn">isPrime</span>(n - p)) {
+            cout &lt;&lt; n &lt;&lt; <span class="st">" = "</span> &lt;&lt; p &lt;&lt; <span class="st">" + "</span> &lt;&lt; n - p &lt;&lt; endl;
+            <span class="kw">break</span>;
+        }
+    }
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why loop only to N/2:</strong> once p exceeds N/2, q = N - p drops below N/2 — you'd just be finding the same pair in reverse (e.g. 10 = 3+7 then 10 = 7+3). Looping to N/2 cuts the work in half.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ LOOPS & ARRAYS ════════════════ -->
+<section class="topic-panel" data-ch="loops" data-topic="xmastree">
+  <h3 class="method-title">Christmas Tree</h3>
+  <div class="method-subtitle">PATTERN · nested loops · ASCII art</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Print a triangular pattern of stars (or characters). Outer loop = row, inner loops = spaces and stars. Row <code class="inline">i</code> (0-indexed) has <code class="inline">n - 1 - i</code> leading spaces and <code class="inline">2i + 1</code> stars.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Read height <code class="inline">n</code>.</li>
+      <li>Outer loop: <code class="inline">i</code> from 0 to n-1.</li>
+      <li>Inner loop 1: print <code class="inline">n - 1 - i</code> spaces.</li>
+      <li>Inner loop 2: print <code class="inline">2 * i + 1</code> stars.</li>
+      <li>End the row with <code class="inline">"\n"</code>.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/64/problem/1" target="_blank">Problem · Christmas Tree</a>
+      <span class="prob-meta">Contest 64 · #1</span>
+    </div>
+    <div class="prob-section-body">Print a Christmas tree of height N using asterisks.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> n; cin &gt;&gt; n;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+        <span class="cm">// leading spaces</span>
+        <span class="kw">for</span> (<span class="ty">int</span> j = <span class="nm">0</span>; j &lt; n - <span class="nm">1</span> - i; j++) cout &lt;&lt; <span class="st">' '</span>;
+        <span class="cm">// stars</span>
+        <span class="kw">for</span> (<span class="ty">int</span> j = <span class="nm">0</span>; j &lt; <span class="nm">2</span> * i + <span class="nm">1</span>; j++) cout &lt;&lt; <span class="st">'*'</span>;
+        cout &lt;&lt; <span class="st">"\n"</span>;
+    }
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why <code class="inline">2*i + 1</code> stars:</strong> rows widen by 2 each time (1, 3, 5, 7, ...). The pattern is always odd. Combined with <code class="inline">n-1-i</code> leading spaces, the apex aligns with the centre.
+      </div>
+      <div class="pitfall-box">
+        <strong>Watch out:</strong> trailing whitespace at end of rows may cause judge failures. Don't add extra spaces AFTER the stars.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="loops" data-topic="fibonacci">
+  <h3 class="method-title">Fibonacci Sequence</h3>
+  <div class="method-subtitle">PATTERN · iterative DP · roll two variables</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Compute F(n) where F(0)=0, F(1)=1, F(n) = F(n-1) + F(n-2). Recursion is O(2^n) and TLEs. The fix is iterative: keep only the last two values and roll them forward.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Handle small <code class="inline">n</code>: if 0 → 0; if 1 → 1.</li>
+      <li>Initialize <code class="inline">a = 0, b = 1</code>.</li>
+      <li>Loop from 2 to n: <code class="inline">c = a + b; a = b; b = c;</code>.</li>
+      <li>Output <code class="inline">b</code> (the n-th value).</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/67/problem/1" target="_blank">Problem · Fibonacci Sequence</a>
+      <span class="prob-meta">Contest 67 · #1</span>
+    </div>
+    <div class="prob-section-body">Output the N-th Fibonacci number.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> n; cin &gt;&gt; n;
+    <span class="kw">if</span> (n == <span class="nm">0</span>) { cout &lt;&lt; <span class="nm">0</span>; <span class="kw">return</span> <span class="nm">0</span>; }
+    <span class="kw">if</span> (n == <span class="nm">1</span>) { cout &lt;&lt; <span class="nm">1</span>; <span class="kw">return</span> <span class="nm">0</span>; }
+
+    <span class="ty">long long</span> a = <span class="nm">0</span>, b = <span class="nm">1</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">2</span>; i &lt;= n; i++) {
+        <span class="ty">long long</span> c = a + b;
+        a = b;
+        b = c;
+    }
+    cout &lt;&lt; b &lt;&lt; endl;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why iterative beats recursive:</strong> the naive recursion <code class="inline">fib(n) = fib(n-1) + fib(n-2)</code> recomputes the same values exponentially many times. The iterative version computes each value exactly once: O(n) time, O(1) space.
+      </div>
+      <div class="pitfall-box">
+        <strong>Watch out:</strong> F(46) overflows <code class="inline">int</code>. F(92) overflows <code class="inline">long long</code>. For large n, use <code class="inline">long long</code> and check the problem's stated upper bound.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="loops" data-topic="kth">
+  <h3 class="method-title">K-th Smallest Number</h3>
+  <div class="method-subtitle">PATTERN · sort then index · or partial sort</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Find the K-th smallest element in an array. Simplest robust approach: sort, then index. <code class="inline">std::sort</code> from <code class="inline">&lt;algorithm&gt;</code> is O(N log N) — fast enough for any exam-sized input.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Read N and K.</li>
+      <li>Read N integers into an array or <code class="inline">vector&lt;int&gt;</code>.</li>
+      <li>Call <code class="inline">sort(arr, arr + n)</code> or <code class="inline">sort(v.begin(), v.end())</code>.</li>
+      <li>Output element at index <code class="inline">k - 1</code> (since K is 1-indexed in problem, arrays are 0-indexed in code).</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/67/problem/2" target="_blank">Problem · K-th Smallest Number</a>
+      <span class="prob-meta">Contest 67 · #2</span>
+    </div>
+    <div class="prob-section-body">Given N integers, output the K-th smallest.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="cm">#include &lt;algorithm&gt;</span>
+<span class="cm">#include &lt;vector&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> n, k;
+    cin &gt;&gt; n &gt;&gt; k;
+    vector&lt;<span class="ty">int</span>&gt; v(n);
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; n; i++) cin &gt;&gt; v[i];
+
+    sort(v.begin(), v.end());          <span class="cm">// ascending</span>
+    cout &lt;&lt; v[k - <span class="nm">1</span>] &lt;&lt; endl;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why <code class="inline">k - 1</code>:</strong> the problem uses 1-indexed K (the 1st smallest, 2nd smallest, ...), but C++ arrays start at index 0. After sorting ascending, the 1st smallest is <code class="inline">v[0]</code>, the K-th is <code class="inline">v[k-1]</code>.
+      </div>
+      <div class="pitfall-box">
+        <strong>Watch out:</strong> if the problem says "K-th LARGEST" instead, either sort descending (<code class="inline">sort(v.rbegin(), v.rend())</code>) or use index <code class="inline">n - k</code> after ascending sort.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="loops" data-topic="stock">
+  <h3 class="method-title">Best Time to Buy and Sell Stock</h3>
+  <div class="method-subtitle">PATTERN · single-pass tracking · running minimum</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Given an array of daily prices, find the max profit from one buy + one sell where you must buy before selling. The trick: at each day, the best possible profit if you sell today is <code class="inline">price[today] - minPriceSoFar</code>. Track the running minimum and the running best profit in one pass.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Initialize <code class="inline">minPrice = INT_MAX</code>, <code class="inline">maxProfit = 0</code>.</li>
+      <li>For each price:
+        <ul style="margin-top:6px;padding-left:18px;color:var(--text2);font-size:0.92rem;">
+          <li>Update <code class="inline">minPrice = min(minPrice, price)</code>.</li>
+          <li>Update <code class="inline">maxProfit = max(maxProfit, price - minPrice)</code>.</li>
+        </ul>
+      </li>
+      <li>Output <code class="inline">maxProfit</code>.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/64/problem/4" target="_blank">Problem · Best Time to Buy and Sell Stock</a>
+      <span class="prob-meta">Contest 64 · #4</span>
+    </div>
+    <div class="prob-section-body">Given prices[N], find max profit from one buy + one sell (buy must come before sell).</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="cm">#include &lt;climits&gt;</span>
+<span class="cm">#include &lt;algorithm&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> n; cin &gt;&gt; n;
+    <span class="ty">int</span> minPrice = INT_MAX, maxProfit = <span class="nm">0</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; n; i++) {
+        <span class="ty">int</span> price; cin &gt;&gt; price;
+        minPrice  = min(minPrice, price);
+        maxProfit = max(maxProfit, price - minPrice);
+    }
+    cout &lt;&lt; maxProfit &lt;&lt; endl;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why one pass works:</strong> at any day, the best sell-today profit depends only on the minimum price seen in days 0..today. You don't need to store the array — just track the two running values. O(N) time, O(1) space.<br><br>
+        <strong>Why <code class="inline">maxProfit = 0</code> initially:</strong> if prices only go down, no profit is possible, so the answer should be 0 (don't trade), not negative.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ CLASSES & OOP ════════════════ -->
+<section class="topic-panel" data-ch="classes" data-topic="battleunit">
+  <h3 class="method-title">Battle Unit Simulator</h3>
+  <div class="method-subtitle">PATTERN · class with state · methods that mutate</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>The "first real class" problem. Build a class with private state (HP, attack, defense), public methods (<code class="inline">attack()</code>, <code class="inline">takeDamage()</code>, <code class="inline">isAlive()</code>), and a constructor. Simulate a fight or a sequence of actions.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Define class with <code class="inline">private:</code> data members, <code class="inline">public:</code> interface.</li>
+      <li>Constructor takes initial stats via init list: <code class="inline">Unit(int h, int a) : hp(h), atk(a) {}</code>.</li>
+      <li>Method <code class="inline">takeDamage(int dmg)</code> subtracts from HP (clamp at 0).</li>
+      <li>Method <code class="inline">isAlive()</code> returns <code class="inline">hp &gt; 0</code> — mark it <code class="inline">const</code>.</li>
+      <li>In main, instantiate units, simulate the turns per the problem spec.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/67/problem/0" target="_blank">Problem · Battle Unit Simulator</a>
+      <span class="prob-meta">Contest 67 · #0</span>
+    </div>
+    <div class="prob-section-body">Two units take turns attacking. Output the winner or final state per the rules.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="cm">#include &lt;string&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">class</span> <span class="ty">Unit</span> {
+<span class="kw">private</span>:
+    string name_;
+    <span class="ty">int</span> hp_, atk_, def_;
+<span class="kw">public</span>:
+    <span class="ty">Unit</span>(<span class="kw">const</span> string&amp; n, <span class="ty">int</span> h, <span class="ty">int</span> a, <span class="ty">int</span> d)
+        : name_(n), hp_(h), atk_(a), def_(d) {}
+
+    <span class="ty">bool</span> <span class="fn">isAlive</span>() <span class="kw">const</span> { <span class="kw">return</span> hp_ &gt; <span class="nm">0</span>; }
+    <span class="ty">int</span>  <span class="fn">hp</span>()      <span class="kw">const</span> { <span class="kw">return</span> hp_; }
+    string <span class="fn">name</span>()  <span class="kw">const</span> { <span class="kw">return</span> name_; }
+
+    <span class="ty">void</span> <span class="fn">attack</span>(<span class="ty">Unit</span>&amp; target) {
+        <span class="ty">int</span> dmg = atk_ - target.def_;
+        <span class="kw">if</span> (dmg &lt; <span class="nm">0</span>) dmg = <span class="nm">0</span>;
+        target.hp_ -= dmg;
+        <span class="kw">if</span> (target.hp_ &lt; <span class="nm">0</span>) target.hp_ = <span class="nm">0</span>;
+    }
+};
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">Unit</span> a(<span class="st">"A"</span>, <span class="nm">100</span>, <span class="nm">20</span>, <span class="nm">5</span>);
+    <span class="ty">Unit</span> b(<span class="st">"B"</span>, <span class="nm">100</span>, <span class="nm">15</span>, <span class="nm">3</span>);
+    <span class="kw">while</span> (a.<span class="fn">isAlive</span>() &amp;&amp; b.<span class="fn">isAlive</span>()) {
+        a.<span class="fn">attack</span>(b);
+        <span class="kw">if</span> (b.<span class="fn">isAlive</span>()) b.<span class="fn">attack</span>(a);
+    }
+    cout &lt;&lt; (a.<span class="fn">isAlive</span>() ? a.<span class="fn">name</span>() : b.<span class="fn">name</span>()) &lt;&lt; <span class="st">" wins"</span> &lt;&lt; endl;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why <code class="inline">attack()</code> can access <code class="inline">target.def_</code>:</strong> member functions of class <code class="inline">Unit</code> can access private members of <em>any</em> <code class="inline">Unit</code> object, not just <code class="inline">this</code>. Access control is per-class, not per-instance.<br><br>
+        <strong>Why <code class="inline">const</code> on getters:</strong> declares that the method doesn't modify state. Allows the method to be called on <code class="inline">const Unit&amp;</code> references too.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="classes" data-topic="polyarea">
+  <h3 class="method-title">Polymorphic Areas</h3>
+  <div class="method-subtitle">PATTERN · abstract base · pure virtual · override · array of base pointers</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>The polymorphism test. Define an abstract <code class="inline">Shape</code> with pure virtual <code class="inline">area()</code>, derive <code class="inline">Circle</code>, <code class="inline">Rectangle</code>, etc. Store them in an array of <code class="inline">Shape*</code>, loop and sum their areas — virtual dispatch picks the right <code class="inline">area()</code> at runtime.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Base class <code class="inline">Shape</code>: <code class="inline">virtual double area() = 0;</code> + <code class="inline">virtual ~Shape() = default;</code>.</li>
+      <li>Each subclass: store its dimensions, implement <code class="inline">area() override</code>.</li>
+      <li>In main: <code class="inline">Shape* shapes[N];</code>, populate with <code class="inline">new Circle(...)</code> etc.</li>
+      <li>Loop: <code class="inline">total += shapes[i]-&gt;area();</code> — calls the correct override.</li>
+      <li>Loop again to <code class="inline">delete shapes[i]</code> — works correctly because the destructor is virtual.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/75/problem/2" target="_blank">Problem · Polymorphic Areas</a>
+      <span class="prob-meta">Contest 75 · #2</span>
+    </div>
+    <div class="prob-section-body">Given a list of shapes (circles, rectangles, triangles, ...), compute the sum of their areas using polymorphism.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="cm">#include &lt;vector&gt;</span>
+<span class="cm">#include &lt;iomanip&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">class</span> <span class="ty">Shape</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="ty">double</span> <span class="fn">area</span>() <span class="kw">const</span> = <span class="nm">0</span>;
+    <span class="kw">virtual</span> ~<span class="ty">Shape</span>() = <span class="kw">default</span>;
+};
+
+<span class="kw">class</span> <span class="ty">Circle</span> : <span class="kw">public</span> <span class="ty">Shape</span> {
+    <span class="ty">double</span> r;
+<span class="kw">public</span>:
+    <span class="ty">Circle</span>(<span class="ty">double</span> r) : r(r) {}
+    <span class="ty">double</span> <span class="fn">area</span>() <span class="kw">const</span> <span class="kw">override</span> { <span class="kw">return</span> <span class="nm">3.14159265</span> * r * r; }
+};
+
+<span class="kw">class</span> <span class="ty">Rectangle</span> : <span class="kw">public</span> <span class="ty">Shape</span> {
+    <span class="ty">double</span> w, h;
+<span class="kw">public</span>:
+    <span class="ty">Rectangle</span>(<span class="ty">double</span> w, <span class="ty">double</span> h) : w(w), h(h) {}
+    <span class="ty">double</span> <span class="fn">area</span>() <span class="kw">const</span> <span class="kw">override</span> { <span class="kw">return</span> w * h; }
+};
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    vector&lt;<span class="ty">Shape</span>*&gt; shapes;
+    shapes.push_back(<span class="kw">new</span> <span class="ty">Circle</span>(<span class="nm">5</span>));
+    shapes.push_back(<span class="kw">new</span> <span class="ty">Rectangle</span>(<span class="nm">3</span>, <span class="nm">4</span>));
+
+    <span class="ty">double</span> total = <span class="nm">0</span>;
+    <span class="kw">for</span> (<span class="ty">Shape</span>* s : shapes) total += s-&gt;<span class="fn">area</span>();
+
+    cout &lt;&lt; fixed &lt;&lt; setprecision(<span class="nm">2</span>) &lt;&lt; total &lt;&lt; endl;
+
+    <span class="kw">for</span> (<span class="ty">Shape</span>* s : shapes) <span class="kw">delete</span> s;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why dynamic dispatch works:</strong> because <code class="inline">area()</code> is virtual, each Shape* secretly stores a pointer to its real type's vtable. <code class="inline">s-&gt;area()</code> looks up the right function at runtime — Circle's for Circle objects, Rectangle's for Rectangle objects.<br><br>
+        <strong>Why virtual destructor:</strong> <code class="inline">delete s</code> with a <code class="inline">Shape*</code> would only call <code class="inline">~Shape()</code> if the destructor weren't virtual — Circle's destructor would be skipped, leaking <code class="inline">r</code>. With <code class="inline">virtual ~Shape()</code>, the chain runs correctly: <code class="inline">~Circle()</code> first, then <code class="inline">~Shape()</code>.
+      </div>
+      <div class="pitfall-box">
+        <strong>Watch out:</strong> forgetting <code class="inline">override</code> hides typos — if you write <code class="inline">area()</code> without <code class="inline">const</code> when the base has <code class="inline">const</code>, you've defined a new function instead of overriding. <code class="inline">override</code> catches this at compile time.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="classes" data-topic="friend">
+  <h3 class="method-title">Friend Function</h3>
+  <div class="method-subtitle">PATTERN · friend declaration · access to private members</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Sometimes a non-member function needs access to a class's private data — most commonly operator overloads like <code class="inline">operator&lt;&lt;</code>, or functions that need to inspect two different classes. Declare it <code class="inline">friend</code> inside the class.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Inside the class, declare <code class="inline">friend</code> on the function prototype (in any access section — it doesn't matter).</li>
+      <li>Outside the class, define the function normally — no <code class="inline">friend</code> keyword on the definition, no class scope (<code class="inline">ClassName::</code>) since friends aren't members.</li>
+      <li>The function can now read/write any private member.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/75/problem/3" target="_blank">Problem · Friend Function</a>
+      <span class="prob-meta">Contest 75 · #3</span>
+    </div>
+    <div class="prob-section-body">Implement a class with private data and a friend function that prints / manipulates it.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">class</span> <span class="ty">Box</span> {
+<span class="kw">private</span>:
+    <span class="ty">int</span> width, height;
+<span class="kw">public</span>:
+    <span class="ty">Box</span>(<span class="ty">int</span> w, <span class="ty">int</span> h) : width(w), height(h) {}
+
+    <span class="cm">// Declare friend — grants access to private members</span>
+    <span class="kw">friend</span> <span class="ty">int</span> <span class="fn">area</span>(<span class="kw">const</span> <span class="ty">Box</span>&amp; b);
+    <span class="kw">friend</span> ostream&amp; <span class="fn">operator</span>&lt;&lt;(ostream&amp; os, <span class="kw">const</span> <span class="ty">Box</span>&amp; b);
+};
+
+<span class="cm">// Definition — NO Box:: scope, NO friend keyword here</span>
+<span class="ty">int</span> <span class="fn">area</span>(<span class="kw">const</span> <span class="ty">Box</span>&amp; b) {
+    <span class="kw">return</span> b.width * b.height;   <span class="cm">// access private via friendship</span>
+}
+
+ostream&amp; <span class="fn">operator</span>&lt;&lt;(ostream&amp; os, <span class="kw">const</span> <span class="ty">Box</span>&amp; b) {
+    os &lt;&lt; <span class="st">"Box("</span> &lt;&lt; b.width &lt;&lt; <span class="st">"x"</span> &lt;&lt; b.height &lt;&lt; <span class="st">")"</span>;
+    <span class="kw">return</span> os;
+}
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">Box</span> b(<span class="nm">3</span>, <span class="nm">4</span>);
+    cout &lt;&lt; b &lt;&lt; <span class="st">" area = "</span> &lt;&lt; <span class="fn">area</span>(b) &lt;&lt; endl;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why <code class="inline">operator&lt;&lt;</code> must be a friend (not a member):</strong> the left operand is <code class="inline">ostream</code>, not <code class="inline">Box</code>. If it were a member of Box, you'd have to write <code class="inline">b &lt;&lt; cout</code> — backwards. Making it a free function with friendship lets the natural <code class="inline">cout &lt;&lt; b</code> syntax work AND lets it read Box's private fields.
+      </div>
+      <div class="pitfall-box">
+        <strong>Watch out:</strong> friendship is not inherited (a derived class's friends aren't friends of the base) and not transitive (A's friend isn't automatically B's friend). Use it sparingly — it breaks encapsulation.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="topic-panel" data-ch="classes" data-topic="chess">
+  <h3 class="method-title">One-Move Chess Problem</h3>
+  <div class="method-subtitle">PATTERN · class hierarchy · virtual move validation</div>
+
+  <div class="method-section when">
+    <div class="method-label">The pattern</div>
+    <p>Combines class design + polymorphism. Base class <code class="inline">Piece</code> with abstract <code class="inline">canMove(from, to)</code>; subclasses (Pawn, Rook, Knight, ...) each define their own movement rules. Given a board and a move, determine if it's legal.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Approach</div>
+    <ol class="proc">
+      <li>Abstract <code class="inline">Piece</code> with <code class="inline">virtual bool canMove(int fr, int fc, int tr, int tc) const = 0;</code></li>
+      <li>Each subclass implements its rule — Rook: same row OR same col; Bishop: |dr| == |dc|; Knight: (|dr|,|dc|) = (1,2) or (2,1); etc.</li>
+      <li>Store pieces in <code class="inline">Piece* board[8][8]</code> or similar.</li>
+      <li>Look up the piece at the source square, call its <code class="inline">canMove()</code>.</li>
+    </ol>
+  </div>
+
+  <div class="problem-card">
+    <div class="prob-head">
+      <a class="prob-link" href="https://ai.tuoj.thusaac.com/course/5/contest/67/problem/3" target="_blank">Problem · One-Move Chess</a>
+      <span class="prob-meta">Contest 67 · #3</span>
+    </div>
+    <div class="prob-section-body">Given a piece type and a from/to coordinate pair, decide whether the move is legal in chess rules.</div>
+
+    <div class="sol-controls">
+      <button class="sol-btn" onclick="toggleSol(this)">▸ Show solution</button>
+    </div>
+    <div class="solution">
+<pre class="code"><span class="cm">#include &lt;iostream&gt;</span>
+<span class="cm">#include &lt;cmath&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">class</span> <span class="ty">Piece</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="ty">bool</span> <span class="fn">canMove</span>(<span class="ty">int</span> fr, <span class="ty">int</span> fc, <span class="ty">int</span> tr, <span class="ty">int</span> tc) <span class="kw">const</span> = <span class="nm">0</span>;
+    <span class="kw">virtual</span> ~<span class="ty">Piece</span>() = <span class="kw">default</span>;
+};
+
+<span class="kw">class</span> <span class="ty">Rook</span> : <span class="kw">public</span> <span class="ty">Piece</span> {
+<span class="kw">public</span>:
+    <span class="ty">bool</span> <span class="fn">canMove</span>(<span class="ty">int</span> fr, <span class="ty">int</span> fc, <span class="ty">int</span> tr, <span class="ty">int</span> tc) <span class="kw">const</span> <span class="kw">override</span> {
+        <span class="kw">return</span> (fr == tr || fc == tc) &amp;&amp; !(fr == tr &amp;&amp; fc == tc);
+    }
+};
+
+<span class="kw">class</span> <span class="ty">Bishop</span> : <span class="kw">public</span> <span class="ty">Piece</span> {
+<span class="kw">public</span>:
+    <span class="ty">bool</span> <span class="fn">canMove</span>(<span class="ty">int</span> fr, <span class="ty">int</span> fc, <span class="ty">int</span> tr, <span class="ty">int</span> tc) <span class="kw">const</span> <span class="kw">override</span> {
+        <span class="kw">return</span> <span class="fn">abs</span>(fr - tr) == <span class="fn">abs</span>(fc - tc) &amp;&amp; fr != tr;
+    }
+};
+
+<span class="kw">class</span> <span class="ty">Knight</span> : <span class="kw">public</span> <span class="ty">Piece</span> {
+<span class="kw">public</span>:
+    <span class="ty">bool</span> <span class="fn">canMove</span>(<span class="ty">int</span> fr, <span class="ty">int</span> fc, <span class="ty">int</span> tr, <span class="ty">int</span> tc) <span class="kw">const</span> <span class="kw">override</span> {
+        <span class="ty">int</span> dr = <span class="fn">abs</span>(fr - tr), dc = <span class="fn">abs</span>(fc - tc);
+        <span class="kw">return</span> (dr == <span class="nm">2</span> &amp;&amp; dc == <span class="nm">1</span>) || (dr == <span class="nm">1</span> &amp;&amp; dc == <span class="nm">2</span>);
+    }
+};
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    string type;
+    <span class="ty">int</span> fr, fc, tr, tc;
+    cin &gt;&gt; type &gt;&gt; fr &gt;&gt; fc &gt;&gt; tr &gt;&gt; tc;
+
+    <span class="ty">Piece</span>* p = <span class="kw">nullptr</span>;
+    <span class="kw">if</span>      (type == <span class="st">"rook"</span>)   p = <span class="kw">new</span> <span class="ty">Rook</span>();
+    <span class="kw">else if</span> (type == <span class="st">"bishop"</span>) p = <span class="kw">new</span> <span class="ty">Bishop</span>();
+    <span class="kw">else if</span> (type == <span class="st">"knight"</span>) p = <span class="kw">new</span> <span class="ty">Knight</span>();
+
+    cout &lt;&lt; (p &amp;&amp; p-&gt;<span class="fn">canMove</span>(fr, fc, tr, tc) ? <span class="st">"Yes"</span> : <span class="st">"No"</span>) &lt;&lt; endl;
+    <span class="kw">delete</span> p;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}</pre>
+      <div class="why-it-works">
+        <strong>Why polymorphism over a switch:</strong> if you used a giant <code class="inline">switch(type)</code> statement instead, every new piece type would require editing the switch. With polymorphism, adding a Queen is just adding a new class — no existing code changes. This is "open for extension, closed for modification."<br><br>
+        <strong>Why the Rook check excludes <code class="inline">fr == tr &amp;&amp; fc == tc</code>:</strong> "moving to the same square" isn't a real move. Always exclude the zero-move case unless the problem allows it.
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /doc-wrap -->
+
+<script>
+  const TOPICS = {
+    basics:  [
+      { id:'aplusb', name:'A + B' },
+      { id:'honor',  name:'Honor Code' },
+      { id:'life',   name:'Life, Universe, Everything' }
+    ],
+    numeric: [
+      { id:'floatcmp',   name:'Floating-Point Comparison' },
+      { id:'gpa',        name:'GPA' },
+      { id:'prime',      name:'Prime Judgement' },
+      { id:'palindrome', name:'Palindrome' },
+      { id:'goldbach',   name:'Goldbach\u2019s Conjecture' }
+    ],
+    loops:   [
+      { id:'xmastree',  name:'Christmas Tree' },
+      { id:'fibonacci', name:'Fibonacci' },
+      { id:'kth',       name:'K-th Smallest' },
+      { id:'stock',     name:'Buy &amp; Sell Stock' }
+    ],
+    classes: [
+      { id:'battleunit', name:'Battle Unit Simulator' },
+      { id:'polyarea',   name:'Polymorphic Areas' },
+      { id:'friend',     name:'Friend Function' },
+      { id:'chess',      name:'One-Move Chess' }
+    ]
+  };
+
+  function selectChapter(ch) {
+    document.querySelectorAll('.ch-tab').forEach(t => t.classList.toggle('active', t.dataset.ch === ch));
+    const bar = document.getElementById('topic-bar');
+    bar.innerHTML = '';
+    TOPICS[ch].forEach((t, i) => {
+      const b = document.createElement('button');
+      b.className = 'topic-btn' + (i === 0 ? ' active' : '');
+      b.innerHTML = t.name;
+      b.onclick = () => selectTopic(ch, t.id, b);
+      bar.appendChild(b);
+    });
+    selectTopic(ch, TOPICS[ch][0].id, bar.firstChild);
+  }
+
+  function selectTopic(ch, topic, btn) {
+    document.querySelectorAll('.topic-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.querySelector('.topic-panel[data-ch="' + ch + '"][data-topic="' + topic + '"]');
+    if (panel) panel.classList.add('active');
+    if (btn) {
+      document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  }
+
+  function toggleSol(btn) {
+    const sol = btn.closest('.problem-card').querySelector('.solution');
+    sol.classList.toggle('open');
+    btn.textContent = sol.classList.contains('open') ? '▼ Hide solution' : '▸ Show solution';
+  }
+
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 || 0;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+
+  selectChapter('basics');
+</script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

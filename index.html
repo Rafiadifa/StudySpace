@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rafi's Study Hub</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .domain-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:8px; }
+    .domain{
+      display:block; text-decoration:none; background:var(--bg2); border:1px solid var(--border);
+      border-radius:14px; padding:30px 28px 26px; transition:.18s; position:relative; overflow:hidden;
+    }
+    .domain::after{ content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px;
+      background:radial-gradient(circle,var(--da,rgba(0,0,0,.05)) 0%,transparent 70%); pointer-events:none; }
+    .domain:hover{ transform:translateY(-4px); background:var(--bg3); }
+    .domain.soon{ opacity:.55; pointer-events:none; }
+    .d-eyebrow{ font-family:'DM Mono',monospace; font-size:0.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--text3); }
+    .d-title{ font-family:'DM Serif Display',serif; font-size:1.9rem; letter-spacing:-.02em; margin-top:8px; }
+    .d-desc{ font-size:0.88rem; color:var(--text2); font-weight:300; margin-top:10px; line-height:1.6; }
+    .d-tags{ display:flex; gap:6px; flex-wrap:wrap; margin-top:18px; }
+    .d-tag{ font-family:'DM Mono',monospace; font-size:0.66rem; padding:4px 10px; border-radius:99px; border:1px solid var(--border); color:var(--text3); }
+    .d-go{ font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--text3); margin-top:18px; display:inline-block; }
+    .domain:hover .d-go{ color:var(--text); }
+    .d-stem  { border-left:3px solid var(--calc); --da:rgba(29,78,216,.10); }
+    .d-stem  .d-title{ color:var(--calc); }
+    .d-lang  { border-left:3px solid #c0392b; --da:rgba(192,57,43,.10); }
+    .d-lang  .d-title{ color:#c0392b; }
+    .d-hum   { border-left:3px solid var(--mgmt); --da:rgba(109,40,217,.10); }
+    .d-hum   .d-title{ color:var(--mgmt); }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+
+  <div class="topbar">
+    <span class="topbar-title">Study Hub</span>
+    <span class="topbar-sub">/ Rafi Adifa Maulana</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="hero">
+    <h1>One hub, <em>every subject</em></h1>
+    <p class="hero-meta">Pick a domain to study. STEM holds your final-exam practice; Language holds your Chinese library. More areas can slot in over time.</p>
+  </div>
+
+  <div class="main" style="padding-top:48px;">
+    <div class="domain-grid">
+
+      <a href="hub/stem.html" class="domain d-stem">
+        <div class="d-eyebrow">Domain 01</div>
+        <div class="d-title">STEM</div>
+        <div class="d-desc">Practice sets, review notes, and timed mock exams for your technical courses.</div>
+        <div class="d-tags"><span class="d-tag">C++</span><span class="d-tag">Calculus A2</span><span class="d-tag">Linear Algebra</span></div>
+        <span class="d-go">Enter →</span>
+      </a>
+
+      <a href="hub/language.html" class="domain d-lang">
+        <div class="d-eyebrow">Domain 02</div>
+        <div class="d-title">Language</div>
+        <div class="d-desc">Vocabulary, flashcards with spaced repetition, grammar, and exam-style exercises.</div>
+        <div class="d-tags"><span class="d-tag">中文 Chinese</span><span class="d-tag">+ add more</span></div>
+        <span class="d-go">Enter →</span>
+      </a>
+
+      <a href="hub/humanities.html" class="domain d-hum">
+        <div class="d-eyebrow">Domain 03</div>
+        <div class="d-title">Humanities</div>
+        <div class="d-desc">Concept libraries, case applications, and written-answer mock exams for reading- and theory-heavy subjects.</div>
+        <div class="d-tags"><span class="d-tag">General Management</span><span class="d-tag">+ add more</span></div>
+        <span class="d-go">Enter →</span>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="footer-note">RAFI ADIFA MAULANA · STUDY HUB · 2026</div>
+
+  <script>
+    const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const D=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const d=new Date();
+    document.getElementById('topbar-date').textContent =
+      `${D[d.getDay()]} · ${d.getDate()} ${M[d.getMonth()].toUpperCase()} ${d.getFullYear()}`;
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

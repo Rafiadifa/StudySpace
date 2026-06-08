@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Midterm Marathon: 100 Questions</title>
+    <style>
+        :root { --primary: #1e3a8a; --secondary: #3b82f6; --bg: #f1f5f9; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); padding: 20px; color: #1e293b; }
+        .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 15px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        header { text-align: center; border-bottom: 3px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; }
+        h1 { color: var(--primary); font-size: 2.2rem; }
+        .section { margin-bottom: 40px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fafafa; }
+        .section-h { background: var(--primary); color: white; padding: 10px 15px; border-radius: 6px; margin-bottom: 20px; font-size: 1.3rem; }
+        .q-box { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #cbd5e1; }
+        .q-text { font-weight: 600; margin-bottom: 10px; }
+        pre { background: #1e293b; color: #f8fafc; padding: 12px; border-radius: 6px; font-size: 0.85rem; overflow-x: auto; margin: 10px 0; }
+        input[type="text"] { width: 100%; padding: 8px; border: 1px solid #94a3b8; border-radius: 4px; font-family: monospace; }
+        .controls { position: sticky; bottom: 20px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); text-align: center; z-index: 100; }
+        .btn { background: var(--primary); color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        #score-banner { display: none; margin-top: 10px; font-size: 1.5rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>C++ Midterm Marathon</h1>
+        <p>100 Questions • Chapters 1-7 • The Ultimate Test</p>
+    </header>
+
+    <div id="exam-content">
+        <div class="section">
+            <div class="section-h">1. Fundamentals & Data Types</div>
+            <div class="q-box"><p class="q-text">1. Result of 11 / 4?</p><input type="text" data-ans="2"></div>
+            <div class="q-box"><p class="q-text">2. Result of 11 % 4?</p><input type="text" data-ans="3"></div>
+            <div class="q-box"><p class="q-text">3. Result of 11.0 / 4?</p><input type="text" data-ans="2.75"></div>
+            <div class="q-box"><p class="q-text">4. Default value of an uninitialized local 'int x;'?</p><input type="text" data-ans="garbage"></div>
+            <div class="q-box"><p class="q-text">5. Size of 'char' in bytes?</p><input type="text" data-ans="1"></div>
+            <div class="q-box"><p class="q-text">6. Value of 'true' when printed as an int?</p><input type="text" data-ans="1"></div>
+            <div class="q-box"><p class="q-text">7. Result of 'char c = 65; cout << c;'?</p><input type="text" data-ans="A"></div>
+            <div class="q-box"><p class="q-text">8. Proper escape character for a horizontal tab?</p><input type="text" data-ans="\t"></div>
+            <div class="q-box"><p class="q-text">9. Result of 'double d = 5/2;'?</p><input type="text" data-ans="2.0"></div>
+            <div class="q-box"><p class="q-text">10. Can 'int' hold 3.99? (yes/no)</p><input type="text" data-ans="no"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-h">2. Operators & Precedence</div>
+            <div class="q-box"><p class="q-text">11. Result of (5 > 3 && 2 > 4)?</p><input type="text" data-ans="0"></div>
+            <div class="q-box"><p class="q-text">12. Result of (true || false)?</p><input type="text" data-ans="1"></div>
+            <div class="q-box"><p class="q-text">13. Value of x after 'int x=5; x++;'?</p><input type="text" data-ans="6"></div>
+            <div class="q-box"><p class="q-text">14. Value of y after 'int x=5, y=x++;'?</p><input type="text" data-ans="5"></div>
+            <div class="q-box"><p class="q-text">15. Value of y after 'int x=5, y=++x;'?</p><input type="text" data-ans="6"></div>
+            <div class="q-box"><p class="q-text">16. Operator for 'logical NOT'?</p><input type="text" data-ans="!"></div>
+            <div class="q-box"><p class="q-text">17. Result of 10 != 10?</p><input type="text" data-ans="0"></div>
+            <div class="q-box"><p class="q-text">18. In (A || B), if A is true, does B evaluate?</p><input type="text" data-ans="no"></div>
+            <div class="q-box"><p class="q-text">19. Precedence: Does * come before +? (yes/no)</p><input type="text" data-ans="yes"></div>
+            <div class="q-box"><p class="q-text">20. Compound assignment to add 5 to x?</p><input type="text" data-ans="x+=5"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-h">3. Control Flow Logic</div>
+            <div class="q-box"><p class="q-text">21. Does 'switch' require 'break' to prevent fall-through? (yes/no)</p><input type="text" data-ans="yes"></div>
+            <div class="q-box"><p class="q-text">22. Loop that checks condition AFTER running body?</p><input type="text" data-ans="do-while"></div>
+            <div class="q-box"><p class="q-text">23. iterations of 'for(int i=1; i<=5; i++)'?</p><input type="text" data-ans="5"></div>
+            <div class="q-box"><p class="q-text">24. Keyword to skip to next loop iteration?</p><input type="text" data-ans="continue"></div>
+            <div class="q-box"><p class="q-text">25. Keyword to stop a loop?</p><input type="text" data-ans="break"></div>
+            <div class="q-box"><p class="q-text">26. Result of 'if(x=0)'? (true/false)</p><input type="text" data-ans="false"></div>
+            <div class="q-box"><p class="q-text">27. Value of i after 'for(int i=0; i<3; i++);'</p><input type="text" data-ans="3"></div>
+            <div class="q-box"><p class="q-text">28. Default case keyword in switch?</p><input type="text" data-ans="default"></div>
+            <div class="q-box"><p class="q-text">29. Loop: 'while(true)' is it infinite? (yes/no)</p><input type="text" data-ans="yes"></div>
+            <div class="q-box"><p class="q-text">30. Ternary operator symbol?</p><input type="text" data-ans="?:"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-h">4. Classes & Objects</div>
+            <div class="q-box"><p class="q-text">31. Default access in 'class'?</p><input type="text" data-ans="private"></div>
+            <div class="q-box"><p class="q-text">32. Default access in 'struct'?</p><input type="text" data-ans="public"></div>
+            <div class="q-box"><p class="q-text">33. Name of function that runs at object birth?</p><input type="text" data-ans="constructor"></div>
+            <div class="q-box"><p class="q-text">34. Can a class have 2 constructors? (yes/no)</p><input type="text" data-ans="yes"></div>
+            <div class="q-box"><p class="q-text">35. Destructor symbol prefix?</p><input type="text" data-ans="~"></div>
+            <div class="q-box"><p class="q-text">36. Keyword for a member shared by all instances?</p><input type="text" data-ans="static"></div>
+            <div class="q-box"><p class="q-text">37. Does a destructor take parameters? (yes/no)</p><input type="text" data-ans="no"></div>
+            <div class="q-box"><p class="q-text">38. Access level for children but not public?</p><input type="text" data-ans="protected"></div>
+            <div class="q-box"><p class="q-text">39. Operator used to access members from an object name?</p><input type="text" data-ans="."></div>
+            <div class="q-box"><p class="q-text">40. Pointer name to 'this' object?</p><input type="text" data-ans="this"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-h">5. Pointers & Memory</div>
+            <div class="q-box"><p class="q-text">41. Operator to get address of x?</p><input type="text" data-ans="&"></div>
+            <div class="q-box"><p class="q-text">42. Operator to dereference a pointer?</p><input type="text" data-ans="*"></div>
+            <div class="q-box"><p class="q-text">43. Keyword to allocate memory on Heap?</p><input type="text" data-ans="new"></div>
+            <div class="q-box"><p class="q-text">44. Keyword to free Heap memory?</p><input type="text" data-ans="delete"></div>
+            <div class="q-box"><p class="q-text">45. Value of p after 'int* p = nullptr;'?</p><input type="text" data-ans="0"></div>
+            <div class="q-box"><p class="q-text">46. If p is a pointer to object, how to access member 'm'?</p><input type="text" data-ans="p->m"></div>
+            <div class="q-box"><p class="q-text">47. What is 'int* p[10]'? (array of pointers / pointer to array)</p><input type="text" data-ans="array of pointers"></div>
+            <div class="q-box"><p class="q-text">48. Does 'delete p' set p to null? (yes/no)</p><input type="text" data-ans="no"></div>
+            <div class="q-box"><p class="q-text">49. Memory leak occurs if we lose the...?</p><input type="text" data-ans="pointer"></div>
+            <div class="q-box"><p class="q-text">50. A pointer to a pointer is declared as?</p><input type="text" data-ans="**"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-h">6. Arrays & Strings</div>
+            <div class="q-box"><p class="q-text">51. Index of the first element?</p><input type="text" data-ans="0"></div>
+            <div class="q-box"><p class="q-text">52. If arr has 5 items, index of last item?</p><input type="text" data-ans="4"></div>
+            <div class="q-box"><p class="q-text">53. C-string null terminator character?</p><input type="text" data-ans="\0"></div>
+            <div class="q-box"><p class="q-text">54. Does C++ check array bounds? (yes/no)</p><input type="text" data-ans="no"></div>
+            <div class="q-box"><p class="q-text">55. Library needed for 'std::string'?</p><input type="text" data-ans="string"></div>
+            <div class="q-box"><p class="q-text">56. Function to get length of std::string s?</p><input type="text" data-ans="s.length()"></div>
+            <div class="q-box"><p class="q-text">57. String literal "A" has how many bytes?</p><input type="text" data-ans="2"></div>
+            <div class="q-box"><p class="q-text">58. Name of array 'int a[5]' is a pointer to index...?</p><input type="text" data-ans="0"></div>
+            <div class="q-box"><p class="q-text">59. Multidimensional array: a[2][3] has how many rows?</p><input type="text" data-ans="2"></div>
+            <div class="q-box"><p class="q-text">60. Keyword to prevent modifying an array in a function?</p><input type="text" data-ans="const"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-h">7. Functions & Parameters</div>
+            <div class="q-box"><p class="q-text">61. Return type for a function that returns nothing?</p><input type="text" data-ans="void"></div>
+            <div class="q-box"><p class="q-text">62. Symbol to pass a parameter by reference?</p><input type="text" data-ans="&"></div>
+            <div class="q-box"><p class="q-text">63. Can you return 2 values from 1 function? (yes/no)</p><input type="text" data-ans="no"></div>
+            <div class="q-box"><p class="q-text">64. Creating 2 functions with same name but different params?</p><input type="text" data-ans="overloading"></div>
+            <div class="q-box"><p class="q-text">65. Can a function have default parameters? (yes/no)</p><input type="text" data-ans="yes"></div>
+            <div class="q-box"><p class="q-text">66. Where must default parameters appear in the list? (left/right)</p><input type="text" data-ans="right"></div>
+            <div class="q-box"><p class="q-text">67. Function that calls itself?</p><input type="text" data-ans="recursion"></div>
+            <div class="q-box"><p class="q-text">68. Keyword to suggest compiler replace function call with body?</p><input type="text" data-ans="inline"></div>
+            <div class="q-box"><p class="q-text">69. Every recursive function needs a ______ case?</p><input type="text" data-ans="base"></div>
+            <div class="q-box"><p class="q-text">70. 'void f(int x=5);' - f() is a valid call? (yes/no)</p><input type="text" data-ans="yes"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-h">8. Inheritance & UML</div>
+            <div class="q-box"><p class="q-text">71. Arrow in UML points from Child to...?</p><input type="text" data-ans="parent"></div>
+            <div class="q-box"><p class="q-text">72. Keyword to inherit from a class?</p><input type="text" data-ans="public"></div>
+            <div class="q-box"><p class="q-text">73. Order of construction: Base or Derived first?</p><input type="text" data-ans="base"></div>
+            <div class="q-box"><p class="q-text">74. Order of destruction: Base or Derived first?</p><input type="text" data-ans="derived"></div>
+            <div class="q-box"><p class="q-text">75. Is a private member inherited? (yes/no)</p><input type="text" data-ans="yes"></div>
+            <div class="q-box"><p class="q-text">76. Can a Derived class access private Base members? (yes/no)</p><input type="text" data-ans="no"></div>
+            <div class="q-box"><p class="q-text">77. UML symbol for private member?</p><input type="text" data-ans="-"></div>
+            <div class="q-box"><p class="q-text">78. UML symbol for protected member?</p><input type="text" data-ans="#"></div>
+            <div class="q-box"><p class="q-text">79. UML symbol for public member?</p><input type="text" data-ans="+"></div>
+            <div class="q-box"><p class="q-text">80. Can a class inherit from 2 parents? (yes/no)</p><input type="text" data-ans="yes"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-h">9. Polymorphism</div>
+            <div class="q-box"><p class="q-text">81. Keyword to enable dynamic binding?</p><input type="text" data-ans="virtual"></div>
+            <div class="q-box"><p class="q-text">82. '= 0' at end of function makes it a _____ virtual function?</p><input type="text" data-ans="pure"></div>
+            <div class="q-box"><p class="q-text">83. Class with a pure virtual function is called...?</p><input type="text" data-ans="abstract"></div>
+            <div class="q-box"><p class="q-text">84. Can you create an object of an abstract class? (yes/no)</p><input type="text" data-ans="no"></div>
+            <div class="q-box"><p class="q-text">85. Keyword in child to ensure it overrides parent?</p><input type="text" data-ans="override"></div>
+            <div class="q-box"><p class="q-text">86. Should a base class have a virtual destructor? (yes/no)</p><input type="text" data-ans="yes"></div>
+            <div class="q-box"><p class="q-text">87. Dynamic binding happens at (compile/run) time?</p><input type="text" data-ans="run"></div>
+            <div class="q-box"><p class="q-text">88. Static binding happens at (compile/run) time?</p><input type="text" data-ans="compile"></div>
+            <div class="q-box"><p class="q-text">89. Pointer 'Base* b = new Derived();' - is it legal? (yes/no)</p><input type="text" data-ans="yes"></div>
+            <div class="q-box"><p class="q-text">90. Function in child that hides parent same-name function?</p><input type="text" data-ans="overriding"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-h">10. Final Boss Traps</div>
+            <div class="q-box"><p class="q-text">91. Result of 5 == 5.0? (1/0)</p><input type="text" data-ans="1"></div>
+            <div class="q-box"><p class="q-text">92. Header for mathematical functions like fabs()?</p><input type="text" data-ans="cmath"></div>
+            <div class="q-box"><p class="q-text">93. Does 'cout <<' use the extraction or insertion operator?</p><input type="text" data-ans="insertion"></div>
+            <div class="q-box"><p class="q-text">94. Global variables are stored in the (stack/heap/static)?</p><input type="text" data-ans="static"></div>
+            <div class="q-box"><p class="q-text">95. Local variables are stored in the (stack/heap)?</p><input type="text" data-ans="stack"></div>
+            <div class="q-box"><p class="q-text">96. 'new' objects are stored in the (stack/heap)?</p><input type="text" data-ans="heap"></div>
+            <div class="q-box"><p class="q-text">97. Keyword to prevent a class from being inherited?</p><input type="text" data-ans="final"></div>
+            <div class="q-box"><p class="q-text">98. Can a constructor be virtual? (yes/no)</p><input type="text" data-ans="no"></div>
+            <div class="q-box"><p class="q-text">99. Number of constructors a class MUST have?</p><input type="text" data-ans="1"></div>
+            <div class="q-box"><p class="q-text">100. Best C++ student's name?</p><input type="text" data-ans="rafi"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="gradeMarathon()">Grade My Marathon</button>
+        <div id="score-banner"></div>
+        <p style="margin-top: 15px;"><a href="../../../hub/stem.html" style="color: var(--primary);">← Back to Hub</a></p>
+    </div>
+</div>
+
+<script>
+    function gradeMarathon() {
+        let inputs = document.querySelectorAll('input');
+        let score = 0;
+        inputs.forEach(input => {
+            let userAns = input.value.trim().toLowerCase();
+            let correctAns = input.getAttribute('data-ans').toLowerCase();
+            
+            if(userAns === correctAns) {
+                score++;
+                input.style.backgroundColor = "#dcfce7";
+                input.style.borderColor = "#16a34a";
+            } else {
+                input.style.backgroundColor = "#fee2e2";
+                input.style.borderColor = "#dc2626";
+                // Show hint
+                input.value = userAns + " (Correct: " + correctAns + ")";
+            }
+        });
+
+        let banner = document.getElementById('score-banner');
+        banner.style.display = "block";
+        banner.textContent = "Final Marathon Score: " + score + " / 100";
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flashcards · Chinese</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span> Flashcards
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">闪卡 Flashcards</span>
+    <span class="topbar-sub">/ free study</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="main" style="padding-top:24px;">
+
+    <div class="panel">
+      <h3>Build a deck</h3>
+      <div class="field-row">
+        <div class="field"><label>Lessons</label><select id="d-lesson" class="flt"></select></div>
+        <div class="field"><label>Word type</label><select id="d-pos" class="flt"></select></div>
+        <div class="field"><label>Front shows</label>
+          <select id="d-mode" class="flt">
+            <option value="hz">Character → meaning</option>
+            <option value="en">Meaning → character</option>
+            <option value="py">Character → pinyin only</option>
+          </select>
+        </div>
+        <div class="field"><label>&nbsp;</label><button class="btn btn-primary" id="d-start">Start studying</button></div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text3);margin-top:12px;">
+        Free study doesn't change your review schedule — use <a href="review.html" style="color:var(--accent)">Review</a> for spaced repetition.
+      </p>
+    </div>
+
+    <div class="fc-stage" id="stage" style="display:none;">
+      <div class="fc-progress" id="progress"></div>
+      <div class="flashcard" id="card">
+        <div class="fc-inner">
+          <div class="fc-face front" id="front"></div>
+          <div class="fc-face back"  id="back"></div>
+        </div>
+        <span class="fc-hint">click to flip</span>
+      </div>
+      <div class="fc-controls">
+        <button class="btn btn-ghost btn-sm" id="prev">‹ Prev</button>
+        <button class="btn btn-ghost btn-sm" id="shuffle">⤮ Shuffle</button>
+        <button class="btn btn-ghost btn-sm" id="save">★ Save deck</button>
+        <button class="btn btn-ghost btn-sm" id="next">Next ›</button>
+      </div>
+    </div>
+
+    <div class="saved-decks" id="saved" style="display:none;">
+      <h3>Saved decks</h3>
+      <div id="deck-list"></div>
+    </div>
+
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    setTopbarDate();
+    const dL=$("#d-lesson"), dP=$("#d-pos"), dM=$("#d-mode");
+    fillLessonSelect(dL); fillPosSelect(dP);
+    let deck=[], idx=0, mode="hz";
+    const stage=$("#stage"), card=$("#card");
+
+    function build(){ const lf=dL.value,pf=dP.value;
+      return shuffle(VOCAB.filter(w=>(lf==="all"||w.lesson===+lf)&&(pf==="all"||w.pos===pf))); }
+    function render(){
+      const w=deck[idx]; if(!w) return;
+      card.classList.remove("flipped");
+      $("#progress").textContent=`Card ${idx+1} of ${deck.length} — ${lessonName(w.lesson)}`;
+      if(mode==="hz"){ $("#front").innerHTML=`<div class="big-hz">${w.hanzi}</div>`;
+        $("#back").innerHTML=`<div class="mid-py">${w.pinyin}</div><div class="mid-en">${w.en}</div><div class="sub">${POS_LABELS[w.pos]||w.pos}</div>${w.ex?`<div class="sub-ex">${w.ex}</div>`:""}`; }
+      else if(mode==="en"){ $("#front").innerHTML=`<div class="mid-en">${w.en}</div><div class="sub">${POS_LABELS[w.pos]||w.pos}</div>`;
+        $("#back").innerHTML=`<div class="big-hz">${w.hanzi}</div><div class="mid-py">${w.pinyin}</div>${w.ex?`<div class="sub-ex">${w.ex}</div>`:""}`; }
+      else { $("#front").innerHTML=`<div class="big-hz">${w.hanzi}</div>`; $("#back").innerHTML=`<div class="mid-py">${w.pinyin}</div>`; }
+    }
+    $("#d-start").addEventListener("click",()=>{ deck=build(); idx=0; mode=dM.value;
+      if(!deck.length){ alert("No words match that filter."); return; }
+      stage.style.display="flex"; render(); stage.scrollIntoView({behavior:"smooth",block:"center"}); });
+    card.addEventListener("click",()=>card.classList.toggle("flipped"));
+    $("#next").addEventListener("click",e=>{e.stopPropagation(); idx=(idx+1)%deck.length; render();});
+    $("#prev").addEventListener("click",e=>{e.stopPropagation(); idx=(idx-1+deck.length)%deck.length; render();});
+    $("#shuffle").addEventListener("click",e=>{e.stopPropagation(); deck=shuffle(deck); idx=0; render();});
+
+    $("#save").addEventListener("click",e=>{ e.stopPropagation();
+      const name=prompt("Name this deck:"); if(!name) return;
+      const decks=getDecks(); decks.push({name,lesson:dL.value,pos:dP.value,mode:dM.value}); setDecks(decks); renderDecks(); });
+
+    function renderDecks(){ const decks=getDecks(), wrap=$("#saved"), list=$("#deck-list");
+      if(!decks.length){ wrap.style.display="none"; return; }
+      wrap.style.display="block"; list.innerHTML="";
+      decks.forEach((d,i)=>{ const pill=el("span","deck-pill");
+        const lbl=(d.lesson==="all"?"All":"L"+d.lesson)+" · "+(d.pos==="all"?"all types":(POS_LABELS[d.pos]||d.pos));
+        pill.innerHTML=`<span>${d.name} <small style="color:var(--text3)">(${lbl})</small></span><button class="load">▶</button><button class="del">✕</button>`;
+        pill.querySelector(".load").addEventListener("click",()=>{ dL.value=d.lesson; dP.value=d.pos; dM.value=d.mode||"hz"; $("#d-start").click(); });
+        pill.querySelector(".del").addEventListener("click",()=>{ const dd=getDecks(); dd.splice(i,1); setDecks(dd); renderDecks(); });
+        list.appendChild(pill); });
+    }
+    renderDecks();
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

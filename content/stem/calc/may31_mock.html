@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Weekly Mock · 31 May</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ calc-a2 / weekly mock</span>
+    <span class="topbar-date">SUN · 31 MAY 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Weekly Mock <em>Exam</em></h1>
+    <p class="hero-meta">Ch.12–13.3 · 60-minute timed mock. Take it cold — no notes. Grade after, then log every error.</p>
+    <div class="exam-pills">
+      <span class="pill pill-calc">∫ Calc A2</span>
+      <span class="pill pill-calc">Ch.12 – 13.3</span>
+      <span class="pill pill-calc">40 pts · 60 min</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-calc"></div>
+        <div>
+          <div class="subject-label">Weekly Mock · P1 · 60 min timed</div>
+          <div class="subject-title" style="color:var(--calc)">Partial Derivatives → Gradients → Chain Rule</div>
+        </div>
+        <div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>Instructions.</strong> 4 problems, 40 points, 60 minutes (timer warns at 51 min, red at 60). Show all working; reveal each answer only after attempting that sub-part. <strong>Coverage:</strong> continuity &amp; partial derivatives, optimization &amp; the Hessian, the chain rule, gradients &amp; directional derivatives. Newton's Method (13.4) is <strong>not</strong> on this mock.<br><br>
+        <strong>Quick reference.</strong> Gradient \(\nabla f=(f_x,f_y)\); directional derivative \(D_{\mathbf u}f=\nabla f\cdot\mathbf u\) (\(\mathbf u\) unit); Hessian \(H=\begin{pmatrix}f_{xx}&f_{xy}\\f_{yx}&f_{yy}\end{pmatrix}\) classified by \(\det H\) and \(f_{xx}\); chain rule \(\frac{\partial z}{\partial s}=z_x x_s+z_y y_s\); tangent plane \(z=f(\mathbf x_0)+\nabla f(\mathbf x_0)\cdot(\mathbf x-\mathbf x_0)\).
+      </div>
+
+      <!-- ══ Problem 1 (math) ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">Continuity &amp; Mixed Partial Derivatives</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Consider the function below, defined piecewise at the origin.</div>
+          <div class="define-block">
+            \[f(x,y)=\begin{cases}\dfrac{xy(x^2-y^2)}{x^2+y^2}, & (x,y)\neq(0,0)\\[6pt] 0, & (x,y)=(0,0).\end{cases}\]
+          </div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <div class="part-content">
+                <div class="part-question">Show that \(f\) is continuous at \((0,0)\). <span class="pts">2 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      In polar form \(x=r\cos\theta,\,y=r\sin\theta\): \(|f|=r^2\,|\cos\theta\sin\theta(\cos^2\theta-\sin^2\theta)|\le r^2\to0\) as \(r\to0\).
+                      <div class="key-result">\(\displaystyle\lim_{(x,y)\to(0,0)}f(x,y)=0=f(0,0)\) — continuous ✓</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <div class="part-content">
+                <div class="part-question">Using the limit definition, compute \(f_x(0,0)\) and \(f_y(0,0)\). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(f_x(0,0)=\lim_{h\to0}\dfrac{f(h,0)-0}{h}=\lim_{h\to0}\dfrac{0}{h}=0\). Similarly \(f_y(0,0)=\lim_{k\to0}\dfrac{f(0,k)}{k}=0\).
+                      <div class="key-result">\(f_x(0,0)=0,\qquad f_y(0,0)=0.\)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <div class="part-content">
+                <div class="part-question">Away from the origin, \(f_x(0,y)=-y\) and \(f_y(x,0)=x\). Use these to compute \(f_{xy}(0,0)\) and \(f_{yx}(0,0)\). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(f_{xy}(0,0)=\lim_{k\to0}\dfrac{f_x(0,k)-f_x(0,0)}{k}=\lim_{k\to0}\dfrac{-k-0}{k}=-1.\)
+                      \(f_{yx}(0,0)=\lim_{h\to0}\dfrac{f_y(h,0)-f_y(0,0)}{h}=\lim_{h\to0}\dfrac{h-0}{h}=+1.\)
+                      <div class="key-result">\(f_{xy}(0,0)=-1\neq f_{yx}(0,0)=+1.\)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(d)</span>
+              <div class="part-content">
+                <div class="part-question">Your two answers in (c) differ. Why does this not contradict Clairaut's theorem? <span class="pts">2 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      Clairaut's theorem requires the mixed partials to be <strong>continuous</strong> in a neighbourhood of the point. Here they exist everywhere but are not continuous at the origin, so the hypothesis fails and equality is not guaranteed.
+                      <div class="ans-note">This is the classic counterexample showing continuity of the mixed partials is essential.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 (flavor) ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">Drone Terrain Survey — Critical Points</span>
+          <span class="problem-pts">12 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">A survey drone maps the elevation of a small valley. The terrain height (in metres) above a reference plane is modelled by</div>
+          <div class="define-block">\[h(x,y)=x^3 - 3xy + y^3.\]</div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <div class="part-content">
+                <div class="part-question">Compute \(\nabla h\) and find all critical points (where the drone reads zero slope). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(\nabla h=(3x^2-3y,\;-3x+3y^2)\). Setting both to zero: \(y=x^2\) and \(x=y^2\). Substituting: \(x=x^4\Rightarrow x(x^3-1)=0\Rightarrow x=0\) or \(x=1\).
+                      <div class="key-result">Critical points: \((0,0)\) and \((1,1)\).</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <div class="part-content">
+                <div class="part-question">Compute the Hessian \(H\). Classify each critical point as a local max, local min, or saddle. <span class="pts">5 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(H=\begin{pmatrix}6x&-3\\-3&6y\end{pmatrix}\), \(\det H=36xy-9\).<br>
+                      At \((0,0)\): \(\det H=-9<0\) → <strong>saddle point</strong>.<br>
+                      At \((1,1)\): \(\det H=27>0\) and \(h_{xx}=6>0\) → <strong>local minimum</strong>.
+                      <div class="key-result">\((0,0)\) saddle; \((1,1)\) local min.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <div class="part-content">
+                <div class="part-question">At the point \((2,1)\), find the direction of steepest ascent and the maximum rate of climb. <span class="pts">2 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(\nabla h(2,1)=(3\cdot4-3,\;-6+3)=(9,-3)\). Steepest ascent is in the direction of the gradient.
+                      <div class="key-result">Direction \(\dfrac{1}{\sqrt{90}}(9,-3)=\dfrac{1}{\sqrt{10}}(3,-1)\); max rate of climb \(=\|\nabla h\|=\sqrt{90}=3\sqrt{10}\approx9.49\).</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(d)</span>
+              <div class="part-content">
+                <div class="part-question">Give the equation of the tangent plane to the terrain at \((1,1)\). <span class="pts">2 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(h(1,1)=1-3+1=-1\) and \(\nabla h(1,1)=(0,0)\) (it is the local min from part b).
+                      <div class="key-result">\(z=-1+0(x-1)+0(y-1)\;\Rightarrow\; z=-1\) (horizontal plane, as expected at a local min).</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- ══ Problem 3 (math) ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-topic">Multivariable Chain Rule</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Let \(z=f(x,y)=x^2y\), where \(x\) and \(y\) depend on two parameters:</div>
+          <div class="define-block">\[x(s,t)=s\cos t,\qquad y(s,t)=s\sin t.\]</div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <div class="part-content">
+                <div class="part-question">Use the chain rule to find \(\dfrac{\partial z}{\partial s}\) in terms of \(s\) and \(t\). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(z_x=2xy,\;z_y=x^2\); \(x_s=\cos t,\;y_s=\sin t\). So \(\frac{\partial z}{\partial s}=2xy\cos t+x^2\sin t\). Substituting \(x=s\cos t,y=s\sin t\): \(=2s^2\cos^2t\sin t+s^2\cos^2t\sin t\).
+                      <div class="key-result">\(\dfrac{\partial z}{\partial s}=3s^2\cos^2 t\,\sin t.\)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <div class="part-content">
+                <div class="part-question">Find \(\dfrac{\partial z}{\partial t}\) in terms of \(s\) and \(t\). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(x_t=-s\sin t,\;y_t=s\cos t\). So \(\frac{\partial z}{\partial t}=2xy(-s\sin t)+x^2(s\cos t)=-2s^3\cos t\sin^2 t+s^3\cos^3 t\).
+                      <div class="key-result">\(\dfrac{\partial z}{\partial t}=s^3\cos t\,(\cos^2 t-2\sin^2 t).\)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <div class="part-content">
+                <div class="part-question">Verify your answer to (a) by substituting first to get \(z(s,t)\) directly, then differentiating. <span class="pts">2 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(z=x^2y=(s\cos t)^2(s\sin t)=s^3\cos^2 t\sin t\). Then \(\frac{\partial z}{\partial s}=3s^2\cos^2 t\sin t\) — matches part (a) ✓.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(d)</span>
+              <div class="part-content">
+                <div class="part-question">Evaluate \(\dfrac{\partial z}{\partial s}\) at \((s,t)=(2,\pi/4)\). <span class="pts">2 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(\cos^2(\pi/4)=\tfrac12,\;\sin(\pi/4)=\tfrac{1}{\sqrt2}\). So \(3(4)(\tfrac12)(\tfrac{1}{\sqrt2})=\dfrac{6}{\sqrt2}=3\sqrt2\).
+                      <div class="key-result">\(\dfrac{\partial z}{\partial s}\Big|_{(2,\pi/4)}=3\sqrt{2}\approx4.243.\)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- ══ Problem 4 (flavor) ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 4</span>
+          <span class="problem-topic">Pollutant Dispersion &amp; Directional Change</span>
+          <span class="problem-pts">8 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">A pollutant disperses across a lake surface. Its concentration (in ppm) at position \((x,y)\) is given below; a sensor drifts through the point \(P=(1,1)\).</div>
+          <div class="define-block">\[C(x,y)=100\,e^{-(x^2+2y^2)}.\]</div>
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <div class="part-content">
+                <div class="part-question">Compute \(\nabla C\) at \(P=(1,1)\). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      \(C_x=-200x\,e^{-(x^2+2y^2)},\quad C_y=-400y\,e^{-(x^2+2y^2)}\). At \((1,1)\), \(e^{-(1+2)}=e^{-3}\).
+                      <div class="key-result">\(\nabla C(1,1)=-200e^{-3}\,(1,\,2)\approx(-9.96,\,-19.91)\) ppm/unit.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <div class="part-content">
+                <div class="part-question">The sensor moves in the direction \(\mathbf v=(3,4)\). Find the rate of change of concentration it measures at \(P\). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      Unit vector \(\mathbf u=\tfrac15(3,4)\). \(D_{\mathbf u}C=\nabla C\cdot\mathbf u=-200e^{-3}(1,2)\cdot\tfrac15(3,4)=-200e^{-3}\cdot\tfrac{11}{5}\).
+                      <div class="key-result">\(D_{\mathbf u}C(1,1)=-440e^{-3}\approx-21.9\) ppm per unit distance.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <div class="part-content">
+                <div class="part-question">In which direction should the sensor move from \(P\) to record the fastest <em>decrease</em> in concentration? <span class="pts">2 pts</span></div>
+                <div class="ans-toggle">
+                  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer">
+                    <div class="ans-part">
+                      <span class="ans-part-label">Solution</span>
+                      Concentration decreases fastest in the direction of \(-\nabla C\), i.e. along \(+(1,2)\) normalised.
+                      <div class="key-result">Direction \(\dfrac{1}{\sqrt5}(1,2)\); maximum rate of decrease \(=\|\nabla C\|=200\sqrt5\,e^{-3}\approx22.3\) ppm/unit.</div>
+                      <div class="ans-note">Both partials are negative, so \(-\nabla C\) points along \(+(1,2)\) — away from the concentration peak at the origin.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      Calc A2 · Weekly Mock · Ch.12–13.3 · Sunday 31 May 2026 · Take cold → grade → log every error ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const SESSION = 60 * 60;
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+      const chip = document.getElementById('timerChip');
+      chip.classList.remove('warn','urgent');
+      if (e >= SESSION) chip.classList.add('urgent');
+      else if (e >= SESSION*0.85) chip.classList.add('warn');
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

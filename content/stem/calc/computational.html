@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calc A2 · Computational Reference · Ch. 12–18</title>
+<link rel="stylesheet" href="../../../style.css">
+<style>
+  .doc-wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+  .chapter-tabs { position: sticky; top: 0; z-index: 20; display: flex; gap: 6px; flex-wrap: wrap; padding: 14px 32px; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+  .ch-tab { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.03em; padding: 9px 15px; border-radius: 9px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+  .ch-tab:hover { color: var(--text); border-color: var(--text3); }
+  .ch-tab.active { background: var(--calc); color: #fff; border-color: var(--calc); }
+  .topic-bar { display: flex; gap: 8px; flex-wrap: wrap; padding: 22px 0 4px; }
+  .topic-btn { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 8px 16px; border-radius: 99px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; transition: all 0.15s; }
+  .topic-btn:hover { color: var(--text); border-color: var(--calc); transform: translateY(-1px); }
+  .topic-btn.active { background: color-mix(in oklab, var(--calc) 12%, transparent); color: var(--calc); border-color: var(--calc); }
+  .topic-panel { display: none; padding: 16px 0 56px; animation: fadeUp 0.3s ease both; }
+  .topic-panel.active { display: block; }
+  .method-title { font-family: 'DM Serif Display', serif; font-size: 1.9rem; letter-spacing: -0.02em; color: var(--text); margin: 22px 0 24px; padding-bottom: 14px; border-bottom: 2px solid var(--calc); }
+  .method-section { margin-bottom: 30px; }
+  .method-label { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--calc); margin-bottom: 12px; }
+  .hint-inline { color: var(--text3); text-transform: none; letter-spacing: 0; }
+  .method-section p { font-size: 0.98rem; line-height: 1.75; color: var(--text2); max-width: 900px; }
+  ol.proc { margin: 0; padding-left: 0; counter-reset: step; list-style: none; max-width: 900px; }
+  ol.proc li { position: relative; padding: 12px 0 12px 44px; font-size: 0.97rem; line-height: 1.7; color: var(--text); border-bottom: 1px solid var(--border); }
+  ol.proc li:last-child { border-bottom: none; }
+  ol.proc li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 12px; width: 26px; height: 26px; border-radius: 50%; background: color-mix(in oklab, var(--calc) 12%, transparent); color: var(--calc); font-family: 'DM Mono', monospace; font-size: 0.78rem; display: flex; align-items: center; justify-content: center; }
+  .ex-tabbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ex-tab { font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 6px 13px; border-radius: 7px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; transition: all 0.15s; }
+  .ex-tab.active { background: var(--calc); color: #fff; border-color: var(--calc); }
+  .worked-example { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--calc); border-radius: 0 12px 12px 0; padding: 22px 24px; max-width: 960px; }
+  .ex-title { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem; color: var(--text); margin-bottom: 14px; }
+  .step-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .step-btn { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.04em; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--calc); background: var(--calc); color: #fff; cursor: pointer; transition: all 0.15s; }
+  .step-btn.ghost { background: transparent; color: var(--text2); border-color: var(--border); }
+  .step-btn.ghost:hover { color: var(--text); border-color: var(--text3); }
+  .step-btn:disabled { opacity: 0.4; cursor: default; }
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-top: 1px dashed var(--border); font-size: 0.95rem; line-height: 1.7; color: var(--text); animation: fadeUp 0.25s ease both; }
+  .step.hidden { display: none; }
+  .step:first-child { border-top: none; }
+  .step-n { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--calc); color: #fff; font-family: 'DM Mono', monospace; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+  .step-body { flex: 1; min-width: 0; overflow-x: auto; }
+  .ex-note { margin-top: 16px; padding: 12px 16px; background: color-mix(in oklab, var(--calc) 7%, transparent); border-radius: 8px; font-size: 0.86rem; line-height: 1.6; color: var(--text2); font-style: italic; }
+  .method-section.limits p, .method-section.exam p { padding: 16px 18px; border-radius: 10px; max-width: 960px; }
+  .method-section.limits p { background: color-mix(in oklab, #c2570c 8%, transparent); }
+  .method-section.exam p { background: color-mix(in oklab, var(--cpp) 9%, transparent); }
+  @supports not (background: color-mix(in oklab, red 50%, blue)) {
+    .topic-btn.active { background: rgba(29,78,216,0.1); }
+    ol.proc li::before { background: rgba(29,78,216,0.1); }
+    .ex-note { background: rgba(29,78,216,0.06); }
+    .method-section.limits p { background: rgba(194,87,12,0.07); }
+    .method-section.exam p { background: rgba(21,128,61,0.07); }
+  }
+  @media (max-width: 640px) { .doc-wrap { padding: 0 18px; } .chapter-tabs { padding: 12px 18px; flex-wrap: nowrap; overflow-x: auto; } .method-title { font-size: 1.5rem; } }
+</style>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" async></script>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ calc / computational reference</span>
+  <span class="topbar-date">FINAL · 23 JUN 2026</span>
+</header>
+
+<section class="hero">
+  <h1>Computational Reference <em>· Ch. 12–18</em></h1>
+  <p class="hero-meta">
+    Every method on the Calc A2 final, with a worked example you can step through, the limitations
+    to watch for, and how Prof. Yang tends to ask it. Pick a chapter, then a method.
+    Includes his \(u=xy,\,v=y/x\) Jacobian substitution and the harmonic-series grouping proof.
+  </p>
+</section>
+
+<nav class="chapter-tabs">
+<button class="ch-tab active" data-ch="12" onclick="selectChapter('12')">Ch.12 · Partial Derivatives</button>
+<button class="ch-tab" data-ch="13" onclick="selectChapter('13')">Ch.13 · Chain Rule, Newton, Implicit</button>
+<button class="ch-tab" data-ch="14" onclick="selectChapter('14')">Ch.14 · Multivariable Integration</button>
+<button class="ch-tab" data-ch="15" onclick="selectChapter('15')">Ch.15 · Vector Field Integration</button>
+<button class="ch-tab" data-ch="16" onclick="selectChapter('16')">Ch.16–18 · Series &amp; Fourier</button>
+</nav>
+
+<div class="doc-wrap">
+  <div class="topic-bar" id="topic-bar"></div>
+<section class="topic-panel" data-ch="12" data-topic="partials">
+  <h3 class="method-title">Partial &amp; Directional Derivatives</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To measure how \(f(x,y)\) changes along an axis (partial) or any unit direction (directional). Foundation for gradient, tangent planes, and optimization.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>For \(\partial f/\partial x\): differentiate treating \(y\) as a constant. For \(\partial f/\partial y\): hold \(x\) constant.</li><li>Assemble the gradient \(\nabla f=(f_x,f_y)\).</li><li>For the directional derivative along unit vector \(\mathbf u\): \(D_{\mathbf u}f=\nabla f\cdot\mathbf u\).</li><li>If a direction is given as a non-unit vector \(\mathbf v\), normalise first: \(\mathbf u=\mathbf v/\lVert\mathbf v\rVert\).</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — directional derivative of \(f=x^2y\)</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(f(x,y)=x^2y\). Partials: \(f_x=2xy,\; f_y=x^2\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">At \((1,3)\): \(\nabla f=(2\cdot1\cdot3,\;1^2)=(6,1)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Direction \(\mathbf v=(3,4)\), \(\lVert\mathbf v\rVert=5\), so \(\mathbf u=(3/5,4/5)\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(D_{\mathbf u}f=\nabla f\cdot\mathbf u=6\cdot\tfrac35+1\cdot\tfrac45=\tfrac{18+4}{5}=\tfrac{22}{5}=4.4.\)</div></div></div><div class="ex-note">The maximum directional derivative at a point is \(\lVert\nabla f\rVert\), attained along \(\nabla f\) itself — here \(\sqrt{37}\).</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Partials existing does NOT imply differentiability — the partials must also be continuous. A classic trap: a function whose partials exist at the origin but which isn't even continuous there.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Yang embeds this in a scenario ('temperature/elevation field'). Watch for the non-unit direction trap — forgetting to normalise is the #1 lost-point. State \(\lVert\nabla f\rVert\) when asked for the steepest direction.</p></div>
+</section>
+<section class="topic-panel" data-ch="12" data-topic="mixed">
+  <h3 class="method-title">Mixed Partials &amp; Clairaut</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>When a problem asks whether \(f_{xy}=f_{yx}\), or to compute second-order partials for a Hessian.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Compute \(f_x\), then differentiate it w.r.t. \(y\) to get \(f_{xy}\).</li><li>Compute \(f_y\), then differentiate w.r.t. \(x\) to get \(f_{yx}\).</li><li>Clairaut: if both mixed partials are <em>continuous</em> near the point, they are equal.</li><li>At a suspicious point (e.g. a piecewise origin), compute each mixed partial from the limit definition — they may differ.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — Clairaut counterexample</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(f(x,y)=\dfrac{xy(x^2-y^2)}{x^2+y^2}\) for \((x,y)\neq(0,0)\), \(f(0,0)=0\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Off-origin one finds \(f_x(0,y)=-y\) and \(f_y(x,0)=x\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(f_{xy}(0,0)=\lim_{k\to0}\frac{f_x(0,k)-f_x(0,0)}{k}=\lim\frac{-k}{k}=-1.\)</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(f_{yx}(0,0)=\lim_{h\to0}\frac{f_y(h,0)-f_y(0,0)}{h}=\lim\frac{h}{h}=+1.\)</div></div>
+<div class="step hidden"><span class="step-n">5</span><div class="step-body">\(-1\neq+1\): mixed partials differ because they are not continuous at the origin — Clairaut's hypothesis fails.</div></div></div><div class="ex-note">This exact function is a recurring exam favourite. The point is conceptual: continuity of the mixed partials is the hypothesis that can break.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Equality of mixed partials is only guaranteed under continuity. Blindly assuming \(f_{xy}=f_{yx}\) on a piecewise function loses the whole sub-part.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Asked as 'do we have \(f_{xy}(0,0)=f_{yx}(0,0)\)?' on a piecewise field (the rubber-stress problem on the 2025 midterm). Always compute from the limit definition at the bad point.</p></div>
+</section>
+<section class="topic-panel" data-ch="12" data-topic="lin">
+  <h3 class="method-title">Linear Approximation &amp; Tangent Plane</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To estimate \(f\) near a known point, or to write the tangent plane to a surface \(z=f(x,y)\).</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Compute \(f(\mathbf x_0)\) and \(\nabla f(\mathbf x_0)\).</li><li>Linear approximation: \(f(\mathbf x_0+\mathbf h)\approx f(\mathbf x_0)+\nabla f(\mathbf x_0)\cdot\mathbf h\).</li><li>Tangent plane: \(z=f(\mathbf x_0)+f_x(\mathbf x_0)(x-x_0)+f_y(\mathbf x_0)(y-y_0)\).</li><li>For a level surface \(g(x,y,z)=c\), the normal is \(\nabla g\) and the tangent plane is \(\nabla g\cdot(\mathbf x-\mathbf x_0)=0\).</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — estimate \(f(1.02,1.97)\)</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(f(x,y)=x^2y\), base point \((1,2)\). \(f(1,2)=2\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\nabla f=(2xy,x^2)\Rightarrow\nabla f(1,2)=(4,1)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(\mathbf h=(0.02,-0.03)\): \(\nabla f\cdot\mathbf h=4(0.02)+1(-0.03)=0.08-0.03=0.05.\)</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(f(1.02,1.97)\approx 2+0.05=2.05.\) (Exact: \(1.02^2\cdot1.97=2.04938\dots\) — close.)</div></div></div><div class="ex-note">The approximation error is second-order in \(\lVert\mathbf h\rVert\); good for small steps only.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Only accurate for small \(\mathbf h\). Requires differentiability (continuous partials) at the base point — otherwise the 'tangent plane' is meaningless.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Often part (b) after computing the Jacobian/gradient in (a). State the plane explicitly; don't leave it as a dot product.</p></div>
+</section>
+<section class="topic-panel" data-ch="12" data-topic="critical">
+  <h3 class="method-title">Critical Points &amp; the Hessian</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To classify interior extrema of \(f(x,y)\): local max, local min, or saddle.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Solve \(\nabla f=\mathbf 0\) for all critical points.</li><li>Form the Hessian \(H=\left(\begin{smallmatrix}f_{xx}&f_{xy}\\f_{yx}&f_{yy}\end{smallmatrix}\right)\).</li><li>Compute \(\det H=f_{xx}f_{yy}-f_{xy}^2\) at each critical point.</li><li>If \(\det H>0\) and \(f_{xx}>0\): local min; \(\det H>0,\,f_{xx}<0\): local max; \(\det H<0\): saddle; \(\det H=0\): inconclusive.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — classify \(h=x^3-3xy+y^3\)</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\nabla h=(3x^2-3y,\,-3x+3y^2)=\mathbf 0\Rightarrow y=x^2,\;x=y^2\Rightarrow x^4=x\Rightarrow x=0,1\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Critical points: \((0,0)\) and \((1,1)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(H=\left(\begin{smallmatrix}6x&-3\\-3&6y\end{smallmatrix}\right)\), \(\det H=36xy-9\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">At \((0,0)\): \(\det H=-9<0\Rightarrow\) saddle. At \((1,1)\): \(\det H=27>0,\,h_{xx}=6>0\Rightarrow\) local min.</div></div></div><div class="ex-note">Verified: \(36(1)(1)-9=27>0\). The second-derivative test is decisive here because \(\det H\neq0\).</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>The test fails when \(\det H=0\) — you must then inspect directly. Boundary/constrained extrema need Lagrange or edge analysis, not the Hessian.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>The 'urban heat island' problem: find all \(\nabla=0\) points, classify with the Hessian, then a constrained sub-part on a square boundary. Don't forget endpoints on a constrained edge.</p></div>
+</section>
+<section class="topic-panel" data-ch="13" data-topic="chain">
+  <h3 class="method-title">Multivariable Chain Rule</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>When \(z=f(x,y)\) and \(x,y\) themselves depend on other variables \(s,t\). Compute \(\partial z/\partial s\) etc.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Draw the dependency tree: \(z\to(x,y)\to(s,t)\).</li><li>Sum over every path: \(\dfrac{\partial z}{\partial s}=\dfrac{\partial z}{\partial x}\dfrac{\partial x}{\partial s}+\dfrac{\partial z}{\partial y}\dfrac{\partial y}{\partial s}\).</li><li>Substitute the parametrisations to express the answer in \(s,t\).</li><li>Optionally verify by substituting first, then differentiating directly.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — polar substitution</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(z=x^2y\), \(x=s\cos t,\;y=s\sin t\). \(z_x=2xy,\;z_y=x^2\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(x_s=\cos t,\;y_s=\sin t\). So \(z_s=2xy\cos t+x^2\sin t\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Substitute: \(=2s^2\cos^2t\sin t+s^2\cos^2t\sin t=3s^2\cos^2t\sin t.\)</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Check by direct substitution: \(z=s^3\cos^2t\sin t\Rightarrow z_s=3s^2\cos^2t\sin t.\;\checkmark\)</div></div></div><div class="ex-note">Always cross-check with direct substitution when the parametrisation is simple — it catches path-summation slips.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Forgetting a path (e.g. when a variable appears in multiple slots) is the classic error. The tree makes every path explicit.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Standalone or as a step inside an implicit-function problem. Yang likes parametrisations with trig so the final simplification is non-trivial.</p></div>
+</section>
+<section class="topic-panel" data-ch="13" data-topic="newton">
+  <h3 class="method-title">Newton's Method in \(\mathbb{R}^n\)</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To solve a nonlinear system \(F(\mathbf x)=\mathbf 0\) iteratively from a starting guess.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Write \(F:\mathbb R^n\to\mathbb R^n\) and compute the Jacobian \([DF(\mathbf x)]\).</li><li>Evaluate \(F(\mathbf x_n)\) and \([DF(\mathbf x_n)]\) at the current guess.</li><li>Solve the linear system \([DF(\mathbf x_n)]\,\Delta=F(\mathbf x_n)\) (or invert the Jacobian).</li><li>Update \(\mathbf x_{n+1}=\mathbf x_n-\Delta\). Repeat; check \(\lVert F(\mathbf x_{n+1})\rVert\) shrinks.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — one step on a 2×2 system</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(F(x,y)=\left(\begin{smallmatrix}x^2-2y\\xy-1\end{smallmatrix}\right)\), guess \((2,1)\). \(F(2,1)=(2,1)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\([DF]=\left(\begin{smallmatrix}2x&-2\\y&x\end{smallmatrix}\right)\Rightarrow[DF(2,1)]=\left(\begin{smallmatrix}4&-2\\1&2\end{smallmatrix}\right)\), \(\det=10\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\([DF]^{-1}=\tfrac1{10}\left(\begin{smallmatrix}2&2\\-1&4\end{smallmatrix}\right)\). \([DF]^{-1}F(2,1)=\tfrac1{10}(6,2)=(0.6,0.2)\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(\mathbf x_1=(2,1)-(0.6,0.2)=(1.4,0.8)\). Check \(F(1.4,0.8)=(0.36,0.12)\) — smaller. \(\checkmark\)</div></div></div><div class="ex-note">The true root satisfies \(x^3=2\Rightarrow x=2^{1/3}\approx1.26\); a second step lands near \((1.265,0.791)\), showing quadratic convergence.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Fails if \([DF]\) is singular at a guess (no inverse). Convergence is only local — a poor start can diverge or oscillate.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Compute the Jacobian (a), one Newton step (b/c), then a convergence/second-step part (d). Keep fractions exact until the final decimal.</p></div>
+</section>
+<section class="topic-panel" data-ch="13" data-topic="ift">
+  <h3 class="method-title">Inverse &amp; Implicit Function Theorems</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To decide if a map is locally invertible (IFT), or whether an equation \(g(x,y)=c\) defines \(y\) as a function of \(x\) locally (implicit FT), and to get the derivative.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Inverse FT: \(F\) is locally invertible near \(\mathbf x_0\) iff \(\det[DF(\mathbf x_0)]\neq0\).</li><li>Implicit FT: \(g(x,y)=c\) defines \(y(x)\) locally near a point iff \(\partial g/\partial y\neq0\) there.</li><li>Implicit derivative: \(\dfrac{dy}{dx}=-\dfrac{g_x}{g_y}\) (single constraint), generalising to systems via the Jacobian.</li><li>Where the relevant partial/determinant vanishes, smoothness can fail (vertical tangent, crossing).</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — implicit derivative & failure point</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(g(x,y)=x^2+y^2-1=0\) (unit circle). \(g_x=2x,\;g_y=2y\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Implicit FT applies wherever \(g_y=2y\neq0\), i.e. away from \((\pm1,0)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(\dfrac{dy}{dx}=-\dfrac{g_x}{g_y}=-\dfrac{2x}{2y}=-\dfrac{x}{y}.\)</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">At \((\pm1,0)\), \(g_y=0\): the curve has a vertical tangent — \(y\) is NOT a function of \(x\) there.</div></div></div><div class="ex-note">On the 2025 final, the 'single non-smooth point' problem asks exactly this: where the implicit FT breaks, set the relevant partial/gradient to zero and solve for the constant \(\alpha\).</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>The theorems are local and existential — they guarantee a function exists but rarely give it in closed form. The condition \(\neq0\) is the whole game; check it explicitly.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Implicit functions are explicitly flagged by Yang as a recurring final topic. Expect 'where does the surface fail to be smooth?' → set the determinant/partial to 0.</p></div>
+</section>
+<section class="topic-panel" data-ch="13" data-topic="vector">
+  <h3 class="method-title">Vector Fields: div, curl, classification</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To analyse a vector field \(F\): find fixed points, classify them, compute divergence/curl, test if it is a gradient field.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Fixed points: solve \(F(\mathbf p)=\mathbf 0\).</li><li>Linearise: eigenvalues of \([DF(\mathbf p)]\) give the type — all \(\mathrm{Re}>0\) source, all \(<0\) sink, mixed signs saddle, complex spiral/center.</li><li>Divergence \(\nabla\cdot F=\operatorname{trace}[DF]\); 2D curl \(=D_1F_2-D_2F_1\); 3D curl is the vector \((D_2F_3-D_3F_2,\,D_3F_1-D_1F_3,\,D_1F_2-D_2F_1)\).</li><li>Gradient-field test: \(F=\nabla\phi\Rightarrow\nabla\times F=\mathbf 0\). If curl \(\neq\mathbf 0\), not conservative.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — classify a fixed point</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(F(x,y)=(x-xy,\,-y+xy)\). Fixed points: \((0,0)\) and \((1,1)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\([DF]=\left(\begin{smallmatrix}1-y&-x\\y&-1+x\end{smallmatrix}\right)\). At \((0,0)\): \(\left(\begin{smallmatrix}1&0\\0&-1\end{smallmatrix}\right)\), eigenvalues \(+1,-1\Rightarrow\) saddle.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">At \((1,1)\): \(\left(\begin{smallmatrix}0&-1\\1&0\end{smallmatrix}\right)\), char. eq. \(\lambda^2+1=0\Rightarrow\lambda=\pm i\Rightarrow\) center (closed orbits).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Divergence \(=\operatorname{trace}=(1-y)+(-1+x)=x-y\): outflow where \(x>y\).</div></div></div><div class="ex-note">Purely imaginary eigenvalues mean the linearisation predicts rotation; the nonlinear field may spiral, so a center is the linear verdict.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Linearisation is only valid near the fixed point and is inconclusive for centers (Re \(=0\)) at the nonlinear level. Curl-free guarantees a potential only on a simply-connected domain.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Often the 'wind/flow' scenario: divergence → does the cloud disperse; curl → does it spin; gradient test → is there a potential. Verify \(\nabla\cdot(\nabla\times F)=0\) as a check sub-part.</p></div>
+</section>
+<section class="topic-panel" data-ch="14" data-topic="fubini">
+  <h3 class="method-title">Fubini &amp; Iterated Integrals</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To evaluate a double/triple integral over a region by iterating one variable at a time.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Sketch the region; decide the order \(dx\,dy\) or \(dy\,dx\).</li><li>Find the inner limits as functions of the outer variable; outer limits are constants.</li><li>Integrate the inner variable first (treat the outer as constant), then the outer.</li><li>If the inner integral is intractable, swap the order (Fubini) and redo the limits from the sketch.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — order swap to make it doable</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\displaystyle\int_0^1\!\!\int_x^1 e^{y^2}\,dy\,dx\). Inner \(\int e^{y^2}dy\) has no elementary form — swap.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Region: \(0\le x\le y\le1\). Reorder: \(\displaystyle\int_0^1\!\!\int_0^y e^{y^2}\,dx\,dy\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Inner: \(\int_0^y e^{y^2}dx=y\,e^{y^2}\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Outer: \(\int_0^1 y e^{y^2}dy=\big[\tfrac12 e^{y^2}\big]_0^1=\tfrac12(e-1).\)</div></div></div><div class="ex-note">The swap converts a non-elementary inner integral into a simple \(u\)-substitution. Recognising this is the whole point of the problem.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Fubini requires the integrand be absolutely integrable on the region; for sign-changing improper integrands it can fail. Wrong limits after a swap is the dominant error — always re-derive from the sketch.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>A near-certain integration problem. Yang favours the 'unswappable as written → swap' setup. Draw the region in the margin; partial credit follows the limits.</p></div>
+</section>
+<section class="topic-panel" data-ch="14" data-topic="change">
+  <h3 class="method-title">Change of Variables &amp; Jacobian</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To simplify a region or integrand via a substitution (polar, or a custom \(u,v\)).</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Choose the map \((x,y)=T(u,v)\); compute the Jacobian \(J=\det\dfrac{\partial(x,y)}{\partial(u,v)}\).</li><li>Replace \(dx\,dy=|J|\,du\,dv\).</li><li>Transform the region's boundary into the \((u,v)\) plane.</li><li>For polar: \(x=r\cos\theta,\,y=r\sin\theta,\;dx\,dy=r\,dr\,d\theta\).</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="ex-tabbar"><button class="ex-tab active" onclick="switchEx(this,0)">Example — polar for a disk</button><button class="ex-tab" onclick="switchEx(this,1)">Example — custom \(u=xy,\,v=y/x\)</button></div><div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — polar for a disk</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\displaystyle\iint_{x^2+y^2\le1}e^{-(x^2+y^2)}\,dA\). Use polar.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Integrand \(e^{-r^2}\), \(dA=r\,dr\,d\theta\); region \(0\le r\le1,\,0\le\theta\le2\pi\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(\int_0^{2\pi}\!\!\int_0^1 e^{-r^2}r\,dr\,d\theta=2\pi\big[-\tfrac12 e^{-r^2}\big]_0^1=2\pi\cdot\tfrac12(1-e^{-1}).\)</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(=\pi(1-e^{-1}).\)</div></div></div><div class="ex-note">The \(r\) from the Jacobian is exactly what makes \(e^{-r^2}r\) integrable — forgetting it is the classic polar mistake.</div></div><div class="worked-example" data-ex="1" style="display:none"><div class="ex-title">Example — custom \(u=xy,\,v=y/x\)</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Region bounded by \(xy=1,xy=2,y=x,y=2x\) (first quadrant). Let \(u=xy,\,v=y/x\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Then \(u\in[1,2],\,v\in[1,2]\) — a square. Need \(dA_{xy}=|J|\,du\,dv\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(\dfrac{\partial(u,v)}{\partial(x,y)}=\left(\begin{smallmatrix}y&x\\-y/x^2&1/x\end{smallmatrix}\right)\), \(\det=\tfrac{y}{x}+\tfrac{y}{x}=\tfrac{2y}{x}=2v\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">So \(dA_{xy}=\dfrac{1}{|2v|}\,du\,dv\) — the reciprocal, since we computed \(\partial(u,v)/\partial(x,y)\).</div></div></div><div class="ex-note">This is the 2025 final's \(u=xy,\,v=y/x\) setup. Key subtlety: invert the Jacobian when you compute \(\partial(u,v)/\partial(x,y)\) instead of \(\partial(x,y)/\partial(u,v)\).</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>The map must be a bijection on the region (watch sign of \(J\), take \(|J|\)). Mixing up which Jacobian you computed (forward vs inverse) flips the factor.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Yang's signature \(u=xy,\,v=y/x\) hyperbola-region substitution appeared on the 2025 final part (a). State whether you took \(\partial(x,y)/\partial(u,v)\) or its reciprocal.</p></div>
+</section>
+<section class="topic-panel" data-ch="15" data-topic="line">
+  <h3 class="method-title">Work / Line Integrals</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To compute work \(\int_\gamma F\cdot d\gamma\) of a field along a curve, or test path-independence.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Parametrise the curve \(\gamma(t),\,t\in[a,b]\); compute \(\gamma'(t)\).</li><li>Substitute into \(\int_a^b F(\gamma(t))\cdot\gamma'(t)\,dt\).</li><li>If \(F=\nabla\phi\) (conservative), shortcut: \(\int_\gamma F\cdot d\gamma=\phi(\text{end})-\phi(\text{start})\) — the Gradient Theorem.</li><li>To find \(\phi\): integrate \(F_1\) in \(x\), differentiate w.r.t. \(y\) to fix the constant-of-integration function.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — conservative shortcut</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(F=(2xy,\,x^2)\). Curl check: \(D_xF_2-D_yF_1=2x-2x=0\Rightarrow\) conservative.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Find \(\phi\): \(\int2xy\,dx=x^2y+g(y)\); \(\partial_y(x^2y+g)=x^2+g'(y)=x^2\Rightarrow g'=0\). So \(\phi=x^2y\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Along any path from \((0,0)\) to \((1,2)\): \(\int_\gamma F\cdot d\gamma=\phi(1,2)-\phi(0,0)=2-0=2.\)</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">No parametrisation needed — path-independence does the work.</div></div></div><div class="ex-note">Always run the curl test first; if it's zero on a simply-connected domain, the potential shortcut saves enormous effort.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>The potential shortcut requires a simply-connected domain; a field can be curl-free but path-dependent around a hole (e.g. the vortex field). Otherwise you must parametrise.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Yang gives a 'messy \(F\), messy \(\gamma\)' and the intended move is to notice conservativeness (or to use Stokes). The last part of the 2025 final was an exact-differential line integral — recognise \(\phi\).</p></div>
+</section>
+<section class="topic-panel" data-ch="15" data-topic="flux">
+  <h3 class="method-title">Flux / Surface Integrals</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To compute flux \(\iint_S F\cdot\mathbf n\,dS\) of a field through a surface.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Parametrise the surface \(\mathbf r(u,v)\) or write it as \(z=g(x,y)\).</li><li>Normal: \(\mathbf n\,dS=\mathbf r_u\times\mathbf r_v\,du\,dv\) (or \((-g_x,-g_y,1)\,dA\) for a graph).</li><li>Substitute \(F\) and dot with the normal; check the orientation matches what's asked.</li><li>Integrate over the parameter region.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — flux through a graph patch</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(F=(0,0,z)\), \(S:z=x^2+y^2\) over the unit disk, upward normal.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\mathbf n\,dS=(-2x,-2y,1)\,dA\). \(F\cdot\mathbf n\,dS=z\cdot1\,dA=(x^2+y^2)\,dA\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Polar: \(\int_0^{2\pi}\!\!\int_0^1 r^2\cdot r\,dr\,d\theta=2\pi\cdot\tfrac14=\tfrac{\pi}{2}.\)</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Flux \(=\pi/2\).</div></div></div><div class="ex-note">For a graph \(z=g\), the upward normal vector is \((-g_x,-g_y,1)\); the \(+1\) third component encodes the orientation.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Orientation sign is the dominant error — a downward normal flips the answer. Closed surfaces are usually easier via the Divergence Theorem than direct flux.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Flux usually appears as a step toward the Divergence or Stokes theorem rather than alone. State your orientation choice explicitly.</p></div>
+</section>
+<section class="topic-panel" data-ch="15" data-topic="divthm">
+  <h3 class="method-title">Divergence Theorem (Green's / Gauss's)</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To convert flux through a CLOSED surface into a volume integral of \(\nabla\cdot F\) (3D Gauss) or a region integral (2D Green's).</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Confirm the surface is closed and bounds a solid region \(V\) (outward orientation).</li><li>Compute \(\nabla\cdot F\).</li><li>Replace \(\displaystyle\oiint_{\partial V}F\cdot\mathbf n\,dS=\iiint_V \nabla\cdot F\,dV\).</li><li>Evaluate the (usually simpler) volume integral, often in spherical/cylindrical coordinates.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — flux out of the unit ball</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(F=(x,y,z)\), \(S=\) unit sphere, outward. Direct flux is doable but Gauss is faster.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\nabla\cdot F=1+1+1=3\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(\iiint_V 3\,dV=3\cdot\operatorname{Vol}(\text{ball})=3\cdot\tfrac43\pi(1)^3=4\pi.\)</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Flux \(=4\pi\).</div></div></div><div class="ex-note">\(\nabla\cdot(x,y,z)=3\) and the ball volume is \(\tfrac43\pi\) — the product \(4\pi\) is a standard sanity value.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Only for CLOSED surfaces; an open cap must be closed off (add a disk) and the added piece subtracted. \(F\) must be \(C^1\) inside — a singularity (e.g. at the origin for an inverse-square field) voids the theorem.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Green's 2D version (\(\oint F\cdot d\gamma=\iint(\partial_xF_2-\partial_yF_1)\,dA\)) is common on the planar problem; Gauss on the 3D one. Watch for singularities.</p></div>
+</section>
+<section class="topic-panel" data-ch="15" data-topic="stokes">
+  <h3 class="method-title">Curl Theorem (Stokes)</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To relate the circulation of \(F\) around a closed curve to the flux of \(\nabla\times F\) through any surface it bounds.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Identify the boundary curve \(\partial S\) and a surface \(S\) it bounds; orient by the right-hand rule.</li><li>Compute \(\nabla\times F\).</li><li>\(\displaystyle\oint_{\partial S}F\cdot d\gamma=\iint_S(\nabla\times F)\cdot\mathbf n\,dS\).</li><li>Choose the EASIEST surface with that boundary (a flat disk often beats the original).</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — circulation via an easy cap</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(F=(-y,x,0)\), boundary = unit circle in the \(xy\)-plane, CCW.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\nabla\times F=(0,0,\,\partial_x x-\partial_y(-y))=(0,0,2)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Use the flat disk \(S\), normal \(\mathbf n=(0,0,1)\): \((\nabla\times F)\cdot\mathbf n=2\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(\iint_S 2\,dS=2\cdot\text{area}=2\pi.\) So the circulation \(=2\pi\).</div></div></div><div class="ex-note">The 2025 final's Stokes problem used a sphere∩plane circle as boundary and swapped to the flat disk — the 'rubber band slides to any cap' idea.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>All surfaces with the same boundary give the same answer ONLY if \(\nabla\times F\) is defined throughout (no singularities between them). Orientation of boundary vs normal must follow the right-hand rule or the sign flips.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Yang's hardest vector-calc problem: messy \(F\) and a hard-to-parametrise \(\gamma\) → the move is Stokes onto a flat disk. Compute curl carefully; that is where points are won.</p></div>
+</section>
+<section class="topic-panel" data-ch="16" data-topic="convtests">
+  <h3 class="method-title">Convergence Tests (Ch.16)</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To decide whether a number series \(\sum a_n\) converges, and whether absolutely or conditionally.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Quick divergence check: if \(a_n\not\to0\), the series diverges. Stop.</li><li>Ratio test: \(L=\lim|a_{n+1}/a_n|\); \(L<1\) converges (absolutely), \(L>1\) diverges, \(L=1\) inconclusive.</li><li>Root test for \(n\)-th powers; comparison / limit-comparison against a \(p\)-series \(\sum n^{-p}\) (converges iff \(p>1\)).</li><li>Alternating series: if terms decrease to 0, it converges; check absolute convergence separately to classify conditional.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="ex-tabbar"><button class="ex-tab active" onclick="switchEx(this,0)">Example — ratio test</button><button class="ex-tab" onclick="switchEx(this,1)">Prof. Yang's harmonic-series grouping proof</button></div><div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — ratio test</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\sum_{n\ge1}\dfrac{2^n}{n!}\). \(\dfrac{a_{n+1}}{a_n}=\dfrac{2^{n+1}/(n+1)!}{2^n/n!}=\dfrac{2}{n+1}\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(L=\lim_{n\to\infty}\dfrac{2}{n+1}=0<1\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Therefore the series converges absolutely.</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">(In fact \(\sum 2^n/n!=e^2-1\), but the test only needed \(L<1\).)</div></div></div><div class="ex-note">Factorials → ratio test almost always. The sum value is a bonus; convergence is the deliverable.</div></div><div class="worked-example" data-ex="1" style="display:none"><div class="ex-title">Prof. Yang's harmonic-series grouping proof</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Claim: \(\sum 1/n=1+\tfrac12+\tfrac13+\cdots\) diverges.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Group: \((\tfrac13+\tfrac14)>2\cdot\tfrac14=\tfrac12\); \((\tfrac15+\cdots+\tfrac18)>4\cdot\tfrac18=\tfrac12\); each block \(>\tfrac12\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Replace each group's terms by the smallest term in it — every group exceeds \(\tfrac12\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Infinitely many half-units \(\Rightarrow\) partial sums \(\to\infty\). Diverges.</div></div></div><div class="ex-note">This is the exact grouping argument Prof. Yang presented. The trick — bound each group below by its smallest term — is the quotable technique.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Ratio/root give NO information when \(L=1\) (e.g. all \(p\)-series). The \(n\)-th-term test can only prove divergence, never convergence.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>One series problem on the final. Expect a ratio-test computation plus a conceptual part. Yang's harmonic grouping proof is fair game as 'show this diverges'.</p></div>
+</section>
+<section class="topic-panel" data-ch="16" data-topic="power">
+  <h3 class="method-title">Power Series &amp; Taylor (Ch.17)</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To find the radius/interval of convergence of \(\sum c_n(x-a)^n\), or expand a function as a Taylor series.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Radius: \(R=1/\lim|c_{n+1}/c_n|\) (or root test). Series converges for \(|x-a|<R\).</li><li>Check the two endpoints \(x=a\pm R\) separately with a number-series test.</li><li>Taylor: \(f(x)=\sum \dfrac{f^{(n)}(a)}{n!}(x-a)^n\). Use known expansions (\(e^x,\sin,\cos,\tfrac1{1-x}\)) and substitute.</li><li>Differentiate/integrate term-by-term within \(R\) to derive new series.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — interval of convergence</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\sum_{n\ge1}\dfrac{(x-2)^n}{n\,3^n}\). Ratio: \(\left|\dfrac{(x-2)^{n+1}}{(n+1)3^{n+1}}\cdot\dfrac{n3^n}{(x-2)^n}\right|=\dfrac{n}{n+1}\cdot\dfrac{|x-2|}{3}\to\dfrac{|x-2|}{3}\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Converges when \(|x-2|/3<1\Rightarrow|x-2|<3\Rightarrow R=3\), interval \((-1,5)\) before endpoints.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">At \(x=5\): \(\sum 1/n\) — diverges. At \(x=-1\): \(\sum(-1)^n/n\) — converges (alternating).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Interval of convergence: \([-1,5)\).</div></div></div><div class="ex-note">Endpoints must each be tested with a number-series test — they often disagree, giving a half-open interval.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Term-by-term differentiation/integration is valid only strictly inside \(R\). Forgetting to test endpoints loses the interval's boundary behaviour.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>A Taylor/power-series part inside the single series problem. Yang stresses that Taylor is 'a series of functions' — connect it to pointwise convergence conceptually.</p></div>
+</section>
+<section class="topic-panel" data-ch="16" data-topic="pointwise">
+  <h3 class="method-title">Pointwise Convergence &amp; the Escape Examples (Ch.17)</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To explain why \(\lim\) and \(\int\) (or \(\tfrac{d}{dx}\)) cannot always be swapped — Yang's most-emphasised conceptual point.</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>Pointwise: \(F_n\to F\) if for every fixed \(x\), \(\lim_n F_n(x)=F(x)\).</li><li>Warn: pointwise is 'nearsighted' — it checks one \(x\) at a time and misses global behaviour.</li><li>It does NOT guarantee \(\lim\int F_n=\int\lim F_n\) nor \(\lim F_n'=(\lim F_n)'\).</li><li>To show a swap fails, exhibit an escape example where the two sides give different numbers.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="ex-tabbar"><button class="ex-tab active" onclick="switchEx(this,0)">Yang's 'horizontal escape'</button><button class="ex-tab" onclick="switchEx(this,1)">Yang's 'vertical escape'</button></div><div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Yang's 'horizontal escape'</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(F_n(x)=\) a fixed bump (area 1) shifted right by \(n\) — e.g. a normal curve centred at \(x=n\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">For every fixed \(x\): as \(n\to\infty\) the bump moves away, so \(F_n(x)\to0\). Thus \(F\equiv0\) pointwise.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(\int\lim F_n=\int 0=0\), but \(\lim\int F_n=\lim 1=1\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(0\neq1\): limit and integral cannot be swapped.</div></div></div><div class="ex-note">The mass 'escapes to infinity' horizontally — pointwise sees 0 everywhere, the integral still sees the area 1.</div></div><div class="worked-example" data-ex="1" style="display:none"><div class="ex-title">Yang's 'vertical escape'</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(F_n=\) a triangle of area 1, stretched vertically by \(2^n\) and squeezed horizontally by \(2^n\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">For every fixed \(x\neq0\): eventually the spike avoids \(x\), so \(F_n(x)\to0\). Pointwise limit \(\equiv0\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Yet each \(F_n\) has area 1, so \(\lim\int F_n=1\neq0=\int\lim F_n\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Same failure mode, different geometry — the mass escapes upward.</div></div></div><div class="ex-note">Prof. Yang said these two examples are 'more important than the theorems' — they build the intuition for why uniform convergence is needed.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>Pointwise convergence is genuinely too weak for analysis swaps; the fix (uniform convergence / dominated convergence) is the next concept. Citing the theorem without an escape example misses Yang's intended answer.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Highly likely conceptual sub-part: 'give an example where \(\lim\int\neq\int\lim\)'. Reproduce one escape example with the two numbers (0 vs 1) — that is the full-credit answer.</p></div>
+</section>
+<section class="topic-panel" data-ch="16" data-topic="fourier">
+  <h3 class="method-title">Fourier Series Setup (Ch.18)</h3>
+  <div class="method-section when"><div class="method-label">When to use it</div><p>To expand a periodic function \(f\) (period \(2\pi\)) into \(\tfrac{a_0}{2}+\sum(a_n\cos nx+b_n\sin nx)\).</p></div>
+  <div class="method-section"><div class="method-label">Procedure</div><ol class="proc"><li>\(a_0=\dfrac1\pi\displaystyle\int_{-\pi}^{\pi}f(x)\,dx\).</li><li>\(a_n=\dfrac1\pi\displaystyle\int_{-\pi}^{\pi}f(x)\cos nx\,dx\).</li><li>\(b_n=\dfrac1\pi\displaystyle\int_{-\pi}^{\pi}f(x)\sin nx\,dx\).</li><li>Use symmetry: even \(f\Rightarrow b_n=0\); odd \(f\Rightarrow a_n=0\) — halve the work.</li></ol></div>
+  <div class="method-section"><div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — square wave (odd)</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(f(x)=-1\) on \((-\pi,0)\), \(+1\) on \((0,\pi)\). Odd \(\Rightarrow a_n=0,\,a_0=0\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(b_n=\dfrac1\pi\int_{-\pi}^{\pi}f\sin nx\,dx=\dfrac2\pi\int_0^\pi\sin nx\,dx\) (odd·odd = even).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(=\dfrac2\pi\Big[-\dfrac{\cos nx}{n}\Big]_0^\pi=\dfrac{2}{n\pi}\big(1-\cos n\pi\big)=\dfrac{2}{n\pi}(1-(-1)^n).\)</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">So \(b_n=\dfrac{4}{n\pi}\) for odd \(n\), \(0\) for even \(n\): \(f(x)=\dfrac4\pi\sum_{k\ge0}\dfrac{\sin((2k+1)x)}{2k+1}.\)</div></div></div><div class="ex-note">Verified: \(1-(-1)^n=2\) for odd \(n\), \(0\) for even — giving the classic odd-harmonics-only square-wave series.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Limitations &amp; pitfalls</div><p>The integrals assume \(f\) is integrable on the period; at jump discontinuities the series converges to the midpoint of the jump (Gibbs phenomenon near jumps). Using the wrong period scales every coefficient.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Part of the single series problem if Fourier appears. Exploit even/odd symmetry FIRST — it is the intended shortcut and saves an entire integral.</p></div>
+</section>
+</div>
+
+<footer class="footer-note">
+  RAFI'S STUDY HUB · CALCULUS A2 · COMPUTATIONAL REFERENCE · CH. 12–18
+</footer>
+
+<script>
+  const TOPICS = {"12": [{"id": "partials", "name": "Partial &amp; Directional Derivatives"}, {"id": "mixed", "name": "Mixed Partials &amp; Clairaut"}, {"id": "lin", "name": "Linear Approximation &amp; Tangent Plane"}, {"id": "critical", "name": "Critical Points &amp; the Hessian"}], "13": [{"id": "chain", "name": "Multivariable Chain Rule"}, {"id": "newton", "name": "Newton's Method in \\(\\mathbb{R}^n\\)"}, {"id": "ift", "name": "Inverse &amp; Implicit Function Theorems"}, {"id": "vector", "name": "Vector Fields: div, curl, classification"}], "14": [{"id": "fubini", "name": "Fubini &amp; Iterated Integrals"}, {"id": "change", "name": "Change of Variables &amp; Jacobian"}], "15": [{"id": "line", "name": "Work / Line Integrals"}, {"id": "flux", "name": "Flux / Surface Integrals"}, {"id": "divthm", "name": "Divergence Theorem (Green's / Gauss's)"}, {"id": "stokes", "name": "Curl Theorem (Stokes)"}], "16": [{"id": "convtests", "name": "Convergence Tests (Ch.16)"}, {"id": "power", "name": "Power Series &amp; Taylor (Ch.17)"}, {"id": "pointwise", "name": "Pointwise Convergence &amp; the Escape Examples (Ch.17)"}, {"id": "fourier", "name": "Fourier Series Setup (Ch.18)"}]};
+  function selectChapter(ch) {
+    document.querySelectorAll('.ch-tab').forEach(t => t.classList.toggle('active', t.dataset.ch === ch));
+    const bar = document.getElementById('topic-bar'); bar.innerHTML = '';
+    TOPICS[ch].forEach((t, i) => {
+      const b = document.createElement('button');
+      b.className = 'topic-btn' + (i === 0 ? ' active' : '');
+      b.innerHTML = t.name;
+      b.onclick = () => selectTopic(ch, t.id, b);
+      bar.appendChild(b);
+    });
+    selectTopic(ch, TOPICS[ch][0].id, bar.firstChild);
+  }
+  function selectTopic(ch, topic, btn) {
+    document.querySelectorAll('.topic-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.querySelector(`.topic-panel[data-ch="${ch}"][data-topic="${topic}"]`);
+    if (panel) panel.classList.add('active');
+    if (btn) { document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+  }
+  function revealStep(btn) {
+    const ex = btn.closest('.worked-example');
+    const hidden = ex.querySelectorAll('.step.hidden');
+    if (hidden.length) hidden[0].classList.remove('hidden');
+    if (ex.querySelectorAll('.step.hidden').length === 0) { btn.textContent = '✓ All steps shown'; btn.disabled = true; }
+  }
+  function revealAll(btn) {
+    const ex = btn.closest('.worked-example');
+    ex.querySelectorAll('.step.hidden').forEach(s => s.classList.remove('hidden'));
+    const nb = ex.querySelector('.step-btn'); nb.textContent = '✓ All steps shown'; nb.disabled = true;
+  }
+  function resetSteps(btn) {
+    const ex = btn.closest('.worked-example');
+    ex.querySelectorAll('.step').forEach((s, i) => { if (i > 0) s.classList.add('hidden'); });
+    const nb = ex.querySelector('.step-btn'); nb.textContent = '▸ Show next step'; nb.disabled = false;
+  }
+  function switchEx(btn, ei) {
+    const panel = btn.closest('.topic-panel');
+    panel.querySelectorAll('.worked-example').forEach(e => e.style.display = 'none');
+    panel.querySelector(`.worked-example[data-ex="${ei}"]`).style.display = 'block';
+    panel.querySelectorAll('.ex-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  function primeFirstSteps() {
+    document.querySelectorAll('.worked-example .steps').forEach(s => { const f = s.querySelector('.step.hidden'); if (f) f.classList.remove('hidden'); });
+  }
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 || 0;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+  primeFirstSteps();
+  selectChapter('12');
+</script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

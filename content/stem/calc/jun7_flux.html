@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Flux &amp; Surface Integrals · 7 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ calc-a2 / flux &amp; surface integrals</span>
+    <span class="topbar-date">SUN · 7 JUN 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Flux &amp; <em>Surface Integrals</em></h1>
+    <p class="hero-meta">P5 · Ch. 15.3. Compute flux of a field through a surface. Get the normal right, watch orientation, and reach for the Divergence Theorem on closed surfaces.</p>
+    <div class="exam-pills">
+      <span class="pill pill-calc">∫∫ Calc A2</span>
+      <span class="pill pill-calc">Ch. 15.3</span>
+      <span class="pill pill-calc">Final · 23 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-calc"></div>
+        <div>
+          <div class="subject-label">Daily Practice · 50 min · Ch. 15.3</div>
+          <div class="subject-title" style="color:var(--calc)">Flux &amp; Surface Integrals</div>
+        </div>
+        <div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>Quick reference.</strong> Flux \(=\displaystyle\iint_S \mathbf F\cdot\mathbf n\,dS\). For a graph \(z=g(x,y)\), the upward normal element is \(\mathbf n\,dS=(-g_x,-g_y,1)\,dA\). For a parametrised surface, \(\mathbf n\,dS=\mathbf r_u\times\mathbf r_v\,du\,dv\). On a <strong>closed</strong> surface, the Divergence Theorem is usually faster: \(\oiint_{\partial V}\mathbf F\cdot\mathbf n\,dS=\iiint_V\nabla\cdot\mathbf F\,dV\). Orientation sign is the #1 error.
+      </div>
+
+      <!-- ══ Problem 1 ══ -->
+      <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">Flux through a closed cylinder</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Let \(\mathbf F=(x,\ y,\ 2z)\) and let \(S\) be the closed cylinder \(x^2+y^2\le1,\ 0\le z\le1\) (with both caps), outward normal.<div class="conn-chain">chains: divergence · Divergence Theorem · cap flux · deduce the rest</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Compute \(\nabla\cdot\mathbf F\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(1+1+2=4\). <div class="key-result">\(\nabla\cdot\mathbf F=4\).</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Total outward flux via the Divergence Theorem.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\iiint_V 4\,dV=4\cdot(\pi\cdot1)=4\pi\). <div class="key-result">\(4\pi\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Flux through the top cap \(z=1\) (\(\mathbf n=(0,0,1)\)).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\mathbf F\cdot\mathbf n=2z=2\); \(\iint 2\,dA=2\pi\). <div class="key-result">\(2\pi\).</div></div></div></div></div></li><li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">The bottom cap \(z=0\) gives \(0\) flux. Deduce the side flux.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>Side \(=\) total \(-\) top \(-\) bottom \(=4\pi-2\pi-0=2\pi\). <div class="key-result">Side flux \(=2\pi\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">Flux through a graph</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">\(\mathbf F=(0,0,z)\) through \(S:z=x^2+y^2\) over the unit disk, upward normal.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \(\mathbf n\,dS=(-2x,-2y,1)\,dA\). \(\mathbf F\cdot\mathbf n\,dS=z\,dA=(x^2+y^2)\,dA\). Polar:
+              \(\int_0^{2\pi}\!\!\int_0^1 r^2\cdot r\,dr\,d\theta=2\pi\cdot\tfrac14=\tfrac\pi2\).
+              <div class="key-result">Flux \(=\dfrac\pi2\).</div>
+              <div class="ans-note">For a graph, the \(+1\) in \((-g_x,-g_y,1)\) is the upward orientation. A downward normal would flip the sign.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">Divergence Theorem shortcut</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Flux of \(\mathbf F=(x,y,z)\) outward through the unit sphere. Do it the fast way.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \(\nabla\cdot\mathbf F=1+1+1=3\). By the Divergence Theorem, flux \(=\iiint_V 3\,dV=3\cdot\text{Vol(ball)}=3\cdot\tfrac43\pi=4\pi\).
+              <div class="key-result">Flux \(=4\pi\).</div>
+              <div class="ans-note">A closed surface + constant divergence makes the volume integral trivial — far easier than parametrising the sphere directly.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 3 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-topic">Flat surface flux</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Flux of \(\mathbf F=(2,3,5)\) (constant) through the disk \(x^2+y^2\le4\) in the plane \(z=0\), normal \(\mathbf n=(0,0,1)\).</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \(\mathbf F\cdot\mathbf n=5\). Flux \(=\iint_S 5\,dS=5\cdot\text{area}=5\cdot\pi(2)^2=20\pi\).
+              <div class="key-result">Flux \(=20\pi\).</div>
+              <div class="ans-note">Only the component of \(\mathbf F\) along the normal contributes — the \(2\) and \(3\) (tangential) parts carry zero flux through a horizontal disk.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 4 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 4</span>
+          <span class="problem-topic">Open cap — close it off</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Conceptual: you want the flux of \(\mathbf F\) through an <em>open</em> paraboloid cap. Outline how to use the Divergence Theorem anyway, and what you must subtract.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              Close the surface by adding the flat disk lid \(D\). Then \(S\cup D\) is closed, so \(\oiint_{S\cup D}=\iiint_V\nabla\cdot\mathbf F\,dV\). Solve for the piece you want: \(\iint_S=\iiint_V\nabla\cdot\mathbf F\,dV-\iint_D\mathbf F\cdot\mathbf n\,dS\).
+              <div class="key-result">Add a lid, apply Gauss to the closed surface, then subtract the lid's flux.</div>
+              <div class="ans-note">The Divergence Theorem needs a <em>closed</em> surface bounding a solid — the "add a lid and subtract it" trick is how you reach an open surface.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      Calc A2 · Flux &amp; Surface Integrals (Ch. 15.3) · Sunday 7 June 2026 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ · OJ Set 2 · Arrays & Polymorphism</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    pre.code { background:#1a1a2e; color:#e2e8f0; padding:18px 20px; border-radius:10px; overflow-x:auto; font-family:'DM Mono',monospace; font-size:0.8rem; line-height:1.65; margin-top:12px; }
+    pre.code .cm { color:#7d8db5; font-style:italic; }
+    pre.code .kw { color:#c792ea; }
+    pre.code .st { color:#c3e88d; }
+    pre.code .fn { color:#82aaff; }
+    .io-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+    .io-box { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+    .io-box .io-label { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text3); margin-bottom:6px; }
+    .io-box pre { font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--text); white-space:pre-wrap; }
+    @media(max-width:640px){ .io-grid{ grid-template-columns:1fr; } }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-cpp">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ c++ / oj set 2</span>
+    <span class="topbar-date">TUE · 2 JUN 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>OJ Set 2 <em>· Arrays &amp; Polymorphism</em></h1>
+    <p class="hero-meta">Precomputation, sorting, and the big one — a virtual-function RPG battle simulator. This set is where inheritance, abstract classes, and dynamic dispatch all show up at once.</p>
+    <div class="exam-pills">
+      <span class="pill pill-cpp">C++</span>
+      <span class="pill pill-cpp">Classes &amp; Virtual</span>
+      <span class="pill pill-cpp">Final · 10 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-cpp"></div>
+        <div>
+          <div class="subject-label">Online Judge · Set 2 · 3 problems</div>
+          <div class="subject-title" style="color:var(--cpp)">Precompute, Sort &amp; Dispatch</div>
+        </div>
+        <div class="subject-exam-date"><strong>C++ Final</strong>10 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>Focus.</strong> Problem 2 (the battle game) is the centrepiece — it's a full OOP exercise: an abstract <code>Unit</code> base, five derived classes each overriding <code>attack()</code>, and one overriding <code>takeDamage()</code>. If you can rebuild this from memory, you understand virtual functions for the final.
+      </div>
+
+      <!-- ══ Problem 1 — Fibonacci ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">Fibonacci Queries</span>
+          <span class="problem-pts">Precompute</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">
+            With \(f_0=f_1=1\) and \(f_i=f_{i-1}+f_{i-2}\), answer \(T\) queries each asking for \(f_n\) (with \(n\le80\)).
+          </div>
+          <div class="io-grid">
+            <div class="io-box"><div class="io-label">Input</div><pre>3
+0
+10
+80</pre></div>
+            <div class="io-box"><div class="io-label">Output</div><pre>1
+89
+23416728348467685</pre></div>
+          </div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Approach &amp; Solution</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Approach</span>
+                \(f_{80}\) overflows 32-bit <code>int</code>, so use <code>long long</code>. Precompute the whole table <em>once</em> up to 80, then each query is an \(O(1)\) lookup.
+                <pre class="code"><span class="kw">long long</span> f[81];
+f[0] = f[1] = 1;
+<span class="kw">for</span> (<span class="kw">int</span> i = 2; i &lt;= 80; i++) f[i] = f[i-1] + f[i-2];
+
+<span class="kw">int</span> T; cin &gt;&gt; T;
+<span class="kw">while</span> (T--) { <span class="kw">int</span> n; cin &gt;&gt; n; cout &lt;&lt; f[n] &lt;&lt; <span class="st">"\n"</span>; }</pre>
+                <div class="ans-note">Precomputing beats recomputing per query: \(T\) queries cost \(O(T)\), not \(O(T\cdot n)\). The <code>long long</code> is the trap most people miss.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 — Battle Game ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">RPG Battle Simulator</span>
+          <span class="problem-pts">Polymorphism</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">
+            Build a battle system. Units share a base with <code>name, hp, maxHp, atk</code>. Commands:
+            <code>CREATE type name hp atk</code>, <code>ATTACK a b</code>, <code>STATUS name</code> (print hp), <code>ALIVE name</code> (print YES/NO).
+            <br><br>Class rules:
+            <strong>Warrior</strong> — deals <code>atk</code>.
+            <strong>Archer</strong> — deals <code>atk+10</code> if target hp &gt; 50, else <code>atk</code>.
+            <strong>Mage</strong> — deals <code>atk+15</code> but takes 5 recoil.
+            <strong>Tank</strong> — deals <code>atk</code>, but only takes 70% of incoming damage.
+            <strong>Healer</strong> — "attack" instead heals the target by <code>atk</code> (capped at maxHp).
+          </div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Approach &amp; Solution</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Design</span>
+                An <strong>abstract base</strong> <code>Unit</code> with a pure virtual <code>attack()</code> and a virtual <code>takeDamage()</code>. Each class overrides <code>attack()</code> for its rule; only <strong>Tank</strong> overrides <code>takeDamage()</code> to apply the 70% reduction before delegating to <code>Unit::takeDamage</code>.
+                <pre class="code"><span class="kw">class</span> <span class="fn">Unit</span> {
+<span class="kw">protected</span>:
+    string name; <span class="kw">int</span> hp, maxHp, atk;
+<span class="kw">public</span>:
+    <span class="fn">Unit</span>(string n, <span class="kw">int</span> hp, <span class="kw">int</span> atk)
+        : name(n), hp(hp), maxHp(hp), atk(atk) {}
+    <span class="kw">virtual</span> ~<span class="fn">Unit</span>() = <span class="kw">default</span>;
+    <span class="kw">bool</span> <span class="fn">isAlive</span>() <span class="kw">const</span> { <span class="kw">return</span> hp &gt; 0; }
+    <span class="kw">virtual</span> <span class="kw">void</span> <span class="fn">attack</span>(Unit&amp; t) = 0;        <span class="cm">// pure virtual</span>
+    <span class="kw">virtual</span> <span class="kw">void</span> <span class="fn">takeDamage</span>(<span class="kw">int</span> d) {
+        <span class="kw">if</span> (!isAlive()) <span class="kw">return</span>;
+        hp -= d; <span class="kw">if</span> (hp &lt; 0) hp = 0;
+    }
+    <span class="kw">void</span> <span class="fn">heal</span>(<span class="kw">int</span> v) { <span class="kw">if</span> (isAlive()) hp = min(maxHp, hp + v); }
+};</pre>
+                <span class="ans-part-label" style="margin-top:14px;">The five overrides</span>
+                <pre class="code"><span class="kw">void</span> Archer::<span class="fn">attack</span>(Unit&amp; t) {
+    <span class="kw">if</span> (t.getHp() &gt; 50) t.takeDamage(atk + 10);
+    <span class="kw">else</span> t.takeDamage(atk);
+}
+<span class="kw">void</span> Mage::<span class="fn">attack</span>(Unit&amp; t) { t.takeDamage(atk + 15); takeDamage(5); }
+<span class="kw">void</span> Healer::<span class="fn">attack</span>(Unit&amp; t) { t.heal(atk); }
+<span class="cm">// Tank overrides takeDamage, not the rule for attack</span>
+<span class="kw">void</span> Tank::<span class="fn">takeDamage</span>(<span class="kw">int</span> d) { Unit::takeDamage((d * 7) / 10); }</pre>
+                <div class="ans-note">Store units in a <code>unordered_map&lt;string, unique_ptr&lt;Unit&gt;&gt;</code> keyed by name. The dispatcher just calls <code>attacker-&gt;attack(*target)</code> — the right override fires automatically via the vtable. Always guard "is the attacker/target alive?" before acting.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 3 — kth ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-topic">k-th Smallest Element</span>
+          <span class="problem-pts">Sort</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">
+            Read \(n\) and \(k\), then \(n\) integers. Print the \(k\)-th smallest value (1-indexed).
+          </div>
+          <div class="io-grid">
+            <div class="io-box"><div class="io-label">Input</div><pre>5 2
+9 3 7 1 5</pre></div>
+            <div class="io-box"><div class="io-label">Output</div><pre>3</pre></div>
+          </div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Approach &amp; Solution</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Approach</span>
+                Sort ascending, then the \(k\)-th smallest is <code>arr[k-1]</code>. Simple and clean with <code>std::sort</code>.
+                <pre class="code">vector&lt;<span class="kw">int</span>&gt; arr(n);
+<span class="kw">for</span> (<span class="kw">int</span>&amp; x : arr) cin &gt;&gt; x;
+sort(arr.begin(), arr.end());
+cout &lt;&lt; arr[k - 1];</pre>
+                <div class="ans-note">The <code>k-1</code> shift converts 1-indexed "k-th" to 0-indexed array access. For huge \(n\), <code>nth_element</code> gives \(O(n)\) average, but sorting is fine here.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      C++ · OJ Set 2 (3 problems) · Tuesday 2 June 2026 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Solution' : 'Show Approach & Solution';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

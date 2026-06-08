@@ -1,0 +1,18 @@
+# ── Source material (kept local, not pushed to GitHub) ──────────────
+# These folders hold course slides + textbooks (large + copyrighted).
+# The live site doesn't need them. Share individual slides via Google
+# Drive links instead (see the DRIVE config in humanities/management/notes.html).
+C++_Material/
+Calculus_Material/
+Linear_Algebra_Material/
+General_Management_Material/
+
+# ── OS / editor cruft ───────────────────────────────────────────────
+.DS_Store
+**/.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+
+# ── Local preview helper ────────────────────────────────────────────
+.claude/

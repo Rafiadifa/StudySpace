@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Full Mock Exam (3 hr) · 20 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    .exam-rules { background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--calc); border-radius:0 12px 12px 0; padding:18px 22px; margin-bottom:28px; font-size:0.9rem; line-height:1.6; color:var(--text2); }
+    .exam-rules strong { color:var(--text); }
+    .pchain { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--calc); margin-top:6px; }
+    .part-pts { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--text3); }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ calc-a2 / full mock exam</span><span class="topbar-date">SAT · 20 JUN 2026</span></div>
+  <div class="hero">
+    <h1>Full Mock <em>Exam · 3 Hours</em></h1>
+    <p class="hero-meta">P1 · Final simulation at past-paper difficulty. Six connected multi-part problems (Ch. 12–18), each chaining theory into computation — exactly Prof. Yang's style. Open book, no calculator. Countdown turns amber at 15 min left.</p>
+    <div class="exam-pills"><span class="pill pill-calc">∫ Calc A2</span><span class="pill pill-calc">180 min</span><span class="pill pill-calc">6 problems · 53 pts</span><span class="pill pill-calc">Final · 23 June 2026</span></div>
+  </div>
+  <div class="main"><div class="subject-block">
+    <div class="subject-header"><div class="subject-dot dot-calc"></div><div><div class="subject-label">Mock Exam · 180 min · 6 connected problems</div><div class="subject-title" style="color:var(--calc)">Cumulative Final Simulation</div></div><div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div></div>
+
+    <div class="exam-rules">
+      <strong>Exam conditions.</strong> 3 hours, 53 points (capped at 50). <strong>Always explain your answer</strong> — a bare number earns no credit. Partial credit is given. Work each problem fully before revealing; the later parts depend on the earlier ones, so don't peek mid-chain.
+    </div>
+
+    <!-- ══ Problem 1 ══ -->
+    <div class="problem">
+      <div class="problem-header"><span class="problem-num">Problem 1</span><span class="problem-topic">The inverse of a second derivative</span><span class="problem-pts">8 pts</span></div>
+      <div class="problem-body">
+        <div class="context-box">
+          Let \(f\) be twice-differentiable on \([0,\infty)\) with \(f(0)=0\) and \(f'(0)=0\). Write \(g=f'\), \(h=f''\). Since \(f(x)=\int_0^x g(t)\,dt\) and \(g(t)=\int_0^t h(s)\,ds\), we get
+          \[ f(x)=\int_0^x\!\!\int_0^t h(s)\,ds\,dt. \]
+          <div class="pchain">chains: iterated integral · region · Fubini · the IBP identity · explicit solve</div>
+        </div>
+        <ol class="parts">
+          <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Sketch / describe the region of integration in the \(st\)-plane. <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> The inner variable is \(s\in[0,t]\), the outer \(t\in[0,x]\). So the region is the triangle \(\{(s,t):0\le s\le t\le x\}\) — below the line \(s=t\), above \(s=0\), left of \(t=x\). <div class="key-result">Triangle \(0\le s\le t\le x\).</div></div></div></div></div></li>
+          <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Swap to integrate \(dt\) first (then \(ds\)), with correct limits. <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> For fixed \(s\), \(t\) runs from \(s\) up to \(x\); \(s\) runs \(0\) to \(x\). \[ f(x)=\int_0^x\!\!\int_s^x h(s)\,dt\,ds=\int_0^x (x-s)\,h(s)\,ds. \] <div class="key-result">\(f(x)=\int_0^x (x-s)h(s)\,ds\).</div></div></div></div></div></li>
+          <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Prove \(f(x)=x f'(x)-\int_0^x s\,f''(s)\,ds\). <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Split (b): \(f(x)=x\int_0^x h(s)\,ds-\int_0^x s\,h(s)\,ds\). Now \(\int_0^x h(s)\,ds=f'(x)-f'(0)=f'(x)\) and \(h=f''\), so \(f(x)=x f'(x)-\int_0^x s\,f''(s)\,ds\). \(\blacksquare\) <div class="ans-note">The double integral is secretly integration by parts on \(\int_0^x(x-s)f''(s)\,ds\).</div></div></div></div></div></li>
+          <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Take \(h(s)=e^{s}\). Use (b) to find \(f(x)\) explicitly and verify \(f''=h\), \(f(0)=f'(0)=0\). <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(f(x)=\int_0^x(x-s)e^s\,ds=x(e^x-1)-\big[(s-1)e^s\big]_0^x=x e^x-x-\big((x-1)e^x+1\big)=e^x-x-1\). Check: \(f'=e^x-1\Rightarrow f'(0)=0\); \(f''=e^x=h\) ✓; \(f(0)=1-0-1=0\) ✓. <div class="key-result">\(f(x)=e^{x}-x-1\).</div></div></div></div></div></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ══ Problem 2 ══ -->
+    <div class="problem">
+      <div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">A field over a hyperbolic region</span><span class="problem-pts">9 pts</span></div>
+      <div class="problem-body">
+        <div class="context-box">
+          Let \(\mathbf F=\begin{pmatrix}-2y^3\\6xy^2\end{pmatrix}\), and let \(\gamma\) be the boundary (CCW) of the first-quadrant region \(D\) bounded by \(xy=1,\ xy=2,\ y=x,\ y=2x\). Use \(u=xy,\ v=y/x\).
+          <div class="pchain">chains: Jacobian · Green's (work) · Green's (flux) · Helmholtz decomposition</div>
+        </div>
+        <ol class="parts">
+          <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Relation between \(dA_{xy}\) and \(dA_{uv}\) in terms of \(u,v\). <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\dfrac{\partial(u,v)}{\partial(x,y)}=\begin{pmatrix}y&x\\-y/x^2&1/x\end{pmatrix}\), \(\det=\dfrac{y}{x}+\dfrac{y}{x}=2v\). So \(dA_{xy}=\dfrac{1}{2v}\,du\,dv\), with \(u\in[1,2],v\in[1,2]\). <div class="key-result">\(dA_{xy}=\dfrac{1}{2v}\,du\,dv\).</div></div></div></div></div></li>
+          <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Compute the work \(\oint_\gamma\mathbf F\cdot d\gamma\) (CCW). <span class="part-pts">3 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Green's: \(\oint=\iint_D(Q_x-P_y)\,dA\), \(P=-2y^3,Q=6xy^2\Rightarrow Q_x-P_y=6y^2+6y^2=12y^2\). With \(y^2=uv\): \(\iint 12uv\cdot\tfrac{1}{2v}\,du\,dv=\iint 6u\,du\,dv=6\cdot\tfrac32\cdot1=9\). <div class="key-result">Work \(=9\).</div></div></div></div></div></li>
+          <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Compute the flux \(\oint_\gamma\mathbf F\cdot\mathbf n\,ds\) (outward positive). <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\oint\mathbf F\cdot\mathbf n\,ds=\iint_D\nabla\cdot\mathbf F\,dA\). \(\nabla\cdot\mathbf F=12xy=12u\). \(\iint 12u\cdot\tfrac{1}{2v}\,du\,dv=6\int_1^2 u\,du\int_1^2\tfrac{dv}{v}=6\cdot\tfrac32\cdot\ln2=9\ln2\). <div class="key-result">Flux \(=9\ln2\).</div></div></div></div></div></li>
+          <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Decompose \(\mathbf F=\nabla\phi+\mathbf R\) with \(\nabla\phi\) curl-free and \(\mathbf R\) divergence-free. <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Need \(\nabla^2\phi=\nabla\cdot\mathbf F=12xy\). Take \(\phi=2x^3y\): \(\nabla\phi=(6x^2y,2x^3)\), \(\nabla\cdot\nabla\phi=12xy\) ✓. Then \(\mathbf R=\mathbf F-\nabla\phi=(-2y^3-6x^2y,\,6xy^2-2x^3)\) has \(\nabla\cdot\mathbf R=-12xy+12xy=0\) ✓; \(\nabla\phi\) is a gradient (curl-free). <div class="key-result">\(\nabla\phi=(6x^2y,2x^3)\), \(\mathbf R=(-2y^3-6x^2y,\,6xy^2-2x^3)\).</div></div></div></div></div></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ══ Problem 3 ══ -->
+    <div class="problem">
+      <div class="problem-header"><span class="problem-num">Problem 3</span><span class="problem-topic">Stokes onto a flat disk</span><span class="problem-pts">10 pts</span></div>
+      <div class="problem-body">
+        <div class="context-box">
+          Let \(\gamma\) be the unit circle \(x^2+y^2=1\) in the plane \(z=0\), CCW viewed from \(+z\), and \(\mathbf F=\begin{pmatrix}-y+z^2\\ x+x^2\\ y^2+z\end{pmatrix}.\)
+          <div class="pchain">chains: curl · Stokes · flat-surface choice · symmetry integration · exact form</div>
+        </div>
+        <ol class="parts">
+          <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Compute \(\nabla\times\mathbf F\). <span class="part-pts">3 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\nabla\times\mathbf F=\big(\partial_y(y^2+z)-\partial_z(x+x^2),\ \partial_z(-y+z^2)-\partial_x(y^2+z),\ \partial_x(x+x^2)-\partial_y(-y+z^2)\big)=(2y,\ 2z,\ 2+2x)\). <div class="key-result">\(\nabla\times\mathbf F=(2y,\,2z,\,2+2x)\).</div></div></div></div></div></li>
+          <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Which surface do you pick, and what is its unit normal? <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> The flat disk \(S:\ x^2+y^2\le1,\ z=0\). CCW-from-\(+z\) boundary ⇒ upward normal \(\mathbf n=(0,0,1)\) by the right-hand rule. <div class="key-result">Flat unit disk, \(\mathbf n=(0,0,1)\).</div></div></div></div></div></li>
+          <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Compute the flux of \(\nabla\times\mathbf F\) through \(S\), hence \(\oint_\gamma\mathbf F\cdot d\gamma\). <span class="part-pts">3 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> On \(z=0\): \((\nabla\times\mathbf F)\cdot\mathbf n=2+2x\). \(\iint_S(2+2x)\,dA=2\pi+2\iint_S x\,dA=2\pi+0\) (symmetry). By Stokes, \(\oint_\gamma\mathbf F\cdot d\gamma=2\pi\). <div class="key-result">\(\oint_\gamma\mathbf F\cdot d\gamma=2\pi\).</div></div></div></div></div></li>
+          <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Compute \(\displaystyle\oint_\gamma (\cos x+z)\,dx+2y\,dy+(x+e^{z})\,dz\). <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\mathbf G=(\cos x+z,2y,x+e^z)\): \(\nabla\times\mathbf G=(0,1-1,0)=\mathbf 0\) and \(\mathbf G=\nabla(\sin x+y^2+xz+e^z)\). An exact form around a closed loop integrates to \(0\). <div class="key-result">\(=0\).</div></div></div></div></div></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ══ Problem 4 ══ -->
+    <div class="problem">
+      <div class="problem-header"><span class="problem-num">Problem 4</span><span class="problem-topic">Divergence over an ice-cream region</span><span class="problem-pts">9 pts</span></div>
+      <div class="problem-body">
+        <div class="context-box">
+          Let \(\mathbf F=e^{x^2+y^2+z^2}\begin{pmatrix}x\\y\\z\end{pmatrix}\) and let \(U\) be the region between the cone \(z^2=x^2+y^2\) and the sphere \(x^2+y^2+z^2=1\), with \(z\ge0\).
+          <div class="pchain">chains: divergence · spherical coords · a slick antiderivative · boundary flux</div>
+        </div>
+        <ol class="parts">
+          <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Compute \(\nabla\cdot\mathbf F\) in terms of \(\rho=\sqrt{x^2+y^2+z^2}\). <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\nabla\cdot\mathbf F=3e^{r^2}+(x,y,z)\cdot 2(x,y,z)e^{r^2}=(3+2r^2)e^{r^2}\). <div class="key-result">\(\nabla\cdot\mathbf F=(3+2\rho^2)e^{\rho^2}\).</div></div></div></div></div></li>
+          <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Set up \(\int_U\nabla\cdot\mathbf F\,dV\) in spherical coordinates; do the \(\phi,\theta\) integrals. <span class="part-pts">3 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Cone ⇒ \(\phi\in[0,\tfrac\pi4]\), \(\theta\in[0,2\pi]\), \(\rho\in[0,1]\). \[ \int_U\!(3+2\rho^2)e^{\rho^2}\rho^2\sin\phi\,d\rho\,d\phi\,d\theta=2\pi\Big(1-\tfrac{\sqrt2}{2}\Big)\!\int_0^1\!(3\rho^2+2\rho^4)e^{\rho^2}\,d\rho. \] <div class="key-result">\(=2\pi\big(1-\tfrac{\sqrt2}{2}\big)\displaystyle\int_0^1(3\rho^2+2\rho^4)e^{\rho^2}\,d\rho\).</div></div></div></div></div></li>
+          <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Finish the \(\rho\)-integral and give the value. <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\dfrac{d}{d\rho}(\rho^3 e^{\rho^2})=(3\rho^2+2\rho^4)e^{\rho^2}\), so \(\int_0^1(3\rho^2+2\rho^4)e^{\rho^2}d\rho=[\rho^3e^{\rho^2}]_0^1=e\). Hence \(\int_U\nabla\cdot\mathbf F\,dV=\pi e(2-\sqrt2)\). <div class="key-result">\(\int_U\nabla\cdot\mathbf F\,dV=\pi e(2-\sqrt2)\).</div><div class="ans-note">By the Divergence Theorem this also equals the outward flux through \(\partial U\).</div></div></div></div></div></li>
+          <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">On the spherical cap \(\rho=1\) (outward normal \(\mathbf n=(x,y,z)\)), compute the flux of \(\mathbf F\) through just the cap. <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> On \(\rho=1\): \(\mathbf F\cdot\mathbf n=e\,(x^2+y^2+z^2)=e\). Cap area \(=2\pi(1-\tfrac{\sqrt2}{2})\). Flux \(=e\cdot2\pi(1-\tfrac{\sqrt2}{2})=\pi e(2-\sqrt2)\). <div class="key-result">Cap flux \(=\pi e(2-\sqrt2)\) — so the cone part contributes \(0\).</div></div></div></div></div></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ══ Problem 5 ══ -->
+    <div class="problem">
+      <div class="problem-header"><span class="problem-num">Problem 5</span><span class="problem-topic">A parametrized cone</span><span class="problem-pts">9 pts</span></div>
+      <div class="problem-body">
+        <div class="context-box">
+          The cone \(S\) is parametrized by \(\Phi(u,v)=(v\cos u,\ v\sin u,\ v)\), \(u\in[0,2\pi]\), \(v\in[0,1]\).
+          <div class="pchain">chains: parametric normal · orientation · surface area · centroid · flux</div>
+        </div>
+        <ol class="parts">
+          <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Compute \(\Phi_u\times\Phi_v\); does it point up or down? <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\Phi_u=(-v\sin u,v\cos u,0)\), \(\Phi_v=(\cos u,\sin u,1)\), cross \(=(v\cos u,\,v\sin u,\,-v)\). \(z\)-comp \(-v<0\Rightarrow\) downward. <div class="key-result">\((v\cos u,v\sin u,-v)\), points down.</div></div></div></div></div></li>
+          <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Find the surface area of \(S\). <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\lVert\Phi_u\times\Phi_v\rVert=v\sqrt2\). Area \(=\int_0^{2\pi}\!\int_0^1 v\sqrt2\,dv\,du=2\pi\sqrt2\cdot\tfrac12=\sqrt2\,\pi\). <div class="key-result">Area \(=\sqrt2\,\pi\).</div></div></div></div></div></li>
+          <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Find the centroid \(\bar z\) (uniform density). <span class="part-pts">3 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\iint_S z\,dS=\int_0^{2\pi}\!\int_0^1 v\cdot v\sqrt2\,dv\,du=2\pi\sqrt2\cdot\tfrac13=\tfrac{2\sqrt2\pi}{3}\). \(\bar z=\dfrac{2\sqrt2\pi/3}{\sqrt2\pi}=\tfrac23\). <div class="key-result">\(\bar z=\tfrac23\).</div></div></div></div></div></li>
+          <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Flux of \(\mathbf F=(0,0,z)\) through \(S\) with the downward normal from (a). <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\mathbf F(\Phi)\cdot(\Phi_u\times\Phi_v)=(0,0,v)\cdot(v\cos u,v\sin u,-v)=-v^2\). Flux \(=\int_0^{2\pi}\!\int_0^1 -v^2\,dv\,du=-\tfrac{2\pi}{3}\). <div class="key-result">Flux \(=-\tfrac{2\pi}{3}\).</div></div></div></div></div></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ══ Problem 6 ══ -->
+    <div class="problem">
+      <div class="problem-header"><span class="problem-num">Problem 6</span><span class="problem-topic">Series, rearrangement &amp; Fourier</span><span class="problem-pts">8 pts</span></div>
+      <div class="problem-body">
+        <div class="context-box">
+          Consider the alternating harmonic series \(\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}}{n}=1-\tfrac12+\tfrac13-\tfrac14+\cdots\).
+          <div class="pchain">chains: convergence tests · conditional vs absolute · power series · Fourier</div>
+        </div>
+        <ol class="parts">
+          <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Conditionally or absolutely convergent? Name the test. <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(\tfrac1n\downarrow0\) ⇒ converges by the <strong>alternating series test</strong>; but \(\sum\tfrac1n\) diverges (\(p=1\)). <div class="key-result">Conditionally convergent.</div></div></div></div></div></li>
+          <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Why can a rearrangement change the sum (Riemann)? <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Conditional convergence ⇒ the positive part \(\sum\tfrac1{2k-1}\) and negative part \(\sum\tfrac1{2k}\) each diverge. Greedily taking positives/negatives steers partial sums to any target, so a rearrangement can yield \(S\neq s\). <div class="key-result">Conditional ⇒ rearrangement can change the limit.</div></div></div></div></div></li>
+          <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Radius &amp; interval of convergence of \(\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}}{n}(x-1)^n\). <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Ratio \(\to|x-1|<1\Rightarrow R=1\), interval \((0,2)\). At \(x=2\): \(\sum\tfrac{(-1)^{n+1}}{n}\) converges; at \(x=0\): \(-\sum\tfrac1n\) diverges. <div class="key-result">\(R=1\), interval \((0,2]\).</div></div></div></div></div></li>
+          <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">\(f\) is \(2\pi\)-periodic, \(f(x)=\pi-x\) on \([0,2\pi)\). Find \(a_n,b_n,S(0)\). <span class="part-pts">2 pts</span></div>
+            <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(a_0=\tfrac{1}{2\pi}\int_0^{2\pi}(\pi-x)dx=0\); \(a_n=0\); \(b_n=\tfrac1\pi\int_0^{2\pi}(\pi-x)\sin nx\,dx=\tfrac1\pi\cdot\tfrac{2\pi}{n}=\tfrac2n\). At the jump \(x=0\): \(S(0)=\tfrac{f(0^+)+f(2\pi^-)}{2}=\tfrac{\pi+(-\pi)}{2}=0\). <div class="key-result">\(a_n=0,\ b_n=\tfrac2n,\ S(0)=0\).</div></div></div></div></div></li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-note">Calc A2 · Full Mock Exam · 3 hours · 6 connected problems · Saturday 20 June 2026 · Exam conditions ✦</div></div>
+  <div class="timer-chip" id="timerChip"><span class="timer-label">remaining</span><span class="timer-display" id="timerDisplay">180:00</span></div>
+  <script>
+    function toggleAns(btn){const a=btn.nextElementSibling;a.classList.toggle('open');btn.textContent=a.classList.contains('open')?'Hide Answer':'Show Answer';}
+    window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+    const SESSION=180*60,start=Date.now(),pad=n=>String(n).padStart(2,'0');
+    setInterval(()=>{const el=Math.floor((Date.now()-start)/1000);const L=Math.max(0,SESSION-el);document.getElementById('timerDisplay').textContent=pad(Math.floor(L/60))+':'+pad(L%60);const c=document.getElementById('timerChip');c.classList.remove('warn','urgent');if(L===0)c.classList.add('urgent');else if(L<=15*60)c.classList.add('warn');},1000);
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

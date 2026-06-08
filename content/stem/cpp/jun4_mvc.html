@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ · MVC &amp; Exception Handling · 4 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    pre.code { background:#1a1a2e; color:#e2e8f0; padding:18px 20px; border-radius:10px; overflow-x:auto; font-family:'DM Mono',monospace; font-size:0.8rem; line-height:1.65; margin-top:12px; }
+    pre.code .cm { color:#7d8db5; font-style:italic; }
+    pre.code .kw { color:#c792ea; }
+    pre.code .st { color:#c3e88d; }
+    pre.code .fn { color:#82aaff; }
+    .mvc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; }
+    .mvc-card { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+    .mvc-card h4 { color:var(--cpp); font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:6px; }
+    .mvc-card p { font-size:0.85rem; color:var(--text2); line-height:1.5; }
+    @media(max-width:640px){ .mvc-grid{ grid-template-columns:1fr; } }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-cpp">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ c++ / mvc &amp; exceptions</span>
+    <span class="topbar-date">THU · 4 JUN 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>MVC Pattern &amp; <em>Exception Handling</em></h1>
+    <p class="hero-meta">P4 · Separating data, presentation, and control — plus how to fail safely with <code>try / catch / throw</code>. Based on Week 11 (File IO &amp; MVC).</p>
+    <div class="exam-pills">
+      <span class="pill pill-cpp">C++</span>
+      <span class="pill pill-cpp">MVC</span>
+      <span class="pill pill-cpp">try / catch</span>
+      <span class="pill pill-cpp">Final · 10 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-cpp"></div>
+        <div>
+          <div class="subject-label">Daily Practice · 50 min</div>
+          <div class="subject-title" style="color:var(--cpp)">MVC + Exception Handling</div>
+        </div>
+        <div class="subject-exam-date"><strong>C++ Final</strong>10 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>MVC in one line.</strong> The <strong>Model</strong> holds data + rules, the <strong>View</strong> shows it, the <strong>Controller</strong> turns user input into Model updates. The point: the Model never knows how it's displayed, so you can swap the View without touching the logic.
+        <div class="mvc-grid">
+          <div class="mvc-card"><h4>Model</h4><p>State + business rules. No I/O, no <code>cout</code>. Pure data and validation.</p></div>
+          <div class="mvc-card"><h4>View</h4><p>Renders the Model. Reads state, prints it. No logic.</p></div>
+          <div class="mvc-card"><h4>Controller</h4><p>Takes input, calls Model methods, picks the View. The glue.</p></div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 1 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">Which layer owns it?</span>
+          <span class="problem-pts">Concept</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">For a to-do app, assign each to M / V / C: (a) "the list of tasks", (b) "printing the menu", (c) "validating that a due-date isn't in the past", (d) "reading the user's keypress".</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                (a) <strong>Model</strong> — it's the data. (b) <strong>View</strong> — pure presentation. (c) <strong>Model</strong> — a business rule lives with the data it guards. (d) <strong>Controller</strong> — input handling routes to Model actions.
+                <div class="ans-note">Rule of thumb: validation belongs to the Model, not the Controller — that way the rule holds no matter which Controller or View calls it.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">throw / try / catch</span>
+          <span class="problem-pts">Mechanics</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Write a <code>withdraw</code> that <code>throw</code>s <code>std::runtime_error</code> on overdraft, and a caller that catches it and prints the message. Trace what happens to the stack when the throw fires.</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                <pre class="code"><span class="cm">#include &lt;stdexcept&gt;</span>
+<span class="kw">void</span> <span class="fn">withdraw</span>(<span class="kw">double</span>&amp; bal, <span class="kw">double</span> amt) {
+    <span class="kw">if</span> (amt &gt; bal)
+        <span class="kw">throw</span> runtime_error(<span class="st">"Insufficient funds"</span>);
+    bal -= amt;
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">double</span> bal = 100;
+    <span class="kw">try</span> {
+        <span class="fn">withdraw</span>(bal, 250);
+    } <span class="kw">catch</span> (<span class="kw">const</span> exception&amp; e) {
+        cout &lt;&lt; <span class="st">"Error: "</span> &lt;&lt; e.what() &lt;&lt; <span class="st">"\n"</span>;
+    }
+}</pre>
+                <div class="ans-note"><strong>Stack unwinding:</strong> when <code>throw</code> fires, control leaves <code>withdraw</code> immediately, destructors run for locals along the way, and execution resumes at the matching <code>catch</code>. Catch by <code>const&amp;</code> to avoid slicing the exception object.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 3 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-topic">Catch order &amp; specificity</span>
+          <span class="problem-pts">Trap</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">A function may throw both <code>std::out_of_range</code> and a generic <code>std::exception</code>. In what order must the <code>catch</code> blocks appear, and why?</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                Most-derived first, base last. <code>catch (const out_of_range&amp;)</code> before <code>catch (const exception&amp;)</code>. Since <code>out_of_range</code> <em>is-a</em> <code>exception</code>, a base-first ordering would swallow everything in the first block and the specific handler would be unreachable (the compiler warns).
+                <pre class="code"><span class="kw">try</span> { risky(); }
+<span class="kw">catch</span> (<span class="kw">const</span> out_of_range&amp; e) { <span class="cm">/* specific */</span> }
+<span class="kw">catch</span> (<span class="kw">const</span> exception&amp; e)   { <span class="cm">/* catch-all fallback */</span> }</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 4 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 4</span>
+          <span class="problem-topic">Put it together</span>
+          <span class="problem-pts">Apply</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Sketch how a Controller reading a bad menu choice from a file should use exceptions so that the View shows a friendly message but the Model stays consistent.</div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Answer</span>
+                The Model methods <code>throw</code> on invalid operations (and do nothing else, so state is unchanged on failure — the <em>strong guarantee</em>). The Controller wraps each Model call in <code>try/catch</code>; on catch it asks the View to print the error and re-prompts. The View never touches exceptions itself.
+                <pre class="code"><span class="kw">try</span> {
+    model.applyChoice(parseFromFile(line));  <span class="cm">// Model validates, may throw</span>
+} <span class="kw">catch</span> (<span class="kw">const</span> exception&amp; e) {
+    view.showError(e.what());                 <span class="cm">// View only displays</span>
+}</pre>
+                <div class="ans-note">Because the Model throws <em>before</em> mutating anything, a rejected operation leaves the data exactly as it was — no half-applied state.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      C++ · MVC &amp; Exception Handling · Thursday 4 June 2026 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

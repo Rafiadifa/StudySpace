@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Partial Fractions + Improper · 5 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ calc-a2 / partial fractions</span>
+    <span class="topbar-date">FRI · 5 JUN 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Partial Fractions <em>+ Improper</em></h1>
+    <p class="hero-meta">P2 · Decompose rational integrands, then push several to improper limits. Decompose first, integrate term by term, then take the limit carefully.</p>
+    <div class="exam-pills">
+      <span class="pill pill-calc">∫ Calc A2</span>
+      <span class="pill pill-calc">Partial Fractions</span>
+      <span class="pill pill-calc">Final · 23 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-calc"></div>
+        <div>
+          <div class="subject-label">Daily Practice · 50 min</div>
+          <div class="subject-title" style="color:var(--calc)">Partial Fractions + Improper Integrals</div>
+        </div>
+        <div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>Quick reference.</strong> For a proper rational \(\frac{P(x)}{Q(x)}\): factor \(Q\), then write one term per factor — \(\frac{A}{x-a}\) for distinct linear, \(\frac{A}{x-a}+\frac{B}{(x-a)^2}\) for repeated, \(\frac{Bx+C}{x^2+bx+c}\) for irreducible quadratics. Solve for constants by plugging roots or matching coefficients. If \(\deg P\ge\deg Q\), do polynomial division first.
+      </div>
+
+      <!-- ══ Problem 1 ══ -->
+      <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">Decompose, integrate, take the limit</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Consider \(\displaystyle I=\int_1^{\infty}\frac{1}{x^2+x}\,dx\).<div class="conn-chain">chains: partial fractions · antiderivative · improper limit · convergence</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Decompose the integrand.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\dfrac{1}{x(x+1)}=\dfrac1x-\dfrac1{x+1}\). <div class="key-result">as shown.</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Find the antiderivative.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\ln|x|-\ln|x+1|=\ln\left|\dfrac{x}{x+1}\right|\). <div class="key-result">as shown.</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Evaluate from \(1\) to \(t\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\ln\dfrac{t}{t+1}-\ln\dfrac12\). <div class="key-result">as shown.</div></div></div></div></div></li><li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Take \(t\to\infty\): does it converge?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\dfrac{t}{t+1}\to1\Rightarrow\ln\to0\); limit \(=0-\ln\tfrac12=\ln2\). <div class="key-result">Converges to \(\ln2\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">Decompose &amp; integrate</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <ol class="parts">
+            <li>
+              <span class="part-label">(a)</span>
+              <div class="part-content">
+                <div class="part-question">\(\displaystyle\int\frac{1}{x^2-1}\,dx\). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+                    \(\frac{1}{(x-1)(x+1)}=\frac{1/2}{x-1}-\frac{1/2}{x+1}\). Integrate: \(\tfrac12\ln|x-1|-\tfrac12\ln|x+1|+C=\tfrac12\ln\left|\frac{x-1}{x+1}\right|+C\).
+                    <div class="key-result">\(\tfrac12\ln\left|\dfrac{x-1}{x+1}\right|+C\).</div>
+                  </div></div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(b)</span>
+              <div class="part-content">
+                <div class="part-question">\(\displaystyle\int\frac{3x+1}{x^2+x}\,dx\). <span class="pts">3 pts</span></div>
+                <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+                    \(\frac{3x+1}{x(x+1)}=\frac{A}{x}+\frac{B}{x+1}\). \(x=0:1=A\). \(x=-1:-2=-B\Rightarrow B=2\). Integrate: \(\ln|x|+2\ln|x+1|+C\).
+                    <div class="key-result">\(\ln|x|+2\ln|x+1|+C\).</div>
+                  </div></div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <span class="part-label">(c)</span>
+              <div class="part-content">
+                <div class="part-question">\(\displaystyle\int\frac{x}{(x-2)^2}\,dx\) (repeated factor). <span class="pts">4 pts</span></div>
+                <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+                  <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+                    \(\frac{x}{(x-2)^2}=\frac{A}{x-2}+\frac{B}{(x-2)^2}\). \(x=A(x-2)+B\Rightarrow A=1,\;B=2\). Integrate: \(\ln|x-2|-\frac{2}{x-2}+C\).
+                    <div class="key-result">\(\ln|x-2|-\dfrac{2}{x-2}+C\).</div>
+                  </div></div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">Irreducible quadratic</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">\(\displaystyle\int\frac{2x+3}{x(x^2+1)}\,dx\). Decompose with a linear numerator over the quadratic.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \(\frac{2x+3}{x(x^2+1)}=\frac{A}{x}+\frac{Bx+C}{x^2+1}\). Clearing: \(2x+3=A(x^2+1)+(Bx+C)x\). \(x=0:A=3\). Coeff \(x^2:A+B=0\Rightarrow B=-3\). Coeff \(x:C=2\).
+              So \(\int\frac{3}{x}+\frac{-3x+2}{x^2+1}\,dx=3\ln|x|-\tfrac32\ln(x^2+1)+2\arctan x+C\).
+              <div class="key-result">\(3\ln|x|-\tfrac32\ln(x^2+1)+2\arctan x+C\).</div>
+              <div class="ans-note">Split \(\frac{-3x+2}{x^2+1}\) into \(\frac{-3x}{x^2+1}\) (gives the log) and \(\frac{2}{x^2+1}\) (gives the arctan).</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 3 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-topic">Improper via partial fractions</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Evaluate \(\displaystyle\int_2^{\infty}\frac{1}{x^2-1}\,dx\), or show it diverges.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              From Problem 1(a), antiderivative \(\tfrac12\ln\left|\frac{x-1}{x+1}\right|\). Evaluate \(2\to b\):
+              \(\tfrac12\ln\frac{b-1}{b+1}-\tfrac12\ln\frac13\). As \(b\to\infty\), \(\frac{b-1}{b+1}\to1\) so \(\ln\to0\). Limit \(=0-\tfrac12\ln\tfrac13=\tfrac12\ln3\).
+              <div class="key-result">Converges to \(\tfrac12\ln 3\).</div>
+              <div class="ans-note">Partial fractions turns a scary improper integral into a clean log difference whose limit is easy to read off.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      Calc A2 · Partial Fractions + Improper · Friday 5 June 2026 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

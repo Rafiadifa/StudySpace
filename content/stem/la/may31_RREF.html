@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Lin Alg P3 · Active Recall · RREF Rules · 31 May</title>
+<link href="../../../style.css" rel="stylesheet"/>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+<header class="topbar">
+<span class="topbar-title">Rafi's Study Hub</span>
+<span class="topbar-sub">/ lin-alg / active recall · rref</span>
+<span class="topbar-date">SUN 31 MAY 2026 · WEEK 1 · P3</span>
+</header>
+<section class="hero">
+<h1>Active Recall <em>· RREF Rules</em></h1>
+<p class="hero-meta">
+    Reconstruct the foundations of \(\mathrm{Ch.\,3}\) (Gaussian elimination and RREF) from memory
+    before peeking at EZ.pdf. Write everything on a separate sheet first — then check against the
+    model answer. The second problem applies your reconstructed rules to a concrete matrix.
+  </p>
+<div class="exam-pills">
+<span class="pill pill-la">P3 · 13:30–15:05 · 95 MIN · 2 PROBLEMS · 35 PTS</span>
+</div>
+</section>
+<main class="main">
+<div class="subject-block">
+<div class="subject-header">
+<span class="subject-dot dot-la"></span>
+<div>
+<div class="subject-label">EZ.pdf Ch. 3 · Gaussian Elimination &amp; RREF</div>
+<h2 class="subject-title" style="color:var(--la)">Active Recall · RREF Rules</h2>
+</div>
+<div class="subject-exam-date">
+<strong>Final · 25 Jun</strong>
+        Week 1 of 6
+      </div>
+</div>
+<div class="formula-ref">
+<strong>How to run this block.</strong>
+<strong>Phase 1 (~40 min):</strong> close EZ.pdf, attempt Problem 1 fully on paper.
+      <strong>Phase 2 (~5 min):</strong> reveal each sub-part one by one and self-grade. Mark
+      anything you missed in red and re-write it in your own words.
+      <strong>Phase 3 (~45 min):</strong> using only your re-written notes (not EZ.pdf), do Problem 2.
+      <strong>Phase 4 (~5 min):</strong> reveal and grade. Log gaps in the error log.
+    </div>
+<!-- ═══════════ Problem 1 — theory recall ═══════════ -->
+<article class="problem" id="p1">
+<div class="problem-header">
+<span class="problem-num">Problem 1</span>
+<span class="problem-topic">Reconstruct the theory of Gaussian elimination and RREF</span>
+<span class="problem-pts">20 pts</span>
+</div>
+<div class="problem-body">
+<div class="context-box">
+          Write everything from memory. Do not consult EZ.pdf, lecture notes, or prior practice
+          pages. Use complete sentences and full statements — this is the reconstruction phase.
+        </div>
+<ol class="parts">
+<li><span class="part-label">(a)</span> <div class="part-content"><div class="part-question">State the <strong>three elementary row operations</strong> and explain why each preserves the solution set of \(A\mathbf x=\mathbf b\). <span class="pts">[4 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+<strong>Operation 1 (Swap):</strong> \(R_i\leftrightarrow R_j\) — interchange two rows.
+            Reordering equations of a system doesn't change which simultaneous solutions exist.
+            <strong>Operation 2 (Scale):</strong> \(R_i\to cR_i\) for \(c\ne0\) — multiplying both
+            sides of an equation by a nonzero constant gives an equivalent equation.
+            <strong>Operation 3 (Replace):</strong> \(R_i\to R_i+cR_j\) — replacing one equation
+            with itself plus \(c\) times another is reversible (subtract \(cR_j\) back), and any
+            simultaneous solution to the original system still satisfies the new one and vice versa.
+            Each operation is invertible, so they form equivalences of linear systems.
+          </div><div class="key-result">Swap, scale (\(c\ne0\)), and add-a-multiple-of-another-row. All three are reversible and preserve the solution set of \(A\mathbf x=\mathbf b\).</div></div>
+</div></div></li>
+<li><span class="part-label">(b)</span> <div class="part-content"><div class="part-question">Define <strong>Reduced Row Echelon Form (RREF)</strong> by giving all the conditions a matrix must satisfy. <span class="pts">[4 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            A matrix \(R\) is in <strong>RREF</strong> when all four conditions hold:
+            <strong>(R1)</strong> Any all-zero rows are at the bottom.
+            <strong>(R2)</strong> The leading nonzero entry of each nonzero row (the <em>pivot</em>) is \(1\).
+            <strong>(R3)</strong> In two consecutive nonzero rows, the pivot of the lower row is strictly to the right of the pivot of the upper row.
+            <strong>(R4)</strong> In every pivot column, the pivot is the <em>only</em> nonzero entry — all other entries (above and below) are \(0\).
+            (R1)–(R3) define <em>row echelon form (REF)</em>; the extra condition (R4) is what makes it <em>reduced</em>.
+          </div><div class="key-result">RREF = (zero rows at bottom) + (leading 1s as pivots) + (pivots step strictly right) + (each pivot is the only nonzero entry in its column).</div></div>
+</div></div></li>
+<li><span class="part-label">(c)</span> <div class="part-content"><div class="part-question">Describe the <strong>Gaussian elimination algorithm</strong> step by step (how to reduce any matrix to RREF). <span class="pts">[4 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+<strong>Step 1 (find pivot).</strong> Locate the leftmost column with a nonzero entry. If the top entry of that column is zero, swap rows to bring a nonzero entry to the top.
+            <strong>Step 2 (normalise).</strong> Scale the pivot row so the pivot equals \(1\).
+            <strong>Step 3 (clear column).</strong> For every other row (above and below), use Operation 3 to make its entry in the pivot column \(0\).
+            <strong>Step 4 (recurse).</strong> Cover the pivot row and look at the submatrix below and to the right. Apply Steps 1–3 there.
+            <strong>Step 5 (stop).</strong> When no more nonzero rows remain in the submatrix, the original matrix is in RREF.
+          </div><div class="key-result">Repeatedly: find leftmost pivot column → swap if needed → scale to make pivot \(1\) → clear above &amp; below → recurse on the submatrix. Stop when no more nonzero rows.</div></div>
+</div></div></li>
+<li><span class="part-label">(d)</span> <div class="part-content"><div class="part-question">State the <strong>uniqueness of RREF theorem</strong> and outline a proof argument in 3–5 sentences. <span class="pts">[4 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+<strong>Theorem (Uniqueness of RREF):</strong> Every matrix \(A\) has a <em>unique</em> RREF — any sequence of elementary row operations that ends in RREF produces the same matrix.
+            <strong>Proof sketch:</strong> Row operations preserve linear dependencies among the <em>columns</em> of \(A\). The pivot columns of the RREF are exactly the columns of \(A\) that are linearly independent from all earlier columns — this is an intrinsic property of \(A\). For each non-pivot column \(c\), its entries in the RREF are the (unique) coefficients expressing \(c\) as a linear combination of the earlier pivot columns; this expansion is again intrinsic to \(A\). So both the pivot pattern and the entries of every column are determined by \(A\) alone. \(\blacksquare\)
+          </div><div class="key-result">RREF is unique because (i) pivot columns are the columns of \(A\) linearly independent from previous ones, (ii) non-pivot columns encode the unique combination expressing them in terms of earlier pivot columns — both intrinsic to \(A\).</div></div>
+</div></div></li>
+<li><span class="part-label">(e)</span> <div class="part-content"><div class="part-question">Using rank and free variables, characterize when \(A\mathbf x=\mathbf b\) has: no solution, a unique solution, or infinitely many solutions. <span class="pts">[4 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            Form the augmented matrix \([A\,|\,\mathbf b]\) and reduce to RREF.
+            <strong>No solution</strong> iff some RREF row has the form \([0\;0\;\cdots\;0\,|\,c]\) with \(c\ne0\); equivalently \(\operatorname{rank}(A)&lt;\operatorname{rank}([A\,|\,\mathbf b])\).
+            <strong>Unique solution</strong> iff \(\operatorname{rank}(A)=\operatorname{rank}([A\,|\,\mathbf b])=n\) (the number of unknowns) — no free variables.
+            <strong>Infinitely many solutions</strong> iff \(\operatorname{rank}(A)=\operatorname{rank}([A\,|\,\mathbf b])&lt;n\) — at least one free variable, and the solution set has dimension \(n-\operatorname{rank}(A)\).
+          </div><div class="key-result">
+            None: \(\operatorname{rank}(A)&lt;\operatorname{rank}[A|\mathbf b]\).<br/>
+            Unique: \(\operatorname{rank}(A)=\operatorname{rank}[A|\mathbf b]=n\).<br/>
+            Infinitely many: \(\operatorname{rank}(A)=\operatorname{rank}[A|\mathbf b]&lt;n\), with \(n-\operatorname{rank}(A)\) free parameters.
+          </div></div>
+</div></div></li>
+</ol>
+
+
+
+
+
+</div>
+</article>
+<!-- ═══════════ Problem 2 — real-world application ═══════════ -->
+<article class="problem" id="p2">
+<div class="problem-header">
+<span class="problem-num">Problem 2</span>
+<span class="problem-topic">Apply your reconstructed rules: a sensor calibration matrix</span>
+<span class="problem-pts">15 pts</span>
+</div>
+<div class="problem-body">
+<div class="context-box">
+          Four sensors output four signals \(x_1,x_2,x_3,x_4\). The calibration constraints are encoded
+          in the matrix below, and a particular reading target is \(\mathbf b\). Using <em>only</em>
+          your own reconstructed notes from Problem 1 (not EZ.pdf), characterise the solution set.
+        </div>
+<div class="define-block">
+          \[A=\begin{pmatrix}1&amp;2&amp;-1&amp;1\\2&amp;4&amp;-1&amp;3\\3&amp;6&amp;-2&amp;4\\1&amp;2&amp;0&amp;2\end{pmatrix},\qquad
+          \mathbf b=\begin{pmatrix}1\\3\\4\\2\end{pmatrix}.\]
+        </div>
+<ol class="parts">
+<li><span class="part-label">(a)</span> <div class="part-content"><div class="part-question">Row-reduce \(A\) to RREF; list each elementary operation. <span class="pts">[4 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(R_2\to R_2-2R_1=(0,0,1,1)\). \(R_3\to R_3-3R_1=(0,0,1,1)\). \(R_4\to R_4-R_1=(0,0,1,1)\).
+            Then \(R_3\to R_3-R_2=(0,0,0,0)\) and \(R_4\to R_4-R_2=(0,0,0,0)\).
+            Finally clear the \(-1\) in row 1: \(R_1\to R_1+R_2=(1,2,0,2)\).
+          </div><div class="key-result">
+            RREF \(=\begin{pmatrix}1&amp;2&amp;0&amp;2\\0&amp;0&amp;1&amp;1\\0&amp;0&amp;0&amp;0\\0&amp;0&amp;0&amp;0\end{pmatrix}\).
+          </div></div>
+</div></div></li>
+<li><span class="part-label">(b)</span> <div class="part-content"><div class="part-question">Identify pivots, free variables, and state \(\operatorname{rank}(A)\) and the nullity. <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            Pivots in columns 1 and 3. Free variables: \(x_2,x_4\). Two pivots, so \(\operatorname{rank}(A)=2\); by rank-nullity \(\text{nullity}=4-2=2\).
+          </div><div class="key-result">Pivots: \(x_1,x_3\). Free: \(x_2,x_4\). \(\operatorname{rank}(A)=2,\;\text{nullity}=2\).</div></div>
+</div></div></li>
+<li><span class="part-label">(c)</span> <div class="part-content"><div class="part-question">Give the general solution to \(A\mathbf x=\mathbf 0\). <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            From RREF: \(x_1=-2x_2-2x_4,\;x_3=-x_4\). Set \((x_2,x_4)=(1,0)\) then \((0,1)\) for null-space basis vectors.
+          </div><div class="key-result">\(\operatorname{Null}(A)=\operatorname{span}\{(-2,1,0,0),\,(-2,0,-1,1)\}\); two-parameter family.</div></div>
+</div></div></li>
+<li><span class="part-label">(d)</span> <div class="part-content"><div class="part-question">Is \(A\mathbf x=\mathbf b\) consistent? If so, give a particular solution. <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            Apply the same row operations to the augmented column. \(\mathbf b\) transforms as:
+            \(b_2-2b_1=1,\;b_3-3b_1=1,\;b_4-b_1=1\), then \(b_3-b_2=0,\;b_4-b_2=0\), then \(b_1+b_2=2\). Final augmented column: \((2,1,0,0)\).
+            No row of the form \([0\;0\;0\;0\,|\,c\ne0]\Rightarrow\) consistent. Particular solution: set free variables to zero: \(x_1=2,\,x_3=1\).
+          </div><div class="key-result">Consistent (\(\operatorname{rank}(A)=\operatorname{rank}[A|\mathbf b]=2\)). Particular solution \(\mathbf x_p=(2,0,1,0)\). Verify: \(A(2,0,1,0)^{\mathsf T}=(2-1,4-1,6-2,2+0)^{\mathsf T}=(1,3,4,2)=\mathbf b\). \(\checkmark\)</div></div>
+</div></div></li>
+<li><span class="part-label">(e)</span> <div class="part-content"><div class="part-question">Write the full solution set to \(A\mathbf x=\mathbf b\). <span class="pts">[2 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            Full solution \(=\) particular \(+\) null space.
+          </div><div class="key-result">
+            \(\big\{(2,0,1,0)+s(-2,1,0,0)+t(-2,0,-1,1):s,t\in\mathbb R\big\}\) — a 2-dimensional affine subspace of \(\mathbb R^4\).
+          </div></div>
+</div></div></li>
+</ol>
+
+
+
+
+
+</div>
+</article>
+</div>
+</main>
+<footer class="footer-note">
+  RAFI'S STUDY HUB · LINEAR ALGEBRA · 31 MAY 2026 · BLOCK P3 · ACTIVE RECALL · RREF
+</footer>
+<div class="timer-chip" id="timer"><span class="timer-label">elapsed</span><span class="timer-display" id="timer-display">0:00</span></div>
+<script>
+  // ── Per-sub-part answer toggle ──
+  function toggleAns(btn) {
+    const ans = btn.nextElementSibling;
+    const open = ans.classList.toggle('open');
+    btn.textContent = open ? 'Hide answer' : 'Show answer';
+  }
+
+  // ── Scroll progress bar ──
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 || 0;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+
+  // ── Session timer. Warn 85%, urgent 100%. Counts up. ──
+  (function () {
+    const sessionMin = 95;
+    const warnSec    = sessionMin * 60 * 0.85;
+    const urgentSec  = sessionMin * 60;
+    const chip   = document.getElementById('timer');
+    const disp   = document.getElementById('timer-display');
+    let elapsed = 0;
+    setInterval(() => {
+      elapsed++;
+      const m = Math.floor(elapsed / 60), s = elapsed % 60;
+      disp.textContent = m + ':' + String(s).padStart(2,'0');
+      if (elapsed >= urgentSec)      { chip.classList.remove('warn'); chip.classList.add('urgent'); }
+      else if (elapsed >= warnSec)   { chip.classList.add('warn'); }
+    }, 1000);
+  })();
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

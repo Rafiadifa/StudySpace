@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lin Alg · Eigenvalues Intro</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    .recall-box { background:rgba(190,24,93,0.07); border:1px solid rgba(190,24,93,0.3); border-left:3px solid var(--la); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+    .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--la); margin-bottom:10px; }
+    .checklist { list-style:none; margin:6px 0 0; padding:0; }
+    .checklist li { padding:9px 0 9px 30px; position:relative; border-bottom:1px solid var(--border); font-size:0.95rem; line-height:1.55; }
+    .checklist li:last-child { border-bottom:none; }
+    .checklist li::before { content:'☐'; position:absolute; left:0; color:var(--la); font-size:1.05rem; }
+    .fcard { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+    .fcard h4 { color:var(--la); font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:6px; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ lin-alg / eigenvalues intro</span><span class="topbar-date">SAT · 13 JUN 2026</span></div>
+  <div class="hero">
+    <h1>Eigenvalues <em>Intro</em></h1>
+    <p class="hero-meta">P1 · 08:00–09:35 · 95 min · 3B1B video + recall</p>
+    <div class="exam-pills"><span class="pill pill-la">Lin Alg</span><span class="pill pill-la">Final · 25 June 2026</span></div>
+  </div>
+  <div class="main"><div class="subject-block">
+    <div class="subject-header"><div class="subject-dot dot-la"></div><div><div class="subject-label">Self-Study · 95 min · watch + explain</div><div class="subject-title" style="color:var(--la)">Eigenvalues — Intuition</div></div><div class="subject-exam-date"><strong>Lin Alg Final</strong>25 June 2026</div></div>
+<div class="recall-box"><div class="rl">⌁ Watch then explain</div>Watch 3Blue1Brown's "Eigenvectors and eigenvalues" (Essence of Linear Algebra, ch. 14). Then, without notes, answer below in your own words.</div><div class="problem"><div class="problem-header"><span class="problem-num">Q1</span><span class="problem-topic">The geometric picture</span></div><div class="problem-body"><div class="context-box">What is an eigenvector, geometrically? What does the eigenvalue tell you?</div><div class="ans-toggle"><button class="ans-btn" data-show="Reveal" data-hide="Hide" onclick="toggleAns(this)">Reveal</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>An eigenvector is a direction that the transformation <em>doesn't rotate</em> — it stays on its own span. The eigenvalue is the factor by which it's stretched (or flipped, if negative) along that line.</div></div></div></div></div><div class="problem"><div class="problem-header"><span class="problem-num">Q2</span><span class="problem-topic">Why \(\det(A-\lambda I)=0\)?</span></div><div class="problem-body"><div class="context-box">Connect the determinant condition to the geometry.</div><div class="ans-toggle"><button class="ans-btn" data-show="Reveal" data-hide="Hide" onclick="toggleAns(this)">Reveal</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>If \((A-\lambda I)v=0\) has a nonzero solution, the matrix \(A-\lambda I\) squashes space (some vector → 0), so it's singular — \(\det(A-\lambda I)=0\). That equation finds the stretch factors \(\lambda\) where a fixed direction exists.</div></div></div></div></div>
+  </div>
+  <div class="footer-note">Lin Alg · Eigenvalues Intro (3B1B) · Saturday 13 June 2026 · Build the intuition ✦</div></div>
+  <div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+  <script>
+    function toggleAns(btn){const a=btn.nextElementSibling;a.classList.toggle('open');const o=a.classList.contains('open');btn.textContent=o?btn.dataset.hide||'Hide Answer':btn.dataset.show||'Show Answer';}
+    window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+    const start=Date.now(),pad=n=>String(n).padStart(2,'0');
+    setInterval(()=>{const e=Math.floor((Date.now()-start)/1000);document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60);},1000);
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

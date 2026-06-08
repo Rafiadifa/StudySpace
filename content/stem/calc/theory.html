@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calc A2 · Theory Reference · Ch. 12–18</title>
+<link rel="stylesheet" href="../../../style.css">
+<style>
+  .doc-wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+  .chapter-tabs { position: sticky; top: 0; z-index: 20; display: flex; gap: 6px; flex-wrap: wrap; padding: 14px 32px; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+  .ch-tab { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.03em; padding: 9px 15px; border-radius: 9px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+  .ch-tab:hover { color: var(--text); border-color: var(--text3); }
+  .ch-tab.active { background: var(--calc); color: #fff; border-color: var(--calc); }
+  .topic-bar { display: flex; gap: 8px; flex-wrap: wrap; padding: 22px 0 4px; }
+  .topic-btn { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 8px 16px; border-radius: 99px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; transition: all 0.15s; }
+  .topic-btn:hover { color: var(--text); border-color: var(--calc); transform: translateY(-1px); }
+  .topic-btn.active { background: color-mix(in oklab, var(--calc) 12%, transparent); color: var(--calc); border-color: var(--calc); }
+  .topic-panel { display: none; padding: 16px 0 56px; animation: fadeUp 0.3s ease both; }
+  .topic-panel.active { display: block; }
+  .method-title { font-family: 'DM Serif Display', serif; font-size: 1.9rem; letter-spacing: -0.02em; color: var(--text); margin: 22px 0 24px; padding-bottom: 14px; border-bottom: 2px solid var(--calc); }
+  .method-section { margin-bottom: 30px; }
+  .method-label { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--calc); margin-bottom: 12px; }
+  .hint-inline { color: var(--text3); text-transform: none; letter-spacing: 0; }
+  .method-section p { font-size: 0.98rem; line-height: 1.75; color: var(--text2); max-width: 900px; }
+  ol.proc { margin: 0; padding-left: 0; counter-reset: step; list-style: none; max-width: 900px; }
+  ol.proc li { position: relative; padding: 12px 0 12px 44px; font-size: 0.97rem; line-height: 1.7; color: var(--text); border-bottom: 1px solid var(--border); }
+  ol.proc li:last-child { border-bottom: none; }
+  ol.proc li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 12px; width: 26px; height: 26px; border-radius: 50%; background: color-mix(in oklab, var(--calc) 12%, transparent); color: var(--calc); font-family: 'DM Mono', monospace; font-size: 0.78rem; display: flex; align-items: center; justify-content: center; }
+  .ex-tabbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ex-tab { font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 6px 13px; border-radius: 7px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; transition: all 0.15s; }
+  .ex-tab.active { background: var(--calc); color: #fff; border-color: var(--calc); }
+  .worked-example { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--calc); border-radius: 0 12px 12px 0; padding: 22px 24px; max-width: 960px; }
+  .ex-title { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem; color: var(--text); margin-bottom: 14px; }
+  .step-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .step-btn { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.04em; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--calc); background: var(--calc); color: #fff; cursor: pointer; transition: all 0.15s; }
+  .step-btn.ghost { background: transparent; color: var(--text2); border-color: var(--border); }
+  .step-btn.ghost:hover { color: var(--text); border-color: var(--text3); }
+  .step-btn:disabled { opacity: 0.4; cursor: default; }
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-top: 1px dashed var(--border); font-size: 0.95rem; line-height: 1.7; color: var(--text); animation: fadeUp 0.25s ease both; }
+  .step.hidden { display: none; }
+  .step:first-child { border-top: none; }
+  .step-n { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--calc); color: #fff; font-family: 'DM Mono', monospace; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+  .step-body { flex: 1; min-width: 0; overflow-x: auto; }
+  .ex-note { margin-top: 16px; padding: 12px 16px; background: color-mix(in oklab, var(--calc) 7%, transparent); border-radius: 8px; font-size: 0.86rem; line-height: 1.6; color: var(--text2); font-style: italic; }
+  .method-section.limits p, .method-section.exam p { padding: 16px 18px; border-radius: 10px; max-width: 960px; }
+  .method-section.limits p { background: color-mix(in oklab, #c2570c 8%, transparent); }
+  .method-section.exam p { background: color-mix(in oklab, var(--cpp) 9%, transparent); }
+  @supports not (background: color-mix(in oklab, red 50%, blue)) {
+    .topic-btn.active { background: rgba(29,78,216,0.1); }
+    ol.proc li::before { background: rgba(29,78,216,0.1); }
+    .ex-note { background: rgba(29,78,216,0.06); }
+    .method-section.limits p { background: rgba(194,87,12,0.07); }
+    .method-section.exam p { background: rgba(21,128,61,0.07); }
+  }
+  @media (max-width: 640px) { .doc-wrap { padding: 0 18px; } .chapter-tabs { padding: 12px 18px; flex-wrap: nowrap; overflow-x: auto; } .method-title { font-size: 1.5rem; } }
+</style>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" async></script>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ calc / theory reference</span>
+  <span class="topbar-date">FINAL · 23 JUN 2026</span>
+</header>
+
+<section class="hero">
+  <h1>Theory Reference <em>· Ch. 12–18</em></h1>
+  <p class="hero-meta">
+    Definitions, the key theorems, and the proof intuitions behind them — one section per chapter,
+    framed the way Prof. Yang asks them. Features his harmonic-series grouping proof and the two
+    pointwise-convergence escape examples he called 'more important than the theorems'.
+  </p>
+</section>
+
+<nav class="chapter-tabs">
+<button class="ch-tab active" data-ch="12" onclick="selectChapter('12')">Ch.12 · Limits, Continuity, Differentiability</button>
+<button class="ch-tab" data-ch="13" onclick="selectChapter('13')">Ch.13 · The Big Theorems</button>
+<button class="ch-tab" data-ch="15" onclick="selectChapter('15')">Ch.15 · Integral Theorems</button>
+<button class="ch-tab" data-ch="16" onclick="selectChapter('16')">Ch.16–18 · Series &amp; Convergence</button>
+</nav>
+
+<div class="doc-wrap">
+  <div class="topic-bar" id="topic-bar"></div>
+<section class="topic-panel" data-ch="12" data-topic="limits">
+  <h3 class="method-title">Limits &amp; Continuity in \(\mathbb{R}^n\)</h3>
+  <div class="method-section when"><div class="method-label">Definition / Idea</div><p>A limit \(\lim_{\mathbf x\to\mathbf a}f(\mathbf x)=L\) means \(f\) approaches \(L\) along <em>every</em> path. Continuity at \(\mathbf a\) means the limit exists and equals \(f(\mathbf a)\).</p></div>
+  <div class="method-section"><div class="method-label">Key theorems</div><ol class="proc"><li><strong>Path test for non-existence:</strong> if two paths into \(\mathbf a\) give different limit values, the limit does not exist.</li><li><strong>Squeeze / polar bound:</strong> if \(|f|\le g(r)\) with \(g(r)\to0\) as \(r\to0\), then the limit is \(0\).</li><li>Continuity is preserved under sums, products, compositions of continuous functions.</li></ol></div>
+  <div class="method-section"><div class="method-label">Proof intuition <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Proof intuition — polar squeeze</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">To show \(\lim_{(x,y)\to0}\dfrac{x^2y}{x^2+y^2}=0\), switch to polar \(x=r\cos\theta,y=r\sin\theta\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\left|\dfrac{x^2y}{x^2+y^2}\right|=\left|\dfrac{r^3\cos^2\theta\sin\theta}{r^2}\right|=r\,|\cos^2\theta\sin\theta|\le r.\)</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">As \(r\to0\) the bound \(r\to0\) independent of \(\theta\) — so the limit is \(0\) along every path.</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Contrast \(\dfrac{xy}{x^2+y^2}\): along \(y=mx\) it equals \(\dfrac{m}{1+m^2}\), path-dependent → no limit.</div></div></div><div class="ex-note">The polar bound must be independent of \(\theta\); if \(\theta\) survives in the bound, the limit likely fails.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Subtleties &amp; pitfalls</div><p>A finite number of paths agreeing proves nothing — only a uniform bound (or all-path argument) proves existence. The path test can only prove non-existence.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Yang opens differentiability problems by probing continuity at a piecewise origin. Show the polar bound explicitly; a hand-wave loses the rigor points.</p></div>
+</section>
+<section class="topic-panel" data-ch="12" data-topic="diff">
+  <h3 class="method-title">Differentiability vs Partials</h3>
+  <div class="method-section when"><div class="method-label">Definition / Idea</div><p>\(f\) is differentiable at \(\mathbf a\) if it admits a good linear approximation: \(f(\mathbf a+\mathbf h)=f(\mathbf a)+\nabla f(\mathbf a)\cdot\mathbf h+o(\lVert\mathbf h\rVert)\). This is STRONGER than the partials merely existing.</p></div>
+  <div class="method-section"><div class="method-label">Key theorems</div><ol class="proc"><li>Differentiable \(\Rightarrow\) continuous, and all directional derivatives exist and equal \(\nabla f\cdot\mathbf u\).</li><li><strong>Sufficient condition:</strong> if the partials exist and are <em>continuous</em> near \(\mathbf a\), then \(f\) is differentiable there.</li><li>The converse fails: partials can exist where \(f\) is not even continuous.</li></ol></div>
+  <div class="method-section"><div class="method-label">Proof intuition <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Proof intuition — partials exist but not differentiable</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(f(x,y)=\dfrac{xy}{x^2+y^2}\) (0 at origin). Along axes \(f=0\), so \(f_x(0,0)=f_y(0,0)=0\): partials exist.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">But along \(y=x\), \(f=\tfrac12\neq0=f(0,0)\): \(f\) is not continuous at the origin.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Not continuous \(\Rightarrow\) not differentiable, even though both partials exist.</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Moral: existence of partials is too weak; continuity of partials is the safe sufficient test.</div></div></div><div class="ex-note">This is the canonical separating example. Differentiability sits strictly between 'partials exist' and 'partials continuous'.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Subtleties &amp; pitfalls</div><p>Never infer differentiability from 'the partials exist'. The only easy sufficient test is continuity of the partials.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>The rubber-stress problem asks 'is \(f\) / \(f_x\) / \(f_{xy}\) continuous?' — a differentiability ladder. Answer each rung separately.</p></div>
+</section>
+<section class="topic-panel" data-ch="12" data-topic="gradient">
+  <h3 class="method-title">Gradient &amp; Its Geometry</h3>
+  <div class="method-section when"><div class="method-label">Definition / Idea</div><p>\(\nabla f\) points in the direction of steepest increase, with magnitude equal to that maximum rate. It is orthogonal to level sets of \(f\).</p></div>
+  <div class="method-section"><div class="method-label">Key theorems</div><ol class="proc"><li>\(D_{\mathbf u}f=\nabla f\cdot\mathbf u\le\lVert\nabla f\rVert\), with equality when \(\mathbf u\parallel\nabla f\).</li><li>\(\nabla f\perp\) the level curve/surface through the point.</li><li>At an interior extremum, \(\nabla f=\mathbf 0\) (Fermat's condition).</li></ol></div>
+  <div class="method-section"><div class="method-label">Proof intuition <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Proof intuition — why gradient ⟂ level set</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Let \(\gamma(t)\) lie in a level set: \(f(\gamma(t))=c\) constant.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Differentiate with the chain rule: \(\nabla f(\gamma)\cdot\gamma'(t)=0\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(\gamma'\) is tangent to the level set, so \(\nabla f\) is orthogonal to every tangent — hence to the level set.</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Therefore the steepest-ascent direction is perpendicular to the contours.</div></div></div><div class="ex-note">This single chain-rule line is the whole proof; Yang expects you to reproduce it.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Subtleties &amp; pitfalls</div><p>The 'steepest' interpretation needs differentiability. At a kink the gradient may not exist and the geometry breaks.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Conceptual sub-parts ask to draw \(\nabla f\) on a contour plot or compare gradient magnitude at two points (denser contours = larger gradient).</p></div>
+</section>
+<section class="topic-panel" data-ch="13" data-topic="newton-th">
+  <h3 class="method-title">Newton's Method — Why It Converges</h3>
+  <div class="method-section when"><div class="method-label">Definition / Idea</div><p>Newton replaces \(F\) by its linearisation at the current guess and solves that exactly; the root of the linearisation is the next guess.</p></div>
+  <div class="method-section"><div class="method-label">Key theorems</div><ol class="proc"><li>Update: \(\mathbf x_{n+1}=\mathbf x_n-[DF(\mathbf x_n)]^{-1}F(\mathbf x_n)\).</li><li>Near a simple root (with \([DF]\) invertible), convergence is <strong>quadratic</strong>: the error roughly squares each step.</li><li>Requires \([DF]\) nonsingular along the iteration; otherwise the step is undefined.</li></ol></div>
+  <div class="method-section"><div class="method-label">Proof intuition <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Proof intuition — quadratic convergence</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Taylor-expand \(F\) about the root \(\mathbf r\): \(F(\mathbf x_n)\approx [DF(\mathbf r)](\mathbf x_n-\mathbf r)+O(\lVert\mathbf x_n-\mathbf r\rVert^2)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Substituting into the update shows the linear term cancels by construction.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">What remains is the quadratic remainder, so \(\lVert\mathbf x_{n+1}-\mathbf r\rVert\le C\lVert\mathbf x_n-\mathbf r\rVert^2\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Squaring the error each step is why a good guess converges in 3–4 iterations.</div></div></div><div class="ex-note">The cancellation of the first-order term is the mechanism — that is what 'using the derivative' buys you.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Subtleties &amp; pitfalls</div><p>Only local: a far or unlucky start can diverge, cycle, or be thrown off by a singular Jacobian. No global guarantee.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>After a numeric step, Yang asks 'comment on convergence' — cite quadratic convergence and verify \(\lVert F\rVert\) shrank.</p></div>
+</section>
+<section class="topic-panel" data-ch="13" data-topic="ift-th">
+  <h3 class="method-title">Inverse &amp; Implicit Function Theorems</h3>
+  <div class="method-section when"><div class="method-label">Definition / Idea</div><p>Both theorems trade a nonlinear local question for a linear-algebra condition on the Jacobian. If the relevant derivative is invertible/nonzero, the nonlinear object behaves like its linearisation locally.</p></div>
+  <div class="method-section"><div class="method-label">Key theorems</div><ol class="proc"><li><strong>Inverse FT:</strong> \(\det[DF(\mathbf a)]\neq0\Rightarrow F\) has a smooth local inverse near \(\mathbf a\).</li><li><strong>Implicit FT:</strong> for \(g(x,y)=c\), if \(g_y(\mathbf a)\neq0\) then \(y=y(x)\) locally with \(y'=-g_x/g_y\).</li><li>Where the condition fails, the solution set can pinch, cross, or turn vertical.</li></ol></div>
+  <div class="method-section"><div class="method-label">Proof intuition <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Proof intuition — implicit derivative</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Assume \(g(x,y(x))=c\) holds identically near the point.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Differentiate in \(x\) by the chain rule: \(g_x+g_y\,y'(x)=0\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Solve: \(y'(x)=-g_x/g_y\), valid exactly when \(g_y\neq0\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">If \(g_y=0\), the formula blows up — signalling a vertical tangent or a non-smooth point.</div></div></div><div class="ex-note">The condition \(g_y\neq0\) is literally the denominator — geometry and algebra coincide.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Subtleties &amp; pitfalls</div><p>Existential and local: guarantees a function exists but not a formula, and only in a neighbourhood. Says nothing globally.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>The 2025 'single non-smooth point' surface problem: set \(\nabla g=0\) (all partials vanish) and solve for the constant \(\alpha\) making the level set pinch.</p></div>
+</section>
+<section class="topic-panel" data-ch="13" data-topic="clairaut-th">
+  <h3 class="method-title">Clairaut's Theorem</h3>
+  <div class="method-section when"><div class="method-label">Definition / Idea</div><p>For nice functions the order of partial differentiation doesn't matter: \(f_{xy}=f_{yx}\). 'Nice' = the mixed partials are continuous.</p></div>
+  <div class="method-section"><div class="method-label">Key theorems</div><ol class="proc"><li>If \(f_{xy}\) and \(f_{yx}\) are continuous on an open set, they are equal there.</li><li>Continuity is essential — drop it and equality can fail.</li><li>Consequence: the Hessian is symmetric for \(C^2\) functions.</li></ol></div>
+  <div class="method-section"><div class="method-label">Proof intuition <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Proof intuition — the symmetric difference quotient</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Consider the second difference \(\Delta=f(a{+}h,b{+}k)-f(a{+}h,b)-f(a,b{+}k)+f(a,b)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Apply the Mean Value Theorem in \(x\) then \(y\): \(\Delta=f_{xy}(\xi,\eta)\,hk\) for some interior point.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Apply MVT in the other order: \(\Delta=f_{yx}(\xi',\eta')\,hk\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">As \(h,k\to0\), continuity forces both interior values to the same limit \(\Rightarrow f_{xy}=f_{yx}\).</div></div></div><div class="ex-note">The proof hinges on continuity at the last step — exactly the hypothesis the counterexample violates.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Subtleties &amp; pitfalls</div><p>Without continuity of the mixed partials, equality can fail (the \(xy(x^2-y^2)/(x^2+y^2)\) origin gives \(\pm1\)).</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>'Do we have \(f_{xy}(0,0)=f_{yx}(0,0)\)?' — answer with the theorem's hypothesis and, if piecewise, the limit-definition computation.</p></div>
+</section>
+<section class="topic-panel" data-ch="15" data-topic="ftc-gen">
+  <h3 class="method-title">The Generalized FTC (one family)</h3>
+  <div class="method-section when"><div class="method-label">Definition / Idea</div><p>Green's, Gauss's (divergence), and Stokes' theorems are all the same statement: the integral of a derivative over a region equals an integral of the original over the boundary. \(\int_\Omega d\omega=\int_{\partial\Omega}\omega\).</p></div>
+  <div class="method-section"><div class="method-label">Key theorems</div><ol class="proc"><li><strong>Gradient theorem:</strong> \(\int_\gamma\nabla\phi\cdot d\gamma=\phi(\text{end})-\phi(\text{start})\).</li><li><strong>Green/Divergence:</strong> \(\iint_R(\nabla\cdot F)\,dA=\oint_{\partial R}F\cdot\mathbf n\,ds\) (outward).</li><li><strong>Stokes:</strong> \(\iint_S(\nabla\times F)\cdot\mathbf n\,dS=\oint_{\partial S}F\cdot d\gamma\).</li></ol></div>
+  <div class="method-section"><div class="method-label">Proof intuition <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Why they're one theorem</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Each says: integrate a 'derivative' (\(\nabla\phi\), \(\nabla\cdot F\), \(\nabla\times F\)) over a \(k\)-dimensional region.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">That equals integrating the un-differentiated object over the \((k{-}1)\)-dimensional boundary.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Boundary orientation (sign / right-hand rule) is the bookkeeping that makes the equality hold.</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">This is the content of the differential-forms identity \(\int_\Omega d\omega=\int_{\partial\Omega}\omega\) — which Yang noted is NOT itself on the exam, only its three classical cases.</div></div></div><div class="ex-note">Knowing they are one idea helps you pick the right tool: match the dimension of what you can compute easily.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Subtleties &amp; pitfalls</div><p>Each requires the field be \(C^1\) on the whole region — a singularity inside (e.g. inverse-square at the origin) voids the theorem; isolate it first.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Yang's vector-calc problem hands you a hard direct integral so you convert via the right theorem. Differential forms themselves are explicitly excluded.</p></div>
+</section>
+<section class="topic-panel" data-ch="15" data-topic="conservative">
+  <h3 class="method-title">Conservative Fields &amp; Path Independence</h3>
+  <div class="method-section when"><div class="method-label">Definition / Idea</div><p>A field is conservative if it is the gradient of a potential. Then line integrals depend only on endpoints, and loops integrate to zero.</p></div>
+  <div class="method-section"><div class="method-label">Key theorems</div><ol class="proc"><li>\(F=\nabla\phi\Rightarrow\) path-independent and \(\oint F\cdot d\gamma=0\).</li><li>On a simply-connected domain, \(\nabla\times F=\mathbf 0\Rightarrow F\) conservative.</li><li>Curl-free is necessary always, sufficient only without holes.</li></ol></div>
+  <div class="method-section"><div class="method-label">Proof intuition <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Proof intuition — curl-free yet not conservative</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">The vortex \(F=\dfrac{(-y,x)}{x^2+y^2}\) has \(\nabla\times F=0\) wherever it's defined.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">But \(\oint F\cdot d\gamma=2\pi\neq0\) around the origin.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">The domain has a hole at the origin — not simply connected — so curl-free fails to give a potential.</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Fill the hole (any simply-connected subregion) and a potential reappears.</div></div></div><div class="ex-note">The topology of the domain is the hidden hypothesis — a favourite 'why doesn't this work?' prompt.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Subtleties &amp; pitfalls</div><p>Curl-free does not imply conservative on a domain with holes. Always check simple-connectedness before claiming a potential exists.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>The exact-differential line integral on the final: test curl, build \(\phi\), evaluate endpoints. Mention the simply-connected caveat.</p></div>
+</section>
+<section class="topic-panel" data-ch="16" data-topic="series-def">
+  <h3 class="method-title">Series &amp; the Harmonic Example</h3>
+  <div class="method-section when"><div class="method-label">Definition / Idea</div><p>A series \(\sum a_n\) is defined as the limit of partial sums \(S_N=\sum_{n\le N}a_n\). It converges iff that limit exists.</p></div>
+  <div class="method-section"><div class="method-label">Key theorems</div><ol class="proc"><li>Necessary condition: if \(\sum a_n\) converges then \(a_n\to0\) (NOT sufficient).</li><li>The harmonic series \(\sum 1/n\) diverges although \(1/n\to0\).</li><li>\(p\)-series \(\sum n^{-p}\) converges iff \(p>1\).</li></ol></div>
+  <div class="method-section"><div class="method-label">Proof intuition <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Prof. Yang's harmonic grouping proof</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Group the harmonic series: \(1+\tfrac12+(\tfrac13+\tfrac14)+(\tfrac15+\cdots+\tfrac18)+\cdots\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Bound each group below by its smallest term \(\times\) its size: \(\tfrac13+\tfrac14>2\cdot\tfrac14=\tfrac12\), next group \(>4\cdot\tfrac18=\tfrac12\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Every group exceeds \(\tfrac12\), and there are infinitely many groups.</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">So \(S_N\) grows past any bound — the series diverges, even though terms \(\to0\).</div></div></div><div class="ex-note">Yang presented exactly this grouping. The quotable move: replace each group by its smallest member to get a clean \(\tfrac12\) lower bound.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Subtleties &amp; pitfalls</div><p>\(a_n\to0\) is necessary, never sufficient — the harmonic series is the standing counterexample. Don't conclude convergence from vanishing terms.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>'Show \(\sum1/n\) diverges' expects the grouping proof, not an integral-test wave. Reproduce the \(\tfrac12\)-per-group bound.</p></div>
+</section>
+<section class="topic-panel" data-ch="16" data-topic="pointwise-th">
+  <h3 class="method-title">Pointwise Convergence &amp; Escape Examples</h3>
+  <div class="method-section when"><div class="method-label">Definition / Idea</div><p>\(F_n\to F\) pointwise if \(F_n(x)\to F(x)\) for each fixed \(x\). Yang calls this 'nearsighted' — it sees one point at a time and misses global mass.</p></div>
+  <div class="method-section"><div class="method-label">Key theorems</div><ol class="proc"><li>Pointwise convergence does NOT permit swapping \(\lim\) with \(\int\) or with \(\tfrac{d}{dx}\).</li><li>Two escape examples make this concrete and are 'more important than the theorems' (Yang).</li><li>The cure is uniform / dominated convergence, which forbids the escape.</li></ol></div>
+  <div class="method-section"><div class="method-label">Proof intuition <span class="hint-inline">— step through it</span></div>
+  <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Horizontal & vertical escape</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body"><strong>Horizontal:</strong> a unit-area bump centred at \(x=n\). Each fixed \(x\): \(F_n(x)\to0\); but \(\int F_n=1\) always.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">So \(\int\lim F_n=0\neq1=\lim\int F_n\) — the mass escaped to infinity.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body"><strong>Vertical:</strong> a triangle of area 1, height \(2^n\), width \(2^{-n}\). Each fixed \(x\): \(F_n(x)\to0\); area stays 1.</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Same contradiction \(0\neq1\) — mass escaped upward. Both show why pointwise is too weak.</div></div></div><div class="ex-note">Memorise both pictures and the '0 vs 1' punchline — that pair of numbers is the full-credit answer.</div></div>
+  </div>
+  <div class="method-section limits"><div class="method-label">Subtleties &amp; pitfalls</div><p>Pointwise limits can lose continuity, integrability swaps, and derivative swaps. It is genuinely insufficient for analysis — that's the lesson, not a technicality.</p></div>
+  <div class="method-section exam"><div class="method-label">How it's asked on the exam</div><p>Conceptual series sub-part: 'give an example where limit and integral don't commute'. One escape example with the two numbers is complete.</p></div>
+</section>
+</div>
+
+<footer class="footer-note">
+  RAFI'S STUDY HUB · CALCULUS A2 · THEORY REFERENCE · CH. 12–18
+</footer>
+
+<script>
+  const TOPICS = {"12": [{"id": "limits", "name": "Limits &amp; Continuity in \\(\\mathbb{R}^n\\)"}, {"id": "diff", "name": "Differentiability vs Partials"}, {"id": "gradient", "name": "Gradient &amp; Its Geometry"}], "13": [{"id": "newton-th", "name": "Newton's Method \u2014 Why It Converges"}, {"id": "ift-th", "name": "Inverse &amp; Implicit Function Theorems"}, {"id": "clairaut-th", "name": "Clairaut's Theorem"}], "15": [{"id": "ftc-gen", "name": "The Generalized FTC (one family)"}, {"id": "conservative", "name": "Conservative Fields &amp; Path Independence"}], "16": [{"id": "series-def", "name": "Series &amp; the Harmonic Example"}, {"id": "pointwise-th", "name": "Pointwise Convergence &amp; Escape Examples"}]};
+  function selectChapter(ch) {
+    document.querySelectorAll('.ch-tab').forEach(t => t.classList.toggle('active', t.dataset.ch === ch));
+    const bar = document.getElementById('topic-bar'); bar.innerHTML = '';
+    TOPICS[ch].forEach((t, i) => {
+      const b = document.createElement('button');
+      b.className = 'topic-btn' + (i === 0 ? ' active' : '');
+      b.innerHTML = t.name; b.onclick = () => selectTopic(ch, t.id, b); bar.appendChild(b);
+    });
+    selectTopic(ch, TOPICS[ch][0].id, bar.firstChild);
+  }
+  function selectTopic(ch, topic, btn) {
+    document.querySelectorAll('.topic-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.querySelector(`.topic-panel[data-ch="${ch}"][data-topic="${topic}"]`);
+    if (panel) panel.classList.add('active');
+    if (btn) { document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+  }
+  function revealStep(btn){const ex=btn.closest('.worked-example');const h=ex.querySelectorAll('.step.hidden');if(h.length)h[0].classList.remove('hidden');if(ex.querySelectorAll('.step.hidden').length===0){btn.textContent='✓ All steps shown';btn.disabled=true;}}
+  function revealAll(btn){const ex=btn.closest('.worked-example');ex.querySelectorAll('.step.hidden').forEach(s=>s.classList.remove('hidden'));const nb=ex.querySelector('.step-btn');nb.textContent='✓ All steps shown';nb.disabled=true;}
+  function resetSteps(btn){const ex=btn.closest('.worked-example');ex.querySelectorAll('.step').forEach((s,i)=>{if(i>0)s.classList.add('hidden');});const nb=ex.querySelector('.step-btn');nb.textContent='▸ Show next step';nb.disabled=false;}
+  function switchEx(btn,ei){const panel=btn.closest('.topic-panel');panel.querySelectorAll('.worked-example').forEach(e=>e.style.display='none');panel.querySelector(`.worked-example[data-ex="${ei}"]`).style.display='block';panel.querySelectorAll('.ex-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
+  function primeFirstSteps(){document.querySelectorAll('.worked-example .steps').forEach(s=>{const f=s.querySelector('.step.hidden');if(f)f.classList.remove('hidden');});}
+  window.addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100||0;document.getElementById('progress').style.width=pct+'%';});
+  primeFirstSteps();
+  selectChapter('12');
+</script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

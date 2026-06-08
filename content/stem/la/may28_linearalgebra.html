@@ -1,0 +1,396 @@
+<!-- ─────────────────────────────────────────
+     Rafi's Study Hub — Practice Page
+     Linear Algebra · Thu 28 May 2026 (Week 1)
+     P4 Change of Basis & Matrix Inverse  ·  P5 Rank-Nullity
+     Styled with the shared stylesheet (style.css) — only
+     page-specific Q&A rules are added below.
+───────────────────────────────────────── -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lin Alg — Change of Basis, Inverse & Rank-Nullity · 28 May</title>
+
+<!-- Theme comes from your shared stylesheet. REQUIRED: keep a file named
+     exactly "style.css" in the SAME folder as this page (same place as
+     index.html). If it's named "style.css (1)", rename it to "style.css". -->
+<link rel="stylesheet" href="../../../style.css">
+
+<!-- MathJax for matrices / fractions -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" async></script>
+
+<!-- ── Page-specific styles (uses your shared CSS variables; fallbacks let it preview standalone) ── -->
+<style>
+  .main { padding-top: 8px; }
+
+  /* Timed-block header */
+  .block-head {
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+    margin: 40px 0 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border, #2a2a33);
+  }
+  .block-head:first-of-type { margin-top: 8px; }
+  .block-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.08em;
+    color: var(--la, #f472b6);
+    border: 1px solid rgba(244,114,182,0.3);
+    background: rgba(244,114,182,0.07);
+    padding: 4px 11px; border-radius: 99px;
+  }
+  .block-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem; letter-spacing: -0.02em;
+    color: var(--text, #e8e8f0);
+  }
+  .block-meta {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; color: var(--text3, #55556a);
+  }
+
+  /* Problem card */
+  .prob {
+    background: var(--bg2, #16161a);
+    border: 1px solid var(--border, #2a2a33);
+    border-left: 3px solid var(--la, #f472b6);
+    border-radius: 12px;
+    padding: 24px 26px;
+    margin-bottom: 18px;
+  }
+  .prob-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text3, #55556a);
+    margin-bottom: 10px;
+  }
+  .prob-pts { color: var(--la, #f472b6); }
+  .prob-stem {
+    font-size: 0.95rem; line-height: 1.7; color: var(--text, #e8e8f0);
+    font-weight: 300;
+  }
+  .prob-stem em { color: var(--text2, #8888a0); font-style: italic; }
+
+  /* Sub-parts list */
+  ol.parts { list-style: none; counter-reset: part; margin: 18px 0 4px; padding: 0; }
+  ol.parts > li {
+    counter-increment: part;
+    position: relative;
+    padding: 10px 0 10px 38px;
+    font-size: 0.92rem; line-height: 1.65; font-weight: 300;
+    color: var(--text, #e8e8f0);
+    border-top: 1px solid var(--border, #2a2a33);
+  }
+  ol.parts > li:first-child { border-top: none; }
+  ol.parts > li::before {
+    content: "(" counter(part, lower-alpha) ")";
+    position: absolute; left: 0; top: 10px;
+    font-family: 'DM Mono', monospace; font-size: 0.8rem;
+    color: var(--la, #f472b6);
+  }
+  .pts {
+    font-family: 'DM Mono', monospace; font-size: 0.64rem;
+    color: var(--text3, #55556a); margin-left: 6px;
+  }
+
+  /* Answer toggle */
+  details.ans {
+    margin-top: 16px;
+    background: var(--bg3, #1e1e24);
+    border: 1px solid var(--border, #2a2a33);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  details.ans > summary {
+    cursor: pointer; list-style: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text2, #8888a0);
+    padding: 12px 18px;
+    transition: color 0.15s, background 0.15s;
+  }
+  details.ans > summary::-webkit-details-marker { display: none; }
+  details.ans > summary::before { content: "▸  "; color: var(--la, #f472b6); }
+  details.ans[open] > summary::before { content: "▾  "; }
+  details.ans > summary:hover { color: var(--text, #e8e8f0); background: rgba(244,114,182,0.05); }
+  .ans-body {
+    padding: 4px 20px 20px;
+    font-size: 0.9rem; line-height: 1.75; font-weight: 300;
+    color: var(--text2, #8888a0);
+    border-top: 1px solid var(--border, #2a2a33);
+  }
+  .ans-body strong { color: var(--text, #e8e8f0); font-weight: 500; }
+  .ans-body .lead {
+    font-family: 'DM Mono', monospace; font-size: 0.66rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--la, #f472b6); display: block; margin: 14px 0 4px;
+  }
+  .ans-body .lead:first-child { margin-top: 4px; }
+
+  .rules {
+    font-size: 0.82rem; line-height: 1.7; color: var(--text2, #8888a0);
+    font-weight: 300; max-width: 760px;
+  }
+  .rules b { color: var(--text, #e8e8f0); font-weight: 500; }
+</style>
+
+<!-- ── Top bar (shared classes) ── -->
+<header class="topbar">
+  <span class="topbar-title">Study Hub</span>
+  <span class="topbar-sub">PRACTICE · LINEAR ALGEBRA</span>
+  <span class="topbar-date">THU 28 MAY 2026 · WEEK 1</span>
+</header>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <h1>Change of Basis, Matrix Inverse <em>&amp; Rank-Nullity</em></h1>
+  <p class="hero-meta">
+    Today's two Linear Algebra blocks, drilled in your professor's exam format —
+    scenario-framed problems with sub-parts and point values. Work each one on a
+    separate sheet first, <em>then</em> reveal the answer. <em>Always explain your reasoning;
+    a bare answer earns no credit.</em> Sources: EZ.pdf Ch.5.4 &amp; Ch.5.6.
+  </p>
+  <div class="exam-pills">
+    <span class="pill pill-la">📐 P4 · 15:20–16:55 · 95 min</span>
+    <span class="pill pill-la">📐 P5 · 18:10–19:00 · 50 min</span>
+    <span class="pill pill-la">FINAL: 25 JUN</span>
+  </div>
+</section>
+
+<main class="main">
+
+  <p class="rules" style="margin-top:36px;">
+    <b>Format reminder.</b> This mirrors 杨一龙's finals: open-book, partial credit, and
+    every claim must be justified. Targets below assume you reconstruct results by hand
+    (the inverse and change-of-coordinate matrices in particular) rather than spotting them.
+  </p>
+
+  <!-- ════════════════ BLOCK P4 ════════════════ -->
+  <div class="block-head">
+    <span class="block-time">15:20–16:55</span>
+    <span class="block-title">Change of Basis &amp; Matrix Inverse</span>
+    <span class="block-meta">~95 MIN · EZ Ch.5.4 · 3 matrices to build</span>
+  </div>
+
+  <!-- Problem 1 -->
+  <article class="prob">
+    <div class="prob-num">Problem 1 &nbsp;·&nbsp; <span class="prob-pts">12 points</span></div>
+    <p class="prob-stem">
+      A music synthesiser stores every tone as a quadratic <em>envelope</em> living in
+      \(P_2\) (polynomials of degree \(\le 2\)). The "attack" engineer prefers the basis
+      \(\mathcal{B}=\big(1,\;x+1,\;(x+1)^2\big)\), while the "release" engineer insists on
+      \(\mathcal{C}=\big(1,\;x-1,\;(x-1)^2\big)\). They keep arguing because the same tone
+      gets two different coordinate vectors. Let's settle it once and for all.
+    </p>
+    <ol class="parts">
+      <li>Find the change-of-coordinate matrix \(I_{\mathcal{C}\leftarrow\mathcal{B}}\)
+          (the matrix of the identity map taking \(\mathcal B\)-coordinates to
+          \(\mathcal C\)-coordinates). <span class="pts">[2 pts]</span></li>
+      <li>Find \(I_{\mathcal{B}\leftarrow\mathcal{C}}\) by computing the inverse of your
+          matrix in (a) <em>by hand</em>, and verify the product is \(I\).
+          <span class="pts">[3 pts]</span></li>
+      <li>The tone \(w=2x^2-3x+5\) comes in. Give its coordinate vector in \(\mathcal B\)
+          and in \(\mathcal C\), using a matrix from above to convert between them.
+          <span class="pts">[2 pts]</span></li>
+      <li>Let \(D:P_2\to P_2\) be differentiation. Write the matrix \([D]_{\mathcal B}\),
+          then use a change of basis to obtain \([D]_{\mathcal C}\).
+          <span class="pts">[3 pts]</span></li>
+      <li>Are \([D]_{\mathcal B}\) and \([D]_{\mathcal C}\) similar? Name three quantities
+          that must agree for any two matrices of the <em>same</em> map, and state the
+          eigenvalues of \(D\). <span class="pts">[2 pts]</span></li>
+    </ol>
+
+    <details class="ans">
+      <summary>Reveal answer</summary>
+      <div class="ans-body">
+        <span class="lead">(a)</span>
+        Columns of \(I_{\mathcal C\leftarrow\mathcal B}\) are the <strong>old</strong> basis
+        vectors (from \(\mathcal B\)) written in \(\mathcal C\)-coordinates:
+        \(1=1\); \(x+1=2\cdot1+1\cdot(x-1)\); \((x+1)^2=4\cdot1+4(x-1)+(x-1)^2\). So
+        \[I_{\mathcal C\leftarrow\mathcal B}=\begin{pmatrix}1&2&4\\0&1&4\\0&0&1\end{pmatrix}.\]
+
+        <span class="lead">(b)</span>
+        Inverting the unit upper-triangular matrix (back-substitution / Gauss–Jordan):
+        \[I_{\mathcal B\leftarrow\mathcal C}=\begin{pmatrix}1&-2&4\\0&1&-4\\0&0&1\end{pmatrix}.\]
+        Check: \(\begin{pmatrix}1&2&4\\0&1&4\\0&0&1\end{pmatrix}\!\begin{pmatrix}1&-2&4\\0&1&-4\\0&0&1\end{pmatrix}=I\). ✓
+        (Equivalently its columns are the \(\mathcal C\) vectors in \(\mathcal B\)-coordinates —
+        same answer, good cross-check.)
+
+        <span class="lead">(c)</span>
+        Matching coefficients, \(w=10\cdot1-7(x+1)+2(x+1)^2\), so
+        \(w_{\mathcal B}=(10,-7,2)^{\mathsf T}\). Then
+        \(w_{\mathcal C}=I_{\mathcal C\leftarrow\mathcal B}\,w_{\mathcal B}
+        =(10-14+8,\,-7+8,\,2)^{\mathsf T}=(4,1,2)^{\mathsf T}\).
+        Direct expansion \(w=4+1\cdot(x-1)+2(x-1)^2\) confirms it. ✓
+
+        <span class="lead">(d)</span>
+        \(D(1)=0,\;D(x+1)=1,\;D((x+1)^2)=2(x+1)\), so
+        \[[D]_{\mathcal B}=\begin{pmatrix}0&1&0\\0&0&2\\0&0&0\end{pmatrix},
+        \qquad
+        [D]_{\mathcal C}=I_{\mathcal C\leftarrow\mathcal B}\,[D]_{\mathcal B}\,I_{\mathcal B\leftarrow\mathcal C}
+        =\begin{pmatrix}0&1&0\\0&0&2\\0&0&0\end{pmatrix}.\]
+        The matrices are <strong>identical</strong> — because both bases are "shifted power"
+        bases, differentiation looks the same in each. (Directly: \(D(x-1)=1,\;D((x-1)^2)=2(x-1)\).)
+
+        <span class="lead">(e)</span>
+        Yes — they are similar via \(P=I_{\mathcal C\leftarrow\mathcal B}\):
+        \([D]_{\mathcal C}=P[D]_{\mathcal B}P^{-1}\) (here they even coincide). Any two matrices of the
+        same map share <strong>determinant, trace, and characteristic polynomial</strong>
+        (hence eigenvalues and rank). The characteristic polynomial is \(\lambda^3\), so every
+        eigenvalue of \(D\) is \(0\): \(D\) is nilpotent with \(D^3=0\) on \(P_2\).
+      </div>
+    </details>
+  </article>
+
+  <!-- Problem 2 -->
+  <article class="prob">
+    <div class="prob-num">Problem 2 &nbsp;·&nbsp; <span class="prob-pts">10 points</span></div>
+    <p class="prob-stem">
+      The cafeteria sells three mystery "combos." Combo \(i\) delivers a fixed amount of
+      protein, carbs and fat, encoded as the columns of a matrix. To plan meals you must be
+      able to invert the recipe — <em>given a nutrition target, how many of each combo?</em>
+      Consider
+      \[M_A=\begin{pmatrix}2&1&1\\1&2&1\\1&1&2\end{pmatrix},\quad
+        M_B=\begin{pmatrix}1&1&1\\0&1&1\\0&0&1\end{pmatrix},\quad
+        M_C=\begin{pmatrix}1&2&3\\0&1&4\\5&6&0\end{pmatrix},\quad
+        M_D=\begin{pmatrix}1&2&3\\2&4&6\\1&0&1\end{pmatrix}.\]
+    </p>
+    <ol class="parts">
+      <li>Compute \(M_A^{-1}\) and \(M_B^{-1}\). <span class="pts">[2 pts]</span></li>
+      <li>Compute \(M_C^{-1}\) (Gauss–Jordan or adjugate — show the determinant).
+          <span class="pts">[3 pts]</span></li>
+      <li>Using your \(M_C^{-1}\), solve \(M_C\mathbf x=\mathbf b\) for the two targets
+          \(\mathbf b_1=(1,0,0)^{\mathsf T}\) and \(\mathbf b_2=(6,4,11)^{\mathsf T}\).
+          (This is the payoff of computing an inverse: every new target is just one
+          matrix–vector product.) <span class="pts">[2 pts]</span></li>
+      <li>Show \(M_D\) has <em>no</em> inverse. Find \(\operatorname{rank}(M_D)\) and
+          \(\dim\operatorname{Ker}(M_D)\), and say what this means for solving
+          \(M_D\mathbf x=\mathbf b\). <span class="pts">[3 pts]</span></li>
+    </ol>
+
+    <details class="ans">
+      <summary>Reveal answer</summary>
+      <div class="ans-body">
+        <span class="lead">(a)</span>
+        \(M_A=I+J\) where \(J\) is all-ones; since \(J^2=3J\),
+        \((I+J)^{-1}=I-\tfrac14J\):
+        \[M_A^{-1}=\tfrac14\begin{pmatrix}3&-1&-1\\-1&3&-1\\-1&-1&3\end{pmatrix}.\]
+        \(M_B\) is unit upper-triangular, so
+        \(M_B^{-1}=\begin{pmatrix}1&-1&0\\0&1&-1\\0&0&1\end{pmatrix}\).
+
+        <span class="lead">(b)</span>
+        \(\det M_C = 1(1\cdot0-4\cdot6)-2(0\cdot0-4\cdot5)+3(0\cdot6-1\cdot5)=-24+40-15=1\).
+        With \(\det=1\) the inverse equals the adjugate:
+        \[M_C^{-1}=\begin{pmatrix}-24&18&5\\20&-15&-4\\-5&4&1\end{pmatrix}.\]
+        (Spot-check: row \(1\) of \(M_C\) times column \(1\) of \(M_C^{-1}\) gives
+        \(-24+40-15=1\). ✓)
+
+        <span class="lead">(c)</span>
+        \(\mathbf x=M_C^{-1}\mathbf b\). For \(\mathbf b_1=(1,0,0)^{\mathsf T}\):
+        \(\mathbf x_1=(-24,20,-5)^{\mathsf T}\) (the first column of \(M_C^{-1}\)).
+        For \(\mathbf b_2=(6,4,11)^{\mathsf T}\):
+        \(\mathbf x_2=(-24\cdot6+18\cdot4+5\cdot11,\;20\cdot6-15\cdot4-4\cdot11,\;-5\cdot6+4\cdot4+11)^{\mathsf T}
+        =(-144+72+55,\;120-60-44,\;-30+16+11)^{\mathsf T}=(-17,16,-3)^{\mathsf T}\).
+        <strong>Note the efficiency:</strong> five more targets would be five more products,
+        no re-elimination.
+
+        <span class="lead">(d)</span>
+        Row \(2 = 2\times\) row \(1\), so \(\det M_D=0\) and \(M_D\) is not invertible.
+        Row-reducing leaves two independent rows \(\Rightarrow\)
+        \(\operatorname{rank}(M_D)=2\), and by rank-nullity
+        \(\dim\operatorname{Ker}(M_D)=3-2=1\). Consequently \(M_D\mathbf x=\mathbf b\) is
+        <strong>either inconsistent or has infinitely many solutions</strong> (a whole line of
+        them, \(\mathbf x_0+\operatorname{Ker}\)) — never a unique one. This is exactly the
+        bridge into the next block.
+      </div>
+    </details>
+  </article>
+
+  <!-- ════════════════ BLOCK P5 ════════════════ -->
+  <div class="block-head">
+    <span class="block-time">18:10–19:00</span>
+    <span class="block-title">The Rank-Nullity Theorem</span>
+    <span class="block-meta">~50 MIN · EZ Ch.5.6 · prove from scratch</span>
+  </div>
+
+  <!-- Problem 3 -->
+  <article class="prob">
+    <div class="prob-num">Problem 3 &nbsp;·&nbsp; <span class="prob-pts">12 points</span></div>
+    <p class="prob-stem">
+      A signal-processing pipeline applies a linear map \(L:V\to W\) between
+      finite-dimensional spaces; engineers care about how much information it
+      <em>keeps</em> (the range) versus <em>destroys</em> (the kernel). The accountant's
+      identity that balances the two is the Rank-Nullity Theorem. Reconstruct it cold.
+    </p>
+    <ol class="parts">
+      <li>State the theorem precisely, and define \(\operatorname{rank}(L)\),
+          nullity, \(\operatorname{Ker}(L)\) and \(\operatorname{Ran}(L)\).
+          <span class="pts">[2 pts]</span></li>
+      <li>Prove it <em>from scratch</em> (no appeal to "rank normal form" as a black box).
+          <span class="pts">[5 pts]</span></li>
+      <li>A matrix \(A\) is \(3\times5\) with \(\operatorname{rank}(A)=2\). Find the nullity,
+          decide whether \(A\) (as a map \(\mathbb R^5\to\mathbb R^3\)) is injective and/or
+          surjective, and describe the full solution set of \(A\mathbf x=\mathbf b\) when it
+          is consistent. <span class="pts">[3 pts]</span></li>
+      <li>Using rank-nullity, prove: if \(\dim V=\dim W<\infty\) then a linear map
+          \(L:V\to W\) is injective \(\iff\) it is surjective. <span class="pts">[2 pts]</span></li>
+    </ol>
+
+    <details class="ans">
+      <summary>Reveal answer</summary>
+      <div class="ans-body">
+        <span class="lead">(a)</span>
+        \(\operatorname{Ker}(L)=\{v\in V: Lv=0\}\) and
+        \(\operatorname{Ran}(L)=\{Lv: v\in V\}\subseteq W\); both are subspaces.
+        Set \(\operatorname{rank}(L)=\dim\operatorname{Ran}(L)\) and
+        \(\text{nullity}(L)=\dim\operatorname{Ker}(L)\). <strong>Theorem:</strong>
+        \[\dim V=\operatorname{rank}(L)+\text{nullity}(L)=\dim\operatorname{Ran}(L)+\dim\operatorname{Ker}(L).\]
+
+        <span class="lead">(b) Proof (basis-extension).</span>
+        Let \(\dim V=n\) and \(\dim\operatorname{Ker}(L)=k\). Pick a basis
+        \(\{u_1,\dots,u_k\}\) of \(\operatorname{Ker}(L)\) and extend it to a basis
+        \(\{u_1,\dots,u_k,w_1,\dots,w_{n-k}\}\) of \(V\). <strong>Claim:</strong>
+        \(\{Lw_1,\dots,Lw_{n-k}\}\) is a basis of \(\operatorname{Ran}(L)\).
+        <br><strong>Spanning:</strong> any \(Lv\) with \(v=\sum a_iu_i+\sum b_jw_j\) gives
+        \(Lv=\sum b_j\,Lw_j\) (the \(u_i\) die), so the \(Lw_j\) span \(\operatorname{Ran}(L)\).
+        <br><strong>Independence:</strong> if \(\sum c_j Lw_j=0\) then \(L\!\left(\sum c_jw_j\right)=0\),
+        so \(\sum c_jw_j\in\operatorname{Ker}(L)=\operatorname{span}\{u_i\}\); writing it as
+        \(\sum d_iu_i\) and using independence of the full basis forces all \(c_j=0\)
+        (and \(d_i=0\)). Hence \(\dim\operatorname{Ran}(L)=n-k\), i.e.
+        \(\operatorname{rank}+\text{nullity}=n=\dim V\). \(\blacksquare\)
+
+        <span class="lead">(c)</span>
+        Here \(\dim V=5\), so nullity \(=5-2=3\). Since
+        \(\operatorname{rank}=2&lt;3=\dim(\text{codomain})\), \(A\) is <strong>not surjective</strong>;
+        since nullity \(=3\neq0\), \(A\) is <strong>not injective</strong>. When \(A\mathbf x=\mathbf b\)
+        is consistent with one solution \(\mathbf x_0\), the full solution set is the affine
+        translate \(\mathbf x_0+\operatorname{Ker}(A)\) — a <strong>3-dimensional</strong> family
+        (three free parameters).
+
+        <span class="lead">(d)</span>
+        \(L\) injective \(\iff\operatorname{Ker}(L)=\{0\}\iff\text{nullity}=0\).
+        By rank-nullity, \(\operatorname{rank}(L)=\dim V-\text{nullity}\), so nullity \(=0\)
+        \(\iff\operatorname{rank}(L)=\dim V=\dim W\)
+        \(\iff\dim\operatorname{Ran}(L)=\dim W\iff\operatorname{Ran}(L)=W\iff L\) surjective.
+        Thus injective \(\iff\) surjective. \(\blacksquare\)
+      </div>
+    </details>
+  </article>
+
+  <p class="rules" style="margin:28px 0 10px;">
+    <b>After you finish:</b> log any slip in your Error Log (Conceptual / Formula / Algebra /
+    Time / Misread). The most common trap here is mixing up the <em>direction</em> of
+    \(I_{\mathcal C\leftarrow\mathcal B}\) — its columns are the <em>old</em> basis in
+    <em>new</em> coordinates.
+  </p>
+
+</main>
+
+<footer class="footer-note">
+  RAFI'S STUDY HUB · LINEAR ALGEBRA PRACTICE · 28 MAY 2026 · STYLE-MATCHED TO style.css
+</footer>

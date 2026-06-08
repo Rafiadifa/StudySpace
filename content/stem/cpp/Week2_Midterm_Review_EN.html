@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1 Midterm Review (Data Types & Basic Functions)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1f2937;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .scroll-progress {
+            position: fixed; top: 0; left: 0; width: 0%; height: 6px;
+            background: linear-gradient(90deg, #22c55e, #14b8a6);
+            z-index: 1000; transition: width 0.2s ease;
+        }
+        .container {
+            max-width: 1000px; margin: 0 auto; background: #fff;
+            border-radius: 18px; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+        }
+        header {
+            background: linear-gradient(135deg, #5b6df5 0%, #7e57c2 100%);
+            color: #fff; padding: 28px;
+        }
+        h1 { font-size: 2rem; margin-bottom: 6px; }
+        .subtitle { opacity: 0.95; }
+        .content { padding: 24px; }
+        .card {
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+            padding: 18px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+        h2 { font-size: 1.4rem; margin-bottom: 12px; color: #2f3f9c; }
+        h3 { font-size: 1.1rem; margin: 10px 0; color: #334155; }
+        h4 { color: #334155; margin: 10px 0; }
+        ul { padding-left: 20px; }
+        li { margin: 5px 0; }
+        .goal-list li {
+            cursor: pointer; user-select: none; padding: 4px 6px; border-radius: 6px;
+        }
+        .goal-list li.checked { text-decoration: line-through; color: #64748b; background: #f1f5f9; }
+        .highlight-box {
+            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+            border-left: 4px solid #6366f1; border-radius: 10px; padding: 14px; margin: 10px 0;
+        }
+        .warning {
+            background: #fff1f2; border-left: 4px solid #e11d48;
+            border-radius: 10px; padding: 12px; margin: 10px 0;
+        }
+        .tip {
+            background: #eff6ff; border-left: 4px solid #2563eb;
+            border-radius: 10px; padding: 12px; margin: 10px 0;
+        }
+        .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .tab-btn {
+            border: none; border-radius: 999px; padding: 8px 14px; cursor: pointer;
+            background: #e2e8f0; color: #1f2937; font-weight: 600; transition: 0.2s ease;
+        }
+        .tab-btn.active { background: linear-gradient(135deg, #5b6df5 0%, #7e57c2 100%); color: #fff; }
+        .tab-panel {
+            display: none; border: 1px solid #e5e7eb; border-radius: 10px;
+            padding: 14px; background: #fcfcff;
+        }
+        .tab-panel.active { display: block; }
+        .code-block {
+            background: #0f172a; color: #e2e8f0; border-radius: 10px; padding: 14px;
+            font-family: Consolas, Monaco, "Courier New", monospace; font-size: 14px; line-height: 1.5;
+            margin: 10px 0; white-space: pre; overflow-x: auto; tab-size: 4;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: left; vertical-align: top; }
+        th { background: #eef2ff; color: #1e293b; }
+        .exercise {
+            background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px;
+            padding: 16px; margin: 14px 0;
+        }
+        .difficulty {
+            display: inline-block; margin-left: 8px; padding: 2px 8px;
+            border-radius: 999px; font-size: 12px; color: #fff;
+        }
+        .basic { background: #16a34a; }
+        .core { background: #ea580c; }
+        .challenge { background: #dc2626; }
+        .answer-btn {
+            margin-top: 8px; border: none; border-radius: 8px; padding: 8px 12px;
+            color: #fff; font-weight: 600; cursor: pointer;
+            background: linear-gradient(135deg, #5b6df5 0%, #7e57c2 100%);
+        }
+        .answer-section {
+            display: none; margin-top: 10px; border-radius: 10px; padding: 12px;
+            background: #ecfdf5; border: 1px solid #86efac;
+        }
+        .answer-section.show { display: block; animation: slideDown 0.25s ease; }
+        .memory-tip { margin-top: 8px; background: #e0f2fe; border-left: 4px solid #0284c7; padding: 8px; border-radius: 8px; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 14px; }
+            h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="container">
+        <header>
+            <h1>Chapter 1 Midterm Review: Data Types & Basic Functions</h1>
+            <p class="subtitle">Exam-focused interactive review: memory, variables, data types, operators, functions, and cin/cout.</p>
+        </header>
+
+        <main class="content">
+            <section class="card">
+                <h2>A. Exam Goals Checklist</h2>
+                <div class="highlight-box">
+                    <ul class="goal-list">
+                        <li>Explain declaration vs initialization vs assignment with examples.</li>
+                        <li>Avoid uninitialized variables and identify undefined behavior risks.</li>
+                        <li>Choose correct data types: int/int64_t/double/char/bool/string.</li>
+                        <li>Predict integer division, modulo, and precedence outcomes.</li>
+                        <li>Write and call basic functions (void/parameters/return value).</li>
+                        <li>Use cin/cout correctly for interactive programs.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>B. Concept Cheat Sheets</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('tab-memory', this)">Memory & Variables</button>
+                    <button class="tab-btn" onclick="showTab('tab-types', this)">Data Types</button>
+                    <button class="tab-btn" onclick="showTab('tab-ops', this)">Operations</button>
+                    <button class="tab-btn" onclick="showTab('tab-func', this)">Functions</button>
+                    <button class="tab-btn" onclick="showTab('tab-io', this)">Input/Output</button>
+                </div>
+
+                <div id="tab-memory" class="tab-panel active">
+                    <table>
+                        <tr><th>Concept</th><th>Meaning</th><th>Mini Example</th><th>Memory Image</th></tr>
+                        <tr><td>Declaration</td><td>Announce name + type</td><td><code>int score;</code></td><td>Create labeled empty box</td></tr>
+                        <tr><td>Initialization</td><td>Give first value</td><td><code>int score = 0;</code></td><td>Label + put value immediately</td></tr>
+                        <tr><td>Assignment</td><td>Update existing value</td><td><code>score = 100;</code></td><td>Replace content in box</td></tr>
+                        <tr><td>Address-of</td><td>Get memory address</td><td><code>cout &lt;&lt; &amp;score;</code></td><td>Read box location number</td></tr>
+                    </table>
+                    <div class="warning"><strong>Common trap:</strong> <code>int x; cout &lt;&lt; x;</code> reads garbage value and causes undefined behavior.</div>
+                </div>
+
+                <div id="tab-types" class="tab-panel">
+                    <table>
+                        <tr><th>Type</th><th>Use Case</th><th>Example</th><th>Exam Note</th></tr>
+                        <tr><td><code>int</code></td><td>Whole numbers</td><td><code>int age = 20;</code></td><td>Can overflow around ±2.1B</td></tr>
+                        <tr><td><code>int64_t</code></td><td>Large integers</td><td><code>int64_t big = 4000000000;</code></td><td>Use for bigger ranges</td></tr>
+                        <tr><td><code>double</code></td><td>Decimals (preferred)</td><td><code>double p = 19.99;</code></td><td>Compare with epsilon, not ==</td></tr>
+                        <tr><td><code>char</code></td><td>Single character</td><td><code>char g = 'A';</code></td><td>Single quote only</td></tr>
+                        <tr><td><code>string</code></td><td>Text</td><td><code>string n = "Alice";</code></td><td>Needs <code>#include &lt;string&gt;</code></td></tr>
+                    </table>
+                    <div class="tip"><strong>Memory tip:</strong> "Type chooses box size and interpretation."</div>
+                </div>
+
+                <div id="tab-ops" class="tab-panel">
+                    <table>
+                        <tr><th>Rule</th><th>Example</th><th>Result</th><th>Why</th></tr>
+                        <tr><td>Integer division truncates</td><td><code>5 / 2</code></td><td>2</td><td>Both operands are int</td></tr>
+                        <tr><td>Floating division keeps decimals</td><td><code>5.0 / 2</code></td><td>2.5</td><td>At least one operand is floating</td></tr>
+                        <tr><td>Modulo gives remainder</td><td><code>17 % 5</code></td><td>2</td><td>Remainder after integer division</td></tr>
+                        <tr><td>Precedence</td><td><code>10 + 5 * 2</code></td><td>20</td><td><code>*</code> before <code>+</code></td></tr>
+                    </table>
+                    <div class="warning"><strong>Common trap:</strong> <code>double d = 5 / 2;</code> still stores 2.0 (division happened as int first).</div>
+                </div>
+
+                <div id="tab-func" class="tab-panel">
+                    <ul>
+                        <li><strong>Void function:</strong> performs action, no return value.</li>
+                        <li><strong>Function with parameters:</strong> receives input values.</li>
+                        <li><strong>Function with return value:</strong> computes and sends a value back.</li>
+                    </ul>
+                    <div class="tip"><strong>Memory tip:</strong> Function = "reusable machine": input -> process -> output.</div>
+                </div>
+
+                <div id="tab-io" class="tab-panel">
+                    <table>
+                        <tr><th>Tool</th><th>Direction</th><th>Operator</th><th>Example</th></tr>
+                        <tr><td><code>cout</code></td><td>Program -> Screen</td><td><code>&lt;&lt;</code></td><td><code>cout &lt;&lt; "Hi";</code></td></tr>
+                        <tr><td><code>cin</code></td><td>Keyboard -> Program</td><td><code>&gt;&gt;</code></td><td><code>cin &gt;&gt; age;</code></td></tr>
+                    </table>
+                    <div class="warning"><strong>Common trap:</strong> Writing <code>cin &lt;&lt; x;</code> (wrong direction).</div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>C. Must-Know Code Templates</h2>
+                <h3>1) Safe variable use + address check</h3>
+                <pre class="code-block">int age = 25;
+cout << "Value: " << age << endl;
+cout << "Address: " << &age << endl;</pre>
+
+                <h3>2) Floating-point comparison (epsilon)</h3>
+                <pre class="code-block">#include <cmath>
+double a = 0.1 + 0.2;
+if (fabs(a - 0.3) < 1e-9) {
+    cout << "Equal enough" << endl;
+}</pre>
+
+                <h3>3) Function with parameters and return value</h3>
+                <pre class="code-block">double average(int a, int b, int c) {
+    return (a + b + c) / 3.0;
+}
+
+int main() {
+    int x, y, z;
+    cin >> x >> y >> z;
+    cout << average(x, y, z) << endl;
+    return 0;
+}</pre>
+            </section>
+
+            <section class="card">
+                <h2>D. Program Flow Diagram (Input -> Process -> Output)</h2>
+                <div class="highlight-box">
+                    <p><strong>Execution thinking:</strong> declare variables -> read input with <code>cin</code> -> compute by expressions/functions -> print with <code>cout</code>.</p>
+                    <p><strong>Quality check:</strong> ensure type match, division type, and precedence clarity before output.</p>
+                </div>
+                <div class="tip"><strong>Memory tip:</strong> "Collect ingredients -> cook -> plate the dish."</div>
+            </section>
+
+            <section class="card">
+                <h2>E. Hard Points & Common Mistakes</h2>
+                <div class="warning"><strong>Hard Point 1:</strong> Confusing declaration with initialization. Declaration alone does not assign safe value.</div>
+                <div class="warning"><strong>Hard Point 2:</strong> Forgetting integer division behavior in mixed calculations.</div>
+                <div class="warning"><strong>Hard Point 3:</strong> Comparing doubles with <code>==</code> directly.</div>
+                <div class="warning"><strong>Hard Point 4:</strong> Misreading operator precedence when there are multiple operators.</div>
+                <div class="tip"><strong>Anti-mistake checklist:</strong> initialize, check operand types, add parentheses, test with sample input.</div>
+            </section>
+
+            <section class="card">
+                <h2>F. Practice Zone (Click to Reveal)</h2>
+
+                <article class="exercise">
+                    <h3>Q1. Declaration vs Initialization <span class="difficulty basic">Basic</span></h3>
+                    <p>Which line is initialization?</p>
+                    <p>A) <code>int score;</code> B) <code>score = 90;</code> C) <code>int score = 90;</code></p>
+                    <button class="answer-btn" onclick="toggleAnswer('a1', this)">Show Answer</button>
+                    <div id="a1" class="answer-section">
+                        <p><strong>Answer:</strong> C</p>
+                        <p><strong>Why:</strong> It creates variable and gives first value in one statement.</p>
+                        <div class="memory-tip"><strong>Memory Tip:</strong> [Rule] First value at birth = initialization.</div>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q2. Uninitialized Risk <span class="difficulty core">Core</span></h3>
+                    <p>What is wrong with <code>int x; cout &lt;&lt; x;</code>?</p>
+                    <button class="answer-btn" onclick="toggleAnswer('a2', this)">Show Answer</button>
+                    <div id="a2" class="answer-section">
+                        <p><strong>Answer:</strong> <code>x</code> is uninitialized and may print random garbage.</p>
+                        <p><strong>Why:</strong> This is undefined behavior in C++.</p>
+                        <div class="memory-tip"><strong>Memory Tip:</strong> [Analogy] Unlabeled box content is unknown - never trust it.</div>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q3. Division Trap <span class="difficulty core">Core</span></h3>
+                    <p>What is the output of <code>double d = 5 / 2; cout &lt;&lt; d;</code>?</p>
+                    <button class="answer-btn" onclick="toggleAnswer('a3', this)">Show Answer</button>
+                    <div id="a3" class="answer-section">
+                        <p><strong>Answer:</strong> 2 (or 2.0)</p>
+                        <p><strong>Why:</strong> <code>5 / 2</code> is integer division first, then converted to double.</p>
+                        <div class="memory-tip"><strong>Memory Tip:</strong> [Rule] Integer + integer division => truncation first.</div>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q4. Precedence <span class="difficulty basic">Basic</span></h3>
+                    <p>Evaluate: <code>10 + 5 * 2</code> and <code>(10 + 5) * 2</code>.</p>
+                    <button class="answer-btn" onclick="toggleAnswer('a4', this)">Show Answer</button>
+                    <div id="a4" class="answer-section">
+                        <p><strong>Answer:</strong> 20 and 30.</p>
+                        <p><strong>Why:</strong> Multiplication has higher precedence than addition.</p>
+                        <div class="memory-tip"><strong>Memory Tip:</strong> [Comparison] Parentheses are "priority override buttons".</div>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q5. Type Matching <span class="difficulty core">Core</span></h3>
+                    <p>Pick the corrected statement for text "A":</p>
+                    <p>A) <code>string s = 'A';</code> B) <code>char c = 'A';</code> C) <code>char c = "A";</code></p>
+                    <button class="answer-btn" onclick="toggleAnswer('a5', this)">Show Answer</button>
+                    <div id="a5" class="answer-section">
+                        <p><strong>Answer:</strong> B is correct.</p>
+                        <p><strong>Why:</strong> Single quote is char; double quote is string literal.</p>
+                        <div class="memory-tip"><strong>Memory Tip:</strong> [Rule] Single quote = one char, double quote = text string.</div>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q6. Function Return Type <span class="difficulty core">Core</span></h3>
+                    <p>Why is this wrong: <code>void f() { return 5; }</code>?</p>
+                    <button class="answer-btn" onclick="toggleAnswer('a6', this)">Show Answer</button>
+                    <div id="a6" class="answer-section">
+                        <p><strong>Answer:</strong> <code>void</code> means no return value.</p>
+                        <p><strong>Fix:</strong> Use <code>int f()</code> or remove returned value.</p>
+                        <div class="memory-tip"><strong>Memory Tip:</strong> [Rule] void = "no package sent back".</div>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q7. cin/cout Direction <span class="difficulty basic">Basic</span></h3>
+                    <p>Choose correct input statement:</p>
+                    <p>A) <code>cin &lt;&lt; age;</code> B) <code>cin &gt;&gt; age;</code></p>
+                    <button class="answer-btn" onclick="toggleAnswer('a7', this)">Show Answer</button>
+                    <div id="a7" class="answer-section">
+                        <p><strong>Answer:</strong> B</p>
+                        <p><strong>Why:</strong> <code>&gt;&gt;</code> extracts data from input stream into variable.</p>
+                        <div class="memory-tip"><strong>Memory Tip:</strong> [Analogy] Arrow points toward variable for input.</div>
+                    </div>
+                </article>
+
+                <article class="exercise">
+                    <h3>Q8. Comprehensive Mini Debug <span class="difficulty challenge">Challenge</span></h3>
+                    <p>Find two bugs:</p>
+                    <pre class="code-block">double average(int a, int b) {
+    return (a + b) / 2;
+}
+int main() {
+    int x;
+    cin << x;
+    cout << average(x, 5) << endl;
+}</pre>
+                    <button class="answer-btn" onclick="toggleAnswer('a8', this)">Show Answer</button>
+                    <div id="a8" class="answer-section">
+                        <p><strong>Answer:</strong> (1) <code>cin &gt;&gt; x;</code> should use extraction operator. (2) better use <code>/ 2.0</code> for decimal average.</p>
+                        <pre class="code-block">double average(int a, int b) {
+    return (a + b) / 2.0;
+}
+int main() {
+    int x = 0;
+    cin >> x;
+    cout << average(x, 5) << endl;
+    return 0;
+}</pre>
+                        <div class="memory-tip"><strong>Memory Tip:</strong> [Checklist] operator direction, initialization, numeric type.</div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="card">
+                <h2>G. Coverage Mapping (Source Markdown -> This Review)</h2>
+                <table>
+                    <tr><th>Source Heading Group</th><th>Coverage Decision</th><th>Mapped Location</th></tr>
+                    <tr><td>Quick/Bilingual Reference Tables</td><td>Include as core review point</td><td>Section B tabs + Section C templates</td></tr>
+                    <tr><td>0. Preliminaries (Memory/Variable/&amp; operator)</td><td>Include as core review point</td><td>Section B (Memory tab), C1, Q1-Q2</td></tr>
+                    <tr><td>1. First Program (cout, syntax basics)</td><td>Include as brief mention</td><td>Section B (I/O tab), Q7</td></tr>
+                    <tr><td>2. Introducing Variables</td><td>Include as core review point</td><td>Section A goals, B memory tab, Q1-Q2</td></tr>
+                    <tr><td>3. Basic Data Types (+overflow, float precision)</td><td>Include as core review point</td><td>B data type tab, C2, Q5</td></tr>
+                    <tr><td>4. Operations &amp; Division Trap</td><td>Include as core review point</td><td>B operations tab, Q3</td></tr>
+                    <tr><td>5. Operator Precedence</td><td>Include as core review point</td><td>B operations tab, Q4</td></tr>
+                    <tr><td>6. Intro to Functions (void/params/return/library)</td><td>Include as core review point</td><td>B functions tab, C3, Q6</td></tr>
+                    <tr><td>7. User Input with cin</td><td>Include as core review point</td><td>B I/O tab, D flow, Q7-Q8</td></tr>
+                    <tr><td>8. Complete Student Management Program</td><td>Include as brief mention</td><td>D flow + Q8 comprehensive exercise</td></tr>
+                    <tr><td>9. Chapter Summary + Common Mistakes</td><td>Include as core review point</td><td>E hard points + all exercises</td></tr>
+                    <tr><td>Quick Reference Card</td><td>Include as brief mention</td><td>B tables and C templates</td></tr>
+                    <tr><td>All "Try It Yourself" subsections</td><td>Include as brief mention</td><td>Section F (8 mixed exercises)</td></tr>
+                    <tr><td>Preview of Chapter 2</td><td>Exclude with reason (next chapter scope)</td><td>Out of current midterm scope</td></tr>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function showTab(tabId, button) {
+            const panels = document.querySelectorAll(".tab-panel");
+            const buttons = document.querySelectorAll(".tab-btn");
+            panels.forEach((panel) => panel.classList.remove("active"));
+            buttons.forEach((btn) => btn.classList.remove("active"));
+            const target = document.getElementById(tabId);
+            if (target) {
+                target.classList.add("active");
+            }
+            button.classList.add("active");
+        }
+
+        function toggleAnswer(answerId, button) {
+            const ans = document.getElementById(answerId);
+            if (!ans) return;
+            ans.classList.toggle("show");
+            button.textContent = ans.classList.contains("show") ? "Hide Answer" : "Show Answer";
+        }
+
+        window.addEventListener("scroll", () => {
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollTop = window.scrollY;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            document.getElementById("scrollProgress").style.width = progress + "%";
+        });
+
+        document.querySelectorAll(".goal-list li").forEach((item) => {
+            item.addEventListener("click", () => item.classList.toggle("checked"));
+        });
+    </script>
+</body>
+</html>

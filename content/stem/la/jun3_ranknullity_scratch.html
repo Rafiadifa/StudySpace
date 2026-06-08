@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Lin Alg · Rank-Nullity from Scratch · 3 Jun</title>
+<link href="../../../style.css" rel="stylesheet"/>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  .recall-box { background:rgba(190,24,93,0.07); border:1px solid rgba(190,24,93,0.3); border-left:3px solid var(--la); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+  .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--la); margin-bottom:10px; }
+  .recall-box ul { margin:8px 0 0 20px; line-height:1.9; color:var(--text); font-size:0.95rem; }
+</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+<div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ lin-alg / rank-nullity</span>
+  <span class="topbar-date">WED 3 JUN 2026 · P5</span>
+</header>
+<section class="hero">
+  <h1>Rank–Nullity <em>from Scratch</em></h1>
+  <p class="hero-meta">Active-recall session. Close the notes. Try to reconstruct the statement and the full proof on a blank sheet before revealing anything. The goal is to write the theorem cold.</p>
+  <div class="exam-pills">
+    <span class="pill pill-la">Lin Alg</span>
+    <span class="pill pill-la">Active Recall</span>
+    <span class="pill pill-la">Final · 25 June 2026</span>
+  </div>
+</section>
+<main class="main">
+<div class="subject-block">
+  <div class="subject-header">
+    <span class="subject-dot dot-la"></span>
+    <div>
+      <div class="subject-label">Self-Study · recall from memory</div>
+      <h2 class="subject-title" style="color:var(--la)">Prove It Cold</h2>
+    </div>
+    <div class="subject-exam-date"><strong>Final · 25 Jun</strong></div>
+  </div>
+
+  <!-- R1 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Recall 1</span><span class="problem-topic">State the theorem</span></div>
+    <div class="problem-body">
+      <div class="recall-box">
+        <div class="rl">⌁ Write it from memory</div>
+        State the Rank–Nullity Theorem precisely. Define every symbol: what are the rank, the nullity, and what does \(n\) refer to?
+      </div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Reveal Model Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Model</span>
+          For a linear map \(T:V\to W\) with \(\dim V=n\): \(\operatorname{rank}(T)+\operatorname{nullity}(T)=n\), where \(\operatorname{rank}(T)=\dim(\operatorname{im}T)\) and \(\operatorname{nullity}(T)=\dim(\ker T)\). For a matrix \(A\in\mathbb R^{m\times n}\): \(\dim(\operatorname{Col}A)+\dim(\operatorname{Nul}A)=n\) — \(n\) is the number of <em>columns</em>.
+          <div class="ans-note">The most-missed detail: \(n\) is the dimension of the <em>domain</em> (columns), not the codomain.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- R2 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Recall 2</span><span class="problem-topic">Build the proof</span></div>
+    <div class="problem-body">
+      <div class="recall-box">
+        <div class="rl">⌁ Reconstruct the argument</div>
+        Prove it. Start from a basis of the kernel and extend. What do you need to show about the images of the extension vectors?
+      </div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Reveal Model Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Model proof</span>
+          Let \(\{u_1,\dots,u_k\}\) be a basis of \(\ker T\) (so \(\operatorname{nullity}=k\)). Extend to a basis \(\{u_1,\dots,u_k,w_1,\dots,w_{n-k}\}\) of \(V\).
+          <br><strong>Claim:</strong> \(\{T(w_1),\dots,T(w_{n-k})\}\) is a basis of \(\operatorname{im}T\).
+          <br><em>Spanning:</em> any \(T(v)\) expands via the basis; the \(u_i\) terms vanish under \(T\), leaving a combination of the \(T(w_j)\).
+          <br><em>Independence:</em> if \(\sum c_j T(w_j)=0\), then \(T(\sum c_j w_j)=0\), so \(\sum c_j w_j\in\ker T\) is a combination of the \(u_i\); independence of the full basis forces all \(c_j=0\).
+          <br>Hence \(\operatorname{rank}=n-k\), so \(\operatorname{rank}+\operatorname{nullity}=(n-k)+k=n\). \(\blacksquare\)
+          <div class="ans-note">The engine of the proof: extend a kernel basis, then show the images of the <em>extension</em> vectors form a basis of the image.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- R3 -->
+  <div class="problem">
+    <div class="problem-header"><span class="problem-num">Recall 3</span><span class="problem-topic">Apply it fast</span></div>
+    <div class="problem-body">
+      <div class="recall-box">
+        <div class="rl">⌁ One-line answers</div>
+        A matrix \(A\) is \(3\times5\) with rank 2. (a) nullity? (b) Is \(Ax=b\) ever unique? (c) Can the columns span \(\mathbb R^3\)?
+      </div>
+      <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Reveal Model Answer</button>
+        <div class="answer"><div class="ans-part"><span class="ans-part-label">Model</span>
+          (a) nullity \(=5-2=3\). (b) No — nullity \(>0\) means the homogeneous system has free variables, so solutions are never unique. (c) No — column space has dimension 2 \(<3\), so the columns cannot span \(\mathbb R^3\).
+          <div class="key-result">nullity 3; never unique; cannot span \(\mathbb R^3\).</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="footer-note">Lin Alg · Rank–Nullity from Scratch · Wednesday 3 June 2026 · Recall, don't re-read ✦</div>
+</main>
+
+<div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+<script>
+  function toggleAns(btn){ const a=btn.nextElementSibling; a.classList.toggle('open'); btn.textContent=a.classList.contains('open')?'Hide Model Answer':'Reveal Model Answer'; }
+  window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
+  const start=Date.now(), pad=n=>String(n).padStart(2,'0');
+  setInterval(()=>{ const e=Math.floor((Date.now()-start)/1000); document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60); },1000);
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

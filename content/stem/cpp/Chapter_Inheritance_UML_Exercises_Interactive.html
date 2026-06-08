@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter: Inheritance &amp; UML - Interactive Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            margin: 20px 30px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .exercise-section {
+            padding: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .exercise-section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+        
+        .exercise-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .exercise-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .exercise-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        
+        .difficulty-basic { background: #4CAF50; color: white; }
+        .difficulty-intermediate { background: #FF9800; color: white; }
+        .difficulty-advanced { background: #f44336; color: white; }
+        
+        .exercise-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .exercise-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 15px 0;
+            position: relative;
+            tab-size: 4;
+        }
+        
+        .code-block::before {
+            content: 'C++';
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 0.7em;
+            color: #999;
+        }
+        
+        .input-area {
+            margin: 20px 0;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .code-input {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre;
+            overflow-x: auto;
+            resize: vertical;
+            transition: border-color 0.3s;
+            tab-size: 4;
+        }
+        
+        .code-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .mcq-options {
+            margin: 15px 0;
+        }
+        
+        .mcq-option {
+            display: block;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .mcq-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .mcq-option.selected {
+            border-color: #667eea;
+            background: #e8eeff;
+        }
+        
+        .mcq-option.correct {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        
+        .mcq-option.wrong {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            display: block;
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            color: #2e7d32;
+        }
+        
+        .feedback.wrong {
+            display: block;
+            background: #ffebee;
+            border: 2px solid #f44336;
+            color: #c62828;
+        }
+        
+        .feedback.info {
+            display: block;
+            background: #e3f2fd;
+            border: 2px solid #2196F3;
+            color: #1565c0;
+        }
+        
+        .answer-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff3e0;
+            border: 2px solid #FF9800;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .answer-title {
+            font-weight: bold;
+            color: #e65100;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .hint-box {
+            background: #fff9c4;
+            border-left: 4px solid #fbc02d;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        
+        .completion-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .stats {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .exercise-card { padding: 15px; }
+            .button-group { flex-direction: column; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Inheritance &amp; UML</h1>
+            <p class="subtitle">C++ Inheritance, UML Class Diagrams &amp; Access — Interactive Practice / 继承与UML互动练习</p>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">Progress: 0 / 16 exercises completed</div>
+
+        <section class="exercise-section">
+            <h2 class="section-title">Part 1: UML &amp; Relationships</h2>
+
+            <div class="exercise-card" data-exercise="1.1">
+                <span class="exercise-number">Exercise 1.1</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">Is-A vs Has-A</h3>
+                <p class="exercise-description">
+                    In the lecture, <strong>Student is-a Person</strong> models shared identity fields (<code>id</code>, <code>name</code>) in a base class. Which C++ declaration correctly expresses public &quot;is-a&quot; inheritance?
+                </p>
+                <div class="mcq-options" id="mcq-1-1">
+                    <label class="mcq-option" onclick="selectOption('1.1', 0)">
+                        A) <code>class Student { Person p; };</code> (member object)
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('1.1', 1)">
+                        B) <code>class Student : public Person { ... };</code>
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('1.1', 2)">
+                        C) <code>class Student : private Person { ... };</code> (default &quot;is-a&quot; for interfaces)
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('1.1', 3)">
+                        D) <code>class Student; typedef Person Student;</code>
+                    </label>
+                </div>
+                <div class="hint-box" id="hint-1-1">
+                    <strong>Hint:</strong> Inheritance uses a colon and the base class name; <code>public</code> preserves the usual &quot;is-a&quot; meaning. A nested or member <code>Person</code> is &quot;has-a&quot;, not &quot;is-a&quot;.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('1.1', 1)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('1.1')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('1.1')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-1-1"></div>
+                <div class="answer-section" id="answer-1-1">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: B</strong> — <code>class Student : public Person</code> is the standard &quot;is-a&quot; relationship. Option A is composition (has-a). Private inheritance changes interface visibility and is not the usual &quot;Student is a Person&quot; design.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="1.2">
+                <span class="exercise-number">Exercise 1.2</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">UML Access Symbols</h3>
+                <p class="exercise-description">
+                    UML uses <code>+</code>, <code>-</code>, and <code>#</code> before attributes and operations. What does <code>#</code> correspond to in C++?
+                </p>
+                <div class="mcq-options" id="mcq-1-2">
+                    <label class="mcq-option" onclick="selectOption('1.2', 0)">A) <code>public</code></label>
+                    <label class="mcq-option" onclick="selectOption('1.2', 1)">B) <code>private</code></label>
+                    <label class="mcq-option" onclick="selectOption('1.2', 2)">C) <code>protected</code></label>
+                    <label class="mcq-option" onclick="selectOption('1.2', 3)">D) <code>friend</code></label>
+                </div>
+                <div class="hint-box" id="hint-1-2">
+                    <strong>Hint:</strong> Think &quot;family recipe&quot; in the lecture: visible to this class and derived classes, but not to arbitrary outside code.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('1.2', 2)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('1.2')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('1.2')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-1-2"></div>
+                <div class="answer-section" id="answer-1-2">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: C</strong> — <code>#</code> is <code>protected</code>: accessible in the class and in derived classes, not part of the public API for external users.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="1.3">
+                <span class="exercise-number">Exercise 1.3</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Department and Professor</h3>
+                <p class="exercise-description">
+                    A <strong>Department</strong> keeps a collection of <strong>Professor</strong> objects. Professors can exist without belonging to that department (they may move or teach elsewhere). Which UML relationship best matches this &quot;weak has-a&quot;?
+                </p>
+                <div class="mcq-options" id="mcq-1-3">
+                    <label class="mcq-option" onclick="selectOption('1.3', 0)">A) Inheritance: <code>Department</code> is-a <code>Professor</code></label>
+                    <label class="mcq-option" onclick="selectOption('1.3', 1)">B) Composition (filled diamond): professors cannot exist without the department</label>
+                    <label class="mcq-option" onclick="selectOption('1.3', 2)">C) Aggregation (hollow diamond): department references professors that have independent lifetimes</label>
+                    <label class="mcq-option" onclick="selectOption('1.3', 3)">D) Dependency only: no structural link</label>
+                </div>
+                <div class="hint-box" id="hint-1-3">
+                    <strong>Hint:</strong> The lecture contrasts composition (heart–human) with aggregation (university–students who survive if the university closes).
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('1.3', 2)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('1.3')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('1.3')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-1-3"></div>
+                <div class="answer-section" id="answer-1-3">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: C</strong> — Aggregation fits when the part can outlive the whole. Composition would imply the department owns and destroys its professors exclusively.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="1.4">
+                <span class="exercise-number">Exercise 1.4</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Private Inheritance vs Composition</h3>
+                <p class="exercise-description">
+                    The lecture says <code>class Car : private Engine { }</code> means &quot;implemented-in-terms-of&quot; and recommends a clearer alternative. Which design best matches the usual advice?
+                </p>
+                <div class="mcq-options" id="mcq-1-4">
+                    <label class="mcq-option" onclick="selectOption('1.4', 0)">
+                        A) Always use public inheritance: <code>class Car : public Engine</code>
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('1.4', 1)">
+                        B) Prefer composition: <code>class Car { Engine engine; };</code> (or a member <code>Engine</code> object)
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('1.4', 2)">
+                        C) Make <code>Engine</code> a global variable so <code>Car</code> can share it
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('1.4', 3)">
+                        D) Use multiple inheritance from two unrelated engine classes
+                    </label>
+                </div>
+                <div class="hint-box" id="hint-1-4">
+                    <strong>Hint:</strong> Private inheritance hides the base interface; the notes say composition states &quot;has-a&quot; more clearly and stays flexible.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('1.4', 1)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('1.4')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('1.4')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-1-4"></div>
+                <div class="answer-section" id="answer-1-4">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: B</strong> — For &quot;implemented-in-terms-of&quot;, a member <code>Engine</code> (composition) is easier to read and maintain than private inheritance.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="exercise-section">
+            <h2 class="section-title">Part 2: Inheritance in C++</h2>
+
+            <div class="exercise-card" data-exercise="2.1">
+                <span class="exercise-number">Exercise 2.1</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Base Subobject Initialization</h3>
+                <p class="exercise-description">
+                    <code>Person</code> has <code>Person(int id, const string&amp; name)</code>. <code>Student</code> adds <code>gpa</code>. Which initializer list is correct for <code>Student(int id, const string&amp; name, double gpa)</code>?
+                </p>
+                <div class="code-block">class Student : public Person {
+    double gpa;
+public:
+    Student(int id, const string&amp; name, double gpa);
+};</div>
+                <div class="mcq-options" id="mcq-2-1">
+                    <label class="mcq-option" onclick="selectOption('2.1', 0)">
+                        A) <code>Student(...) : gpa(gpa), Person(id, name) { }</code>
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('2.1', 1)">
+                        B) <code>Student(...) { Person(id, name); this-&gt;gpa = gpa; }</code>
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('2.1', 2)">
+                        C) <code>Student(...) : Person(id, name), gpa(gpa) { }</code>
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('2.1', 3)">
+                        D) <code>Student(...) : Person(id, name) { id = id; gpa = gpa; }</code>
+                    </label>
+                </div>
+                <div class="hint-box" id="hint-2-1">
+                    <strong>Hint:</strong> The base class subobject must be constructed via the member-initializer list, not by calling the base constructor like a normal function in the body. Order in the list does not override the rule that bases are initialized before members.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.1', 2)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.1')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.1')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-1"></div>
+                <div class="answer-section" id="answer-2-1">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: C</strong> — Use <code>Person(id, name)</code> in the initializer list. You cannot &quot;call&quot; <code>Person(...)</code> as a statement in the constructor body to construct the base. Option D’s <code>id = id</code> is also wrong for base members in typical designs.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.2">
+                <span class="exercise-number">Exercise 2.2</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Constructor / Destructor Order</h3>
+                <p class="exercise-description">
+                    Given <code>Student</code> publicly derived from <code>Person</code>, each constructor and destructor prints one line. What is the complete print order when <code>Student s;</code> is created and then goes out of scope at the end of <code>main</code>?
+                </p>
+                <div class="code-block">// Person ctor prints: 1. Person constructor
+// Student ctor prints: 2. Student constructor
+// Student dtor prints: 3. Student destructor
+// Person dtor prints: 4. Person destructor</div>
+                <div class="mcq-options" id="mcq-2-2">
+                    <label class="mcq-option" onclick="selectOption('2.2', 0)">
+                        A) 1 → 2 → 3 → 4 (base ctor, derived ctor, derived dtor, base dtor)
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('2.2', 1)">
+                        B) 2 → 1 → 4 → 3
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('2.2', 2)">
+                        C) 1 → 2 → 4 → 3
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('2.2', 3)">
+                        D) 2 → 1 → 3 → 4
+                    </label>
+                </div>
+                <div class="hint-box" id="hint-2-2">
+                    <strong>Hint:</strong> Construction is foundation-first (base → derived). Destruction is the opposite: remove the roof before the foundation (derived → base).
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.2', 0)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.2')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.2')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-2"></div>
+                <div class="answer-section" id="answer-2-2">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: A</strong> — Construct base, then derived. Destroy derived, then base. Matches the &quot;house&quot; analogy in the lecture.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.3">
+                <span class="exercise-number">Exercise 2.3</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Code Analysis: Three-Level Construction</h3>
+                <p class="exercise-description">
+                    Trace construction and destruction for <code>C obj;</code> (from the lecture&apos;s three-level example). What is the <strong>complete</strong> output order?
+                </p>
+                <div class="code-block">class A {
+public:
+    A()  { cout &lt;&lt; "A constructed" &lt;&lt; endl; }
+    ~A() { cout &lt;&lt; "A destroyed" &lt;&lt; endl; }
+};
+class B : public A {
+public:
+    B()  { cout &lt;&lt; "B constructed" &lt;&lt; endl; }
+    ~B() { cout &lt;&lt; "B destroyed" &lt;&lt; endl; }
+};
+class C : public B {
+public:
+    C()  { cout &lt;&lt; "C constructed" &lt;&lt; endl; }
+    ~C() { cout &lt;&lt; "C destroyed" &lt;&lt; endl; }
+};
+int main() { C obj; return 0; }</div>
+                <div class="mcq-options" id="mcq-2-3">
+                    <label class="mcq-option" onclick="selectOption('2.3', 0)">
+                        A) A→B→C constructed, then C→B→A destroyed
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('2.3', 1)">
+                        B) C→B→A constructed, then A→B→C destroyed
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('2.3', 2)">
+                        C) B→A→C constructed, then C→A→B destroyed
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('2.3', 3)">
+                        D) Only &quot;C constructed&quot; and &quot;C destroyed&quot; print
+                    </label>
+                </div>
+                <div class="hint-box" id="hint-2-3">
+                    <strong>Hint:</strong> Every base subobject is constructed before the derived class body runs; destruction unwinds in the reverse order.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.3', 0)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.3')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.3')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-3"></div>
+                <div class="answer-section" id="answer-2-3">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: A</strong> — Output: <code>A constructed</code>, <code>B constructed</code>, <code>C constructed</code>, then <code>C destroyed</code>, <code>B destroyed</code>, <code>A destroyed</code>.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.4">
+                <span class="exercise-number">Exercise 2.4</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Code Completion: Base Constructor Call</h3>
+                <p class="exercise-description">
+                    <code>Person</code> has <code>Person(int id, const string&amp; name)</code>. Fill in the <strong>initializer list</strong> so the base subobject is constructed correctly (lecture pattern).
+                </p>
+                <div class="code-block">Student::Student(int id, const string&amp; name, double gpa, const string&amp; major)
+    : _______________________________
+    , gpa(gpa)
+    , major(major)
+{ }</div>
+                <div class="input-area">
+                    <label class="input-label">Replace the blank with the correct initializer (e.g. <code>Person(id, name)</code>):</label>
+                    <input type="text" class="text-input" id="input-2-4" placeholder="Person(id, name)">
+                </div>
+                <div class="hint-box" id="hint-2-4">
+                    <strong>Hint:</strong> Name the base class and pass the same <code>id</code> and <code>name</code> parameters the <code>Student</code> constructor receives.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkAnswer('2.4', 'student-init')">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.4')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.4')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-4"></div>
+                <div class="answer-section" id="answer-2-4">
+                    <div class="answer-title">Solution</div>
+                    <div class="code-block">Student::Student(int id, const string&amp; name, double gpa, const string&amp; major)
+    : Person(id, name)
+    , gpa(gpa)
+    , major(major)
+{ }</div>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.5">
+                <span class="exercise-number">Exercise 2.5</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Code Fix: <code>const</code> Member Initialization</h3>
+                <p class="exercise-description">
+                    The lecture stresses that <code>const</code> data members must be initialized in the <strong>constructor initializer list</strong>, not assigned in the body. List at least <strong>two</strong> distinct problems with this code.
+                </p>
+                <div class="code-block">class ChessPiece {
+private:
+    const string pieceID;
+    const bool isWhite;
+public:
+    ChessPiece(string id, bool white) {
+        pieceID = id;      // line 1
+        isWhite = white;   // line 2
+    }
+};</div>
+                <div class="input-area">
+                    <label class="input-label">Short phrases, one per line (English or 中文):</label>
+                    <textarea class="code-input" id="input-2-5" placeholder="1. ...
+2. ..."></textarea>
+                </div>
+                <div class="hint-box" id="hint-2-5">
+                    <strong>Hint:</strong> After the opening <code>{</code>, all subobjects are already supposed to be constructed; <code>const</code> members cannot be &quot;assigned&quot; later like ordinary fields.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkAnswer('2.5', 'const-member-errors')">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.5')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.5')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-5"></div>
+                <div class="answer-section" id="answer-2-5">
+                    <div class="answer-title">Solution</div>
+                    <ol>
+                        <li><code>const</code> members must be initialized in the <strong>initializer list</strong>, e.g. <code>ChessPiece(string id, bool white) : pieceID(id), isWhite(white) { }</code>.</li>
+                        <li>Assignments like <code>pieceID = id;</code> in the constructor body are <strong>compile errors</strong> because <code>const</code> cannot be modified after initialization.</li>
+                    </ol>
+                    <div class="code-block">ChessPiece(string id, bool white)
+    : pieceID(id), isWhite(white) { }</div>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.6">
+                <span class="exercise-number">Exercise 2.6</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Code Analysis: <code>Rectangle</code> and <code>move</code></h3>
+                <p class="exercise-description">
+                    <code>Rectangle</code> privately inherits <code>Point</code> and exposes <code>getX</code>/<code>getY</code> via wrappers (lecture example). After <code>initRectangle(2, 3, 20, 10)</code> then <code>move(3, 2)</code>, what does <code>getX()</code>, <code>getY()</code>, <code>getW()</code>, <code>getH()</code> return?
+                </p>
+                <div class="mcq-options" id="mcq-2-6">
+                    <label class="mcq-option" onclick="selectOption('2.6', 0)">A) 2, 3, 20, 10</label>
+                    <label class="mcq-option" onclick="selectOption('2.6', 1)">B) 5, 5, 20, 10</label>
+                    <label class="mcq-option" onclick="selectOption('2.6', 2)">C) 5, 5, 23, 12</label>
+                    <label class="mcq-option" onclick="selectOption('2.6', 3)">D) 3, 2, 20, 10</label>
+                </div>
+                <div class="hint-box" id="hint-2-6">
+                    <strong>Hint:</strong> <code>initRectangle</code> calls <code>initPoint(x, y)</code>; <code>move</code> adds offsets to the point. Width and height are unchanged by <code>move</code>.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.6', 1)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.6')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.6')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-6"></div>
+                <div class="answer-section" id="answer-2-6">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: B</strong> — Position becomes (2+3, 3+2) = (5, 5); <code>w</code> and <code>h</code> stay 20 and 10. Matches the sample output in the notes.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="exercise-section">
+            <h2 class="section-title">Part 3: Static Members &amp; Common Mistakes</h2>
+
+            <div class="exercise-card" data-exercise="3.1">
+                <span class="exercise-number">Exercise 3.1</span>
+                <span class="difficulty difficulty-advanced">Advanced</span>
+                <h3 class="exercise-title">Static Member Pitfalls</h3>
+                <p class="exercise-description">
+                    The review section warns about <code>static</code> data members. List at least <strong>three distinct problems</strong> with the code below (one short phrase per line is enough).
+                </p>
+                <div class="code-block">class ChessClub {
+private:
+    static int memberCount;
+public:
+    ChessClub() {
+        static int memberCount = 0;  // line A
+        memberCount++;
+    }
+};
+
+int static ChessClub::memberCount = 0;  // line B</div>
+                <div class="input-area">
+                    <label class="input-label">Your answers (e.g. 1. ... 2. ... 3. ...):</label>
+                    <textarea class="code-input" id="input-3-1" placeholder="1. First problem...
+2. Second problem...
+3. Third problem..."></textarea>
+                </div>
+                <div class="hint-box" id="hint-3-1">
+                    <strong>Hint:</strong> A <code>static</code> member is one shared variable for the whole class — it should not be re-declared as a local <code>static</code> inside each constructor. Also check how the out-of-class definition must look, and whether resetting the counter in the constructor makes sense.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkAnswer('3.1', 'static-errors')">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('3.1')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('3.1')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-3-1"></div>
+                <div class="answer-section" id="answer-3-1">
+                    <div class="answer-title">Solution</div>
+                    <ol>
+                        <li><strong>Line A:</strong> Declaring <code>static int memberCount = 0</code> inside the constructor creates a <em>different</em> local static variable, shadowing the class member — wrong pattern for counting all objects.</li>
+                        <li><strong>Line A:</strong> If interpreted as resetting shared state each construction, that would defeat a cumulative count (the lecture warns against initializing shared statics in the ctor body).</li>
+                        <li><strong>Line B:</strong> The out-of-class definition must be <code>int ChessClub::memberCount = 0;</code> — do not repeat the <code>static</code> keyword there (compile error).</li>
+                    </ol>
+                    <p><strong>Key insight:</strong> Define the static data member exactly once outside the class (in one .cpp), without <code>static</code> on the definition line.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="3.2">
+                <span class="exercise-number">Exercise 3.2</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">Code Analysis: Access in <code>Derived::test()</code></h3>
+                <p class="exercise-description">
+                    From the lecture&apos;s access-control drill — inside <code>Derived::test()</code>, which assignment <strong>does not compile</strong>?
+                </p>
+                <div class="code-block">class Base {
+private:    int a;
+protected:  int b;
+public:     int c;
+};
+class Derived : public Base {
+public:
+    void test() {
+        a = 1;
+        b = 2;
+        c = 3;
+    }
+};</div>
+                <div class="mcq-options" id="mcq-3-2">
+                    <label class="mcq-option" onclick="selectOption('3.2', 0)">A) <code>a = 1;</code> only</label>
+                    <label class="mcq-option" onclick="selectOption('3.2', 1)">B) <code>b = 2;</code> only</label>
+                    <label class="mcq-option" onclick="selectOption('3.2', 2)">C) <code>c = 3;</code> only</label>
+                    <label class="mcq-option" onclick="selectOption('3.2', 3)">D) All three compile</label>
+                </div>
+                <div class="hint-box" id="hint-3-2">
+                    <strong>Hint:</strong> <code>private</code> members of the base are visible only inside the base class, not inside arbitrary derived member functions.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('3.2', 0)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('3.2')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('3.2')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-3-2"></div>
+                <div class="answer-section" id="answer-3-2">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: A</strong> — <code>a</code> is <code>private</code> to <code>Base</code>. <code>b</code> and <code>c</code> are OK inside <code>Derived</code> (<code>protected</code> / <code>public</code>).</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="3.3">
+                <span class="exercise-number">Exercise 3.3</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">Code Analysis: Access in <code>main()</code></h3>
+                <p class="exercise-description">
+                    Same <code>Base</code> / <code>Derived</code> as above. Treat each line below as if it were the <strong>only</strong> assignment in <code>main()</code> (other lines removed). Which one <strong>compiles</strong>?
+                </p>
+                <div class="code-block">Derived d;
+// Consider separately: d.a = 1;  OR  d.b = 2;  OR  d.c = 3;</div>
+                <div class="mcq-options" id="mcq-3-3">
+                    <label class="mcq-option" onclick="selectOption('3.3', 0)">A) Only <code>d.a = 1;</code></label>
+                    <label class="mcq-option" onclick="selectOption('3.3', 1)">B) Only <code>d.b = 2;</code></label>
+                    <label class="mcq-option" onclick="selectOption('3.3', 2)">C) Only <code>d.c = 3;</code></label>
+                    <label class="mcq-option" onclick="selectOption('3.3', 3)">D) All three</label>
+                </div>
+                <div class="hint-box" id="hint-3-3">
+                    <strong>Hint:</strong> <code>protected</code> is for use inside the class hierarchy, not for ordinary client code in <code>main()</code>.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('3.3', 2)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('3.3')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('3.3')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-3-3"></div>
+                <div class="answer-section" id="answer-3-3">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: C</strong> — Only <code>d.c</code> is allowed from outside; <code>a</code> and <code>b</code> are not accessible through a <code>Derived</code> object in <code>main()</code>.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="exercise-section">
+            <h2 class="section-title">Part 4: Diamond Problem &amp; Virtual Inheritance</h2>
+
+            <div class="exercise-card" data-exercise="4.1">
+                <span class="exercise-number">Exercise 4.1</span>
+                <span class="difficulty difficulty-advanced">Advanced</span>
+                <h3 class="exercise-title">Code Analysis: Virtual Base Construction</h3>
+                <p class="exercise-description">
+                    With <code>virtual public Person</code> on both <code>Student</code> and <code>Professor</code>, and a most-derived class <code>TA</code> that initializes <code>Person</code> directly, how many times does the <code>Person</code> constructor run when you execute <code>TA ta(...);</code>?
+                </p>
+                <div class="mcq-options" id="mcq-4-1">
+                    <label class="mcq-option" onclick="selectOption('4.1', 0)">A) Once — only the most-derived class&apos;s direct <code>Person(...)</code> runs</label>
+                    <label class="mcq-option" onclick="selectOption('4.1', 1)">B) Twice — once from <code>Student</code>, once from <code>Professor</code></label>
+                    <label class="mcq-option" onclick="selectOption('4.1', 2)">C) Three times — Student, Professor, and TA each call it</label>
+                    <label class="mcq-option" onclick="selectOption('4.1', 3)">D) Zero times if TA uses default constructors</label>
+                </div>
+                <div class="hint-box" id="hint-4-1">
+                    <strong>Hint:</strong> Intermediate <code>Person(...)</code> calls in <code>Student</code> / <code>Professor</code> are ignored when the virtual base is constructed by <code>TA</code>.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('4.1', 0)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('4.1')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('4.1')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-4-1"></div>
+                <div class="answer-section" id="answer-4-1">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: A</strong> — A single shared <code>Person</code> subobject; the lecture shows <code>Person constructor</code> printed only once when creating a <code>TA</code>.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="4.2">
+                <span class="exercise-number">Exercise 4.2</span>
+                <span class="difficulty difficulty-advanced">Advanced</span>
+                <h3 class="exercise-title">Code Fix: <code>Duck</code> Diamond</h3>
+                <p class="exercise-description">
+                    <code>Duck</code> inherits <code>Flyer</code> and <code>Swimmer</code>, both inheriting <code>Animal</code> — so <code>duck.name</code> is ambiguous (lecture &quot;Fix the Diamond&quot;). Which fix matches the notes?
+                </p>
+                <div class="code-block">// Broken pattern (conceptual):
+class Flyer : public Animal { ... };
+class Swimmer : public Animal { ... };
+class Duck : public Flyer, public Swimmer { ... };
+// cout &lt;&lt; duck.name;  // ambiguous</div>
+                <div class="mcq-options" id="mcq-4-2">
+                    <label class="mcq-option" onclick="selectOption('4.2', 0)">
+                        A) Make <code>name</code> a <code>static</code> member of <code>Animal</code> only
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('4.2', 1)">
+                        B) Use <code>virtual public Animal</code> on <code>Flyer</code> and <code>Swimmer</code>, and initialize <code>Animal(n)</code> in <code>Duck</code>&apos;s initializer list before <code>Flyer</code>/<code>Swimmer</code>
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('4.2', 2)">
+                        C) Change <code>Duck</code> to inherit only <code>Flyer</code> and drop <code>Swimmer</code>
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('4.2', 3)">
+                        D) Use <code>private</code> inheritance for <code>Animal</code> in one branch only
+                    </label>
+                </div>
+                <div class="hint-box" id="hint-4-2">
+                    <strong>Hint:</strong> Virtual inheritance shares one base subobject; the most-derived class must construct that base directly.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('4.2', 1)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('4.2')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('4.2')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-4-2"></div>
+                <div class="answer-section" id="answer-4-2">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: B</strong> — Same pattern as the lecture&apos;s <code>Duck</code> solution: <code>virtual public Animal</code> on both intermediate classes, plus <code>Animal(n)</code> in <code>Duck</code>&apos;s ctor-initializer list.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="4.3">
+                <span class="exercise-number">Exercise 4.3</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Concept Check: <code>friend</code></h3>
+                <p class="exercise-description">
+                    Which statement matches the lecture&apos;s table on <code>friend</code> (友元)?
+                </p>
+                <div class="mcq-options" id="mcq-4-3">
+                    <label class="mcq-option" onclick="selectOption('4.3', 0)">
+                        A) Friendship is inherited: a derived class is automatically a friend if the base was
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('4.3', 1)">
+                        B) Friendship is symmetric: if <code>class A</code> friends <code>B</code>, then <code>B</code> friends <code>A</code> automatically
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('4.3', 2)">
+                        C) A friend function is not a member of the class, but may access private/protected members
+                    </label>
+                    <label class="mcq-option" onclick="selectOption('4.3', 3)">
+                        D) <code>friend</code> only grants access to <code>public</code> members
+                    </label>
+                </div>
+                <div class="hint-box" id="hint-4-3">
+                    <strong>Hint:</strong> Recall &quot;spare key&quot; analogy: not family (inheritance), and granting access is one-way unless reciprocated.
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('4.3', 2)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('4.3')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('4.3')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-4-3"></div>
+                <div class="answer-section" id="answer-4-3">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>Answer: C</strong> — Friends are not members; they break encapsulation deliberately. Friendship is <strong>not</strong> inherited and <strong>not</strong> symmetric by default.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="exercise-section">
+            <div class="stats">
+                <h3 style="margin-bottom: 10px;">Your Progress</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="completedCount">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="correctCount">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="accuracyPercent">0%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="completion-badge" id="completionBadge">
+        <h3>Congratulations! / 完成练习</h3>
+        <p>You've completed all inheritance &amp; UML exercises!</p>
+    </div>
+
+    <script>
+        const completedExercises = new Set();
+        const correctAnswers = new Set();
+        const totalExercises = 16;
+
+        function updateProgress() {
+            const progress = (completedExercises.size / totalExercises) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent =
+                `Progress: ${completedExercises.size} / ${totalExercises} exercises completed`;
+
+            document.getElementById('completedCount').textContent = completedExercises.size;
+            document.getElementById('correctCount').textContent = correctAnswers.size;
+            const accuracy = completedExercises.size > 0
+                ? Math.round((correctAnswers.size / completedExercises.size) * 100)
+                : 0;
+            document.getElementById('accuracyPercent').textContent = accuracy + '%';
+
+            if (completedExercises.size === totalExercises) {
+                document.getElementById('completionBadge').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('completionBadge').style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function showHint(exerciseId) {
+            const id = exerciseId.replace('.', '-');
+            const hintBox = document.getElementById('hint-' + id);
+            if (hintBox) {
+                hintBox.style.display = 'block';
+            }
+        }
+
+        function showAnswer(exerciseId) {
+            const id = exerciseId.replace('.', '-');
+            const answerSection = document.getElementById('answer-' + id);
+            if (answerSection) {
+                answerSection.style.display = 'block';
+                completedExercises.add(exerciseId);
+                updateProgress();
+            } else {
+                alert('Answer section not found for exercise ' + exerciseId);
+            }
+        }
+
+        function selectOption(exerciseId, optionIndex) {
+            const id = exerciseId.replace('.', '-');
+            const options = document.querySelectorAll('#mcq-' + id + ' .mcq-option');
+            options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                if (idx === optionIndex) {
+                    opt.classList.add('selected');
+                }
+            });
+        }
+
+        function checkMCQ(exerciseId, correctOption) {
+            const id = exerciseId.replace('.', '-');
+            const options = document.querySelectorAll('#mcq-' + id + ' .mcq-option');
+            let selected = -1;
+            options.forEach((opt, idx) => {
+                if (opt.classList.contains('selected')) {
+                    selected = idx;
+                }
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            const feedback = document.getElementById('feedback-' + id);
+
+            if (selected === -1) {
+                feedback.textContent = 'Please select an answer first!';
+                feedback.className = 'feedback info';
+                return;
+            }
+
+            completedExercises.add(exerciseId);
+
+            if (selected === correctOption) {
+                options[selected].classList.add('correct');
+                feedback.textContent = 'Correct! Well done!';
+                feedback.className = 'feedback correct';
+                correctAnswers.add(exerciseId);
+            } else {
+                options[selected].classList.add('wrong');
+                options[correctOption].classList.add('correct');
+                feedback.textContent = 'Incorrect. The correct answer is highlighted in green.';
+                feedback.className = 'feedback wrong';
+            }
+
+            updateProgress();
+        }
+
+        function checkAnswer(exerciseId, expectedType) {
+            const id = exerciseId.replace('.', '-');
+            const input = document.getElementById('input-' + id);
+            const feedback = document.getElementById('feedback-' + id);
+
+            if (!input || !feedback) {
+                return;
+            }
+
+            const value = input.value.toLowerCase().trim();
+
+            if (!value) {
+                feedback.textContent = 'Please enter an answer first!';
+                feedback.className = 'feedback info';
+                return;
+            }
+
+            completedExercises.add(exerciseId);
+            let isCorrect = false;
+            let wrongMsg = 'Not quite — open the solution and compare.';
+
+            if (expectedType === 'static-errors') {
+                const keywords = [
+                    'static', 'shadow', 'local', 'constructor', 'define', 'definition',
+                    'outside', 'class', 'repeat', 'wrong', 'linker', 'count', 'reset',
+                    'member', 'int chessclub', 'chessclub::',
+                    '静态', '类外', '定义', '构造', '重复', '局部', '遮蔽', '共享'
+                ];
+                const matches = keywords.filter(k => value.includes(k)).length;
+                isCorrect = matches >= 4;
+                wrongMsg = 'Not quite — mention shadowing/local static, wrong out-of-class definition (extra static), and ctor misuse. See solution.';
+            } else if (expectedType === 'student-init') {
+                const compact = value.replace(/\s+/g, '');
+                isCorrect = compact.includes('person(') &&
+                    (compact.includes('id') || compact.includes('name'));
+                wrongMsg = 'Use the base name and pass the constructor parameters, e.g. Person(id, name).';
+            } else if (expectedType === 'const-member-errors') {
+                const keywords = [
+                    'const', 'initializer', 'list', 'body', 'assign', 'cannot', 'modify',
+                    'initialization', 'compile', 'error', '初始化', '列表', '常量', '构造'
+                ];
+                const matches = keywords.filter(k => value.includes(k)).length;
+                isCorrect = matches >= 3;
+                wrongMsg = 'Mention const + initializer list vs body assignment (compile error). See solution.';
+            }
+
+            if (isCorrect) {
+                feedback.textContent = 'Correct! Well done!';
+                feedback.className = 'feedback correct';
+                correctAnswers.add(exerciseId);
+            } else {
+                feedback.textContent = wrongMsg;
+                feedback.className = 'feedback wrong';
+            }
+
+            updateProgress();
+        }
+
+        updateProgress();
+    </script>
+</body>
+</html>

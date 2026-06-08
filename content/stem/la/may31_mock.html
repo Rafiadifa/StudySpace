@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Lin Alg P2 · Mock Test Ch.5 · 31 May</title>
+<link href="../../../style.css" rel="stylesheet"/>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+<header class="topbar">
+<span class="topbar-title">Rafi's Study Hub</span>
+<span class="topbar-sub">/ lin-alg / mock test ch.5</span>
+<span class="topbar-date">SUN 31 MAY 2026 · WEEK 1 · P2</span>
+</header>
+<section class="hero">
+<h1>Mock Test <em>· Chapter 5</em></h1>
+<p class="hero-meta">
+    Full-coverage mock on basis &amp; dimensions, change of basis, rank-nullity, and kernel
+    (\(\mathrm{Ch.\,5}\) of EZ.pdf). Five problems in Prof. 杨一龙's exam format. Treat this as
+    exam conditions: pen on paper, no notes, no peeking at <em>Show</em> until you've finished
+    everything. Calibrated against `Practice_Midterm.pdf` and `2024F_final_E.pdf`.
+  </p>
+<div class="exam-pills">
+<span class="pill pill-la">P2 · 09:50–12:15 · 145 MIN · 5 PROBLEMS · 56 PTS</span>
+</div>
+</section>
+<main class="main">
+<div class="subject-block">
+<div class="subject-header">
+<span class="subject-dot dot-la"></span>
+<div>
+<div class="subject-label">EZ.pdf Ch. 5 · Abstract Vector Spaces · MOCK</div>
+<h2 class="subject-title" style="color:var(--la)">Mock Test · Ch. 5</h2>
+</div>
+<div class="subject-exam-date">
+<strong>Final · 25 Jun</strong>
+        Week 1 of 6
+      </div>
+</div>
+<div class="formula-ref">
+<strong>Exam conventions.</strong>
+      Open-book in the real final, but for this mock: <em>no notes</em>. Partial credit on every
+      sub-part. Always explain your reasoning — a bare numerical answer earns zero. When you
+      finish, reveal each (a)/(b)/(c)… answer one at a time and mark yourself out of the listed
+      points. Log every slip in your error log under Conceptual / Formula / Algebra / Time / Misread.
+    </div>
+<!-- ═══════════ Problem 1 — odd / pure math ═══════════ -->
+<article class="problem" id="p1">
+<div class="problem-header">
+<span class="problem-num">Problem 1</span>
+<span class="problem-topic">Basis of symmetric trace-zero matrices in \(M_{3\times3}\)</span>
+<span class="problem-pts">10 pts</span>
+</div>
+<div class="problem-body">
+<div class="context-box">
+          Let \(W=\{A\in M_{3\times3}(\mathbb R):A=A^{\mathsf T},\;\operatorname{tr}(A)=0\}\),
+          the symmetric trace-zero \(3\times3\) matrices.
+        </div>
+<ol class="parts">
+<li><span class="part-label">(a)</span> <div class="part-content"><div class="part-question">Show \(W\) is a subspace of \(M_{3\times3}\). <span class="pts">[2 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(0\in W\); if \(A,B\in W\) and \(c\in\mathbb R\): \((A+cB)^{\mathsf T}=A^{\mathsf T}+cB^{\mathsf T}=A+cB\)
+            (symmetric closed), and \(\operatorname{tr}(A+cB)=\operatorname{tr}(A)+c\operatorname{tr}(B)=0\) (trace-zero closed).
+          </div><div class="key-result">\(W\) contains \(0\) and is closed under \(+\) and scaling \(\Rightarrow\) subspace. \(\blacksquare\)</div></div>
+</div></div></li>
+<li><span class="part-label">(b)</span> <div class="part-content"><div class="part-question">Find a basis for \(W\) and state \(\dim W\). <span class="pts">[4 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            A symmetric \(3\times3\) matrix has the form
+            \(\begin{psmallmatrix}a&amp;d&amp;e\\d&amp;b&amp;f\\e&amp;f&amp;c\end{psmallmatrix}\)
+            with 6 free entries. The trace condition \(a+b+c=0\) imposes one linear constraint, so 5 free parameters remain.
+            Take \(a,b,d,e,f\) free with \(c=-a-b\):
+          </div><div class="key-result">
+            \(\Bigg\{\begin{psmallmatrix}1&amp;0&amp;0\\0&amp;0&amp;0\\0&amp;0&amp;-1\end{psmallmatrix},
+            \begin{psmallmatrix}0&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;-1\end{psmallmatrix},
+            \begin{psmallmatrix}0&amp;1&amp;0\\1&amp;0&amp;0\\0&amp;0&amp;0\end{psmallmatrix},
+            \begin{psmallmatrix}0&amp;0&amp;1\\0&amp;0&amp;0\\1&amp;0&amp;0\end{psmallmatrix},
+            \begin{psmallmatrix}0&amp;0&amp;0\\0&amp;0&amp;1\\0&amp;1&amp;0\end{psmallmatrix}\Bigg\}\)
+            ; \(\dim W=5\).
+          </div></div>
+</div></div></li>
+<li><span class="part-label">(c)</span> <div class="part-content"><div class="part-question">Express \(M=\begin{pmatrix}2&amp;1&amp;3\\1&amp;-1&amp;0\\3&amp;0&amp;-1\end{pmatrix}\) as a linear combination of your basis vectors. <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(M\) is symmetric (check: \(M^{\mathsf T}=M\)) and \(\operatorname{tr}(M)=2-1-1=0\), so \(M\in W\).
+            Read off: \(a=2,\;b=-1,\;d=1,\;e=3,\;f=0\) (and \(c=-a-b=-1\)\(\checkmark\)).
+          </div><div class="key-result">\(M=2\,B_1+(-1)\,B_2+1\,B_3+3\,B_4+0\,B_5\), where \(B_i\) are the basis matrices above (in order).</div></div>
+</div></div></li>
+<li><span class="part-label">(d)</span> <div class="part-content"><div class="part-question">Quick sanity check: derive \(\dim W\) from a dimension-count argument (constraints on \(M_{3\times3}\)). <span class="pts">[1 pt]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(\dim M_{3\times3}=9\). Symmetric imposes \(\binom{3}{2}=3\) independent constraints (\(a_{ij}=a_{ji}\) for \(i&lt;j\)),
+            leaving \(9-3=6\). Trace-zero adds one more constraint: \(\dim W=6-1=5\). \(\checkmark\)
+          </div><div class="key-result">\(\dim W = 9 - 3 - 1 = 5\) — matches (b).</div></div>
+</div></div></li>
+</ol>
+
+
+
+
+</div>
+</article>
+<!-- ═══════════ Problem 2 — even / real-world ═══════════ -->
+<article class="problem" id="p2">
+<div class="problem-header">
+<span class="problem-num">Problem 2</span>
+<span class="problem-topic">Change of basis for a radar antenna array</span>
+<span class="problem-pts">12 pts</span>
+</div>
+<div class="problem-body">
+<div class="context-box">
+          A radar engineer tracks each beam vector in \(\mathbb R^3\). The hardware reports
+          coordinates in the standard "body" basis \(\mathcal B=(e_1,e_2,e_3)\); the analyst
+          prefers a "sky" basis \(\mathcal C=(c_1,c_2,c_3)\) where
+          \(c_1=(1,0,0),\;c_2=(1,1,0),\;c_3=(1,1,1)\) (each step adds one axis).
+        </div>
+<ol class="parts">
+<li><span class="part-label">(a)</span> <div class="part-content"><div class="part-question">Find \(I_{\mathcal C\leftarrow\mathcal B}\). <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            Columns of \(I_{\mathcal C\leftarrow\mathcal B}\) are \(\mathcal B\)-vectors in \(\mathcal C\)-coordinates.
+            Solving \(e_i=a c_1+b c_2+c c_3\): for \(e_1\) get \((1,0,0)\); for \(e_2\) get \((-1,1,0)\); for \(e_3\) get \((0,-1,1)\).
+          </div><div class="key-result">\(I_{\mathcal C\leftarrow\mathcal B}=\begin{pmatrix}1&amp;-1&amp;0\\0&amp;1&amp;-1\\0&amp;0&amp;1\end{pmatrix}\).</div></div>
+</div></div></li>
+<li><span class="part-label">(b)</span> <div class="part-content"><div class="part-question">Find \(I_{\mathcal B\leftarrow\mathcal C}\) by inverting (a); verify the product is \(I\). <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            Columns of \(I_{\mathcal B\leftarrow\mathcal C}\) are \(c_j\) in \(\mathcal B\)-coordinates:
+            \(c_1=(1,0,0),c_2=(1,1,0),c_3=(1,1,1)\). Check:
+            \(\begin{pmatrix}1&amp;-1&amp;0\\0&amp;1&amp;-1\\0&amp;0&amp;1\end{pmatrix}\!\begin{pmatrix}1&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}=I.\)\(\checkmark\)
+          </div><div class="key-result">\(I_{\mathcal B\leftarrow\mathcal C}=\begin{pmatrix}1&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;1\end{pmatrix}\).</div></div>
+</div></div></li>
+<li><span class="part-label">(c)</span> <div class="part-content"><div class="part-question">Convert the beam vector \(v=(2,3,5)\) (in \(\mathcal B\)-coordinates) into \(\mathcal C\)-coordinates. <span class="pts">[2 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \([v]_{\mathcal C}=I_{\mathcal C\leftarrow\mathcal B}\,[v]_{\mathcal B}
+            =\begin{pmatrix}1&amp;-1&amp;0\\0&amp;1&amp;-1\\0&amp;0&amp;1\end{pmatrix}\!\begin{pmatrix}2\\3\\5\end{pmatrix}
+            =\begin{pmatrix}-1\\-2\\5\end{pmatrix}.\)
+            Verify: \(-1\cdot c_1-2 c_2+5 c_3=(-1-2+5,\,-2+5,\,5)=(2,3,5)\). \(\checkmark\)
+          </div><div class="key-result">\([v]_{\mathcal C}=(-1,-2,5)^{\mathsf T}\).</div></div>
+</div></div></li>
+<li><span class="part-label">(d)</span> <div class="part-content"><div class="part-question">The "neighbour-sum" operator \(T:\mathbb R^3\to\mathbb R^3\) is \(T(x,y,z)=(x+y,\,y+z,\,x+z)\). Compute \([T]_{\mathcal B}\), then use (a)–(b) to obtain \([T]_{\mathcal C}\). <span class="pts">[4 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(T(e_1)=(1,0,1),\;T(e_2)=(1,1,0),\;T(e_3)=(0,1,1)\), so
+            \([T]_{\mathcal B}=\begin{pmatrix}1&amp;1&amp;0\\0&amp;1&amp;1\\1&amp;0&amp;1\end{pmatrix}\).
+            Apply the similarity formula \([T]_{\mathcal C}=I_{\mathcal C\leftarrow\mathcal B}\,[T]_{\mathcal B}\,I_{\mathcal B\leftarrow\mathcal C}\):
+            first multiplication gives \(\begin{psmallmatrix}1&amp;0&amp;-1\\-1&amp;1&amp;0\\1&amp;0&amp;1\end{psmallmatrix}\),
+            second gives the answer. Cross-check by computing \([T(c_j)]_{\mathcal C}\) directly:
+            \(T(c_1)=(1,0,1)\!\to\!(1,-1,1)_{\mathcal C}\),
+            \(T(c_2)=(2,1,1)\!\to\!(1,0,1)_{\mathcal C}\),
+            \(T(c_3)=(2,2,2)\!\to\!(0,0,2)_{\mathcal C}\). \(\checkmark\)
+          </div><div class="key-result">\([T]_{\mathcal C}=\begin{pmatrix}1&amp;1&amp;0\\-1&amp;0&amp;0\\1&amp;1&amp;2\end{pmatrix}\).</div></div>
+</div></div></li>
+</ol>
+
+
+
+
+</div>
+</article>
+<!-- ═══════════ Problem 3 — odd / pure math ═══════════ -->
+<article class="problem" id="p3">
+<div class="problem-header">
+<span class="problem-num">Problem 3</span>
+<span class="problem-topic">Rank-nullity &amp; the four fundamental subspaces of a \(3\times5\) matrix</span>
+<span class="problem-pts">10 pts</span>
+</div>
+<div class="problem-body">
+<div class="define-block">
+          \[A=\begin{pmatrix}1&amp;2&amp;3&amp;1&amp;4\\2&amp;4&amp;7&amp;3&amp;9\\1&amp;2&amp;2&amp;0&amp;3\end{pmatrix}.\]
+        </div>
+<ol class="parts">
+<li><span class="part-label">(a)</span> <div class="part-content"><div class="part-question">Reduce \(A\) to RREF; state \(\operatorname{rank}(A)\). <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(R_2-2R_1=(0,0,1,1,1)\); \(R_3-R_1=(0,0,-1,-1,-1)\); \(R_3+R_2'=0\). Clear the 3 in row 1: \(R_1-3R_2'=(1,2,0,-2,1)\).
+          </div><div class="key-result">RREF \(=\begin{pmatrix}1&amp;2&amp;0&amp;-2&amp;1\\0&amp;0&amp;1&amp;1&amp;1\\0&amp;0&amp;0&amp;0&amp;0\end{pmatrix}\); \(\operatorname{rank}(A)=2\).</div></div>
+</div></div></li>
+<li><span class="part-label">(b)</span> <div class="part-content"><div class="part-question">Find a basis for \(\operatorname{Null}(A)\). <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            Free \(x_2,x_4,x_5\) with \(x_1=-2x_2+2x_4-x_5,\;x_3=-x_4-x_5\). Setting one free variable to 1 at a time:
+          </div><div class="key-result">Basis \(\{(-2,1,0,0,0),\;(2,0,-1,1,0),\;(-1,0,-1,0,1)\}\); nullity \(=3\).</div></div>
+</div></div></li>
+<li><span class="part-label">(c)</span> <div class="part-content"><div class="part-question">Find bases for \(\operatorname{Col}(A)\) and \(\operatorname{Row}(A)\). <span class="pts">[2 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(\operatorname{Col}(A)\): pivot columns of original \(A\) — columns 1 and 3:
+            \(\{(1,2,1)^{\mathsf T},(3,7,2)^{\mathsf T}\}\).
+            \(\operatorname{Row}(A)\): nonzero rows of RREF.
+          </div><div class="key-result">
+            \(\operatorname{Col}(A)\) basis \(\{(1,2,1),(3,7,2)\}\), dim 2.
+            \(\operatorname{Row}(A)\) basis \(\{(1,2,0,-2,1),(0,0,1,1,1)\}\), dim 2.
+          </div></div>
+</div></div></li>
+<li><span class="part-label">(d)</span> <div class="part-content"><div class="part-question">Verify rank-nullity; find a basis for the left null space. <span class="pts">[2 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(\operatorname{rank}+\text{nullity}=2+3=5=\#\text{columns}\). \(\checkmark\)
+            For the left null space, find dependency among rows: \(R_3-R_1=(0,0,-1,-1,-1)=-(R_2-2R_1)\), so \(3R_1-R_2-R_3=0\) ⇒ \(\mathbf y=(3,-1,-1)\).
+          </div><div class="key-result">Left null basis \(\{(3,-1,-1)\}\); dim \(=m-\operatorname{rank}=3-2=1\). \(\checkmark\)</div></div>
+</div></div></li>
+</ol>
+
+
+
+
+</div>
+</article>
+<!-- ═══════════ Problem 4 — even / real-world ═══════════ -->
+<article class="problem" id="p4">
+<div class="problem-header">
+<span class="problem-num">Problem 4</span>
+<span class="problem-topic">Filter subspaces &amp; the dimension formula</span>
+<span class="problem-pts">12 pts</span>
+</div>
+<div class="problem-body">
+<div class="context-box">
+          A signal processor uses two filters acting on \(\mathbb R^4\):
+          Filter A passes only signals with \(x_1+x_2=0\) (DC-rejection on the first pair),
+          and Filter B passes only signals with \(x_3+x_4=0\) (DC-rejection on the second pair).
+          Let \(W=\ker(\text{Filter A's complement})=\{x:x_1+x_2=0\}\) and \(U=\{x:x_3+x_4=0\}\).
+        </div>
+<ol class="parts">
+<li><span class="part-label">(a)</span> <div class="part-content"><div class="part-question">Show \(W\) is a subspace and find a basis. <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(0\in W\); if \(x,y\in W\) and \(c\in\mathbb R\) then \((x+cy)_1+(x+cy)_2=(x_1+x_2)+c(y_1+y_2)=0\) ✓.
+            \(W\) is cut out by one linear equation in \(\mathbb R^4\), so \(\dim W=3\). Take \(x_1=-x_2\): set
+            \(x_2=1,x_3=0,x_4=0\); \(x_2=0,x_3=1,x_4=0\); \(x_2=0,x_3=0,x_4=1\).
+          </div><div class="key-result">\(W\) is a subspace; basis \(\{(-1,1,0,0),(0,0,1,0),(0,0,0,1)\}\), \(\dim W=3\).</div></div>
+</div></div></li>
+<li><span class="part-label">(b)</span> <div class="part-content"><div class="part-question">Find a basis for \(W\cap U\). <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(W\cap U=\{x:x_1+x_2=0\text{ and }x_3+x_4=0\}\). Two independent constraints on \(\mathbb R^4\Rightarrow\dim=2\).
+            Parametrise by \(x_2,x_4\): \(x_1=-x_2,\,x_3=-x_4\).
+          </div><div class="key-result">Basis \(\{(-1,1,0,0),(0,0,-1,1)\}\); \(\dim(W\cap U)=2\).</div></div>
+</div></div></li>
+<li><span class="part-label">(c)</span> <div class="part-content"><div class="part-question">Use the dimension formula to compute \(\dim(W+U)\); identify the space \(W+U\). <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            By the dimension formula: \(\dim(W+U)=\dim W+\dim U-\dim(W\cap U)=3+3-2=4\).
+            Since \(W+U\subseteq\mathbb R^4\) and has dimension 4, it must be all of \(\mathbb R^4\).
+          </div><div class="key-result">\(\dim(W+U)=4\Rightarrow W+U=\mathbb R^4\) (every signal decomposes as filter-A-pass + filter-B-pass).</div></div>
+</div></div></li>
+<li><span class="part-label">(d)</span> <div class="part-content"><div class="part-question">Is \(W\cup U\) a subspace of \(\mathbb R^4\)? Justify with a specific counterexample if not. <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+<strong>No.</strong> Pick \(w=(-1,1,0,0)\in W\) and \(u=(0,0,-1,1)\in U\). Both are in \(W\cup U\), but their sum
+            \(w+u=(-1,1,-1,1)\) satisfies neither \(x_1+x_2=0\) (it does: \(-1+1=0\)) nor \(x_3+x_4=0\) (also does \(-1+1=0\)) —
+            so this particular sum <em>is</em> in both. Try instead \(w=(-1,1,0,0)\in W\) and \(u=(1,0,-1,1)\in U\):
+            \(u\in U\) since \(u_3+u_4=0\); \(w+u=(0,1,-1,1)\) has \(0+1=1\ne0\) and \(-1+1=0\), so it is in \(U\) but
+            not in \(W\) — still not a counterexample. Take instead \(w=(1,-1,0,0)\) and \(u=(0,1,1,-1)\):
+            \(w+u=(1,0,1,-1)\), first sum \(=1\ne0\), second sum \(=0\) — in \(U\) only. To break <em>both</em>:
+            \(w=(1,-1,0,0)\in W,\;u=(0,0,1,-1)\in U\); \(w+u=(1,-1,1,-1)\) has \(1+(-1)=0\) so it is in \(W\). Sum stays
+            inside the union here because both summands sit in axis-aligned subspaces. <strong>Clean counterexample:</strong>
+            \(w=(1,-1,2,0)\in W,\;u=(2,0,1,-1)\in U\Rightarrow w+u=(3,-1,3,-1)\). Check: \(3+(-1)=2\ne0\Rightarrow\notin W\); \(3+(-1)=2\ne0\Rightarrow\notin U\).
+          </div><div class="key-result">\(W\cup U\) is <strong>not</strong> a subspace; e.g. \(w=(1,-1,2,0)\in W\) and \(u=(2,0,1,-1)\in U\) give \(w+u=(3,-1,3,-1)\notin W\cup U\). (A union of subspaces is a subspace only when one contains the other.)</div></div>
+</div></div></li>
+</ol>
+
+
+
+
+</div>
+</article>
+<!-- ═══════════ Problem 5 — odd / pure math ═══════════ -->
+<article class="problem" id="p5">
+<div class="problem-header">
+<span class="problem-num">Problem 5</span>
+<span class="problem-topic">A linear map between polynomial spaces</span>
+<span class="problem-pts">12 pts</span>
+</div>
+<div class="problem-body">
+<div class="context-box">
+          Define \(T:P_3\to P_2\) by \(T(p)(x)=p'(x)-p(0)\) (derivative, then subtract the constant term).
+        </div>
+<ol class="parts">
+<li><span class="part-label">(a)</span> <div class="part-content"><div class="part-question">Verify \(T\) is linear. <span class="pts">[2 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            For \(p,q\in P_3\) and \(\alpha,\beta\in\mathbb R\):
+            \(T(\alpha p+\beta q)(x)=(\alpha p+\beta q)'(x)-(\alpha p+\beta q)(0)
+            =\alpha(p'(x)-p(0))+\beta(q'(x)-q(0))=\alpha T(p)(x)+\beta T(q)(x)\).
+          </div><div class="key-result">\(T(\alpha p+\beta q)=\alpha T(p)+\beta T(q)\) for all \(p,q,\alpha,\beta\Rightarrow T\) is linear. \(\blacksquare\)</div></div>
+</div></div></li>
+<li><span class="part-label">(b)</span> <div class="part-content"><div class="part-question">Find \(\operatorname{Ker}(T)\); give a basis. <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            Write \(p(x)=a+bx+cx^2+dx^3\). Then \(p'(x)=b+2cx+3dx^2\) and \(p(0)=a\), so
+            \(T(p)(x)=(b-a)+2cx+3dx^2\). \(T(p)=0\Rightarrow b-a=0,\;2c=0,\;3d=0\), i.e.
+            \(c=d=0\) and \(a=b\), giving \(p(x)=a(1+x)\).
+          </div><div class="key-result">\(\operatorname{Ker}(T)=\operatorname{span}\{1+x\}\); basis \(\{1+x\}\), nullity \(=1\).</div></div>
+</div></div></li>
+<li><span class="part-label">(c)</span> <div class="part-content"><div class="part-question">Find \(\operatorname{Ran}(T)\); show it equals all of \(P_2\). <span class="pts">[3 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            For any \(q(x)=\alpha+\beta x+\gamma x^2\in P_2\), choose \(p(x)=\alpha x+\frac{\beta}{2}x^2+\frac{\gamma}{3}x^3\)
+            (i.e. \(a=0,b=\alpha,c=\beta/2,d=\gamma/3\)). Then \(T(p)(x)=(\beta\cdot 0-0)\)… let me recompute: \(T(p)=(b-a)+2cx+3dx^2=\alpha+\beta x+\gamma x^2=q\). ✓
+          </div><div class="key-result">For every \(q\in P_2\) there is a \(p\in P_3\) with \(T(p)=q\)\(\Rightarrow\operatorname{Ran}(T)=P_2\), rank \(=3\).</div></div>
+</div></div></li>
+<li><span class="part-label">(d)</span> <div class="part-content"><div class="part-question">Verify the rank-nullity theorem for \(T\). <span class="pts">[2 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            \(\dim P_3=4\); rank \(+\) nullity \(=3+1=4\). \(\checkmark\)
+          </div><div class="key-result">Rank-nullity verified: \(4=3+1\).</div></div>
+</div></div></li>
+<li><span class="part-label">(e)</span> <div class="part-content"><div class="part-question">Is \(T\) injective? surjective? <span class="pts">[2 pts]</span></div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show answer</button>
+<div class="answer"><div class="ans-part">
+            Nullity \(=1\ne0\Rightarrow\) not injective (\(T(1+x)=0\), but also \(T(0)=0\)).
+            \(\operatorname{Ran}(T)=P_2=\) codomain \(\Rightarrow\) surjective.
+          </div><div class="key-result">\(T\) is <strong>surjective but not injective</strong>.</div></div>
+</div></div></li>
+</ol>
+
+
+
+
+
+</div>
+</article>
+</div>
+</main>
+<footer class="footer-note">
+  RAFI'S STUDY HUB · LINEAR ALGEBRA · 31 MAY 2026 · BLOCK P2 · MOCK TEST CH.5
+</footer>
+<div class="timer-chip" id="timer"><span class="timer-label">elapsed</span><span class="timer-display" id="timer-display">0:00</span></div>
+<script>
+  // ── Per-sub-part answer toggle ──
+  function toggleAns(btn) {
+    const ans = btn.nextElementSibling;
+    const open = ans.classList.toggle('open');
+    btn.textContent = open ? 'Hide answer' : 'Show answer';
+  }
+
+  // ── Scroll progress bar ──
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 || 0;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+
+  // ── Session timer. Warn 85%, urgent 100%. Counts up. ──
+  (function () {
+    const sessionMin = 145;
+    const warnSec    = sessionMin * 60 * 0.85;
+    const urgentSec  = sessionMin * 60;
+    const chip   = document.getElementById('timer');
+    const disp   = document.getElementById('timer-display');
+    let elapsed = 0;
+    setInterval(() => {
+      elapsed++;
+      const m = Math.floor(elapsed / 60), s = elapsed % 60;
+      disp.textContent = m + ':' + String(s).padStart(2,'0');
+      if (elapsed >= urgentSec)      { chip.classList.remove('warn'); chip.classList.add('urgent'); }
+      else if (elapsed >= warnSec)   { chip.classList.add('warn'); }
+    }, 1000);
+  })();
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

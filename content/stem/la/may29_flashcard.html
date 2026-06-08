@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Lin Alg P4 · Rank-Nullity Flashcards · 29 May</title>
+<link href="../../../style.css" rel="stylesheet"/>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+<header class="topbar">
+<span class="topbar-title">Rafi's Study Hub</span>
+<span class="topbar-sub">/ lin-alg / rank-nullity</span>
+<span class="topbar-date">FRI 29 MAY 2026 · WEEK 1 · P4</span>
+</header>
+<section class="hero">
+<h1>Rank-Nullity <em>Flashcards</em></h1>
+<p class="hero-meta">
+    Sixteen recall cards on \(\mathrm{Ch.\,5.6}\) of EZ.pdf — definitions, the theorem,
+    rank facts, injective/surjective criteria, the dimension formula, and two applications.
+    Read the front, answer aloud or on paper <em>before</em> flipping. Rate each 1–5; anything
+    \(\le 2\) goes back into the pile and gets re-tested before you leave the block.
+  </p>
+<div class="exam-pills">
+<span class="pill pill-la">P4 · 15:20–16:55 · 95 MIN · 16 CARDS</span>
+</div>
+</section>
+<main class="main">
+<div class="subject-block">
+<div class="subject-header">
+<span class="subject-dot dot-la"></span>
+<div>
+<div class="subject-label">EZ.pdf Ch. 5.6 · Rank-Nullity &amp; Subspace Algebra</div>
+<h2 class="subject-title" style="color:var(--la)">Rank-Nullity Flashcards</h2>
+</div>
+<div class="subject-exam-date">
+<strong>Final · 25 Jun</strong>
+        Week 1 of 6
+      </div>
+</div>
+<div class="formula-ref">
+<strong>The theorem in one line.</strong>
+      For a linear map \(L:V\to W\) with \(\dim V&lt;\infty\),
+      \(\;\dim V=\operatorname{rank}(L)+\text{nullity}(L)\;
+      =\;\dim\operatorname{Ran}(L)+\dim\operatorname{Ker}(L).\)
+      Every card below either defines a term in this equation, sharpens it, or applies it.
+    </div>
+<div class="flash-grid">
+<details class="flash cat-def">
+<summary>
+<span class="flash-tag">Definition · 01</span>
+<span class="flash-q">Define the <strong>kernel</strong> (null space) of \(L:V\to W\).</span>
+</summary>
+<div class="flash-a">
+          \(\operatorname{Ker}(L)=\{v\in V:L(v)=0\}\) — the inputs sent to \(0\).
+          It is a <strong>subspace of \(V\)</strong>.
+        </div>
+</details>
+<details class="flash cat-def">
+<summary>
+<span class="flash-tag">Definition · 02</span>
+<span class="flash-q">Define the <strong>range</strong> (image) of \(L:V\to W\).</span>
+</summary>
+<div class="flash-a">
+          \(\operatorname{Ran}(L)=\{L(v):v\in V\}\) — all achievable outputs.
+          A <strong>subspace of \(W\)</strong>.
+        </div>
+</details>
+<details class="flash cat-def">
+<summary>
+<span class="flash-tag">Definition · 03</span>
+<span class="flash-q">Define <strong>rank</strong> and <strong>nullity</strong> of \(L\).</span>
+</summary>
+<div class="flash-a">
+          \(\operatorname{rank}(L)=\dim\operatorname{Ran}(L)\) and
+          \(\text{nullity}(L)=\dim\operatorname{Ker}(L)\).
+        </div>
+</details>
+<details class="flash cat-thm">
+<summary>
+<span class="flash-tag">Theorem · 04</span>
+<span class="flash-q">State the <strong>Rank-Nullity Theorem</strong>.</span>
+</summary>
+<div class="flash-a">
+          For \(L:V\to W\) with \(\dim V&lt;\infty\):
+          \(\dim V=\operatorname{rank}(L)+\text{nullity}(L)\).
+        </div>
+</details>
+<details class="flash cat-thm">
+<summary>
+<span class="flash-tag">Matrix form · 05</span>
+<span class="flash-q">For an \(m\times n\) matrix \(A\), \(\operatorname{rank}(A)+\text{nullity}(A)=?\)</span>
+</summary>
+<div class="flash-a">
+          \(= n\), the number of <strong>columns</strong> (dimension of the domain \(\mathbb R^n\)).
+        </div>
+</details>
+<details class="flash cat-compute">
+<summary>
+<span class="flash-tag">Computation · 06</span>
+<span class="flash-q">In solving \(A\mathbf x=\mathbf 0\), what does the nullity count?</span>
+</summary>
+<div class="flash-a">
+          The number of <strong>free variables</strong>
+          = (columns − pivots) = dimension of the solution space.
+        </div>
+</details>
+<details class="flash cat-thm">
+<summary>
+<span class="flash-tag">Theorem · 07</span>
+<span class="flash-q">How do <strong>row rank</strong> and <strong>column rank</strong> compare?</span>
+</summary>
+<div class="flash-a">
+          They are <strong>equal</strong> — both equal \(\operatorname{rank}(A)\) (= number of pivots).
+        </div>
+</details>
+<details class="flash cat-thm">
+<summary>
+<span class="flash-tag">Theorem · 08</span>
+<span class="flash-q">Relate \(\operatorname{rank}(A^{\mathsf T})\) and \(\operatorname{rank}(A)\).</span>
+</summary>
+<div class="flash-a">
+          \(\operatorname{rank}(A^{\mathsf T})=\operatorname{rank}(A)\) — immediate from
+          row rank = column rank.
+        </div>
+</details>
+<details class="flash cat-crit">
+<summary>
+<span class="flash-tag">Criterion · 09</span>
+<span class="flash-q">\(L\) is <strong>injective</strong> \(\iff\) ?</span>
+</summary>
+<div class="flash-a">
+          \(\iff \operatorname{Ker}(L)=\{0\}\iff\text{nullity}=0\).
+        </div>
+</details>
+<details class="flash cat-crit">
+<summary>
+<span class="flash-tag">Criterion · 10</span>
+<span class="flash-q">\(L:V\to W\) is <strong>surjective</strong> \(\iff\) ?</span>
+</summary>
+<div class="flash-a">
+          \(\iff \operatorname{Ran}(L)=W\iff \operatorname{rank}(L)=\dim W\).
+        </div>
+</details>
+<details class="flash cat-crit">
+<summary>
+<span class="flash-tag">Criterion · 11</span>
+<span class="flash-q">A square \(n\times n\) matrix \(A\) is invertible \(\iff\) (in rank / nullity terms)?</span>
+</summary>
+<div class="flash-a">
+          \(\iff \operatorname{rank}(A)=n \iff \text{nullity}(A)=0\) — full rank, trivial kernel.
+        </div>
+</details>
+<details class="flash cat-thm">
+<summary>
+<span class="flash-tag">Inequality · 12</span>
+<span class="flash-q">Bound \(\operatorname{rank}(AB)\) above.</span>
+</summary>
+<div class="flash-a">
+          \(\operatorname{rank}(AB)\le\min\{\operatorname{rank}(A),\operatorname{rank}(B)\}\).
+        </div>
+</details>
+<details class="flash cat-thm">
+<summary>
+<span class="flash-tag">Subspace algebra · 13</span>
+<span class="flash-q">State the <strong>dimension formula</strong> for subspaces \(U,W\).</span>
+</summary>
+<div class="flash-a">
+          \(\dim(U+W)=\dim U+\dim W-\dim(U\cap W)\).
+        </div>
+</details>
+<details class="flash cat-apply">
+<summary>
+<span class="flash-tag">Apply · 14</span>
+<span class="flash-q">\(A\) is \(5\times3\) with rank 3. Is the map \(\mathbb R^3\to\mathbb R^5\) injective? surjective?</span>
+</summary>
+<div class="flash-a">
+          Nullity \(=3-3=0\Rightarrow\) <strong>injective</strong>.
+          Rank \(3&lt;5=\dim\mathbb R^5\Rightarrow\) <strong>not surjective</strong>.
+        </div>
+</details>
+<details class="flash cat-thm">
+<summary>
+<span class="flash-tag">Corollary · 15</span>
+<span class="flash-q">For \(L:V\to V\) with \(\dim V&lt;\infty\): injective \(\iff\) ?</span>
+</summary>
+<div class="flash-a">
+          \(\iff\) <strong>surjective</strong>. By rank-nullity, nullity \(=0 \iff\)
+          \(\operatorname{rank}=\dim V \iff L\) onto.
+        </div>
+</details>
+<details class="flash cat-adv">
+<summary>
+<span class="flash-tag">Advanced · 16</span>
+<span class="flash-q">State <strong>Sylvester's rank inequality</strong> (\(A\) is \(m\times n\), \(B\) is \(n\times p\)).</span>
+</summary>
+<div class="flash-a">
+          \(\operatorname{rank}(A)+\operatorname{rank}(B)-n\le\operatorname{rank}(AB)\).
+        </div>
+</details>
+</div>
+</div>
+</main>
+<footer class="footer-note">
+  RAFI'S STUDY HUB · LINEAR ALGEBRA · 29 MAY 2026 · BLOCK P4 · RANK-NULLITY FLASHCARDS
+</footer>
+<div class="timer-chip" id="timer"><span class="timer-label">elapsed</span><span class="timer-display" id="timer-display">0:00</span></div>
+<script>
+  // ── Scroll progress bar ──
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 || 0;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+
+  // ── Session timer (P4 = 95 min). Warn 85%, urgent 100%. Counts up. ──
+  (function () {
+    const sessionMin = 95;
+    const warnSec    = sessionMin * 60 * 0.85;
+    const urgentSec  = sessionMin * 60;
+    const timer = document.getElementById('timer');
+    let elapsed = 0;
+    setInterval(() => {
+      elapsed++;
+      const m = Math.floor(elapsed / 60), s = elapsed % 60;
+      timer.textContent = m + ':' + String(s).padStart(2,'0');
+      if (elapsed >= urgentSec)      { timer.classList.remove('warn'); timer.classList.add('urgent'); }
+      else if (elapsed >= warnSec)   { timer.classList.add('warn'); }
+    }, 1000);
+  })();
+</script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

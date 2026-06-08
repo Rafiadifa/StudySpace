@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vocabulary · Chinese</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span> Vocabulary
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">生词 Vocabulary</span>
+    <span class="topbar-sub">/ 144 words</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="main" style="padding-top:8px;">
+
+    <div class="toolbar">
+      <input id="q" class="search" type="text" placeholder="Search hanzi, pinyin, or meaning…" />
+      <select id="f-lesson" class="flt"></select>
+      <select id="f-pos" class="flt"></select>
+      <select id="f-srs" class="flt">
+        <option value="all">All review states</option>
+        <option value="new">New (unseen)</option>
+        <option value="learning">Learning</option>
+        <option value="learned">Learned (7d+)</option>
+      </select>
+    </div>
+
+    <div class="ch-chiprow" id="chips"></div>
+    <div class="count" id="count"></div>
+    <div class="vocab-grid" id="grid"></div>
+
+  </div>
+
+  <div class="footer-note">
+    <span style="color:var(--text3)">Dots:</span>
+    <span style="color:#9c978d">● new</span> &nbsp;
+    <span style="color:#d97706">● learning</span> &nbsp;
+    <span style="color:#15803d">● learned</span>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    setTopbarDate();
+    const q=$("#q"), fL=$("#f-lesson"), fP=$("#f-pos"), fS=$("#f-srs"), grid=$("#grid"), count=$("#count");
+    fillLessonSelect(fL); fillPosSelect(fP);
+    buildLessonChips($("#chips"), id=>{ fL.value=id; render(); });
+
+    function srsState(hanzi){
+      const r=getSRS()[hanzi];
+      if(!r) return "new";
+      return r.interval>=7 ? "learned" : "learning";
+    }
+
+    function render(){
+      const term=q.value.trim().toLowerCase();
+      const lf=fL.value, pf=fP.value, sf=fS.value;
+      const list=VOCAB.filter(w=>{
+        if(lf!=="all" && w.lesson!==+lf) return false;
+        if(pf!=="all" && w.pos!==pf) return false;
+        if(sf!=="all" && srsState(w.hanzi)!==sf) return false;
+        if(!term) return true;
+        return w.hanzi.includes(q.value.trim())
+            || stripTones(w.pinyin).includes(stripTones(term))
+            || w.en.toLowerCase().includes(term);
+      });
+      count.textContent=`${list.length} word${list.length!==1?"s":""}`;
+      grid.innerHTML="";
+      list.forEach(w=>{
+        const st=srsState(w.hanzi);
+        const card=el("div","word-card");
+        card.innerHTML=`
+          <span class="lesson-tag">L${w.lesson}</span>
+          <div class="hz">${w.hanzi}</div>
+          <div class="py">${w.pinyin}</div>
+          <div class="en">${w.en}</div>
+          <span class="pos-tag">${POS_LABELS[w.pos]||w.pos}</span>
+          ${w.ex?`<div class="ex">${w.ex}</div>`:""}
+          <span class="srs-dot ${st}" title="${st}"></span>`;
+        grid.appendChild(card);
+      });
+    }
+    q.addEventListener("input",render);
+    [fL,fP,fS].forEach(s=>s.addEventListener("change",()=>{
+      $$("#chips .ch-chip").forEach(c=>c.classList.toggle("active",c.dataset.lesson===fL.value));
+      render();
+    }));
+    render();
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ · Full Mock Exam · 1 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    pre.code { background:#1a1a2e; color:#e2e8f0; padding:18px 20px; border-radius:10px; overflow-x:auto; font-family:'DM Mono',monospace; font-size:0.8rem; line-height:1.65; margin-top:12px; }
+    pre.code .cm { color:#7d8db5; font-style:italic; }
+    pre.code .kw { color:#c792ea; }
+    pre.code .st { color:#c3e88d; }
+    pre.code .fn { color:#82aaff; }
+    .sec-band { font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--cpp); border-bottom:2px solid var(--cpp); padding-bottom:8px; margin:40px 0 8px; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-cpp">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ c++ / full mock exam</span>
+    <span class="topbar-date">MON · 1 JUN 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Full Mock <em>Exam</em></h1>
+    <p class="hero-meta">P6 · 2-hour timed cumulative mock. Ten questions spanning data types through polymorphism. Don't open answers until you've committed yours. The countdown chip turns amber at 1:50 and red at time.</p>
+    <div class="exam-pills">
+      <span class="pill pill-cpp">C++</span>
+      <span class="pill pill-cpp">Cumulative</span>
+      <span class="pill pill-cpp">120 min</span>
+      <span class="pill pill-cpp">Final · 10 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-cpp"></div>
+        <div>
+          <div class="subject-label">Mock Exam · 120 min · 10 questions</div>
+          <div class="subject-title" style="color:var(--cpp)">Cumulative — Ch. 1–12</div>
+        </div>
+        <div class="subject-exam-date"><strong>C++ Final</strong>10 June 2026</div>
+      </div>
+
+      <div class="sec-band">Section A · Fundamentals (Q1–Q4)</div>
+
+      <!-- Q1 -->
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Q1</span><span class="problem-topic">Output prediction</span><span class="problem-pts">5 pts</span></div>
+        <div class="problem-body">
+          <div class="context-box">What prints, and why? <pre class="code"><span class="kw">int</span> a = 7, b = 2;
+cout &lt;&lt; a / b &lt;&lt; <span class="st">" "</span> &lt;&lt; a % b &lt;&lt; <span class="st">" "</span> &lt;&lt; (<span class="kw">double</span>)a / b;</pre></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Answer</span> <code>3 1 3.5</code>. Integer division truncates (7/2=3), modulo gives the remainder (1), and casting one operand to <code>double</code> forces floating-point division (3.5).</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Q2</span><span class="problem-topic">Loop &amp; control flow</span><span class="problem-pts">10 pts</span></div>
+        <div class="problem-body">
+          <div class="context-box">Write a function <code>int countVowels(const string&amp;)</code> that returns the number of vowels (case-insensitive).</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Answer</span>
+              <pre class="code"><span class="kw">int</span> <span class="fn">countVowels</span>(<span class="kw">const</span> string&amp; s) {
+    <span class="kw">int</span> n = 0;
+    <span class="kw">for</span> (<span class="kw">char</span> c : s) {
+        <span class="kw">char</span> l = tolower(c);
+        <span class="kw">if</span> (l==<span class="st">'a'</span>||l==<span class="st">'e'</span>||l==<span class="st">'i'</span>||l==<span class="st">'o'</span>||l==<span class="st">'u'</span>) n++;
+    }
+    <span class="kw">return</span> n;
+}</pre></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Q3</span><span class="problem-topic">Pass by value vs reference</span><span class="problem-pts">8 pts</span></div>
+        <div class="problem-body">
+          <div class="context-box">Write <code>swap</code> two ways — one that works, one that doesn't — and explain the difference.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Answer</span>
+              <pre class="code"><span class="kw">void</span> <span class="fn">badSwap</span>(<span class="kw">int</span> a, <span class="kw">int</span> b)   { <span class="kw">int</span> t=a; a=b; b=t; }   <span class="cm">// copies — no effect</span>
+<span class="kw">void</span> <span class="fn">goodSwap</span>(<span class="kw">int</span>&amp; a, <span class="kw">int</span>&amp; b) { <span class="kw">int</span> t=a; a=b; b=t; }   <span class="cm">// aliases — works</span></pre>
+              <div class="ans-note">By value, the function gets <em>copies</em>; changes die at return. By reference, the parameters alias the caller's variables, so the swap persists.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Q4</span><span class="problem-topic">Pointers &amp; arrays</span><span class="problem-pts">7 pts</span></div>
+        <div class="problem-body">
+          <div class="context-box">After <code>int arr[]={10,20,30}; int* p=arr;</code> what are <code>*(p+2)</code> and <code>*p+2</code>?</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Answer</span> <code>*(p+2)</code> = 30 (move pointer two ints forward, then dereference). <code>*p+2</code> = 12 (dereference first → 10, then add 2). Precedence: unary <code>*</code> binds tighter than binary <code>+</code>.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-band">Section B · Classes &amp; OOP (Q5–Q8)</div>
+
+      <!-- Q5 -->
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Q5</span><span class="problem-topic">Constructor &amp; encapsulation</span><span class="problem-pts">10 pts</span></div>
+        <div class="problem-body">
+          <div class="context-box">Design a <code>Temperature</code> class storing Celsius privately, with a constructor, <code>toFahrenheit()</code>, and a setter that rejects values below −273.15.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Answer</span>
+              <pre class="code"><span class="kw">class</span> <span class="fn">Temperature</span> {
+    <span class="kw">double</span> celsius;
+<span class="kw">public</span>:
+    <span class="fn">Temperature</span>(<span class="kw">double</span> c = 0) { setCelsius(c); }
+    <span class="kw">void</span> <span class="fn">setCelsius</span>(<span class="kw">double</span> c) { <span class="kw">if</span> (c &gt;= -273.15) celsius = c; }
+    <span class="kw">double</span> <span class="fn">toFahrenheit</span>() <span class="kw">const</span> { <span class="kw">return</span> celsius * 9.0/5.0 + 32; }
+};</pre>
+              <div class="ans-note">The constructor reuses the validating setter — one place owns the invariant.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Q6</span><span class="problem-topic">Inheritance</span><span class="problem-pts">12 pts</span></div>
+        <div class="problem-body">
+          <div class="context-box">Given a base <code>Animal</code> with virtual <code>speak()</code>, derive <code>Dog</code> and <code>Cat</code>. Show how a <code>vector&lt;Animal*&gt;</code> calls the right <code>speak()</code>.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Answer</span>
+              <pre class="code"><span class="kw">struct</span> <span class="fn">Animal</span> { <span class="kw">virtual</span> string <span class="fn">speak</span>() <span class="kw">const</span> = 0; <span class="kw">virtual</span> ~<span class="fn">Animal</span>(){} };
+<span class="kw">struct</span> <span class="fn">Dog</span> : Animal { string <span class="fn">speak</span>() <span class="kw">const</span> <span class="kw">override</span> { <span class="kw">return</span> <span class="st">"Woof"</span>; } };
+<span class="kw">struct</span> <span class="fn">Cat</span> : Animal { string <span class="fn">speak</span>() <span class="kw">const</span> <span class="kw">override</span> { <span class="kw">return</span> <span class="st">"Meow"</span>; } };
+<span class="kw">for</span> (Animal* a : zoo) cout &lt;&lt; a-&gt;speak() &lt;&lt; <span class="st">"\n"</span>;  <span class="cm">// dispatches per type</span></pre></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Q7</span><span class="problem-topic">Operator overloading</span><span class="problem-pts">10 pts</span></div>
+        <div class="problem-body">
+          <div class="context-box">For a <code>Fraction{num, den}</code>, overload <code>operator*</code> and <code>operator&lt;&lt;</code>. (No need to reduce.)</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Answer</span>
+              <pre class="code">Fraction <span class="fn">operator*</span>(<span class="kw">const</span> Fraction&amp; r) <span class="kw">const</span> {
+    <span class="kw">return</span> Fraction(num * r.num, den * r.den);
+}
+<span class="kw">friend</span> ostream&amp; <span class="fn">operator&lt;&lt;</span>(ostream&amp; os, <span class="kw">const</span> Fraction&amp; f) {
+    <span class="kw">return</span> os &lt;&lt; f.num &lt;&lt; <span class="st">"/"</span> &lt;&lt; f.den;
+}</pre></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Q8</span><span class="problem-topic">Find the bug</span><span class="problem-pts">8 pts</span></div>
+        <div class="problem-body">
+          <div class="context-box">Why does this leak / misbehave? <pre class="code"><span class="kw">class</span> <span class="fn">Base</span> { <span class="kw">public</span>: ~<span class="fn">Base</span>(){} };
+<span class="kw">class</span> <span class="fn">Derived</span> : <span class="kw">public</span> Base { <span class="kw">int</span>* buf = <span class="kw">new</span> <span class="kw">int</span>[100]; <span class="kw">public</span>: ~<span class="fn">Derived</span>(){ <span class="kw">delete</span>[] buf; } };
+Base* b = <span class="kw">new</span> Derived(); <span class="kw">delete</span> b;</pre></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Answer</span> <code>~Base</code> isn't <code>virtual</code>, so <code>delete b</code> only runs <code>~Base</code> — <code>~Derived</code> never fires and <code>buf</code> leaks. Fix: <code>virtual ~Base(){}</code>. Any class meant to be deleted through a base pointer needs a virtual destructor.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-band">Section C · Applied (Q9–Q10)</div>
+
+      <!-- Q9 -->
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Q9</span><span class="problem-topic">friend function</span><span class="problem-pts">10 pts</span></div>
+        <div class="problem-body">
+          <div class="context-box">Write a non-member <code>bool heavier(const Box&amp;, const Box&amp;)</code> that compares a private <code>weight</code>. Why must it be a <code>friend</code>?</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Answer</span>
+              <pre class="code"><span class="kw">class</span> <span class="fn">Box</span> {
+    <span class="kw">double</span> weight;
+<span class="kw">public</span>:
+    <span class="fn">Box</span>(<span class="kw">double</span> w) : weight(w) {}
+    <span class="kw">friend</span> <span class="kw">bool</span> <span class="fn">heavier</span>(<span class="kw">const</span> Box&amp; a, <span class="kw">const</span> Box&amp; b);
+};
+<span class="kw">bool</span> <span class="fn">heavier</span>(<span class="kw">const</span> Box&amp; a, <span class="kw">const</span> Box&amp; b) { <span class="kw">return</span> a.weight &gt; b.weight; }</pre>
+              <div class="ans-note">It's not a member but needs the private <code>weight</code>, so <code>friend</code> grants it access.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q10 -->
+      <div class="problem">
+        <div class="problem-header"><span class="problem-num">Q10</span><span class="problem-topic">Exception handling</span><span class="problem-pts">10 pts</span></div>
+        <div class="problem-body">
+          <div class="context-box">Write a <code>safeDivide(int a, int b)</code> that throws on <code>b == 0</code>, and a caller that reports the error without crashing.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Answer</span>
+              <pre class="code"><span class="kw">int</span> <span class="fn">safeDivide</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) {
+    <span class="kw">if</span> (b == 0) <span class="kw">throw</span> runtime_error(<span class="st">"divide by zero"</span>);
+    <span class="kw">return</span> a / b;
+}
+<span class="kw">try</span> { cout &lt;&lt; safeDivide(10, 0); }
+<span class="kw">catch</span> (<span class="kw">const</span> exception&amp; e) { cout &lt;&lt; e.what(); }</pre></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      C++ · Full Mock Exam (10 Q · 120 min) · Monday 1 June 2026 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">remaining</span>
+    <span class="timer-display" id="timerDisplay">120:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const SESSION = 120 * 60;  // 2-hour countdown
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const elapsed = Math.floor((Date.now() - start) / 1000);
+      const left = Math.max(0, SESSION - elapsed);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(left/60)) + ':' + pad(left%60);
+      const chip = document.getElementById('timerChip');
+      chip.classList.remove('warn','urgent');
+      if (left === 0) chip.classList.add('urgent');
+      else if (left <= 10*60) chip.classList.add('warn');
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

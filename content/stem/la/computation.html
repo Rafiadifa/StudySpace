@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lin Alg · Computational Reference · Ch. 3–8</title>
+<link rel="stylesheet" href="../../../style.css">
+<style>
+  /* ── Page-specific doc layout (this reference page only) ── */
+  .doc-wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+  /* Chapter tab bar — sticky, full width, horizontal scroll on mobile */
+  .chapter-tabs {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; gap: 6px; flex-wrap: wrap;
+    padding: 14px 32px;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+  .ch-tab {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    padding: 9px 15px; border-radius: 9px;
+    border: 1px solid var(--border); background: var(--bg2);
+    color: var(--text2); cursor: pointer; white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .ch-tab:hover { color: var(--text); border-color: var(--text3); }
+  .ch-tab.active {
+    background: var(--la); color: #fff; border-color: var(--la);
+  }
+
+  /* Topic selector row */
+  .topic-bar {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    padding: 22px 0 4px;
+  }
+  .topic-btn {
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+    padding: 8px 16px; border-radius: 99px;
+    border: 1px solid var(--border); background: var(--bg2);
+    color: var(--text2); cursor: pointer; transition: all 0.15s;
+  }
+  .topic-btn:hover { color: var(--text); border-color: var(--la); transform: translateY(-1px); }
+  .topic-btn.active {
+    background: color-mix(in oklab, var(--la) 12%, transparent);
+    color: var(--la); border-color: var(--la);
+  }
+
+  /* Content panels — wide, full horizontal */
+  .topic-panel { display: none; padding: 16px 0 56px; animation: fadeUp 0.3s ease both; }
+  .topic-panel.active { display: block; }
+
+  .method-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.9rem; letter-spacing: -0.02em;
+    color: var(--text); margin: 22px 0 24px;
+    padding-bottom: 14px; border-bottom: 2px solid var(--la);
+  }
+
+  .method-section { margin-bottom: 30px; }
+  .method-label {
+    font-family: 'DM Mono', monospace; font-size: 0.66rem;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--la); margin-bottom: 12px;
+  }
+  .hint-inline { color: var(--text3); text-transform: none; letter-spacing: 0; }
+  .method-section p { font-size: 0.98rem; line-height: 1.75; color: var(--text2); max-width: 900px; }
+
+  ol.proc { margin: 0; padding-left: 0; counter-reset: step; list-style: none; max-width: 900px; }
+  ol.proc li {
+    position: relative; padding: 12px 0 12px 44px;
+    font-size: 0.97rem; line-height: 1.7; color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+  ol.proc li:last-child { border-bottom: none; }
+  ol.proc li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; left: 0; top: 12px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: color-mix(in oklab, var(--la) 12%, transparent);
+    color: var(--la); font-family: 'DM Mono', monospace; font-size: 0.78rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Worked example */
+  .ex-tabbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .ex-tab {
+    font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    padding: 6px 13px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--bg2);
+    color: var(--text2); cursor: pointer; transition: all 0.15s;
+  }
+  .ex-tab.active { background: var(--la); color: #fff; border-color: var(--la); }
+
+  .worked-example {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 3px solid var(--la); border-radius: 0 12px 12px 0;
+    padding: 22px 24px; max-width: 960px;
+  }
+  .ex-title { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem; color: var(--text); margin-bottom: 14px; }
+  .step-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .step-btn {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    padding: 7px 14px; border-radius: 8px;
+    border: 1px solid var(--la); background: var(--la); color: #fff;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .step-btn.ghost { background: transparent; color: var(--text2); border-color: var(--border); }
+  .step-btn.ghost:hover { color: var(--text); border-color: var(--text3); }
+  .step-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 13px 0; border-top: 1px dashed var(--border);
+    font-size: 0.95rem; line-height: 1.7; color: var(--text);
+    animation: fadeUp 0.25s ease both;
+  }
+  .step.hidden { display: none; }
+  .step:first-child { border-top: none; }
+  .step-n {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--la); color: #fff;
+    font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    display: flex; align-items: center; justify-content: center; margin-top: 2px;
+  }
+  .step-body { flex: 1; min-width: 0; overflow-x: auto; }
+  .ex-note {
+    margin-top: 16px; padding: 12px 16px;
+    background: color-mix(in oklab, var(--la) 7%, transparent);
+    border-radius: 8px; font-size: 0.86rem; line-height: 1.6;
+    color: var(--text2); font-style: italic;
+  }
+
+  /* Limitations + exam callouts */
+  .method-section.limits p, .method-section.exam p {
+    padding: 16px 18px; border-radius: 10px; max-width: 960px;
+  }
+  .method-section.limits p { background: color-mix(in oklab, #c2570c 8%, transparent); }
+  .method-section.exam p   { background: color-mix(in oklab, var(--cpp) 9%, transparent); }
+
+  /* Fallback for no color-mix */
+  @supports not (background: color-mix(in oklab, red 50%, blue)) {
+    .topic-btn.active { background: rgba(190,24,93,0.1); }
+    ol.proc li::before { background: rgba(190,24,93,0.1); }
+    .ex-note { background: rgba(190,24,93,0.06); }
+    .method-section.limits p { background: rgba(194,87,12,0.07); }
+    .method-section.exam p { background: rgba(21,128,61,0.07); }
+  }
+
+  @media (max-width: 640px) {
+    .doc-wrap { padding: 0 18px; }
+    .chapter-tabs { padding: 12px 18px; flex-wrap: nowrap; overflow-x: auto; }
+    .method-title { font-size: 1.5rem; }
+  }
+</style>
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" async></script>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+
+<header class="topbar">
+  <span class="topbar-title">Rafi's Study Hub</span>
+  <span class="topbar-sub">/ lin-alg / computational reference</span>
+  <span class="topbar-date">FINAL · 25 JUN 2026</span>
+</header>
+
+<section class="hero">
+  <h1>Computational Reference <em>· Ch. 3–8</em></h1>
+  <p class="hero-meta">
+    Every algorithm on the final, with a worked example you can step through, the limitations
+    to watch for, and how Prof. Yang tends to ask it. Pick a chapter, then a method.
+    Includes the column-shearing QR procedure (§6.9.2) and full SVD.
+  </p>
+</section>
+
+<!-- Chapter tab bar -->
+<nav class="chapter-tabs">
+<button class="ch-tab active" data-ch="3" onclick="selectChapter('3')">Ch.3 · Gaussian Elimination</button>
+<button class="ch-tab" data-ch="4" onclick="selectChapter('4')">Ch.4 · Matrix Algebra & LU</button>
+<button class="ch-tab" data-ch="5" onclick="selectChapter('5')">Ch.5 · Bases & Coordinates</button>
+<button class="ch-tab" data-ch="6" onclick="selectChapter('6')">Ch.6 · Inner Product & QR</button>
+<button class="ch-tab" data-ch="7" onclick="selectChapter('7')">Ch.7 · Determinants</button>
+<button class="ch-tab" data-ch="8" onclick="selectChapter('8')">Ch.8 · Eigenstuff, Spectral, SVD</button>
+</nav>
+
+<div class="doc-wrap">
+  <!-- Topic selector (populated per chapter) -->
+  <div class="topic-bar" id="topic-bar"></div>
+
+  <!-- All panels (JS shows one) -->
+  <section class="topic-panel" data-ch="3" data-topic="rref">
+  <h3 class="method-title">RREF Algorithm</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>Whenever you need the canonical form of a matrix — to solve a system, find rank, or extract a basis. Every other Ch.3 method starts here.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Find the leftmost non-zero column. If its top entry is zero, swap a lower row up.</li><li>Scale that row so the pivot equals \(1\).</li><li>Use row<sub>3</sub> operations \(R_i\to R_i - cR_{\text{pivot}}\) to clear <em>every</em> other entry in the pivot column — both above and below.</li><li>Cover the pivot row, recurse on the submatrix below-and-right.</li><li>Stop when the remaining submatrix is all zeros. Count the pivots — that is the rank.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — 3×4 matrix</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Start with \(A=\begin{pmatrix}0&2&4&2\\1&2&3&1\\2&6&10&4\end{pmatrix}\). Leftmost non-zero column is col 1, but the top entry is 0 — swap \(R_1\leftrightarrow R_2\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\begin{pmatrix}1&2&3&1\\0&2&4&2\\2&6&10&4\end{pmatrix}\). Clear below the first pivot: \(R_3\to R_3-2R_1=(0,2,4,2)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(\begin{pmatrix}1&2&3&1\\0&2&4&2\\0&2&4&2\end{pmatrix}\). Scale \(R_2\) by \(\tfrac12\): \((0,1,2,1)\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Clear column 2 above and below: \(R_1\to R_1-2R_2\), \(R_3\to R_3-2R_2\).</div></div>
+<div class="step hidden"><span class="step-n">5</span><div class="step-body">RREF \(=\begin{pmatrix}1&0&-1&-1\\0&1&2&1\\0&0&0&0\end{pmatrix}\). Two pivots \(\Rightarrow\operatorname{rank}=2\); columns 3,4 are free.</div></div></div><div class="ex-note">Pivots in columns 1 and 2; the third row vanished because the original rows were dependent (\(R_3=2R_2\) of the original after the swap).</div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>RREF is unique but the <em>path</em> isn't — different operations reach the same RREF, so don't second-guess yourself. Hand computation is error-prone for matrices larger than ~4×4; arithmetic slips compound. Fractions appear quickly if pivots aren't 1 — clear denominators early.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang almost always frames this inside a bigger problem ('find a basis for…', 'is this consistent?'). Pure 'reduce this matrix' questions are rare but appear as a sub-part (a). Show <strong>every</strong> row operation in the margin — partial credit is awarded per correct operation even if the final answer slips.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="3" data-topic="solve">
+  <h3 class="method-title">Solving Ax = b</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To find all solutions of a linear system and classify it (none / unique / infinitely many).</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Augment to \([A\,|\,\mathbf b]\) and row-reduce to RREF.</li><li>If any row reads \([0\;\cdots\;0\,|\,c\neq0]\): the system is <strong>inconsistent</strong> — stop, no solution.</li><li>Otherwise set all free variables to 0 and read the pivot variables → the particular solution \(\mathbf x_p\).</li><li>For each free variable, set it to 1 (others 0) and back-solve → one null-space basis vector.</li><li>General solution: \(\mathbf x = \mathbf x_p + \operatorname{span}\{\text{null-space basis}\}\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — infinitely many solutions</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Reduce \([A|\mathbf b]\) to \(\left[\begin{array}{ccc|c}1&0&-1&2\\0&1&2&1\\0&0&0&0\end{array}\right]\). No inconsistent row, one free variable \(x_3\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Set \(x_3=0\): pivots give \(x_1=2,\;x_2=1\). So \(\mathbf x_p=(2,1,0)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Set \(x_3=1\): \(x_1-1=0\Rightarrow x_1=1\); \(x_2+2=0\Rightarrow x_2=-2\). Null-space vector \((1,-2,1)\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">General solution \(\mathbf x=(2,1,0)+t(1,-2,1),\;t\in\mathbb R\).</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Only works once you trust your RREF. A single arithmetic error in elimination silently changes the solution set. For parametric \(\mathbf b\) (with an unknown constant), you must keep the constant symbolic and find the consistency condition — easy to forget.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Very common. Yang likes the variant 'for which values of the parameter \(k\) is the system consistent / has a unique solution?' — that needs the rank condition \(\operatorname{rank}(A)=\operatorname{rank}[A|\mathbf b]\). Always state the solution set explicitly as point + span, not just 'infinitely many'.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="3" data-topic="inverse">
+  <h3 class="method-title">Matrix Inverse via [A | I]</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To compute \(A^{-1}\) by hand, or to prove invertibility constructively.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Form the augmented matrix \([A\,|\,I]\).</li><li>Row-reduce the left block to \(I\).</li><li>Apply the same operations to the right block; it becomes \(A^{-1}\).</li><li>If the left block cannot reach \(I\) (a zero row appears), \(A\) is singular — no inverse.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — 2×2 inverse</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\left[\begin{array}{cc|cc}2&1&1&0\\1&1&0&1\end{array}\right]\). Swap to get a 1 pivot, or scale \(R_1\) by \(\tfrac12\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Use \(R_1\) to clear below, then \(R_2\) to clear above. After reduction the left block is \(I\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Right block: \(A^{-1}=\begin{pmatrix}1&-1\\-1&2\end{pmatrix}\). Verify \(AA^{-1}=I\). \(\checkmark\)</div></div></div><div class="ex-note">For 2×2 you can also use the shortcut \(A^{-1}=\tfrac1{\det A}\left(\begin{smallmatrix}d&-b\\-c&a\end{smallmatrix}\right)\) — here \(\det A=1\).</div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Cost is \(O(n^3)\) and you rarely actually need \(A^{-1}\): to solve \(A\mathbf x=\mathbf b\), LU + substitution is cheaper and numerically safer. Computing inverses by hand beyond 3×3 is a recipe for arithmetic mistakes.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Usually a sub-part, e.g. 'find the change-of-basis matrix and its inverse'. Yang sometimes asks you to invert a 3×3 — keep fractions tidy and verify at the end, since the verification step itself earns marks.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="4" data-topic="matmul">
+  <h3 class="method-title">Matrix Multiplication</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>The workhorse of everything. Beyond the row·column rule, recognising structure (block, diagonal, triangular) saves enormous effort.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Entry rule: \((AB)_{ij}=\) (row \(i\) of \(A\)) · (column \(j\) of \(B\)).</li><li>Column view: column \(j\) of \(AB\) is \(A\,(\text{column }j\text{ of }B)\) — a combination of \(A\)'s columns.</li><li>Check dimensions first: \((m\times n)(n\times p)=(m\times p)\); the inner dimensions must match.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — exploit a diagonal factor</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(AD\) where \(D=\operatorname{diag}(d_1,\dots,d_n)\) just scales column \(j\) of \(A\) by \(d_j\). No full multiply needed.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(DA\) scales <em>row</em> \(i\) of \(A\) by \(d_i\). Recognising this turns a long product into a glance.</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Not commutative: \(AB\neq BA\) in general. Order matters for composition. Associativity holds, so you may regroup — but transposing flips order: \((AB)^T=B^TA^T\).</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang tests conceptual traps: 'is \(AB=BA\)?' (find a counterexample), or 'simplify \((A+B)^2\)' (\(=A^2+AB+BA+B^2\), <em>not</em> \(A^2+2AB+B^2\)). Watch for these.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="4" data-topic="lu">
+  <h3 class="method-title">LU Decomposition</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To factor \(A=LU\) so that solving \(A\mathbf x=\mathbf b\) for many right-hand sides becomes cheap. The algebraic shadow of Gaussian elimination.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Run elimination using only \(R_i\to R_i-\ell_{ij}R_j\) (no swaps, no scaling).</li><li>Each multiplier \(\ell_{ij}\) goes into row \(i\), column \(j\) of \(L\).</li><li>The resulting upper-triangular matrix is \(U\); put \(1\)s on \(L\)'s diagonal.</li><li>Verify \(LU=A\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — 3×3 LU</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(A=\begin{pmatrix}2&1&1\\4&3&3\\8&7&9\end{pmatrix}\). Column 1: \(R_2-2R_1\) (\(\ell_{21}=2\)), \(R_3-4R_1\) (\(\ell_{31}=4\)).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Now rows are \((2,1,1),(0,1,1),(0,3,5)\). Column 2: \(R_3-3R_2\) (\(\ell_{32}=3\)) → \((0,0,2)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(U=\begin{pmatrix}2&1&1\\0&1&1\\0&0&2\end{pmatrix},\;L=\begin{pmatrix}1&0&0\\2&1&0\\4&3&1\end{pmatrix}\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Verify row 3 of \(LU\): \(4(2,1,1)+3(0,1,1)+1(0,0,2)=(8,7,9)\). \(\checkmark\)</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Plain LU only exists if no pivot is ever zero — equivalently, every leading principal minor is non-zero. The moment a pivot vanishes you must permute rows → PLU. Numerically, even small pivots cause instability (real solvers always pivot).</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>A staple computational question. Yang phrases it 'find the LU factorisation' and expects \(L\) and \(U\) explicitly plus a verification. A frequent follow-up: 'use it to solve \(A\mathbf x=\mathbf b\)' — see the LU-solve topic.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="4" data-topic="plu">
+  <h3 class="method-title">PLU (with pivoting)</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>When a pivot lands on zero (or you simply want the general guaranteed factorisation). Works for any square matrix.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Whenever the pivot position is zero, swap with a lower row that has a non-zero entry there.</li><li>Record each swap in a permutation matrix \(P\) (left-multiply the running \(P\) by the swap).</li><li>Continue elimination; multipliers fill \(L\) using the post-swap row order.</li><li>Result: \(PA=LU\). Verify by multiplying both sides.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — zero second pivot</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(A=\begin{pmatrix}1&2&1\\2&4&3\\3&7&8\end{pmatrix}\). Eliminate col 1: \(R_2-2R_1=(0,0,1)\), \(R_3-3R_1=(0,1,5)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Row 2 now has a zero in the pivot (col 2) but row 3 doesn't — swap rows 2 and 3. Encode in \(P=\left(\begin{smallmatrix}1&0&0\\0&0&1\\0&1&0\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Work with \(PA=\begin{pmatrix}1&2&1\\3&7&8\\2&4&3\end{pmatrix}\): \(\ell_{21}=3,\;\ell_{31}=2\); column 2 already clear.</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(L=\begin{pmatrix}1&0&0\\3&1&0\\2&0&1\end{pmatrix},\;U=\begin{pmatrix}1&2&1\\0&1&5\\0&0&1\end{pmatrix}\), and \(PA=LU\). \(\checkmark\)</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Bookkeeping is the danger: if you swap rows, the already-computed multipliers must travel with their rows. The cleanest convention is to permute first (\(PA\)) and only then read off \(L\). Different textbooks place \(P\) on different sides — Yang uses \(PA=LU\).</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang sets a matrix that forces exactly one swap so the mechanics are visible. Make the permutation matrix explicit and verify \(PA=LU\) — graders look for the \(P\) specifically.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="4" data-topic="lusolve">
+  <h3 class="method-title">Solving via LU</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>Once \(A=LU\) is cached, every new right-hand side costs only \(\sim2n^2\) work instead of a fresh elimination.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>If using \(P\): replace \(\mathbf b\) by \(P\mathbf b\).</li><li>Forward substitution: solve \(L\mathbf y=\mathbf b\) top-to-bottom.</li><li>Back substitution: solve \(U\mathbf x=\mathbf y\) bottom-to-top.</li><li>Verify \(A\mathbf x=\mathbf b\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — reuse one factorisation twice</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Using \(L=\left(\begin{smallmatrix}1&0&0\\2&1&0\\3&2&1\end{smallmatrix}\right),U=\left(\begin{smallmatrix}1&2&3\\0&1&2\\0&0&1\end{smallmatrix}\right)\) (so \(A=\left(\begin{smallmatrix}1&2&3\\2&5&8\\3&8&14\end{smallmatrix}\right)\)) and \(\mathbf b=(6,17,31)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Forward \(L\mathbf y=\mathbf b\): \(y_1=6;\;2y_1+y_2=17\Rightarrow y_2=5;\;3y_1+2y_2+y_3=31\Rightarrow y_3=3\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Back \(U\mathbf x=\mathbf y\): \(x_3=3;\;x_2+2x_3=5\Rightarrow x_2=-1;\;x_1+2x_2+3x_3=6\Rightarrow x_1=-1\). So \(\mathbf x=(-1,-1,3)\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">For a new \(\mathbf b'=(3,9,17)\), reuse the same \(L,U\): \(\mathbf y=(3,3,2)\Rightarrow\mathbf x=(-1,-1,2)\) — no re-elimination.</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>You must keep \(L\) and \(U\) (and \(P\)) around; if you only have \(A\) you've saved nothing. Forward/back substitution still needs non-zero diagonal in \(U\) (guaranteed if \(A\) is invertible).</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Common as the 'payoff' part after computing LU. The operation-count comparison ('why is LU better than Gauss–Jordan for many RHS?') is a favourite short-answer: factor once \(\sim n^3/3\), then \(\sim 2n^2\) per solve.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="4" data-topic="block">
+  <h3 class="method-title">Block Matrices</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To simplify products of large structured matrices and to prove identities elegantly.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Partition \(A,B\) into compatible blocks.</li><li>Multiply <em>as if the blocks were scalars</em>: \((AB)_{IJ}=\sum_K A_{IK}B_{KJ}\) — but keep block order (no commuting!).</li><li>Exploit zero blocks: block-triangular times block-triangular kills many terms.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — block upper-triangular inverse</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">For \(M=\left(\begin{smallmatrix}A&B\\0&D\end{smallmatrix}\right)\) with \(A,D\) invertible, the inverse is \(\left(\begin{smallmatrix}A^{-1}&-A^{-1}BD^{-1}\\0&D^{-1}\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Check by multiplying: the \((1,1)\) block \(=AA^{-1}=I\); the \((1,2)\) block \(=A(-A^{-1}BD^{-1})+BD^{-1}=-BD^{-1}+BD^{-1}=0\). \(\checkmark\)</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Blocks must have compatible sizes for every sub-product — mismatched partitions silently break the formula. And blocks never commute, so \(A_{IK}B_{KJ}\) cannot be reordered.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Appears in proof-style problems ('show that \(\det\left(\begin{smallmatrix}A&B\\0&D\end{smallmatrix}\right)=\det A\det D\)') and in LU when matrices are naturally partitioned.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="5" data-topic="spanbasis">
+  <h3 class="method-title">Basis for a Span</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To strip a redundant spanning set down to a basis and read off the dimension.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Place the vectors as <strong>rows</strong> of a matrix \(M\).</li><li>Row-reduce \(M\) to RREF.</li><li>The non-zero rows form a basis of the span; their count is the dimension.</li><li>Alternative (to keep <em>original</em> vectors): place them as columns, reduce, and take the original columns sitting in pivot positions.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — span in ℝ⁴</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Vectors \((1,2,0,1),(2,4,1,3),(0,0,1,1)\) as rows. Reduce: \(R_2-2R_1=(0,0,1,1)\), which equals \(R_3\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">RREF has two non-zero rows \((1,2,0,1)\) and \((0,0,1,1)\) → \(\dim=2\); the third vector was redundant.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Basis \(=\{(1,2,0,1),(0,0,1,1)\}\) (row method) — clean but not original vectors.</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>The row method gives a <em>clean</em> basis but not necessarily the original vectors; if the question demands a basis chosen <em>from the given set</em>, use the column method instead. Abstract spaces (polynomials, matrices) must first be coordinatised.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang often hands you 4–5 vectors in \(\mathbb R^4\) or a set of polynomials and asks for a basis + dimension of their span. State which method you used; if the question says 'from among these vectors', the column method is mandatory.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="5" data-topic="coords">
+  <h3 class="method-title">Coordinate Vectors</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To translate an abstract vector into a column of numbers relative to a chosen basis.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Write \(v=c_1b_1+\cdots+c_nb_n\) as a linear system \(B\mathbf c=v\) (the \(b_j\) as columns of \(B\)).</li><li>Solve by elimination, or \(\mathbf c=B^{-1}v\) if \(B\) is invertible.</li><li>\([v]_{\mathcal B}=(c_1,\dots,c_n)^T\).</li><li>For abstract spaces, first express everything in a standard basis (e.g. \((1,x,x^2)\) for \(P_2\)).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — coordinates in P₂</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Basis \(\mathcal B=(1,\,x,\,x(x-1))\), vector \(p(x)=3+2x+5x^2\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Match coefficients: \(3+2x+5x^2=a\cdot1+b\cdot x+c\cdot x(x-1)=a+(b-c)x+cx^2\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">So \(c=5,\;b-c=2\Rightarrow b=7,\;a=3\). Thus \([p]_{\mathcal B}=(3,7,5)\).</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Coordinates depend entirely on the basis <em>and its order</em>; swap two basis vectors and the coordinate vector permutes. For non-orthogonal bases you must solve a system — there's no shortcut (unlike ONB, where coordinates are just inner products).</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Foundational; appears as the first sub-part of change-of-basis problems. Yang likes \(P_2\) or \(M_{2\times2}\) so you must pick a standard basis yourself — state it explicitly.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="5" data-topic="cob">
+  <h3 class="method-title">Change-of-Basis Matrix</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To convert coordinates between two bases of the same space.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Columns of \(I_{\mathcal C\leftarrow\mathcal B}\) are the \(\mathcal B\)-vectors written in \(\mathcal C\)-coordinates.</li><li>Compute whichever direction is easier (often \(I_{\mathcal B\leftarrow\mathcal C}\) if \(\mathcal C\) is standard) and invert for the other.</li><li>Convert: \([v]_{\mathcal C}=I_{\mathcal C\leftarrow\mathcal B}\,[v]_{\mathcal B}\).</li><li>Always sanity-check \(I_{\mathcal C\leftarrow\mathcal B}\,I_{\mathcal B\leftarrow\mathcal C}=I\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — ℝ³ standard to a layered basis</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\mathcal C=(c_1,c_2,c_3)\) with \(c_1=(1,1,1),c_2=(1,1,0),c_3=(1,0,0)\); \(\mathcal B\) standard.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(I_{\mathcal B\leftarrow\mathcal C}\) has the \(c_j\) as columns: \(\left(\begin{smallmatrix}1&1&1\\1&1&0\\1&0&0\end{smallmatrix}\right)\) (easy direction).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Invert to get \(I_{\mathcal C\leftarrow\mathcal B}=\left(\begin{smallmatrix}0&0&1\\0&1&-1\\1&-1&0\end{smallmatrix}\right)\); check the product is \(I\). \(\checkmark\)</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>The single most common slip is building the matrix with vectors in the <em>wrong</em> coordinate system, or transposing it. The mnemonic: 'old basis written in new coordinates, as columns'. Direction matters — \(I_{\mathcal C\leftarrow\mathcal B}\neq I_{\mathcal B\leftarrow\mathcal C}\) unless the matrix is an involution.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Heavily tested. Yang gives two bases of \(\mathbb R^3\) or \(P_2\) and walks you through (a) build \(I_{\mathcal C\leftarrow\mathcal B}\), (b) invert, (c) convert a vector, (d) convert a map. The verification \(I\cdot I^{-1}=I\) is worth marks — never skip it.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="5" data-topic="mapbasis">
+  <h3 class="method-title">Matrix of a Map across Bases</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To re-express a linear operator in a different basis (similarity transform) — the gateway to diagonalisation.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Compute \(P=I_{\mathcal C\leftarrow\mathcal B}\) and \(P^{-1}=I_{\mathcal B\leftarrow\mathcal C}\).</li><li>Apply \([T]_{\mathcal C}=P\,[T]_{\mathcal B}\,P^{-1}\).</li><li>Cross-check directly: column \(j\) of \([T]_{\mathcal C}\) is \([T(c_j)]_{\mathcal C}\).</li><li>Invariants — trace, determinant, eigenvalues, char. polynomial — must match between the two.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — verify via invariants</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Swap map \(T(x,y,z)=(z,y,x)\): in the standard basis \([T]_{\mathcal B}=\left(\begin{smallmatrix}0&0&1\\0&1&0\\1&0&0\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">After a change of basis \([T]_{\mathcal C}=\left(\begin{smallmatrix}1&1&1\\0&0&-1\\0&-1&0\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Check invariants: \(\operatorname{tr}=1\) both; \(\det=-1\) both; eigenvalues \(\{1,1,-1\}\) both. \(\checkmark\)</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Easy to apply \(P\) and \(P^{-1}\) on the wrong sides — the rule is 'new-from-old' on the left. If \(T:V\to W\) maps between <em>different</em> spaces, you need two change-of-basis matrices, not a similarity.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>The capstone sub-part of change-of-basis problems. Yang rewards the invariant cross-check (trace/det), so always end with it — it catches your own errors and signals understanding.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="5" data-topic="fourspaces">
+  <h3 class="method-title">Four Fundamental Subspaces</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To produce bases and dimensions for the column space, row space, null space, and left null space of a matrix.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Reduce \(A\) to RREF.</li><li><strong>Col(A):</strong> the <em>original</em> columns of \(A\) in pivot positions.</li><li><strong>Row(A):</strong> the non-zero rows of RREF.</li><li><strong>Null(A):</strong> set each free variable to a standard basis vector, back-solve for the pivots.</li><li><strong>LeftNull(A):</strong> reduce \(A^T\) and repeat the null-space procedure.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — dimensions add up</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">For a \(3\times5\) matrix with RREF having 2 pivots: \(\operatorname{rank}=2\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\dim\operatorname{Col}=\dim\operatorname{Row}=2\); \(\dim\operatorname{Null}=5-2=3\); \(\dim\operatorname{LeftNull}=3-2=1\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Check: \(\operatorname{rank}+\text{nullity}=2+3=5=\#\text{cols}\) (rank-nullity). \(\checkmark\)</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>The classic trap: taking pivot columns <em>of the RREF</em> for Col(A) instead of the corresponding <em>original</em> columns — the RREF columns span a different space. Row(A) is safe to read from RREF; Col(A) is not.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>A favourite full-problem. Yang asks for all four with bases + dimensions and the rank-nullity check. The orthogonality relations (Row ⟂ Null, Col ⟂ LeftNull) connect to Ch.6 — be ready to state them.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="6" data-topic="gram">
+  <h3 class="method-title">Gram Matrix & PD Test</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To turn an abstract inner product into a concrete matrix, and to test positive-definiteness.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Form \(G=A^TA\): entry \(G_{ij}=\mathbf a_i\cdot\mathbf a_j\) (dot products of the columns of \(A\)).</li><li>\(G\) is always symmetric and positive semi-definite.</li><li>Test positive-definite: all leading principal minors \(>0\) (Sylvester), or all eigenvalues \(>0\), or Cholesky completes without a non-positive pivot.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — Gram of two columns</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(A=\left(\begin{smallmatrix}1&1\\1&0\\0&1\end{smallmatrix}\right)\Rightarrow G=A^TA=\left(\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Leading minors: \(2>0\) and \(\det G=3>0\) → positive definite → the two columns are independent.</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Forming \(A^TA\) <em>squares the condition number</em> — numerically dangerous for least squares (prefer QR). \(G\) is only PD when \(A\) has independent columns; otherwise it's merely PSD and not invertible.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Appears as the setup for Cholesky or least squares. Yang may ask 'is this pairing a valid inner product?' — checking the four axioms reduces to checking that the Gram matrix is symmetric PD.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="6" data-topic="cholesky">
+  <h3 class="method-title">Cholesky Decomposition</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To factor a positive-definite \(G=LL^T\) — the matrix analogue of taking a square root. Used to solve normal equations and to recognise inner-product spaces as Euclidean.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>\(l_{11}=\sqrt{G_{11}}\).</li><li>First column: \(l_{i1}=G_{i1}/l_{11}\) for \(i>1\).</li><li>Diagonal: \(l_{jj}=\sqrt{G_{jj}-\sum_{k<j}l_{jk}^2}\).</li><li>Below diagonal: \(l_{ij}=\bigl(G_{ij}-\sum_{k<j}l_{ik}l_{jk}\bigr)/l_{jj}\) for \(i>j\).</li><li>If any \(l_{jj}^2\le0\), \(G\) is not positive definite — Cholesky has detected it.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — 3×3 Cholesky</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(G=\begin{pmatrix}4&2&2\\2&5&3\\2&3&6\end{pmatrix}\). \(l_{11}=\sqrt4=2\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">First column: \(l_{21}=2/2=1,\;l_{31}=2/2=1\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(l_{22}=\sqrt{5-1^2}=2\); then \(l_{32}=(3-l_{31}l_{21})/l_{22}=(3-1)/2=1\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(l_{33}=\sqrt{6-l_{31}^2-l_{32}^2}=\sqrt{6-1-1}=2\).</div></div>
+<div class="step hidden"><span class="step-n">5</span><div class="step-body">\(L=\begin{pmatrix}2&0&0\\1&2&0\\1&1&2\end{pmatrix}\); verify \(LL^T=G\). \(\checkmark\)</div></div></div><div class="ex-note">Yang frames Cholesky as the 'third perspective' on Gram-Schmidt (§6.9.3): if \(A=QR\) then \(A^TA=R^TR\), so \(R^T\) is the Cholesky factor of the Gram matrix.</div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Only for <em>positive-definite</em> matrices — symmetric is not enough. A negative number under a square root is the signal that \(G\) fails PD. Half the cost of LU, but restricted to this special class.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang asks you to (a) form the Gram matrix, (b) Cholesky-factor it, (c) note that a failed square root means non-PD. Connect it to \(R^TR\) from QR for the conceptual marks.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="6" data-topic="qr">
+  <h3 class="method-title">Gram-Schmidt → QR (column shearing) ★</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To orthonormalise a basis and factor \(A=QR\). This is Prof. Yang's signature 'shearing' procedure — the dot-product method you asked about (§6.9.2).</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Take column 1. Compute \(\mathbf a_1\cdot\mathbf a_1\) and \(\mathbf a_1\cdot\mathbf a_j\) for every \(j>1\).</li><li>Form ratios \(r_{1j}=\dfrac{\mathbf a_1\cdot\mathbf a_j}{\mathbf a_1\cdot\mathbf a_1}\). These become row 1 of the upper-triangular matrix on the right.</li><li>Shear: \(\mathbf a_j\to\mathbf a_j-r_{1j}\mathbf a_1\) for each \(j>1\) — now every later column is orthogonal to column 1.</li><li>Move to column 2 and repeat with columns 3,4,… — these ratios become row 2. Continue down the columns.</li><li>You now have orthogonal \(W\) and \(A=WU\). Normalise: \(D=\operatorname{diag}(\|\mathbf w_i\|)\), \(Q=WD^{-1}\), \(R=DU\). Final: \(A=QR\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked examples <span class="hint-inline">— step through it</span></div>
+    <div class="ex-tabbar"><button class="ex-tab active" onclick="switchEx(this,0)">Prof. Yang's example — Haar wavelet (§6.9.2)</button><button class="ex-tab" onclick="switchEx(this,1)">Smaller example — 2 columns</button></div>
+    <div class="worked-example" data-ex="0" style="display:block"><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(A=\begin{pmatrix}1&2&4&4\\1&2&2&0\\1&0&2&0\\1&0&0&0\end{pmatrix}\). Column 1 · itself \(=4\); column 1 · the others \(=4,8,4\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Ratios \(\tfrac44,\tfrac84,\tfrac44=1,2,1\) → row 1 of \(U\) is \((1,1,2,1)\). Shear all columns by these multiples of column 1.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">After shearing: \(\begin{pmatrix}1&1&2&3\\1&1&0&-1\\1&-1&0&-1\\1&-1&-2&-1\end{pmatrix}\). Now repeat with column 2 on columns 3,4 → row 2 of \(U\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">After column 2, then column 3, the orthogonal matrix is \(W=\begin{pmatrix}1&1&1&1\\1&1&-1&-1\\1&-1&1&-1\\1&-1&-1&1\end{pmatrix}\) and \(U=\begin{pmatrix}1&1&2&1\\0&1&1&1\\0&0&1&1\\0&0&0&1\end{pmatrix}\).</div></div>
+<div class="step hidden"><span class="step-n">5</span><div class="step-body">Each column of \(W\) has norm \(2\), so \(D=2I\). Normalise: \(Q=\tfrac12 W\) (the Haar wavelet basis) and \(R=2U=\begin{pmatrix}2&2&4&2\\0&2&2&2\\0&0&2&2\\0&0&0&2\end{pmatrix}\). Then \(A=QR\). \(\checkmark\)</div></div></div><div class="ex-note">Why the ratios fill an upper-triangular matrix: each shear \(\mathbf a_j\to\mathbf a_j-r_{ij}\mathbf a_i\) is right-multiplication by an elementary upper-triangular matrix. Compose them and you get \(U\); normalise to \(R\).</div></div><div class="worked-example" data-ex="1" style="display:none"><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(A=\left(\begin{smallmatrix}1&2\\1&0\\1&1\end{smallmatrix}\right)\). Column 1 · itself \(=3\); column 1 · column 2 \(=2+0+1=3\). Ratio \(3/3=1\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Shear: \(\mathbf a_2\to\mathbf a_2-1\cdot\mathbf a_1=(1,-1,0)\). Now \(\mathbf a_1\perp\mathbf a_2\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Norms: \(\|\mathbf a_1\|=\sqrt3,\;\|(1,-1,0)\|=\sqrt2\). So \(Q=\bigl[\tfrac1{\sqrt3}(1,1,1)\mid\tfrac1{\sqrt2}(1,-1,0)\bigr]\), \(R=\left(\begin{smallmatrix}\sqrt3&\sqrt3\\0&\sqrt2\end{smallmatrix}\right)\).</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Classical Gram-Schmidt is numerically unstable — rounding makes later vectors drift from orthogonality (modified Gram-Schmidt fixes this). By hand the square roots in the normalisation step get messy fast; many problems ask only for the orthogonal \(W\) and \(U\), leaving normalisation symbolic.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>This is a Yang favourite precisely because of the shearing picture. Expect: 'orthogonalise these columns' or 'find the QR decomposition'. Show the dot-product ratios explicitly and point out that they populate \(R\). The Haar example has appeared on past finals.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="6" data-topic="onbcoords">
+  <h3 class="method-title">Vector in an ONB</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>When the basis is orthonormal, coordinates are free — no system to solve.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Coordinates are inner products: \([v]_i=\langle v,q_i\rangle\).</li><li>Reconstruct: \(v=\sum_i\langle v,q_i\rangle\,q_i\).</li><li>In matrix form \(Q^TQ=I\), so \(Q^{-1}=Q^T\) — inverting is just transposing.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — project onto an ONB</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">ONB \(q_1=\tfrac1{\sqrt2}(1,1),\;q_2=\tfrac1{\sqrt2}(1,-1)\); vector \(v=(3,1)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\langle v,q_1\rangle=\tfrac{3+1}{\sqrt2}=\tfrac4{\sqrt2}=2\sqrt2\); \(\langle v,q_2\rangle=\tfrac{3-1}{\sqrt2}=\sqrt2\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">So \([v]=(2\sqrt2,\sqrt2)\), and \(2\sqrt2\,q_1+\sqrt2\,q_2=(2,2)+(1,-1)=(3,1)\). \(\checkmark\)</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Only valid if the basis is genuinely orthonormal — using the inner-product shortcut on a non-orthonormal basis gives wrong coordinates. For merely orthogonal (not normalised) bases, divide by \(\|q_i\|^2\).</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang contrasts this with the general coordinate computation to make the point that orthonormality is what makes life easy. Often a quick sub-part inside a Gram-Schmidt problem.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="6" data-topic="leastsq">
+  <h3 class="method-title">Projection & Least Squares</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To find the closest point in a subspace, or the best-fit solution to an over-determined (inconsistent) system.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Projection matrix onto \(\operatorname{Col}(A)\): \(P=A(A^TA)^{-1}A^T\). Check \(P^2=P\) and \(P^T=P\).</li><li>Projection of \(\mathbf b\): \(\hat{\mathbf b}=P\mathbf b\); residual \(\mathbf r=\mathbf b-\hat{\mathbf b}\) satisfies \(A^T\mathbf r=0\).</li><li>Least-squares solution: solve the <strong>normal equations</strong> \(A^TA\,\mathbf x=A^T\mathbf b\).</li><li>With \(A=QR\): solve \(R\mathbf x=Q^T\mathbf b\) by back-substitution (better conditioned).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — fit a line through 3 points</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Fit \(y=mx+c\) to \((0,1),(1,2),(2,2)\). Set \(A=\left(\begin{smallmatrix}0&1\\1&1\\2&1\end{smallmatrix}\right),\mathbf b=(1,2,2)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(A^TA=\left(\begin{smallmatrix}5&3\\3&3\end{smallmatrix}\right),\;A^T\mathbf b=\left(\begin{smallmatrix}6\\5\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Solve \(\left(\begin{smallmatrix}5&3\\3&3\end{smallmatrix}\right)\binom{m}{c}=\binom{6}{5}\Rightarrow m=\tfrac12,\;c=\tfrac76\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">Best-fit line \(y=\tfrac12 x+\tfrac76\); the residual is orthogonal to the column space.</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Forming \(A^TA\) squares the condition number — for ill-conditioned data the QR route is far more accurate. \(A^TA\) must be invertible, i.e. \(A\) needs independent columns; otherwise use the pseudo-inverse (via SVD).</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>A staple applied problem — line/plane/polynomial fitting with 'real-world' framing (sensor readings, calibration). Yang wants the normal equations set up explicitly and the orthogonality of the residual verified.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="6" data-topic="fit">
+  <h3 class="method-title">Curve Fitting (general)</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To fit any model that is linear in its parameters — lines, planes, polynomials, exponentials after a log-transform.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Choose basis functions \(\phi_1,\dots,\phi_k\); build the design matrix \(A_{ij}=\phi_j(x_i)\).</li><li>Stack the targets in \(\mathbf b\).</li><li>Solve the normal equations \(A^TA\mathbf c=A^T\mathbf b\) for the coefficients \(\mathbf c\).</li><li>The fitted model is \(\hat f(x)=\sum_j c_j\phi_j(x)\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — quadratic fit setup</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Degree-2 fit to data \((x_i,y_i)\): basis \(\{1,x,x^2\}\), so \(A_{i\cdot}=(1,x_i,x_i^2)\) (a Vandermonde-style matrix).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Solve \(A^TA\,(c_0,c_1,c_2)^T=A^T\mathbf y\). The coefficients give \(\hat y=c_0+c_1x+c_2x^2\).</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Only models <em>linear in the parameters</em> fit this framework — true non-linear fits (e.g. \(y=ae^{bx}\) without a log trick) need calculus-based optimisation. High-degree polynomial fits become ill-conditioned (Vandermonde matrices).</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Usually phrased as a scenario (population growth, sensor calibration). Recognise the model is linear-in-parameters, set up \(A\) correctly, and reduce to least squares — that recognition is most of the marks.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="7" data-topic="cofactor">
+  <h3 class="method-title">Cofactor Expansion</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>For small matrices (≤ 4×4) or any matrix with a row/column full of zeros.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Pick the row or column with the most zeros.</li><li>For each non-zero entry \(a_{ij}\): delete row \(i\) and column \(j\) to get the minor \(M_{ij}\).</li><li>Attach sign \((-1)^{i+j}\) (checkerboard pattern).</li><li>\(\det A=\sum_j(-1)^{i+j}a_{ij}\det M_{ij}\); recurse until 2×2: \(\det\left(\begin{smallmatrix}a&b\\c&d\end{smallmatrix}\right)=ad-bc\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — expand along a sparse column</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\det\begin{pmatrix}2&0&1\\3&0&4\\1&5&2\end{pmatrix}\): column 2 has a single non-zero entry \(5\) (position (3,2)).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\det=(-1)^{3+2}\cdot5\cdot\det\left(\begin{smallmatrix}2&1\\3&4\end{smallmatrix}\right)=-5(8-3)=-25\).</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Cost explodes as \(n!\) — utterly impractical beyond 4×4 by hand. Choosing a dense row wastes effort; always hunt for zeros first. Sign errors from the checkerboard are the most common mistake.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Standard for 3×3. Yang sometimes builds a matrix with an obvious sparse row to reward students who spot it. Always state the sign of each cofactor explicitly.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="7" data-topic="detrow">
+  <h3 class="method-title">Determinant by Row Reduction</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>For larger matrices, or when cofactor expansion would be tedious.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Row-reduce \(A\) to upper-triangular \(U\), tracking each operation's effect.</li><li>Row swap → multiply running determinant by \(-1\).</li><li>Scale a row by \(c\) → the determinant scales by \(c\) (so divide back).</li><li>Add a multiple of one row to another → no change.</li><li>\(\det A=(\pm1)^{\#\text{swaps}}\times\prod(\text{diagonal of }U)\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — reduce then multiply diagonal</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\det\begin{pmatrix}1&2&3\\2&5&8\\3&8&14\end{pmatrix}\): \(R_2-2R_1,R_3-3R_1\) then \(R_3-2R_2\) (all 'add multiple' ops — determinant unchanged).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Upper-triangular result \(\left(\begin{smallmatrix}1&2&3\\0&1&2\\0&0&1\end{smallmatrix}\right)\); no swaps, so \(\det=1\cdot1\cdot1=1\).</div></div></div><div class="ex-note">This is exactly the \(U\) from the LU decomposition — \(\det A=\det U=\prod u_{ii}\) when no pivoting is used.</div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Forget to account for a row swap or a scaling and the sign/magnitude is wrong. Fractions from scaling rows can be avoided by using only 'add multiple' operations and reading the diagonal at the end.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang accepts either method; row reduction is expected for 4×4+. State explicitly how each swap/scale affected the determinant — those annotations earn marks.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="7" data-topic="detprops">
+  <h3 class="method-title">Properties & Cramer's Rule</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To compute determinants cleverly using algebraic identities, and to solve systems symbolically.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Key identities: \(\det(I)=1\), \(\det(AB)=\det A\det B\), \(\det(A^T)=\det A\), \(\det(A^{-1})=1/\det A\), \(\det(cA)=c^n\det A\).</li><li>Triangular/diagonal: determinant is the product of the diagonal.</li><li>Cramer: \(x_i=\det(A_i)/\det(A)\), where \(A_i\) is \(A\) with column \(i\) replaced by \(\mathbf b\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — use multiplicativity</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">If \(\det A=3\) and \(\det B=-2\) for \(3\times3\) matrices, then \(\det(A^2B^{-1})=\det(A)^2/\det(B)=9/(-2)=-4.5\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">And \(\det(2A)=2^3\cdot3=24\) (the \(c^n\) rule with \(n=3\)).</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Cramer's rule is \(O(n!\cdot n)\) — only for theory or tiny systems, never practical computation. The identity \(\det(A+B)\neq\det A+\det B\) (determinant is <em>not</em> linear in the whole matrix) trips many students.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang loves the conceptual one-liners: 'if \(\det A=5\), find \(\det(2A^{-1}A^T)\)'. Memorise the five identities cold; the \(\det(cA)=c^n\det A\) factor-of-\(n\) is the usual trap.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="8" data-topic="eigen">
+  <h3 class="method-title">Eigenvalues & Eigenvectors</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>The foundation of all of Ch.8 — diagonalisation, powers, ODEs, spectral theorem, SVD all start here.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Form the characteristic polynomial \(p_A(\lambda)=\det(\lambda I-A)\).</li><li>Factor \(p_A\) to find eigenvalues \(\lambda_i\) (over \(\mathbb C\) if needed).</li><li>For each \(\lambda_i\): solve \((A-\lambda_iI)\mathbf v=0\) by row reduction → eigenspace basis.</li><li>Record algebraic multiplicity (root multiplicity) and geometric multiplicity (\(\dim\) eigenspace).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — symmetric 2×2</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(A=\left(\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right)\): \(p_A(\lambda)=(2-\lambda)^2-1=\lambda^2-4\lambda+3=(\lambda-1)(\lambda-3)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Eigenvalues \(\lambda=1,3\). For \(\lambda=3\): \((A-3I)=\left(\begin{smallmatrix}-1&1\\1&-1\end{smallmatrix}\right)\Rightarrow\mathbf v=(1,1)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">For \(\lambda=1\): \((A-I)=\left(\begin{smallmatrix}1&1\\1&1\end{smallmatrix}\right)\Rightarrow\mathbf v=(1,-1)\). (Orthogonal — because \(A\) is symmetric.)</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Finding roots of \(p_A\) is hard for \(n\ge3\) unless the polynomial factors nicely (Yang always rigs them to). Complex eigenvalues appear for rotations. A repeated eigenvalue with too-small eigenspace means the matrix is <em>not</em> diagonalisable.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Universal. Yang gives 2×2 or 3×3 matrices with integer eigenvalues. Show the characteristic polynomial fully factored, then each eigenspace. State both multiplicities — the gap between them is the whole point of the next topic.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="8" data-topic="diag">
+  <h3 class="method-title">Diagonalization</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To write \(A=PDP^{-1}\), making powers, exponentials, and dynamics trivial.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Find all eigenvalues and a full set of \(n\) independent eigenvectors (needs geometric = algebraic multiplicity for every \(\lambda\)).</li><li>\(P=[\mathbf v_1\mid\cdots\mid\mathbf v_n]\); \(D=\operatorname{diag}(\lambda_1,\dots,\lambda_n)\) in the <em>same column order</em>.</li><li>Then \(A=PDP^{-1}\). Compute \(P^{-1}\) once.</li><li>If you can't get \(n\) independent eigenvectors, \(A\) is defective — fall back to Schur \(A=QTQ^*\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — diagonalise the 2×2</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">From \(A=\left(\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right)\): \(P=\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right),\;D=\left(\begin{smallmatrix}3&0\\0&1\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(P^{-1}=\tfrac12\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right)\) (here \(P^{-1}=\tfrac12P\) since the columns are orthogonal of equal length).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Check \(PDP^{-1}=A\). \(\checkmark\) Because \(A\) is symmetric, \(P\) can be made orthogonal — that's the spectral theorem.</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Not every matrix is diagonalisable (defective matrices with repeated eigenvalues). Even when possible, \(P\) can be ill-conditioned. Order consistency between \(P\) and \(D\) is essential — swapping one without the other breaks it.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Core computational problem. Yang asks 'is \(A\) diagonalisable? If so, find \(P,D\).' The 'is it?' part requires the multiplicity comparison — don't skip straight to computing.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="8" data-topic="powers">
+  <h3 class="method-title">Powers, Markov & ODEs</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To compute \(A^k\), find steady states of Markov chains, and solve linear systems of ODEs.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Diagonalise \(A=PDP^{-1}\). Then \(A^k=PD^kP^{-1}\) (raise diagonal entries to the \(k\)).</li><li>Markov steady state: the eigenvector for \(\lambda=1\), normalised so entries sum to 1; other \(|\lambda|<1\) decay.</li><li>Linear ODE \(\mathbf x'=A\mathbf x\): solution \(\mathbf x(t)=Pe^{Dt}P^{-1}\mathbf x_0\) with \(e^{Dt}=\operatorname{diag}(e^{\lambda_it})\).</li><li>Stability: classify by signs of \(\operatorname{Re}(\lambda_i)\) (all negative → stable).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — Markov steady state</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">Transition matrix \(M=\left(\begin{smallmatrix}0.9&0.2\\0.1&0.8\end{smallmatrix}\right)\) (columns sum to 1). Eigenvalue \(\lambda=1\) always exists.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Solve \((M-I)\mathbf v=0\): \(\left(\begin{smallmatrix}-0.1&0.2\\0.1&-0.2\end{smallmatrix}\right)\Rightarrow\mathbf v=(2,1)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Normalise to sum 1: steady state \(=(2/3,1/3)\). Long-run, 2/3 of the population is in state 1.</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Requires diagonalisability; defective matrices need the matrix exponential via Jordan/Schur form (beyond this course's clean cases). For Markov chains the steady state is unique only if the chain is 'nice' (irreducible, aperiodic).</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang frames these as dynamical-system scenarios (population models, web ranking, coupled springs). Recognise that diagonalisation is the engine; set up \(P,D\) then apply the relevant formula. The steady-state normalisation (sum to 1) is a common dropped detail.</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="8" data-topic="spectral">
+  <h3 class="method-title">Spectral Decomposition</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>For symmetric matrices \(A=A^T\) — guaranteed an orthonormal eigenbasis and \(A=Q\Lambda Q^T\).</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Find eigenvalues (all real, guaranteed for symmetric \(A\)).</li><li>Find eigenvectors; those for distinct eigenvalues are automatically orthogonal.</li><li>Within a repeated eigenvalue, Gram-Schmidt the eigenspace basis.</li><li>Normalise all eigenvectors → orthogonal matrix \(Q\); set \(\Lambda=\operatorname{diag}(\lambda_i)\).</li><li>\(A=Q\Lambda Q^T\) — and \(Q^{-1}=Q^T\), no inversion needed.</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — symmetric 2×2 spectral form</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(A=\left(\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right)\), eigenvalues \(3,1\), eigenvectors \((1,1),(1,-1)\) — already orthogonal.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Normalise: \(Q=\tfrac1{\sqrt2}\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right)\), \(\Lambda=\left(\begin{smallmatrix}3&0\\0&1\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(A=Q\Lambda Q^T\); since \(Q\) is orthogonal this needs no inverse. \(\checkmark\)</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Only for <em>symmetric</em> (real) or Hermitian matrices. For repeated eigenvalues you must orthogonalise within the eigenspace — forgetting this gives a \(Q\) that isn't orthogonal. Non-symmetric matrices need Schur, not spectral.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang's go-to for symmetric matrices, often as a lead-in to quadratic forms. The orthonormalisation of repeated-eigenvalue eigenspaces is the subtle part he tests. Emphasise \(Q^{-1}=Q^T\).</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="8" data-topic="svd">
+  <h3 class="method-title">Singular Value Decomposition ★</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To factor <em>any</em> matrix (square or rectangular) as \(A=U\Sigma V^T\). The most powerful decomposition — underlies PCA, compression, pseudo-inverse.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Form \(A^TA\) (symmetric, PSD).</li><li>Find its eigenvalues \(\lambda_1\ge\cdots\ge\lambda_n\ge0\); singular values \(\sigma_i=\sqrt{\lambda_i}\).</li><li>Orthonormal eigenvectors of \(A^TA\) → columns of \(V\) (same order as the \(\sigma_i\)).</li><li>For each \(\sigma_i>0\): \(\mathbf u_i=A\mathbf v_i/\sigma_i\) → columns of \(U\).</li><li>If \(m>\operatorname{rank}\): extend the \(\mathbf u_i\) to an ONB of \(\mathbb R^m\). Assemble \(\Sigma\) (\(m\times n\), \(\sigma_i\) on diagonal).</li><li>Verify \(U\Sigma V^T=A\).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — full 2×2 SVD</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(A=\left(\begin{smallmatrix}2&2\\-1&1\end{smallmatrix}\right)\). \(A^TA=\left(\begin{smallmatrix}5&3\\3&5\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Eigenvalues of \(A^TA\): \(\lambda=8,2\) → singular values \(\sigma_1=2\sqrt2,\;\sigma_2=\sqrt2\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Eigenvectors: \(\lambda=8\to(1,1)\), \(\lambda=2\to(1,-1)\). So \(V=\tfrac1{\sqrt2}\left(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(\mathbf u_1=A\mathbf v_1/\sigma_1=\tfrac1{2\sqrt2}A\cdot\tfrac1{\sqrt2}(1,1)^T=(1,0)\); \(\mathbf u_2=A\mathbf v_2/\sigma_2=(0,-1)\). So \(U=\left(\begin{smallmatrix}1&0\\0&-1\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">5</span><div class="step-body">\(A=U\Sigma V^T\) with \(\Sigma=\left(\begin{smallmatrix}2\sqrt2&0\\0&\sqrt2\end{smallmatrix}\right)\). Verify the product returns \(A\). \(\checkmark\)</div></div></div><div class="ex-note">Why it works: \(A^TA=V\Sigma^T\Sigma V^T\) is the spectral decomposition of \(A^TA\), so \(V\) and the \(\sigma_i^2\) come straight from it; then \(U\) is forced by \(\mathbf u_i=A\mathbf v_i/\sigma_i\).</div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>Hand computation requires diagonalising \(A^TA\) — feasible only for small matrices with clean eigenvalues (Yang rigs them). Sign ambiguity: eigenvectors can be \(\pm\), so different-looking SVDs can both be correct — always verify by reconstructing \(A\). The \(\mathbf u_i=A\mathbf v_i/\sigma_i\) formula only gives the first \(r\) columns; the rest need extension.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Increasingly common and the one you flagged as missing. Expect a 2×2 or 2×3 matrix: compute \(A^TA\), its eigenvalues → singular values, \(V\), then \(U\). Show every step and verify. A frequent follow-up is the rank-1 (low-rank) approximation \(\sigma_1\mathbf u_1\mathbf v_1^T\).</p>
+  </div>
+</section>
+<section class="topic-panel" data-ch="8" data-topic="quadform">
+  <h3 class="method-title">Quadratic Forms & Definiteness</h3>
+
+  <div class="method-section when">
+    <div class="method-label">When to use it</div>
+    <p>To classify a quadratic surface \(\mathbf x^TA\mathbf x\) and identify its shape.</p>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Procedure</div>
+    <ol class="proc"><li>Write the form with a <em>symmetric</em> \(A\) (symmetrise: \(A\leftarrow(A+A^T)/2\) if needed).</li><li>Find the eigenvalues of \(A\).</li><li>Classify by sign pattern: all \(+\) → positive definite (ellipsoid); all \(-\) → negative definite; mixed → indefinite (saddle/hyperboloid); some 0 → degenerate.</li><li>For the shape & axes: diagonalise via the spectral theorem (principal-axis theorem).</li></ol>
+  </div>
+
+  <div class="method-section">
+    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
+    
+    <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — classify a 2D form</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(q(x,y)=2x^2+2xy+2y^2\). Symmetric matrix \(A=\left(\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right)\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Eigenvalues \(3,1\) — both positive → <strong>positive definite</strong> → the level set \(q=1\) is an ellipse.</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Principal axes are the eigenvectors \((1,1),(1,-1)\); semi-axis lengths \(1/\sqrt{\lambda}=1/\sqrt3,\,1\).</div></div></div></div>
+  </div>
+
+  <div class="method-section limits">
+    <div class="method-label">Limitations &amp; pitfalls</div>
+    <p>You must symmetrise first — using a non-symmetric \(A\) gives wrong eigenvalues. Sylvester's minor test is a fast PD check but doesn't directly give the shape; for that you need the eigenvalues. Sylvester's law of inertia guarantees the signature is basis-independent.</p>
+  </div>
+
+  <div class="method-section exam">
+    <div class="method-label">How it's asked on the exam</div>
+    <p>Yang pairs this with the spectral theorem: classify the form, then identify the surface and find principal axes. The sign-of-eigenvalues → shape mapping is the key deliverable; memorise the four cases.</p>
+  </div>
+</section>
+</div>
+
+<footer class="footer-note">
+  RAFI'S STUDY HUB · LINEAR ALGEBRA · COMPUTATIONAL REFERENCE · CH. 3–8
+</footer>
+
+<script>
+  const TOPICS = {"3": [{"id": "rref", "name": "RREF Algorithm"}, {"id": "solve", "name": "Solving Ax = b"}, {"id": "inverse", "name": "Matrix Inverse via [A | I]"}], "4": [{"id": "matmul", "name": "Matrix Multiplication"}, {"id": "lu", "name": "LU Decomposition"}, {"id": "plu", "name": "PLU (with pivoting)"}, {"id": "lusolve", "name": "Solving via LU"}, {"id": "block", "name": "Block Matrices"}], "5": [{"id": "spanbasis", "name": "Basis for a Span"}, {"id": "coords", "name": "Coordinate Vectors"}, {"id": "cob", "name": "Change-of-Basis Matrix"}, {"id": "mapbasis", "name": "Matrix of a Map across Bases"}, {"id": "fourspaces", "name": "Four Fundamental Subspaces"}], "6": [{"id": "gram", "name": "Gram Matrix & PD Test"}, {"id": "cholesky", "name": "Cholesky Decomposition"}, {"id": "qr", "name": "Gram-Schmidt \u2192 QR (column shearing) \u2605"}, {"id": "onbcoords", "name": "Vector in an ONB"}, {"id": "leastsq", "name": "Projection & Least Squares"}, {"id": "fit", "name": "Curve Fitting (general)"}], "7": [{"id": "cofactor", "name": "Cofactor Expansion"}, {"id": "detrow", "name": "Determinant by Row Reduction"}, {"id": "detprops", "name": "Properties & Cramer's Rule"}], "8": [{"id": "eigen", "name": "Eigenvalues & Eigenvectors"}, {"id": "diag", "name": "Diagonalization"}, {"id": "powers", "name": "Powers, Markov & ODEs"}, {"id": "spectral", "name": "Spectral Decomposition"}, {"id": "svd", "name": "Singular Value Decomposition \u2605"}, {"id": "quadform", "name": "Quadratic Forms & Definiteness"}]};
+
+  function selectChapter(ch) {
+    document.querySelectorAll('.ch-tab').forEach(t => t.classList.toggle('active', t.dataset.ch === ch));
+    const bar = document.getElementById('topic-bar');
+    bar.innerHTML = '';
+    TOPICS[ch].forEach((t, i) => {
+      const b = document.createElement('button');
+      b.className = 'topic-btn' + (i === 0 ? ' active' : '');
+      b.innerHTML = t.name;
+      b.onclick = () => selectTopic(ch, t.id, b);
+      bar.appendChild(b);
+    });
+    selectTopic(ch, TOPICS[ch][0].id, bar.firstChild);
+  }
+
+  function selectTopic(ch, topic, btn) {
+    document.querySelectorAll('.topic-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.querySelector(`.topic-panel[data-ch="${ch}"][data-topic="${topic}"]`);
+    if (panel) panel.classList.add('active');
+    if (btn) {
+      document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  }
+
+  // ── Worked-example step reveals ──
+  function revealStep(btn) {
+    const ex = btn.closest('.worked-example');
+    const hidden = ex.querySelectorAll('.step.hidden');
+    if (hidden.length) hidden[0].classList.remove('hidden');
+    if (ex.querySelectorAll('.step.hidden').length === 0) {
+      btn.textContent = '✓ All steps shown'; btn.disabled = true;
+    }
+  }
+  function revealAll(btn) {
+    const ex = btn.closest('.worked-example');
+    ex.querySelectorAll('.step.hidden').forEach(s => s.classList.remove('hidden'));
+    const nb = ex.querySelector('.step-btn'); nb.textContent = '✓ All steps shown'; nb.disabled = true;
+  }
+  function resetSteps(btn) {
+    const ex = btn.closest('.worked-example');
+    const steps = ex.querySelectorAll('.step');
+    steps.forEach((s, i) => { if (i > 0) s.classList.add('hidden'); });
+    const nb = ex.querySelector('.step-btn'); nb.textContent = '▸ Show next step'; nb.disabled = false;
+  }
+  function switchEx(btn, ei) {
+    const panel = btn.closest('.topic-panel');
+    panel.querySelectorAll('.worked-example').forEach(e => e.style.display = 'none');
+    panel.querySelector(`.worked-example[data-ex="${ei}"]`).style.display = 'block';
+    panel.querySelectorAll('.ex-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // Reveal the FIRST step of every example by default (so a step is always visible)
+  function primeFirstSteps() {
+    document.querySelectorAll('.worked-example .steps').forEach(s => {
+      const first = s.querySelector('.step.hidden');
+      if (first) first.classList.remove('hidden');
+    });
+  }
+
+  // Scroll progress
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 || 0;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+
+  // Init
+  primeFirstSteps();
+  selectChapter('3');
+</script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

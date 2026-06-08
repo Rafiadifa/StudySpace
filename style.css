@@ -1,0 +1,564 @@
+/* ─────────────────────────────────────────
+   Rafi's Study Hub — Shared Stylesheet
+   Used by: index.html, placeholder.html,
+            and all future practice pages
+───────────────────────────────────────── */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ── Variables ── */
+:root {
+  --bg:    #faf9f7;
+  --bg2:   #ffffff;
+  --bg3:   #f1efe9;
+  --border:#e2ded5;
+  --text:  #23211c;
+  --text2: #6b6760;
+  --text3: #9c978d;
+  --cpp:   #15803d;
+  --calc:  #1d4ed8;
+  --la:    #be185d;
+  --dt:    #c2570c;
+  --mgmt:  #6d28d9;
+
+  /* Per-page accent. Pages set body.subject-X to switch. Default = calc. */
+  --accent:     var(--calc);
+  --accent-08:  rgba(29,78,216,0.07);
+  --accent-25:  rgba(29,78,216,0.22);
+  --accent-40:  rgba(29,78,216,0.4);
+
+  --topbar-bg:  rgba(250,249,247,0.9);
+}
+
+/* ── Dark theme ── */
+html[data-theme="dark"] {
+  --bg:    #15141a;
+  --bg2:   #1d1c24;
+  --bg3:   #272630;
+  --border:#35333f;
+  --text:  #ece9f1;
+  --text2: #aba7b6;
+  --text3: #7c7889;
+  --cpp:   #4ade80;
+  --calc:  #60a5fa;
+  --la:    #f472b6;
+  --dt:    #fb923c;
+  --mgmt:  #a78bfa;
+  --topbar-bg: rgba(21,20,26,0.9);
+}
+body { transition: background-color .25s ease, color .25s ease; }
+
+/* ── Theme toggle button (floating, bottom-left) ── */
+.theme-toggle {
+  position: fixed; left: 20px; bottom: 20px; z-index: 300;
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg2);
+  cursor: pointer; font-size: 1.05rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.14); transition: transform .15s, border-color .15s;
+}
+.theme-toggle:hover { transform: translateY(-2px); border-color: var(--text3); }
+.theme-toggle::before { content: '🌙'; }
+html[data-theme="dark"] .theme-toggle::before { content: '☀️'; }
+@media print { .theme-toggle { display: none; } }
+
+body.subject-calc { --accent: var(--calc); --accent-08: rgba(29,78,216,0.07); --accent-25: rgba(29,78,216,0.22); --accent-40: rgba(29,78,216,0.4); }
+body.subject-la   { --accent: var(--la);   --accent-08: rgba(190,24,93,0.07); --accent-25: rgba(190,24,93,0.22); --accent-40: rgba(190,24,93,0.4); }
+body.subject-cpp  { --accent: var(--cpp);  --accent-08: rgba(21,128,61,0.07);  --accent-25: rgba(21,128,61,0.22);  --accent-40: rgba(21,128,61,0.4); }
+body.subject-dt   { --accent: var(--dt);   --accent-08: rgba(194,87,12,0.07);  --accent-25: rgba(194,87,12,0.22);  --accent-40: rgba(194,87,12,0.4); }
+body.subject-mgmt { --accent: var(--mgmt); --accent-08: rgba(109,40,217,0.07); --accent-25: rgba(109,40,217,0.22); --accent-40: rgba(109,40,217,0.4); }
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* ── Top bar ── */
+.topbar {
+  border-bottom: 1px solid var(--border);
+  padding: 20px 48px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  background: var(--topbar-bg);
+  backdrop-filter: blur(12px);
+  z-index: 10;
+}
+.topbar-title { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--text); letter-spacing: -0.01em; }
+.topbar-sub   { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--text3); letter-spacing: 0.05em; }
+.topbar-date  { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--text3); }
+
+/* ── Hero ── */
+.hero {
+  padding: 64px 48px 48px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--accent-08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  max-width: 680px;
+}
+.hero h1 em { font-style: italic; color: var(--text2); }
+.hero-meta { margin-top: 16px; font-size: 0.88rem; color: var(--text2); font-weight: 300; max-width: 500px; line-height: 1.6; }
+.exam-pills { display: flex; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+.pill { font-family: 'DM Mono', monospace; font-size: 0.72rem; padding: 5px 12px; border-radius: 99px; border: 1px solid; letter-spacing: 0.03em; }
+.pill-cpp  { color: var(--cpp);  border-color: rgba(74,222,128,0.3);  background: rgba(74,222,128,0.07); }
+.pill-calc { color: var(--calc); border-color: rgba(96,165,250,0.3);  background: rgba(96,165,250,0.07); }
+.pill-la   { color: var(--la);   border-color: rgba(244,114,182,0.3); background: rgba(244,114,182,0.07); }
+
+/* ── Main container ── */
+.main { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+
+/* ── Subject blocks ── */
+.subject-block { padding: 48px 0; border-bottom: 1px solid var(--border); animation: fadeUp 0.4s ease both; }
+.subject-block:last-child { border-bottom: none; }
+
+.subject-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 36px; }
+.subject-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 8px; flex-shrink: 0; }
+.subject-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+.subject-title { font-family: 'DM Serif Display', serif; font-size: 1.6rem; letter-spacing: -0.02em; line-height: 1.2; }
+.subject-exam-date { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--text3); text-align: right; line-height: 1.8; flex-shrink: 0; }
+.subject-exam-date strong { display: block; font-weight: 500; color: var(--text2); }
+
+/* ── Cards (hub page) ── */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.card { display: block; text-decoration: none; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; color: var(--text2); font-size: 0.88rem; font-weight: 500; line-height: 1.4; transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s; }
+.card:hover { background: var(--bg3); transform: translateY(-2px); color: var(--text); }
+.card-sub { display: block; font-size: 0.75rem; font-weight: 400; color: var(--text3); margin-top: 4px; }
+.card-badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.62rem; padding: 2px 6px; border-radius: 4px; border: 1px solid; vertical-align: middle; margin-left: 6px; letter-spacing: 0.04em; }
+.badge-new { color: #fb7185; border-color: rgba(251,113,133,0.35); background: rgba(251,113,133,0.08); }
+.acc-cpp  { border-left: 3px solid var(--cpp); }
+.acc-calc { border-left: 3px solid var(--calc); }
+.acc-la   { border-left: 3px solid var(--la); }
+.acc-dt   { border-left: 3px solid var(--dt); }
+.acc-mgmt { border-left: 3px solid var(--mgmt); }
+.dot-cpp  { background: var(--cpp); }
+.dot-calc { background: var(--calc); }
+.dot-la   { background: var(--la); }
+.dot-dt   { background: var(--dt); }
+
+/* ── Footer ── */
+.footer-note { padding: 32px 48px; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--text3); letter-spacing: 0.04em; }
+
+/* ── Placeholder page ── */
+.placeholder-wrap { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 40px; }
+.placeholder-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text3); }
+.placeholder-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); }
+.placeholder-title { font-family: 'DM Serif Display', serif; font-size: 2.2rem; letter-spacing: -0.03em; color: var(--text2); font-style: italic; }
+.placeholder-desc { font-size: 0.88rem; color: var(--text3); font-weight: 300; text-align: center; max-width: 320px; line-height: 1.7; }
+.placeholder-back { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--text3); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 2px; transition: color 0.15s; }
+.placeholder-back:hover { color: var(--text2); }
+
+/* ── Timer chip ── */
+.timer-chip {
+  position: fixed; bottom: 28px; right: 32px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 20px;
+  padding: 8px 20px 6px;
+  font-family: 'DM Mono', monospace;
+  color: var(--text2); letter-spacing: 0.08em;
+  z-index: 100;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  box-shadow: 0 4px 16px rgba(40,36,28,0.1);
+  transition: border-color 0.3s;
+}
+.timer-label   { font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); }
+.timer-display { font-size: 0.9rem; color: var(--text); }
+.timer-chip.warn               { border-color: rgba(251,146,60,0.5); }
+.timer-chip.warn   .timer-display { color: var(--dt); }
+.timer-chip.urgent             { border-color: rgba(239,68,68,0.5); }
+.timer-chip.urgent .timer-display { color: #f87171; }
+
+/* ── Progress bar ── */
+.progress-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: transparent; z-index: 1000; }
+.progress-bar  { height: 100%; background: var(--accent); width: 0%; transition: width 0.15s ease-out; }
+
+/* ── Formula reference strip ── */
+.formula-ref {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--text2);
+  font-weight: 300;
+}
+.formula-ref strong { color: var(--text); font-weight: 500; }
+
+/* ── Problems ── */
+.problem { padding: 40px 0; border-top: 1px dashed var(--border); }
+.problem-header {
+  display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.problem-num {
+  font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500;
+}
+.problem-title, .problem-topic {
+  font-family: 'DM Serif Display', serif; font-size: 1.35rem;
+  color: var(--text); letter-spacing: -0.01em;
+}
+.problem-pts {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace; font-size: 0.7rem;
+  color: var(--accent);
+  padding: 4px 12px;
+  border: 1px solid var(--accent-25);
+  background: var(--accent-08);
+  border-radius: 99px;
+  letter-spacing: 0.06em;
+}
+.pts {
+  font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--text3);
+  margin-left: 6px;
+}
+.problem-body { margin-top: 12px; }
+.context-box {
+  font-size: 0.95rem; color: var(--text2); margin-bottom: 16px;
+  line-height: 1.65; font-weight: 300;
+}
+.define-block {
+  margin: 24px 0; padding: 20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; text-align: center; overflow-x: auto;
+}
+
+/* Parts list — each <li> contains: label · question · per-part toggle · answer */
+.parts {
+  list-style: none; margin: 28px 0 0; padding: 0;
+  display: flex; flex-direction: column; gap: 28px;
+}
+.parts > li {
+  display: flex; gap: 16px;
+  font-size: 0.95rem; color: var(--text); line-height: 1.65;
+}
+.part-label {
+  font-family: 'DM Mono', monospace; font-size: 0.9rem;
+  color: var(--accent); flex-shrink: 0; font-weight: 500;
+  padding-top: 1px;
+}
+.part-content {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.part-question {
+  font-size: 0.95rem; line-height: 1.65; color: var(--text);
+}
+
+/* ── Per sub-part answer toggle ── */
+.ans-toggle { margin-top: 6px; }
+.ans-btn {
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--border);
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.ans-btn:hover {
+  background: var(--accent-08);
+  color: var(--accent);
+  border-color: var(--accent-40);
+}
+.ans-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.answer {
+  display: none;
+  margin-top: 12px;
+  padding: 18px 22px;
+  background: var(--bg2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  animation: fadeUp 0.3s ease-out;
+}
+.answer.open { display: block; }
+.ans-part {
+  font-size: 0.92rem; line-height: 1.75;
+  color: var(--text2); font-weight: 300;
+}
+.ans-part strong { color: var(--text); font-weight: 500; }
+.ans-part-label {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  color: var(--accent);
+  margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em;
+  display: block;
+}
+.key-result {
+  background: var(--bg3);
+  padding: 14px 18px;
+  border-radius: 8px;
+  margin-top: 14px;
+  text-align: center;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.ans-note {
+  font-size: 0.82rem; color: var(--text3); font-style: italic; margin-top: 12px;
+}
+
+/* ─────────────────────────────────────────
+   FLASHCARDS
+   For active-recall sessions.
+   Categories are color-coded via .cat-* classes on details.flash.
+───────────────────────────────────────── */
+.flash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+details.flash {
+  --flash-color: var(--accent);
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+details.flash::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--flash-color);
+  opacity: 0.55;
+  transition: opacity 0.2s;
+}
+details.flash:hover {
+  border-color: var(--flash-color);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(40,36,28,0.1);
+}
+details.flash:hover::before { opacity: 1; }
+details.flash[open] {
+  background: var(--bg3);
+  border-color: var(--flash-color);
+}
+details.flash[open]::before { opacity: 1; }
+
+details.flash > summary {
+  cursor: pointer; list-style: none;
+  padding: 22px 24px 20px;
+  user-select: none;
+  display: flex; flex-direction: column; gap: 0;
+}
+details.flash > summary::-webkit-details-marker { display: none; }
+details.flash > summary::marker { display: none; }
+
+.flash-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: inline-block;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 99px;
+  color: var(--flash-color);
+  border: 1px solid var(--flash-color);
+  background: rgba(255,255,255,0.02);
+  margin-bottom: 16px;
+}
+
+/* Category color presets */
+details.flash.cat-def     { --flash-color: var(--calc); }
+details.flash.cat-thm     { --flash-color: var(--dt); }
+details.flash.cat-crit    { --flash-color: var(--cpp); }
+details.flash.cat-compute { --flash-color: var(--mgmt); }
+details.flash.cat-apply   { --flash-color: var(--la); }
+details.flash.cat-adv     { --flash-color: #fbbf24; }
+
+.flash-q {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text);
+  font-weight: 400;
+}
+.flash-q strong { color: var(--text); font-weight: 500; }
+
+.flash-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-top: 20px;
+  display: inline-flex; align-items: center; gap: 8px;
+  align-self: flex-start;
+  transition: color 0.2s;
+}
+.flash-hint::after {
+  content: "↓";
+  display: inline-block;
+  transition: transform 0.3s ease;
+  color: var(--flash-color);
+  font-size: 0.85rem;
+}
+details.flash:hover .flash-hint { color: var(--text2); }
+details.flash[open] .flash-hint { color: var(--flash-color); }
+details.flash[open] .flash-hint::after { transform: rotate(180deg); }
+
+.flash-a {
+  padding: 18px 24px 22px;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--text2);
+  font-weight: 300;
+  border-top: 1px dashed var(--border);
+  animation: fadeUp 0.3s ease-out;
+}
+.flash-a strong { color: var(--text); font-weight: 500; }
+.flash-a-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--flash-color);
+  margin: 0 0 8px;
+  display: block;
+}
+
+/* ── Block separator (for multi-block-per-day pages) ── */
+.block-head {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  margin: 40px 0 22px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Animation ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .topbar, .hero, .main, .footer-note { padding-left: 20px; padding-right: 20px; }
+  .hero h1            { font-size: 2rem; }
+  .card-grid          { grid-template-columns: 1fr; }
+  .flash-grid         { grid-template-columns: 1fr; }
+  .subject-exam-date  { display: none; }
+  .parts > li         { flex-direction: column; gap: 4px; }
+  .part-label         { padding-top: 0; }
+}
+
+/* ─────────────────────────────────────────
+   COMPLETION TRACKING (index hub)
+───────────────────────────────────────── */
+/* Card becomes a positioning context for the check button */
+.card { position: relative; }
+
+/* Tappable check circle in the top-right of each card */
+.card-check {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  z-index: 3;
+  flex-shrink: 0;
+  padding: 0;
+}
+.card-check:hover { border-color: var(--accent-40); transform: scale(1.12); }
+.card-check::after {
+  content: "✓";
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.15s;
+  line-height: 1;
+}
+/* Done state */
+.card[data-done="true"] { opacity: 0.55; }
+.card[data-done="true"] .card-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.card[data-done="true"] .card-check::after { opacity: 1; }
+.card[data-done="true"] > :not(.card-check) { text-decoration: line-through; text-decoration-color: var(--text3); }
+
+/* Give cards room so the long titles don't run under the check circle */
+.card { padding-right: 42px; }
+
+/* ─────────────────────────────────────────
+   PAGE TRANSITIONS — cross-document View Transitions
+   Pure CSS, site-wide (every page links this stylesheet).
+   Chromium + Safari 18.2+ cross-fade between pages;
+   other browsers simply navigate normally (graceful fallback).
+───────────────────────────────────────── */
+
+/* Opt the whole site into multi-page view transitions */
+@view-transition {
+  navigation: auto;
+}
+
+/* Root transition: old page fades out & lifts slightly,
+   new page fades up into place — matches the fadeUp feel. */
+::view-transition-old(root) {
+  animation: vt-out 0.22s ease both;
+}
+::view-transition-new(root) {
+  animation: vt-in 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes vt-out {
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+@keyframes vt-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Keep the top bar and progress bar anchored across navigations
+   (they don't fade with the body — the chrome stays solid while
+   the content swaps). Remove these two lines if you'd rather the
+   whole page cross-fade as one piece. */
+.topbar       { view-transition-name: studyhub-topbar; }
+.progress-wrap{ view-transition-name: studyhub-progress; }
+
+/* Accessibility: honour reduced-motion — instant, no slide. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

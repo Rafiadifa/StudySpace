@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++ Fix the Function — Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0c0e14;
+  --surface:   #12141c;
+  --card:      #181b26;
+  --card2:     #1d2030;
+  --border:    #252840;
+  --border2:   #30345a;
+  --accent:    #5c73f2;
+  --red:       #ff4560;
+  --orange:    #ff8c42;
+  --yellow:    #ffd460;
+  --green:     #1be4a0;
+  --teal:      #38bdf8;
+  --purple:    #b78bf8;
+  --text:      #dde1f5;
+  --muted:     #5a607a;
+  --muted2:    #8891b0;
+  --code-bg:   #0a0c12;
+  --ans-bg:    #101520;
+  --mono:      'JetBrains Mono', monospace;
+  --sans:      'DM Sans', sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height:100vh;
+  padding: 28px 16px 80px;
+}
+
+body::after {
+  content:'';
+  position:fixed; inset:0; pointer-events:none;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(92,115,242,.07) 0%, transparent 60%);
+  z-index:0;
+}
+
+.scrollbar {
+  position:fixed; top:0; left:0; height:3px; width:0%;
+  background: linear-gradient(90deg, var(--accent), var(--purple));
+  z-index:999; transition: width .12s;
+}
+
+.wrap { max-width:900px; margin:0 auto; position:relative; z-index:1; }
+
+/* ── Header ──────────────────────────────────────── */
+.header {
+  padding:30px 36px 28px;
+  background: var(--card);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  margin-bottom:26px;
+  position:relative; overflow:hidden;
+}
+.header::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg, var(--accent), var(--purple), var(--teal));
+}
+.h-eyebrow {
+  font-family:var(--mono); font-size:.65rem; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:10px;
+}
+.header h1 {
+  font-size:1.85rem; font-weight:700; letter-spacing:-.025em;
+  line-height:1.2; margin-bottom:8px;
+}
+.header h1 em { font-style:normal; color:var(--accent); }
+.header p { color:var(--muted2); font-size:.9rem; line-height:1.55; margin-bottom:18px; }
+.pills { display:flex; flex-wrap:wrap; gap:8px; }
+.pill {
+  background: rgba(255,255,255,.04);
+  border:1px solid var(--border2);
+  border-radius:6px; padding:5px 13px;
+  font-family:var(--mono); font-size:.72rem; color:var(--muted2);
+}
+.pill strong { color:var(--yellow); }
+
+/* ── Progress ────────────────────────────────────── */
+.prog {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:8px; padding:11px 18px;
+  display:flex; align-items:center; gap:14px;
+  margin-bottom:26px;
+}
+.prog-bar { flex:1; height:4px; background:var(--border); border-radius:4px; overflow:hidden; }
+.prog-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--purple)); transition:width .5s; }
+.prog-txt  { font-family:var(--mono); font-size:.72rem; color:var(--muted); white-space:nowrap; }
+
+/* ── Section divider ─────────────────────────────── */
+.sec {
+  display:flex; align-items:center; gap:10px;
+  margin:30px 0 16px;
+}
+.sec-line { flex:1; height:1px; background:var(--border2); }
+.sec-label {
+  font-family:var(--mono); font-size:.68rem; font-weight:700;
+  letter-spacing:.11em; text-transform:uppercase;
+  color:var(--muted); white-space:nowrap;
+}
+.sec-pts {
+  font-family:var(--mono); font-size:.68rem;
+  background:rgba(255,212,96,.07); color:var(--yellow);
+  border:1px solid rgba(255,212,96,.18);
+  padding:2px 10px; border-radius:4px;
+}
+
+/* ── Question card ───────────────────────────────── */
+.qcard {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  margin-bottom:20px;
+  overflow:hidden;
+  transition: border-color .2s;
+}
+.qcard:hover { border-color:var(--border2); }
+.qcard.s-ok  { border-color:rgba(27,228,160,.3); }
+.qcard.s-bad { border-color:rgba(255,69,96,.28); }
+
+.qcard-top {
+  padding:20px 24px 16px;
+  border-bottom:1px solid var(--border);
+}
+.q-meta { display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+.qnum {
+  font-family:var(--mono); font-size:.68rem; font-weight:700;
+  background:var(--accent); color:#fff;
+  padding:3px 10px; border-radius:4px;
+}
+.badge {
+  font-family:var(--mono); font-size:.62rem; font-weight:700;
+  padding:2px 8px; border-radius:4px; letter-spacing:.03em;
+}
+.b-med    { background:rgba(255,140,66,.13);  color:var(--orange); border:1px solid rgba(255,140,66,.25); }
+.b-hard   { background:rgba(255,69,96,.12);   color:var(--red);    border:1px solid rgba(255,69,96,.25); }
+.b-expert { background:rgba(183,139,248,.12); color:var(--purple); border:1px solid rgba(183,139,248,.25); }
+.b-topic  { background:rgba(255,255,255,.04); color:var(--muted2); border:1px solid var(--border); }
+
+.q-title { font-size:1rem; font-weight:600; margin-bottom:6px; }
+.q-desc  { font-size:.87rem; color:var(--muted2); line-height:1.6; }
+.q-desc code {
+  font-family:var(--mono); font-size:.78rem;
+  background:rgba(255,255,255,.07); color:var(--yellow);
+  padding:1px 5px; border-radius:3px;
+}
+
+/* ── Code panels ─────────────────────────────────── */
+.code-area { padding:0 24px 0; }
+.code-label {
+  font-family:var(--mono); font-size:.63rem; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:10px 0 5px;
+  display:flex; align-items:center; gap:8px;
+}
+.code-label .dot {
+  width:7px; height:7px; border-radius:50%;
+}
+.dot-red    { background:var(--red); }
+.dot-green  { background:var(--green); }
+.dot-yellow { background:var(--yellow); }
+
+pre.code {
+  background:var(--code-bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:16px 18px;
+  font-family:var(--mono);
+  font-size:.795rem;
+  line-height:1.65;
+  white-space:pre;
+  overflow-x:auto;
+  tab-size:4;
+  margin-bottom:14px;
+  position:relative;
+}
+pre.code::after {
+  content:'C++'; position:absolute; top:6px; right:10px;
+  font-size:.58rem; color:var(--muted);
+}
+
+/* syntax colours */
+.kw { color:#79b8ff; }
+.ty { color:var(--yellow); }
+.fn { color:#b392f0; }
+.st { color:#9ecbff; }
+.cm { color:#3d4560; font-style:italic; }
+.nm { color:#f97583; }
+.op { color:var(--orange); }
+.hl-bad { background:rgba(255,69,96,.18); border-radius:3px; }
+.hl-ok  { background:rgba(27,228,160,.13); border-radius:3px; }
+
+/* ── Answer section ──────────────────────────────── */
+.answer-wrap {
+  display:none;
+  border-top:1px solid var(--border);
+}
+.answer-wrap.open { display:block; animation:fadeIn .25s ease; }
+
+.ans-tabs {
+  display:flex; border-bottom:1px solid var(--border);
+  padding:0 24px;
+  background:var(--ans-bg);
+}
+.ans-tab {
+  font-family:var(--mono); font-size:.68rem; font-weight:700;
+  letter-spacing:.05em; text-transform:uppercase;
+  padding:10px 14px; cursor:pointer;
+  color:var(--muted); border-bottom:2px solid transparent;
+  transition: all .15s;
+}
+.ans-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.ans-tab:hover:not(.active) { color:var(--muted2); }
+
+.ans-panel { display:none; padding:20px 24px; background:var(--ans-bg); }
+.ans-panel.active { display:block; }
+
+/* fixed code block */
+pre.fixed {
+  background:var(--code-bg);
+  border:1px solid rgba(27,228,160,.2);
+  border-left:3px solid var(--green);
+  border-radius:8px;
+  padding:14px 16px;
+  font-family:var(--mono); font-size:.78rem; line-height:1.65;
+  white-space:pre; overflow-x:auto; tab-size:4;
+  margin:10px 0;
+}
+
+/* explanation block */
+.expl-block {
+  margin:10px 0;
+}
+.expl-item {
+  display:flex; gap:12px; padding:10px 14px;
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--border);
+  border-radius:8px; margin-bottom:8px;
+}
+.expl-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
+.expl-text { font-size:.85rem; color:var(--muted2); line-height:1.6; }
+.expl-text strong { color:var(--text); }
+.expl-text code {
+  font-family:var(--mono); font-size:.76rem;
+  background:rgba(255,255,255,.07); color:var(--yellow);
+  padding:1px 5px; border-radius:3px;
+}
+
+.bug-list {
+  list-style:none; margin:8px 0;
+}
+.bug-list li {
+  font-size:.84rem; color:var(--muted2); line-height:1.6;
+  padding:9px 12px;
+  background:rgba(255,69,96,.06); border:1px solid rgba(255,69,96,.15);
+  border-radius:7px; margin-bottom:6px;
+}
+.bug-list li code {
+  font-family:var(--mono); font-size:.75rem;
+  background:rgba(255,255,255,.08); color:var(--red);
+  padding:1px 5px; border-radius:3px;
+}
+.fix-list {
+  list-style:none; margin:8px 0;
+}
+.fix-list li {
+  font-size:.84rem; color:var(--muted2); line-height:1.6;
+  padding:9px 12px;
+  background:rgba(27,228,160,.05); border:1px solid rgba(27,228,160,.15);
+  border-radius:7px; margin-bottom:6px;
+}
+.fix-list li code {
+  font-family:var(--mono); font-size:.75rem;
+  background:rgba(255,255,255,.08); color:var(--green);
+  padding:1px 5px; border-radius:3px;
+}
+
+.rule-box {
+  background:rgba(92,115,242,.07);
+  border:1px solid rgba(92,115,242,.2);
+  border-radius:8px; padding:12px 16px;
+  font-size:.83rem; color:var(--muted2); line-height:1.6;
+  margin:10px 0;
+}
+.rule-box strong { color:var(--teal); }
+.rule-box code {
+  font-family:var(--mono); font-size:.75rem;
+  background:rgba(255,255,255,.07); color:var(--yellow);
+  padding:1px 5px; border-radius:3px;
+}
+
+.warn-box {
+  background:rgba(255,140,66,.06);
+  border:1px solid rgba(255,140,66,.2);
+  border-radius:8px; padding:12px 16px;
+  font-size:.83rem; color:var(--muted2); line-height:1.6;
+  margin:10px 0;
+}
+.warn-box strong { color:var(--orange); }
+.warn-box code {
+  font-family:var(--mono); font-size:.75rem;
+  background:rgba(255,255,255,.07); color:var(--yellow);
+  padding:1px 5px; border-radius:3px;
+}
+
+/* ── Action row ──────────────────────────────────── */
+.action-row {
+  display:flex; gap:8px; padding:16px 24px;
+  border-top:1px solid var(--border);
+  flex-wrap:wrap; align-items:center;
+}
+.btn {
+  padding:9px 18px; border:none; border-radius:7px;
+  font-family:var(--sans); font-size:.82rem; font-weight:600;
+  cursor:pointer; transition: all .17s;
+}
+.btn-reveal {
+  background:var(--accent); color:#fff;
+}
+.btn-reveal:hover { background:#4a62e0; transform:translateY(-1px); }
+.btn-toggle {
+  background:rgba(255,255,255,.05); color:var(--muted2);
+  border:1px solid var(--border2);
+}
+.btn-toggle:hover { background:rgba(255,255,255,.09); color:var(--text); }
+.btn-reveal.revealed {
+  background:rgba(27,228,160,.15); color:var(--green);
+  border:1px solid rgba(27,228,160,.3);
+}
+
+/* ── Score ───────────────────────────────────────── */
+.score-panel {
+  display:none;
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:14px; overflow:hidden;
+  margin-top:30px;
+}
+.score-top {
+  padding:30px; text-align:center;
+  background: linear-gradient(135deg, #14172a 0%, #1a1d2e 100%);
+  border-bottom:1px solid var(--border2);
+}
+.score-big {
+  font-size:4.2rem; font-weight:700; letter-spacing:-.04em;
+  font-family:var(--sans); line-height:1;
+}
+.score-sub { color:var(--muted2); font-family:var(--mono); font-size:.78rem; margin-top:8px; }
+.score-body { padding:24px 28px; }
+.score-body h3 {
+  font-family:var(--mono); font-size:.68rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.1em;
+  color:var(--muted); margin-bottom:14px;
+}
+.srow {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:9px 14px; border-radius:7px; margin-bottom:6px; font-size:.84rem;
+}
+.srow.ok  { background:rgba(27,228,160,.07);  color:#6effd9; border:1px solid rgba(27,228,160,.15); }
+.srow.bad { background:rgba(255,69,96,.07);   color:#ff8fa3; border:1px solid rgba(255,69,96,.15); }
+.srow.sk  { background:rgba(255,255,255,.02); color:var(--muted); border:1px solid var(--border); }
+.srow .ptag { font-family:var(--mono); font-size:.7rem; font-weight:700; }
+
+.btn-retake {
+  display:block; width:fit-content; margin:20px auto 0;
+  padding:11px 32px; border:1px solid var(--border2);
+  border-radius:7px; background:transparent; color:var(--text);
+  font-family:var(--sans); font-size:.88rem; font-weight:600;
+  cursor:pointer; transition:all .2s;
+}
+.btn-retake:hover { border-color:var(--accent); color:var(--accent); }
+
+/* ── Submit ──────────────────────────────────────── */
+.submit-area { text-align:center; padding:34px 0 10px; }
+.btn-submit {
+  padding:15px 52px; border:none; border-radius:9px;
+  font-family:var(--sans); font-size:1rem; font-weight:700;
+  cursor:pointer;
+  background:linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+  color:#fff; letter-spacing:.02em;
+  box-shadow: 0 4px 20px rgba(92,115,242,.35);
+  transition:all .2s;
+}
+.btn-submit:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(92,115,242,.45); }
+.btn-submit:disabled { opacity:.4; cursor:not-allowed; transform:none; box-shadow:none; }
+
+@keyframes fadeIn {
+  from{opacity:0;transform:translateY(-4px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@media(max-width:600px){
+  body{padding:12px 10px 60px;}
+  .header{padding:20px;}
+  .header h1{font-size:1.4rem;}
+  .qcard-top,.code-area,.action-row{padding-left:16px;padding-right:16px;}
+  .score-big{font-size:3rem;}
+}
+</style>
+</head>
+<body>
+<div class="scrollbar" id="sbar"></div>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="h-eyebrow">// fix_the_function.cpp</div>
+  <h1>Find the Bug,<br><em>Fix the Code</em></h1>
+  <p>Each question shows a broken C++ function with a stated goal. Your job: spot every bug and understand why it's wrong. Reveal the full answer to see the corrected code, a line-by-line breakdown, and the rule behind each fix.</p>
+  <div class="pills">
+    <span class="pill"><strong>10</strong> questions</span>
+    <span class="pill"><strong>100</strong> pts</span>
+    <span class="pill">Data Types · Loops · Functions · OOP · Inheritance</span>
+    <span class="pill">Full explanations included</span>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="prog">
+  <div class="prog-bar"><div class="prog-fill" id="pFill"></div></div>
+  <div class="prog-txt" id="pTxt">0 / 10 revealed</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — CONTROL FLOW & BASICS
+══════════════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-line"></div>
+  <div class="sec-label">§1 — Control Flow &amp; Basics</div>
+  <div class="sec-pts">30 pts</div>
+  <div class="sec-line"></div>
+</div>
+
+<!-- ─── Q1 ─── -->
+<div class="qcard" id="qc1">
+  <div class="qcard-top">
+    <div class="q-meta">
+      <span class="qnum">Q1</span>
+      <span class="badge b-med">Medium</span>
+      <span class="badge b-topic">if-else order · Operators</span>
+    </div>
+    <div class="q-title">Grade Calculator</div>
+    <div class="q-desc"><strong>Goal:</strong> Print the letter grade for a score. A ≥ 90, B ≥ 80, C ≥ 70, D ≥ 60, F otherwise. <strong>How many bugs can you find?</strong></div>
+  </div>
+  <div class="code-area">
+    <div class="code-label"><span class="dot dot-red"></span>Buggy Code</div>
+<pre class="code"><span class="kw">void</span> <span class="fn">printGrade</span>(<span class="ty">int</span> score) {
+    <span class="kw">if</span> (score >= <span class="nm">60</span>)            <span class="cm">// check 1</span>
+        cout << <span class="st">"D"</span>;
+    <span class="kw">else if</span> (score >= <span class="nm">70</span>)       <span class="cm">// check 2</span>
+        cout << <span class="st">"C"</span>;
+    <span class="kw">else if</span> (score >= <span class="nm">80</span>)       <span class="cm">// check 3</span>
+        cout << <span class="st">"B"</span>;
+    <span class="kw">else if</span> (score >= <span class="nm">90</span>)       <span class="cm">// check 4</span>
+        cout << <span class="st">"A"</span>;
+    <span class="kw">else</span>
+        cout << <span class="st">"F"</span>;
+}</pre>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-reveal" id="rb1" onclick="reveal(1)">Reveal Answer</button>
+    <button class="btn btn-toggle" onclick="togTab(1,'exp')">Explanation</button>
+    <button class="btn btn-toggle" onclick="togTab(1,'rule')">Key Rule</button>
+  </div>
+  <div class="answer-wrap" id="aw1">
+    <div class="ans-tabs">
+      <div class="ans-tab active" id="tab1-fix" onclick="switchTab(1,'fix')">Fixed Code</div>
+      <div class="ans-tab" id="tab1-exp" onclick="switchTab(1,'exp')">Explanation</div>
+      <div class="ans-tab" id="tab1-rule" onclick="switchTab(1,'rule')">Key Rule</div>
+    </div>
+    <div class="ans-panel active" id="panel1-fix">
+      <div class="code-label"><span class="dot dot-green"></span>Fixed Code</div>
+<pre class="fixed"><span class="kw">void</span> <span class="fn">printGrade</span>(<span class="ty">int</span> score) {
+    <span class="kw">if</span> (score >= <span class="nm">90</span>)      <span class="cm">// ✓ highest first</span>
+        cout << <span class="st">"A"</span>;
+    <span class="kw">else if</span> (score >= <span class="nm">80</span>)
+        cout << <span class="st">"B"</span>;
+    <span class="kw">else if</span> (score >= <span class="nm">70</span>)
+        cout << <span class="st">"C"</span>;
+    <span class="kw">else if</span> (score >= <span class="nm">60</span>)
+        cout << <span class="st">"D"</span>;
+    <span class="kw">else</span>
+        cout << <span class="st">"F"</span>;
+}</pre>
+    </div>
+    <div class="ans-panel" id="panel1-exp">
+      <div class="expl-block">
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug — wrong order of conditions.</strong> The first condition <code>score >= 60</code> catches <em>every</em> passing score including 90, 80, 70. Because <code>if-else if</code> stops at the first true condition, a score of 95 hits the <code>>= 60</code> check and prints <code>"D"</code> immediately — the higher checks are never reached.</div></div>
+        <div class="expl-item"><span class="expl-icon">✅</span><div class="expl-text"><strong>Fix — order from most restrictive to least.</strong> Always place the tightest condition first (<code>>= 90</code>), then progressively loosen. Once a score fails the 90 threshold, the 80 check runs, and so on.</div></div>
+        <div class="expl-item"><span class="expl-icon">🔍</span><div class="expl-text"><strong>Trace with score = 95:</strong> Buggy: <code>95 >= 60</code> → true → prints "D" ✗. Fixed: <code>95 >= 90</code> → true → prints "A" ✓</div></div>
+      </div>
+    </div>
+    <div class="ans-panel" id="panel1-rule">
+      <div class="rule-box"><strong>Rule — if-else-if order matters:</strong> Conditions are evaluated top-to-bottom and stop at the first <code>true</code> branch. For overlapping ranges (like grade thresholds), always check from the most specific (highest) to the least specific (lowest). A larger number satisfies both <code>>= 90</code> and <code>>= 60</code> — only the order decides which branch runs.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Q2 ─── -->
+<div class="qcard" id="qc2">
+  <div class="qcard-top">
+    <div class="q-meta">
+      <span class="qnum">Q2</span>
+      <span class="badge b-med">Medium</span>
+      <span class="badge b-topic">Loops · Off-by-one · Max finding</span>
+    </div>
+    <div class="q-title">Find the Largest Value</div>
+    <div class="q-desc"><strong>Goal:</strong> Return the largest value in an array of integers. The function has two bugs that make it silently fail for certain inputs.</div>
+  </div>
+  <div class="code-area">
+    <div class="code-label"><span class="dot dot-red"></span>Buggy Code</div>
+<pre class="code"><span class="ty">int</span> <span class="fn">findMax</span>(<span class="ty">int</span> arr[], <span class="ty">int</span> size) {
+    <span class="ty">int</span> maxVal = <span class="nm">0</span>;          <span class="cm">// bug 1</span>
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i <= size; i++) {  <span class="cm">// bug 2</span>
+        <span class="kw">if</span> (arr[i] > maxVal)
+            maxVal = arr[i];
+    }
+    <span class="kw">return</span> maxVal;
+}</pre>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-reveal" id="rb2" onclick="reveal(2)">Reveal Answer</button>
+    <button class="btn btn-toggle" onclick="togTab(2,'exp')">Explanation</button>
+    <button class="btn btn-toggle" onclick="togTab(2,'rule')">Key Rule</button>
+  </div>
+  <div class="answer-wrap" id="aw2">
+    <div class="ans-tabs">
+      <div class="ans-tab active" id="tab2-fix" onclick="switchTab(2,'fix')">Fixed Code</div>
+      <div class="ans-tab" id="tab2-exp" onclick="switchTab(2,'exp')">Explanation</div>
+      <div class="ans-tab" id="tab2-rule" onclick="switchTab(2,'rule')">Key Rule</div>
+    </div>
+    <div class="ans-panel active" id="panel2-fix">
+<pre class="fixed"><span class="ty">int</span> <span class="fn">findMax</span>(<span class="ty">int</span> arr[], <span class="ty">int</span> size) {
+    <span class="ty">int</span> maxVal = arr[<span class="nm">0</span>];     <span class="cm">// ✓ start from first element</span>
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">1</span>; i < size; i++) {   <span class="cm">// ✓ i < size (not <=)</span>
+        <span class="kw">if</span> (arr[i] > maxVal)
+            maxVal = arr[i];
+    }
+    <span class="kw">return</span> maxVal;
+}</pre>
+    </div>
+    <div class="ans-panel" id="panel2-exp">
+      <div class="expl-block">
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 1 — <code>maxVal = 0</code>.</strong> Initializing to 0 silently fails when the array contains only negative numbers (e.g., <code>{-5, -2, -8}</code>). No element beats 0, so the function returns 0 — which is not even in the array. Fix: initialize to <code>arr[0]</code> (the first actual element).</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 2 — <code>i &lt;= size</code>.</strong> Valid indices are <code>0</code> to <code>size - 1</code>. When <code>i == size</code>, <code>arr[size]</code> reads one position past the end of the array — this is undefined behavior and can crash or silently corrupt data.</div></div>
+        <div class="expl-item"><span class="expl-icon">✅</span><div class="expl-text"><strong>Fix — initialize to <code>arr[0]</code>, start loop at <code>i = 1</code>, use <code>i &lt; size</code>.</strong> Since we've already "looked at" index 0 as the initial max, we start comparing from index 1. The condition <code>i &lt; size</code> stops safely at the last valid index.</div></div>
+      </div>
+    </div>
+    <div class="ans-panel" id="panel2-rule">
+      <div class="rule-box"><strong>Rule 1 — initialize max/min to the first element, not 0:</strong> <code>0</code> is a magic number that breaks for all-negative arrays. Use <code>arr[0]</code>.</div>
+      <div class="rule-box"><strong>Rule 2 — off-by-one with arrays:</strong> An array of size <code>n</code> has valid indices <code>0 … n-1</code>. The correct loop condition is <code>i &lt; size</code>, never <code>i &lt;= size</code>. Reading <code>arr[size]</code> is undefined behavior — no crash guarantee, but results are meaningless.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Q3 ─── -->
+<div class="qcard" id="qc3">
+  <div class="qcard-top">
+    <div class="q-meta">
+      <span class="qnum">Q3</span>
+      <span class="badge b-med">Medium</span>
+      <span class="badge b-topic">while loop · Infinite loop</span>
+    </div>
+    <div class="q-title">Sum Until Negative</div>
+    <div class="q-desc"><strong>Goal:</strong> Keep reading integers from the user and accumulate a sum. Stop when the user enters a negative number. Return the sum. There are two bugs.</div>
+  </div>
+  <div class="code-area">
+    <div class="code-label"><span class="dot dot-red"></span>Buggy Code</div>
+<pre class="code"><span class="ty">int</span> <span class="fn">sumUntilNegative</span>() {
+    <span class="ty">int</span> sum = <span class="nm">0</span>;
+    <span class="ty">int</span> n = <span class="nm">0</span>;
+    <span class="kw">while</span> (n >= <span class="nm">0</span>) {   <span class="cm">// bug 1</span>
+        sum = sum + n;
+        cin >> n;       <span class="cm">// bug 2: cin is inside, but check below</span>
+    }
+    sum = sum + n;      <span class="cm">// accidentally adds the negative number</span>
+    <span class="kw">return</span> sum;
+}</pre>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-reveal" id="rb3" onclick="reveal(3)">Reveal Answer</button>
+    <button class="btn btn-toggle" onclick="togTab(3,'exp')">Explanation</button>
+    <button class="btn btn-toggle" onclick="togTab(3,'rule')">Key Rule</button>
+  </div>
+  <div class="answer-wrap" id="aw3">
+    <div class="ans-tabs">
+      <div class="ans-tab active" id="tab3-fix" onclick="switchTab(3,'fix')">Fixed Code</div>
+      <div class="ans-tab" id="tab3-exp" onclick="switchTab(3,'exp')">Explanation</div>
+      <div class="ans-tab" id="tab3-rule" onclick="switchTab(3,'rule')">Key Rule</div>
+    </div>
+    <div class="ans-panel active" id="panel3-fix">
+<pre class="fixed"><span class="ty">int</span> <span class="fn">sumUntilNegative</span>() {
+    <span class="ty">int</span> sum = <span class="nm">0</span>;
+    <span class="ty">int</span> n;
+    cin >> n;                    <span class="cm">// ✓ read before the loop checks</span>
+    <span class="kw">while</span> (n >= <span class="nm">0</span>) {
+        sum = sum + n;           <span class="cm">// ✓ only add non-negative numbers</span>
+        cin >> n;
+    }
+    <span class="kw">return</span> sum;                  <span class="cm">// ✓ negative number never added</span>
+}</pre>
+    </div>
+    <div class="ans-panel" id="panel3-exp">
+      <div class="expl-block">
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 1 — first iteration always adds 0.</strong> <code>n</code> starts as 0, and <code>0 >= 0</code> is true, so the loop body runs immediately and adds 0 to sum before any user input is read. This doesn't break the sum (adding 0 is harmless) but it's logically wrong — the loop runs once before the user has entered anything.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 2 — the negative number is added to sum.</strong> After the while condition fails (user entered a negative <code>n</code>), the line <code>sum = sum + n</code> runs, adding the negative sentinel to the total. This corrupts the result.</div></div>
+        <div class="expl-item"><span class="expl-icon">✅</span><div class="expl-text"><strong>Fix — "prime the pump" pattern.</strong> Read the first <code>n</code> before the loop. The while condition then checks it. If it's negative, the loop body never runs (correct). If positive, the body adds it and reads the next <code>n</code>. The negative sentinel is never added.</div></div>
+      </div>
+    </div>
+    <div class="ans-panel" id="panel3-rule">
+      <div class="rule-box"><strong>Rule — "prime the pump" for input loops:</strong> When a <code>while</code> loop needs to check a value that comes from user input, read the first value <em>before</em> the loop. This ensures the condition has a real value to test on the very first iteration, and that the sentinel (stop value) is never processed as data.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — FUNCTIONS
+══════════════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-line"></div>
+  <div class="sec-label">§2 — Functions &amp; Scope</div>
+  <div class="sec-pts">30 pts</div>
+  <div class="sec-line"></div>
+</div>
+
+<!-- ─── Q4 ─── -->
+<div class="qcard" id="qc4">
+  <div class="qcard-top">
+    <div class="q-meta">
+      <span class="qnum">Q4</span>
+      <span class="badge b-med">Medium</span>
+      <span class="badge b-topic">Pass by value vs reference · Swap</span>
+    </div>
+    <div class="q-title">Swap Two Numbers</div>
+    <div class="q-desc"><strong>Goal:</strong> Swap the values of two variables in the caller. After calling <code>swap(a, b)</code>, <code>a</code> and <code>b</code> should be exchanged.</div>
+  </div>
+  <div class="code-area">
+    <div class="code-label"><span class="dot dot-red"></span>Buggy Code</div>
+<pre class="code"><span class="kw">void</span> <span class="fn">swap</span>(<span class="ty">int</span> x, <span class="ty">int</span> y) {   <span class="cm">// bug: passes by value</span>
+    <span class="ty">int</span> temp = x;
+    x = y;
+    y = temp;
+}
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> a = <span class="nm">3</span>, b = <span class="nm">7</span>;
+    <span class="fn">swap</span>(a, b);
+    cout << a << <span class="st">" "</span> << b;    <span class="cm">// still prints: 3 7</span>
+}</pre>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-reveal" id="rb4" onclick="reveal(4)">Reveal Answer</button>
+    <button class="btn btn-toggle" onclick="togTab(4,'exp')">Explanation</button>
+    <button class="btn btn-toggle" onclick="togTab(4,'rule')">Key Rule</button>
+  </div>
+  <div class="answer-wrap" id="aw4">
+    <div class="ans-tabs">
+      <div class="ans-tab active" id="tab4-fix" onclick="switchTab(4,'fix')">Fixed Code</div>
+      <div class="ans-tab" id="tab4-exp" onclick="switchTab(4,'exp')">Explanation</div>
+      <div class="ans-tab" id="tab4-rule" onclick="switchTab(4,'rule')">Key Rule</div>
+    </div>
+    <div class="ans-panel active" id="panel4-fix">
+<pre class="fixed"><span class="kw">void</span> <span class="fn">swap</span>(<span class="ty">int</span>& x, <span class="ty">int</span>& y) {   <span class="cm">// ✓ pass by reference</span>
+    <span class="ty">int</span> temp = x;
+    x = y;
+    y = temp;
+}
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> a = <span class="nm">3</span>, b = <span class="nm">7</span>;
+    <span class="fn">swap</span>(a, b);
+    cout << a << <span class="st">" "</span> << b;    <span class="cm">// now prints: 7 3</span>
+}</pre>
+    </div>
+    <div class="ans-panel" id="panel4-exp">
+      <div class="expl-block">
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug — parameters are passed by value.</strong> When you call <code>swap(a, b)</code>, C++ copies the values of <code>a</code> and <code>b</code> into new local variables <code>x</code> and <code>y</code>. The swap logic correctly swaps <code>x</code> and <code>y</code> — but those are local copies. When the function returns, the copies are destroyed. <code>a</code> and <code>b</code> in <code>main</code> are completely unchanged.</div></div>
+        <div class="expl-item"><span class="expl-icon">✅</span><div class="expl-text"><strong>Fix — use reference parameters: <code>int&amp; x</code>.</strong> The <code>&amp;</code> makes <code>x</code> a reference (alias) to the original variable. <code>x</code> and <code>a</code> now point to the exact same memory location. Any change to <code>x</code> directly changes <code>a</code>.</div></div>
+        <div class="expl-item"><span class="expl-icon">🔍</span><div class="expl-text"><strong>Memory picture:</strong> By value: <code>a=3</code> at address 0x100, <code>x=3</code> (copy) at address 0x200. Swap changes 0x200 only. By reference: <code>x</code> IS 0x100 — same box as <code>a</code>. Swap changes 0x100, so <code>a</code> changes.</div></div>
+      </div>
+    </div>
+    <div class="ans-panel" id="panel4-rule">
+      <div class="rule-box"><strong>Rule — pass by reference (<code>&amp;</code>) when you need to modify the caller's variable:</strong> Pass by value = copy. Any changes stay local. Pass by reference (<code>int&amp; x</code>) = alias to original. Changes affect the caller. If you only need to read, pass by value or <code>const&amp;</code>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Q5 ─── -->
+<div class="qcard" id="qc5">
+  <div class="qcard-top">
+    <div class="q-meta">
+      <span class="qnum">Q5</span>
+      <span class="badge b-hard">Hard</span>
+      <span class="badge b-topic">Return type · Integer division · Recursive logic</span>
+    </div>
+    <div class="q-title">Average of Three</div>
+    <div class="q-desc"><strong>Goal:</strong> Return the average of three integers as a decimal value (e.g., average of 1, 2, 3 should be <code>2.0</code>). The function silently produces wrong results. Find all bugs.</div>
+  </div>
+  <div class="code-area">
+    <div class="code-label"><span class="dot dot-red"></span>Buggy Code</div>
+<pre class="code"><span class="ty">int</span> <span class="fn">average</span>(<span class="ty">int</span> a, <span class="ty">int</span> b, <span class="ty">int</span> c) {  <span class="cm">// bug 1: return type</span>
+    <span class="kw">return</span> (a + b + c) / <span class="nm">3</span>;          <span class="cm">// bug 2: integer division</span>
+}
+<span class="ty">int</span> <span class="fn">main</span>() {
+    cout << <span class="fn">average</span>(<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">4</span>);         <span class="cm">// expected 2.33, prints 2</span>
+}</pre>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-reveal" id="rb5" onclick="reveal(5)">Reveal Answer</button>
+    <button class="btn btn-toggle" onclick="togTab(5,'exp')">Explanation</button>
+    <button class="btn btn-toggle" onclick="togTab(5,'rule')">Key Rule</button>
+  </div>
+  <div class="answer-wrap" id="aw5">
+    <div class="ans-tabs">
+      <div class="ans-tab active" id="tab5-fix" onclick="switchTab(5,'fix')">Fixed Code</div>
+      <div class="ans-tab" id="tab5-exp" onclick="switchTab(5,'exp')">Explanation</div>
+      <div class="ans-tab" id="tab5-rule" onclick="switchTab(5,'rule')">Key Rule</div>
+    </div>
+    <div class="ans-panel active" id="panel5-fix">
+<pre class="fixed"><span class="ty">double</span> <span class="fn">average</span>(<span class="ty">int</span> a, <span class="ty">int</span> b, <span class="ty">int</span> c) {  <span class="cm">// ✓ return double</span>
+    <span class="kw">return</span> (a + b + c) / <span class="nm">3.0</span>;            <span class="cm">// ✓ 3.0 forces floating-point division</span>
+}</pre>
+      <div class="warn-box" style="margin-top:12px;"><strong>Common mistake — this is still wrong:</strong><br><code>double result = (a + b + c) / 3;</code><br>The division happens first as integer division, then the result (already truncated) is converted to double. You still get <code>2.0</code> instead of <code>2.33</code>. The fix must happen inside the division itself.</div>
+    </div>
+    <div class="ans-panel" id="panel5-exp">
+      <div class="expl-block">
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 1 — return type is <code>int</code>.</strong> Declaring <code>int average()</code> tells the compiler this function returns an integer. Even if the division somehow produced 2.33, it would be truncated to 2 before returning.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 2 — integer division: <code>/ 3</code>.</strong> Both sides of the division are integers (<code>a+b+c</code> is an <code>int</code>, and <code>3</code> is an <code>int</code> literal). C++ performs integer division, which truncates the decimal. <code>7 / 3 = 2</code>, not 2.33.</div></div>
+        <div class="expl-item"><span class="expl-icon">✅</span><div class="expl-text"><strong>Fix — change divisor to <code>3.0</code> (a double literal) and return type to <code>double</code>.</strong> When at least one operand is a floating-point type, C++ promotes the whole division to floating-point. <code>7 / 3.0 = 2.333...</code>. Alternatively, cast: <code>(double)(a + b + c) / 3</code>.</div></div>
+      </div>
+    </div>
+    <div class="ans-panel" id="panel5-rule">
+      <div class="rule-box"><strong>Rule — integer division truncates, always:</strong> If both operands are <code>int</code>, the result is <code>int</code> (decimal discarded). To get a decimal result, at least one operand must be floating-point: use <code>3.0</code>, or cast with <code>(double)</code> <em>before</em> the division, not after.</div>
+      <div class="rule-box"><strong>Rule — return type must match what you return:</strong> A function declared <code>int f()</code> that returns <code>2.33</code> will silently truncate to <code>2</code>. Always match the return type to the expected precision.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Q6 ─── -->
+<div class="qcard" id="qc6">
+  <div class="qcard-top">
+    <div class="q-meta">
+      <span class="qnum">Q6</span>
+      <span class="badge b-hard">Hard</span>
+      <span class="badge b-topic">Recursion · Base case · Stack overflow</span>
+    </div>
+    <div class="q-title">Factorial (Recursive)</div>
+    <div class="q-desc"><strong>Goal:</strong> Compute <code>n!</code> (factorial) recursively. <code>factorial(5)</code> should return 120. The function has two bugs — one causes wrong results, one causes infinite recursion.</div>
+  </div>
+  <div class="code-area">
+    <div class="code-label"><span class="dot dot-red"></span>Buggy Code</div>
+<pre class="code"><span class="ty">int</span> <span class="fn">factorial</span>(<span class="ty">int</span> n) {
+    <span class="kw">if</span> (n == <span class="nm">1</span>)              <span class="cm">// bug 1: base case misses n = 0</span>
+        <span class="kw">return</span> <span class="nm">1</span>;
+    <span class="kw">return</span> n * <span class="fn">factorial</span>(n);  <span class="cm">// bug 2: should be factorial(n - 1)</span>
+}</pre>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-reveal" id="rb6" onclick="reveal(6)">Reveal Answer</button>
+    <button class="btn btn-toggle" onclick="togTab(6,'exp')">Explanation</button>
+    <button class="btn btn-toggle" onclick="togTab(6,'rule')">Key Rule</button>
+  </div>
+  <div class="answer-wrap" id="aw6">
+    <div class="ans-tabs">
+      <div class="ans-tab active" id="tab6-fix" onclick="switchTab(6,'fix')">Fixed Code</div>
+      <div class="ans-tab" id="tab6-exp" onclick="switchTab(6,'exp')">Explanation</div>
+      <div class="ans-tab" id="tab6-rule" onclick="switchTab(6,'rule')">Key Rule</div>
+    </div>
+    <div class="ans-panel active" id="panel6-fix">
+<pre class="fixed"><span class="ty">int</span> <span class="fn">factorial</span>(<span class="ty">int</span> n) {
+    <span class="kw">if</span> (n <= <span class="nm">1</span>)                      <span class="cm">// ✓ handles both n=0 and n=1</span>
+        <span class="kw">return</span> <span class="nm">1</span>;
+    <span class="kw">return</span> n * <span class="fn">factorial</span>(n - <span class="nm">1</span>);  <span class="cm">// ✓ recurse with n-1</span>
+}</pre>
+    </div>
+    <div class="ans-panel" id="panel6-exp">
+      <div class="expl-block">
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 1 — base case only checks <code>n == 1</code>.</strong> Mathematically, <code>0! = 1</code>. If someone calls <code>factorial(0)</code>, the base case fails and the function calls <code>factorial(-1)</code>, then <code>factorial(-2)</code>, forever. The base case should be <code>n &lt;= 1</code> to handle both 0 and 1.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 2 — <code>factorial(n)</code> instead of <code>factorial(n - 1)</code>.</strong> This is infinite recursion. The function calls itself with the same argument <code>n</code> — it never gets closer to the base case. The call stack fills up and crashes (stack overflow). The fix is <code>factorial(n - 1)</code>, which reduces <code>n</code> by 1 each time, eventually reaching the base case.</div></div>
+        <div class="expl-item"><span class="expl-icon">🔍</span><div class="expl-text"><strong>Trace for factorial(3):</strong> <code>factorial(3)</code> → <code>3 * factorial(2)</code> → <code>2 * factorial(1)</code> → returns 1 → <code>2 * 1 = 2</code> → <code>3 * 2 = 6</code> ✓</div></div>
+      </div>
+    </div>
+    <div class="ans-panel" id="panel6-rule">
+      <div class="rule-box"><strong>Rule — every recursive function needs two things:</strong><br>1. A <strong>base case</strong> that stops recursion (and handles edge cases like 0).<br>2. A <strong>recursive case</strong> that moves toward the base case — the argument must change in a way that eventually reaches the base (e.g., <code>n - 1</code>). Without (1) or (2), you get infinite recursion and a stack overflow crash.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Q7 ─── -->
+<div class="qcard" id="qc7">
+  <div class="qcard-top">
+    <div class="q-meta">
+      <span class="qnum">Q7</span>
+      <span class="badge b-hard">Hard</span>
+      <span class="badge b-topic">String · char comparison · Loop logic</span>
+    </div>
+    <div class="q-title">Count Vowels in a String</div>
+    <div class="q-desc"><strong>Goal:</strong> Return the number of vowels (a, e, i, o, u — case insensitive) in a string. The function misses uppercase vowels and has a logic bug in its condition.</div>
+  </div>
+  <div class="code-area">
+    <div class="code-label"><span class="dot dot-red"></span>Buggy Code</div>
+<pre class="code"><span class="ty">int</span> <span class="fn">countVowels</span>(<span class="ty">string</span> s) {
+    <span class="ty">int</span> count = <span class="nm">0</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i < s.length(); i++) {
+        <span class="kw">if</span> (s[i] == <span class="st">'a'</span> | s[i] == <span class="st">'e'</span> |   <span class="cm">// bug 1: | not ||</span>
+            s[i] == <span class="st">'i'</span> | s[i] == <span class="st">'o'</span> |
+            s[i] == <span class="st">'u'</span>)                   <span class="cm">// bug 2: no uppercase</span>
+            count++;
+    }
+    <span class="kw">return</span> count;
+}</pre>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-reveal" id="rb7" onclick="reveal(7)">Reveal Answer</button>
+    <button class="btn btn-toggle" onclick="togTab(7,'exp')">Explanation</button>
+    <button class="btn btn-toggle" onclick="togTab(7,'rule')">Key Rule</button>
+  </div>
+  <div class="answer-wrap" id="aw7">
+    <div class="ans-tabs">
+      <div class="ans-tab active" id="tab7-fix" onclick="switchTab(7,'fix')">Fixed Code</div>
+      <div class="ans-tab" id="tab7-exp" onclick="switchTab(7,'exp')">Explanation</div>
+      <div class="ans-tab" id="tab7-rule" onclick="switchTab(7,'rule')">Key Rule</div>
+    </div>
+    <div class="ans-panel active" id="panel7-fix">
+<pre class="fixed"><span class="ty">int</span> <span class="fn">countVowels</span>(<span class="ty">string</span> s) {
+    <span class="ty">int</span> count = <span class="nm">0</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i < s.length(); i++) {
+        <span class="ty">char</span> c = tolower(s[i]);     <span class="cm">// ✓ normalize to lowercase</span>
+        <span class="kw">if</span> (c == <span class="st">'a'</span> || c == <span class="st">'e'</span> ||  <span class="cm">// ✓ logical OR (||)</span>
+            c == <span class="st">'i'</span> || c == <span class="st">'o'</span> ||
+            c == <span class="st">'u'</span>)
+            count++;
+    }
+    <span class="kw">return</span> count;
+}</pre>
+    </div>
+    <div class="ans-panel" id="panel7-exp">
+      <div class="expl-block">
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 1 — single <code>|</code> (bitwise OR) instead of <code>||</code> (logical OR).</strong> <code>|</code> performs a bitwise operation on the integer values of the characters. It will compile without error but produces incorrect boolean logic — it may count non-vowels or miss vowels because it's operating on bit patterns, not true/false values. Always use <code>||</code> to combine boolean conditions.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 2 — no uppercase handling.</strong> The condition only checks lowercase <code>'a'</code> through <code>'u'</code>. A string like <code>"Apple"</code> has <code>'A'</code> and <code>'e'</code> = 2 vowels, but the function returns 1 (misses <code>'A'</code>). Fix: convert each character to lowercase with <code>tolower()</code> from <code>&lt;cctype&gt;</code> before comparing.</div></div>
+      </div>
+    </div>
+    <div class="ans-panel" id="panel7-rule">
+      <div class="rule-box"><strong>Rule — <code>|</code> vs <code>||</code>:</strong> <code>|</code> = bitwise OR (operates on individual bits of integers). <code>||</code> = logical OR (combines boolean true/false). For combining conditions in <code>if</code> statements always use <code>||</code> and <code>&amp;&amp;</code>, not <code>|</code> and <code>&amp;</code>. The bitwise versions compile but give logically wrong results with booleans.</div>
+      <div class="rule-box"><strong>Rule — case-insensitive comparisons:</strong> Use <code>tolower(c)</code> (from <code>#include &lt;cctype&gt;</code>) to normalize a character to lowercase before comparing. This way you only need to check lowercase variants.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — OOP & CLASSES
+══════════════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-line"></div>
+  <div class="sec-label">§3 — OOP &amp; Classes</div>
+  <div class="sec-pts">40 pts</div>
+  <div class="sec-line"></div>
+</div>
+
+<!-- ─── Q8 ─── -->
+<div class="qcard" id="qc8">
+  <div class="qcard-top">
+    <div class="q-meta">
+      <span class="qnum">Q8</span>
+      <span class="badge b-hard">Hard</span>
+      <span class="badge b-topic">Class · Encapsulation · const · Setter validation</span>
+    </div>
+    <div class="q-title">Temperature Class</div>
+    <div class="q-desc"><strong>Goal:</strong> A <code>Temperature</code> class stores Celsius degrees. <code>getTemp()</code> should not modify the object. <code>setTemp()</code> should reject values below absolute zero (−273.15°C). The class has three design bugs.</div>
+  </div>
+  <div class="code-area">
+    <div class="code-label"><span class="dot dot-red"></span>Buggy Code</div>
+<pre class="code"><span class="kw">class</span> <span class="ty">Temperature</span> {
+<span class="kw">public</span>:                           <span class="cm">// bug 1: data should be private</span>
+    <span class="ty">double</span> celsius;
+
+    <span class="ty">double</span> <span class="fn">getTemp</span>() {             <span class="cm">// bug 2: should be const</span>
+        <span class="kw">return</span> celsius;
+    }
+
+    <span class="kw">void</span> <span class="fn">setTemp</span>(<span class="ty">double</span> t) {
+        celsius = t;               <span class="cm">// bug 3: no validation</span>
+    }
+};</pre>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-reveal" id="rb8" onclick="reveal(8)">Reveal Answer</button>
+    <button class="btn btn-toggle" onclick="togTab(8,'exp')">Explanation</button>
+    <button class="btn btn-toggle" onclick="togTab(8,'rule')">Key Rule</button>
+  </div>
+  <div class="answer-wrap" id="aw8">
+    <div class="ans-tabs">
+      <div class="ans-tab active" id="tab8-fix" onclick="switchTab(8,'fix')">Fixed Code</div>
+      <div class="ans-tab" id="tab8-exp" onclick="switchTab(8,'exp')">Explanation</div>
+      <div class="ans-tab" id="tab8-rule" onclick="switchTab(8,'rule')">Key Rule</div>
+    </div>
+    <div class="ans-panel active" id="panel8-fix">
+<pre class="fixed"><span class="kw">class</span> <span class="ty">Temperature</span> {
+<span class="kw">private</span>:                               <span class="cm">// ✓ data hidden from outside</span>
+    <span class="ty">double</span> celsius;
+
+<span class="kw">public</span>:
+    <span class="fn">Temperature</span>(<span class="ty">double</span> t = <span class="nm">0.0</span>) : celsius(t) {}
+
+    <span class="ty">double</span> <span class="fn">getTemp</span>() <span class="kw">const</span> {          <span class="cm">// ✓ const: won't modify object</span>
+        <span class="kw">return</span> celsius;
+    }
+
+    <span class="kw">void</span> <span class="fn">setTemp</span>(<span class="ty">double</span> t) {
+        <span class="kw">if</span> (t >= -<span class="nm">273.15</span>)              <span class="cm">// ✓ validate before setting</span>
+            celsius = t;
+        <span class="kw">else</span>
+            cout << <span class="st">"Invalid: below absolute zero\n"</span>;
+    }
+};</pre>
+    </div>
+    <div class="ans-panel" id="panel8-exp">
+      <div class="expl-block">
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 1 — <code>celsius</code> is <code>public</code>.</strong> Any code can write <code>obj.celsius = -9999</code>, completely bypassing the validation in <code>setTemp()</code>. The whole point of a setter is to control access — but it's useless if the data is public. Move data to <code>private</code>.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 2 — <code>getTemp()</code> is not <code>const</code>.</strong> A getter should never modify the object — marking it <code>const</code> enforces this. More importantly, if you have a <code>const Temperature</code> object, you <em>cannot</em> call non-<code>const</code> methods on it at all, making the object essentially read-only but inaccessible. Always mark read-only methods <code>const</code>.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 3 — no validation in <code>setTemp()</code>.</strong> The setter assigns any value, including physically impossible temperatures below −273.15°C (absolute zero). A setter's purpose is to guard the data. Add an <code>if</code> check before assigning.</div></div>
+      </div>
+    </div>
+    <div class="ans-panel" id="panel8-rule">
+      <div class="rule-box"><strong>Rule — Encapsulation checklist:</strong><br>• Data members → <code>private</code><br>• Getters → <code>const</code> (they only read)<br>• Setters → validate before assigning<br>• This way the class controls its own state and prevents invalid data.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Q9 ─── -->
+<div class="qcard" id="qc9">
+  <div class="qcard-top">
+    <div class="q-meta">
+      <span class="qnum">Q9</span>
+      <span class="badge b-hard">Hard</span>
+      <span class="badge b-topic">Constructor · Initializer list · Static member · Definition</span>
+    </div>
+    <div class="q-title">Student Counter Class</div>
+    <div class="q-desc"><strong>Goal:</strong> Each <code>Student</code> object gets a unique ID (starting from 1). A static counter tracks how many students exist. The class has three bugs — one prevents compilation, one gives wrong IDs, one corrupts the count on destruction.</div>
+  </div>
+  <div class="code-area">
+    <div class="code-label"><span class="dot dot-red"></span>Buggy Code</div>
+<pre class="code"><span class="kw">class</span> <span class="ty">Student</span> {
+    <span class="ty">int</span> id;
+    <span class="kw">static</span> <span class="ty">int</span> count;
+<span class="kw">public</span>:
+    <span class="fn">Student</span>() {
+        count++;
+        id = count;              <span class="cm">// seems right...</span>
+    }
+    ~<span class="fn">Student</span>() { count++; }   <span class="cm">// bug 1: should decrement</span>
+    <span class="kw">static</span> <span class="ty">int</span> <span class="fn">getCount</span>() { <span class="kw">return</span> count; }
+};
+<span class="cm">// bug 2: static member never defined outside class</span>
+<span class="cm">// bug 3: if two Students are created in same expression,</span>
+<span class="cm">//        id assignment order vs count increment is fragile.</span>
+<span class="cm">//        Better practice: id = ++count (pre-increment)</span></pre>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-reveal" id="rb9" onclick="reveal(9)">Reveal Answer</button>
+    <button class="btn btn-toggle" onclick="togTab(9,'exp')">Explanation</button>
+    <button class="btn btn-toggle" onclick="togTab(9,'rule')">Key Rule</button>
+  </div>
+  <div class="answer-wrap" id="aw9">
+    <div class="ans-tabs">
+      <div class="ans-tab active" id="tab9-fix" onclick="switchTab(9,'fix')">Fixed Code</div>
+      <div class="ans-tab" id="tab9-exp" onclick="switchTab(9,'exp')">Explanation</div>
+      <div class="ans-tab" id="tab9-rule" onclick="switchTab(9,'rule')">Key Rule</div>
+    </div>
+    <div class="ans-panel active" id="panel9-fix">
+<pre class="fixed"><span class="kw">class</span> <span class="ty">Student</span> {
+    <span class="ty">int</span> id;
+    <span class="kw">static</span> <span class="ty">int</span> count;
+<span class="kw">public</span>:
+    <span class="fn">Student</span>() {
+        id = ++count;            <span class="cm">// ✓ pre-increment: count becomes 1, id = 1</span>
+    }
+    ~<span class="fn">Student</span>() { count--; }   <span class="cm">// ✓ decrement on destroy</span>
+    <span class="kw">static</span> <span class="ty">int</span> <span class="fn">getCount</span>() { <span class="kw">return</span> count; }
+    <span class="ty">int</span> <span class="fn">getId</span>() <span class="kw">const</span> { <span class="kw">return</span> id; }
+};
+
+<span class="ty">int</span> Student::count = <span class="nm">0</span>;       <span class="cm">// ✓ must define static outside class</span></pre>
+    </div>
+    <div class="ans-panel" id="panel9-exp">
+      <div class="expl-block">
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 1 — destructor increments instead of decrements (<code>count++</code>).</strong> When a <code>Student</code> object is destroyed, the count should decrease (one fewer student alive). Using <code>count++</code> makes the count grow on destruction, completely defeating the purpose of tracking live students.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 2 — static member <code>count</code> declared but never defined.</strong> In C++, <code>static</code> data members must be <em>declared</em> inside the class AND <em>defined</em> (given storage) outside the class with <code>int Student::count = 0;</code>. Without the definition, the linker throws "undefined reference" and the code won't compile.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 3 — <code>count++; id = count;</code> uses post-increment with separate assignment.</strong> This works here, but <code>id = ++count</code> is cleaner and safer: it increments count <em>first</em>, then assigns that new value to <code>id</code> — all in one expression, guaranteeing id 1 for the first student, 2 for the second, etc.</div></div>
+      </div>
+    </div>
+    <div class="ans-panel" id="panel9-rule">
+      <div class="rule-box"><strong>Rule — static members need an out-of-class definition:</strong><br>Inside class: <code>static int count;</code> — this is only a declaration.<br>Outside class: <code>int Student::count = 0;</code> — this is the definition (allocates actual memory).<br>Missing the definition = linker error every time.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Q10 ─── -->
+<div class="qcard" id="qc10">
+  <div class="qcard-top">
+    <div class="q-meta">
+      <span class="qnum">Q10</span>
+      <span class="badge b-expert">Expert</span>
+      <span class="badge b-topic">Inheritance · virtual destructor · Base constructor · Override</span>
+    </div>
+    <div class="q-title">Animal & Dog Inheritance</div>
+    <div class="q-desc"><strong>Goal:</strong> <code>Dog</code> inherits from <code>Animal</code>. Deleting via a base pointer should call both destructors. <code>speak()</code> on a base pointer should call <code>Dog</code>'s version. The class has <strong>four bugs</strong>.</div>
+  </div>
+  <div class="code-area">
+    <div class="code-label"><span class="dot dot-red"></span>Buggy Code</div>
+<pre class="code"><span class="kw">class</span> <span class="ty">Animal</span> {
+<span class="kw">public</span>:
+    <span class="ty">string</span> name;                        <span class="cm">// bug 1: should be private/protected</span>
+    <span class="fn">Animal</span>(<span class="ty">string</span> n) { name = n; }
+    ~<span class="fn">Animal</span>() { cout << <span class="st">"~Animal "</span>; }  <span class="cm">// bug 2: not virtual</span>
+    <span class="ty">void</span> <span class="fn">speak</span>() { cout << <span class="st">"..."</span>; }    <span class="cm">// bug 3: not virtual</span>
+};
+
+<span class="kw">class</span> <span class="ty">Dog</span> : <span class="kw">public</span> <span class="ty">Animal</span> {
+<span class="kw">public</span>:
+    <span class="fn">Dog</span>(<span class="ty">string</span> n) { name = n; }         <span class="cm">// bug 4: doesn't call base ctor</span>
+    ~<span class="fn">Dog</span>() { cout << <span class="st">"~Dog "</span>; }
+    <span class="ty">void</span> <span class="fn">speak</span>() { cout << <span class="st">"Woof!"</span>; }
+};
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">Animal</span>* a = <span class="kw">new</span> <span class="ty">Dog</span>(<span class="st">"Rex"</span>);
+    a-><span class="fn">speak</span>();   <span class="cm">// prints "..." instead of "Woof!"</span>
+    <span class="kw">delete</span> a;    <span class="cm">// only calls ~Animal, leaks ~Dog</span>
+}</pre>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-reveal" id="rb10" onclick="reveal(10)">Reveal Answer</button>
+    <button class="btn btn-toggle" onclick="togTab(10,'exp')">Explanation</button>
+    <button class="btn btn-toggle" onclick="togTab(10,'rule')">Key Rule</button>
+  </div>
+  <div class="answer-wrap" id="aw10">
+    <div class="ans-tabs">
+      <div class="ans-tab active" id="tab10-fix" onclick="switchTab(10,'fix')">Fixed Code</div>
+      <div class="ans-tab" id="tab10-exp" onclick="switchTab(10,'exp')">Explanation</div>
+      <div class="ans-tab" id="tab10-rule" onclick="switchTab(10,'rule')">Key Rule</div>
+    </div>
+    <div class="ans-panel active" id="panel10-fix">
+<pre class="fixed"><span class="kw">class</span> <span class="ty">Animal</span> {
+<span class="kw">protected</span>:                                    <span class="cm">// ✓ accessible to Dog, not public</span>
+    <span class="ty">string</span> name;
+<span class="kw">public</span>:
+    <span class="fn">Animal</span>(<span class="ty">string</span> n) : name(n) {}             <span class="cm">// ✓ initializer list</span>
+    <span class="kw">virtual</span> ~<span class="fn">Animal</span>() { cout << <span class="st">"~Animal "</span>; } <span class="cm">// ✓ virtual destructor</span>
+    <span class="kw">virtual</span> <span class="ty">void</span> <span class="fn">speak</span>() { cout << <span class="st">"..."</span>; }  <span class="cm">// ✓ virtual for polymorphism</span>
+};
+
+<span class="kw">class</span> <span class="ty">Dog</span> : <span class="kw">public</span> <span class="ty">Animal</span> {
+<span class="kw">public</span>:
+    <span class="fn">Dog</span>(<span class="ty">string</span> n) : <span class="fn">Animal</span>(n) {}            <span class="cm">// ✓ delegate to base ctor</span>
+    ~<span class="fn">Dog</span>() { cout << <span class="st">"~Dog "</span>; }
+    <span class="ty">void</span> <span class="fn">speak</span>() <span class="kw">override</span> { cout << <span class="st">"Woof!"</span>; }
+};
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">Animal</span>* a = <span class="kw">new</span> <span class="ty">Dog</span>(<span class="st">"Rex"</span>);
+    a-><span class="fn">speak</span>();   <span class="cm">// ✓ now prints "Woof!"</span>
+    <span class="kw">delete</span> a;    <span class="cm">// ✓ calls ~Dog then ~Animal</span>
+}</pre>
+    </div>
+    <div class="ans-panel" id="panel10-exp">
+      <div class="expl-block">
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 1 — <code>name</code> is <code>public</code>.</strong> Any outside code can write <code>animal.name = "hacked"</code> with no control. Use <code>protected</code>: it hides <code>name</code> from outside code while still letting <code>Dog</code> and other derived classes access it directly.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 2 — destructor is not <code>virtual</code>.</strong> When you <code>delete</code> an object through a base class pointer (<code>Animal* a = new Dog(...)</code>), C++ only calls <code>~Animal</code> — it has no idea a <code>Dog</code> is underneath. The <code>Dog</code> destructor never runs, causing resource leaks. Adding <code>virtual</code> to <code>~Animal</code> tells C++ to look up the actual destructor at runtime.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 3 — <code>speak()</code> is not <code>virtual</code>.</strong> Without <code>virtual</code>, calling <code>a-&gt;speak()</code> on an <code>Animal*</code> always calls <code>Animal::speak()</code> — the pointer type decides, not the actual object. Adding <code>virtual</code> enables runtime dispatch: C++ checks the actual object (<code>Dog</code>) and calls <code>Dog::speak()</code>.</div></div>
+        <div class="expl-item"><span class="expl-icon">🐛</span><div class="expl-text"><strong>Bug 4 — <code>Dog</code> constructor doesn't call the base constructor.</strong> <code>Animal</code> has no default (no-argument) constructor. <code>Dog(string n) { name = n; }</code> tries to default-construct <code>Animal</code> first (impossible), then assign <code>name</code> directly (which works only because <code>name</code> is public/protected). The correct pattern is to use the initializer list: <code>Dog(string n) : Animal(n) {}</code>, which explicitly calls <code>Animal</code>'s constructor with the name.</div></div>
+      </div>
+    </div>
+    <div class="ans-panel" id="panel10-rule">
+      <div class="rule-box"><strong>Rule — always use <code>virtual</code> destructor in a base class:</strong> If a class is meant to be inherited and objects will be deleted through base pointers, the base destructor <em>must</em> be <code>virtual</code>. Without it, derived destructors are silently skipped — a hard-to-detect resource leak.</div>
+      <div class="rule-box"><strong>Rule — <code>virtual</code> enables runtime polymorphism:</strong> Without <code>virtual</code>, function calls are resolved at compile time by the pointer/reference type. With <code>virtual</code>, they are resolved at runtime by the actual object type. Add <code>override</code> in the derived class — the compiler will verify the signature matches.</div>
+      <div class="rule-box"><strong>Rule — call base constructor in derived initializer list:</strong> If the base class has no default constructor, derived classes <em>must</em> call the base constructor explicitly in their initializer list: <code>Derived(args) : Base(args) {}</code>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Submit -->
+<div class="submit-area">
+  <button class="btn-submit" id="subBtn" onclick="submitAll()">📊 See My Score</button>
+  <p style="color:var(--muted);font-size:.75rem;margin-top:10px;font-family:var(--mono);">// reveal all answers before submitting for full score</p>
+</div>
+
+<!-- Score panel -->
+<div class="score-panel" id="scorePanel">
+  <div class="score-top">
+    <div class="score-big" id="sPct">—</div>
+    <div id="sGrade" style="font-size:1rem;font-weight:600;margin-top:6px;"></div>
+    <div class="score-sub" id="sRaw"></div>
+  </div>
+  <div class="score-body">
+    <h3>// breakdown</h3>
+    <div id="sBreak"></div>
+    <button class="btn-retake" onclick="location.reload()">↺ Reset</button>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// scroll bar
+window.addEventListener('scroll',()=>{
+  const s=document.documentElement;
+  document.getElementById('sbar').style.width=(s.scrollTop/(s.scrollHeight-s.clientHeight)*100)+'%';
+});
+
+// state
+const revealed = {};
+const qLabels = {
+  1:'Q1 — Grade Calculator (if-else order)',
+  2:'Q2 — Find Largest (off-by-one + init)',
+  3:'Q3 — Sum Until Negative (loop logic)',
+  4:'Q4 — Swap (pass by value vs reference)',
+  5:'Q5 — Average (integer division + return type)',
+  6:'Q6 — Factorial (base case + infinite recursion)',
+  7:'Q7 — Count Vowels (| vs || + case)',
+  8:'Q8 — Temperature Class (encapsulation)',
+  9:'Q9 — Student Counter (static definition)',
+  10:'Q10 — Animal & Dog (virtual + ctor chain)'
+};
+
+function reveal(n){
+  if(revealed[n]) return;
+  revealed[n]=true;
+  const aw=document.getElementById('aw'+n);
+  aw.classList.add('open');
+  const btn=document.getElementById('rb'+n);
+  btn.classList.add('revealed');
+  btn.textContent='Answer Revealed ✓';
+  btn.disabled=true;
+  document.getElementById('qc'+n).classList.add('s-ok');
+  // update progress
+  const done=Object.keys(revealed).length;
+  document.getElementById('pFill').style.width=(done/10*100)+'%';
+  document.getElementById('pTxt').textContent=done+' / 10 revealed';
+}
+
+function togTab(n, tab){
+  // show answer wrap then switch to requested tab
+  const aw=document.getElementById('aw'+n);
+  if(!aw.classList.contains('open')){
+    reveal(n);
+  }
+  switchTab(n,tab);
+  aw.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function switchTab(n, name){
+  const aw=document.getElementById('aw'+n);
+  if(!aw.classList.contains('open')) reveal(n);
+  ['fix','exp','rule'].forEach(t=>{
+    const tab=document.getElementById('tab'+n+'-'+t);
+    const panel=document.getElementById('panel'+n+'-'+t);
+    if(tab&&panel){
+      tab.classList.toggle('active', t===name);
+      panel.classList.toggle('active', t===name);
+    }
+  });
+}
+
+function submitAll(){
+  document.getElementById('subBtn').disabled=true;
+  const total=Object.keys(revealed).length;
+  const pts=total*10;
+  const pct=Math.round(pts);
+
+  let grade='', col='var(--green)';
+  if(pct>=90){grade='S — Mastery 🔥';}
+  else if(pct>=70){grade='A — Strong 💪'; col='#6effd9';}
+  else if(pct>=50){grade='B — Good start 📖'; col='var(--yellow)';}
+  else{grade='C — Keep reviewing 💡'; col='var(--orange)';}
+
+  document.getElementById('sPct').textContent=pct+'%';
+  document.getElementById('sPct').style.color=col;
+  document.getElementById('sGrade').textContent=grade;
+  document.getElementById('sGrade').style.color=col;
+  document.getElementById('sRaw').textContent='revealed: '+total+' / 10 questions';
+
+  const bd=document.getElementById('sBreak');
+  bd.innerHTML='';
+  for(let i=1;i<=10;i++){
+    const r=document.createElement('div');
+    if(revealed[i]){
+      r.className='srow ok';
+      r.innerHTML=`<span>✓ ${qLabels[i]}</span><span class="ptag">+10</span>`;
+    } else {
+      r.className='srow sk';
+      r.innerHTML=`<span>— ${qLabels[i]} <em>(not revealed)</em></span><span class="ptag">0</span>`;
+    }
+    bd.appendChild(r);
+  }
+
+  document.getElementById('scorePanel').style.display='block';
+  document.getElementById('scorePanel').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>

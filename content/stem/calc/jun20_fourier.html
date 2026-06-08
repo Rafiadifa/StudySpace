@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Ch.18 Fourier Series Setup</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    .recall-box { background:rgba(29,78,216,0.07); border:1px solid rgba(29,78,216,0.3); border-left:3px solid var(--calc); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+    .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--calc); margin-bottom:10px; }
+    .checklist { list-style:none; margin:6px 0 0; padding:0; }
+    .checklist li { padding:9px 0 9px 30px; position:relative; border-bottom:1px solid var(--border); font-size:0.95rem; line-height:1.55; }
+    .checklist li:last-child { border-bottom:none; }
+    .checklist li::before { content:'☐'; position:absolute; left:0; color:var(--calc); font-size:1.05rem; }
+    .fcard { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+    .fcard h4 { color:var(--calc); font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:6px; }
+  </style>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ calc-a2 / fourier series</span><span class="topbar-date">SAT · 20 JUN 2026</span></div>
+  <div class="hero">
+    <h1>Ch.18 Fourier Series <em>Setup</em></h1>
+    <p class="hero-meta">P5 · 18:10–19:00 · 50 min · a₀, aₙ, bₙ</p>
+    <div class="exam-pills"><span class="pill pill-calc">∫ Calc A2</span><span class="pill pill-calc">Ch. 18</span><span class="pill pill-calc">Final · 23 June 2026</span></div>
+  </div>
+  <div class="main"><div class="subject-block">
+    <div class="subject-header"><div class="subject-dot dot-calc"></div><div><div class="subject-label">Daily Practice · 50 min · Ch. 18</div><div class="subject-title" style="color:var(--calc)">Fourier Series Setup</div></div><div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div></div>
+<div class="formula-ref"><strong>Quick reference.</strong> Period \(2\pi\): \(f=\tfrac{a_0}{2}+\sum(a_n\cos nx+b_n\sin nx)\), with \(a_0=\tfrac1\pi\int_{-\pi}^\pi f\), \(a_n=\tfrac1\pi\int_{-\pi}^\pi f\cos nx\), \(b_n=\tfrac1\pi\int_{-\pi}^\pi f\sin nx\). Use symmetry: even \(f\Rightarrow b_n=0\); odd \(f\Rightarrow a_n=0\).</div><div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">Fourier of the sawtooth</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Let \(f(x)=x\) on \((-\pi,\pi)\), extended \(2\pi\)-periodically.<div class="conn-chain">chains: odd symmetry · Fourier coefficients · evaluate to a known constant</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Why are all \(a_n=0\)?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(f\) is odd, so \(f(x)\cos nx\) is odd and integrates to \(0\) over \((-\pi,\pi)\). <div class="key-result">\(a_n=0\).</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Compute \(b_n\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(b_n=\tfrac1\pi\int_{-\pi}^\pi x\sin nx\,dx=\tfrac{2(-1)^{n+1}}{n}\). <div class="key-result">\(b_n=\dfrac{2(-1)^{n+1}}{n}\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Evaluate the series at \(x=\tfrac\pi2\) to recover Leibniz’s \(\tfrac\pi4\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(f(\tfrac\pi2)=\tfrac\pi2=\sum\tfrac{2(-1)^{n+1}}{n}\sin\tfrac{n\pi}2=2(1-\tfrac13+\tfrac15-\cdots)\Rightarrow 1-\tfrac13+\tfrac15-\cdots=\tfrac\pi4\). <div class="key-result">Leibniz: \(\tfrac\pi4\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem"><div class="problem-header"><span class="problem-num">Problem 1</span><span class="problem-topic">Square wave (odd)</span><span class="problem-pts">12 pts</span></div><div class="problem-body"><div class="context-box">\(f(x)=-1\) on \((-\pi,0)\), \(+1\) on \((0,\pi)\). Find the Fourier series.</div><div class="ans-toggle"><button class="ans-btn" data-show="Show Answer" data-hide="Hide Answer" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>Odd \(\Rightarrow a_n=0\). \(b_n=\tfrac2\pi\int_0^\pi\sin nx\,dx=\tfrac{2}{n\pi}(1-\cos n\pi)=\tfrac{2}{n\pi}(1-(-1)^n)\), i.e. \(\tfrac{4}{n\pi}\) for odd \(n\), 0 for even.<div class="key-result">\(f(x)=\tfrac4\pi\sum_{k\ge0}\frac{\sin((2k+1)x)}{2k+1}\).</div><div class="ans-note">Exploit odd symmetry FIRST — it kills every \(a_n\) and halves the work.</div></div></div></div></div></div><div class="problem"><div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">Even function</span><span class="problem-pts">8 pts</span></div><div class="problem-body"><div class="context-box">Why does an even \(f\) have all \(b_n=0\)?</div><div class="ans-toggle"><button class="ans-btn" data-show="Show Answer" data-hide="Hide Answer" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>Because \(f(x)\sin nx\) is odd·even... actually even·odd = odd, and \(\int_{-\pi}^\pi(\text{odd})=0\). So every \(b_n\) vanishes.<div class="key-result">Even \(f\Rightarrow f\sin nx\) odd \(\Rightarrow b_n=0\).</div></div></div></div></div></div>
+  </div>
+  <div class="footer-note">Calc A2 · Fourier Series Setup (Ch. 18) · Saturday 20 June 2026 · Good luck Rafi ✦</div></div>
+  <div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+  <script>
+    function toggleAns(btn){const a=btn.nextElementSibling;a.classList.toggle('open');const o=a.classList.contains('open');btn.textContent=o?btn.dataset.hide||'Hide Answer':btn.dataset.show||'Show Answer';}
+    window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+    const start=Date.now(),pad=n=>String(n).padStart(2,'0');
+    setInterval(()=>{const e=Math.floor((Date.now()-start)/1000);document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60);},1000);
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

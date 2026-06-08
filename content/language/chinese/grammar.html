@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grammar · Chinese</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span> Grammar
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">语法 Grammar</span>
+    <span class="topbar-sub">/ 19 points</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="main" style="padding-top:24px;">
+    <div class="ch-chiprow" id="chips" style="margin-top:8px;"></div>
+    <div id="list"></div>
+  </div>
+
+  <div class="footer-note">CHINESE LIBRARY · GRAMMAR</div>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    setTopbarDate();
+    const list=$("#list");
+    buildLessonChips($("#chips"), id=>render(id));
+    function render(lf="all"){
+      const items=GRAMMAR.filter(g=>lf==="all"||g.lesson===+lf);
+      list.innerHTML="";
+      items.forEach(g=>{
+        const ex=g.examples.map(e=>`<div class="g-ex"><div class="ezh">${e.zh}</div><div class="epy">${e.py}</div><div class="een">${e.en}</div></div>`).join("");
+        const card=el("div","grammar-card");
+        card.innerHTML=`
+          <div class="g-title">
+            <span class="g-zh">${g.zh}</span>
+            <span class="g-en">${g.en}</span>
+            <span class="g-num">Lesson ${g.lesson}</span>
+          </div>
+          <div class="g-pattern">${g.pattern}</div>
+          <div class="g-note">${g.note}</div>
+          <div class="g-examples">${ex}</div>`;
+        list.appendChild(card);
+      });
+    }
+    render();
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

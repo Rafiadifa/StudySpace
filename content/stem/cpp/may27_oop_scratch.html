@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ · Classes &amp; OOP from Scratch · 27 May</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    pre.code { background:#1a1a2e; color:#e2e8f0; padding:18px 20px; border-radius:10px; overflow-x:auto; font-family:'DM Mono',monospace; font-size:0.8rem; line-height:1.65; margin-top:12px; }
+    pre.code .cm { color:#7d8db5; font-style:italic; }
+    pre.code .kw { color:#c792ea; }
+    pre.code .st { color:#c3e88d; }
+    pre.code .fn { color:#82aaff; }
+    .recall-box { background:color-mix(in oklab, var(--cpp) 8%, transparent); border:1px solid rgba(21,128,61,0.3); border-left:3px solid var(--cpp); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+    .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--cpp); margin-bottom:10px; }
+    .recall-box ul { margin:8px 0 0 20px; line-height:1.9; color:var(--text); font-size:0.95rem; }
+    @supports not (background: color-mix(in oklab, red 50%, blue)) { .recall-box { background:rgba(21,128,61,0.07); } }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-cpp">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ c++ / classes from scratch</span>
+    <span class="topbar-date">TUE · 27 MAY 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Classes &amp; OOP <em>from Scratch</em></h1>
+    <p class="hero-meta">Active-recall session. Don't read the answers first — build each piece from memory on paper or in your editor, then expand the model answer to check. The goal is to write a full class without looking anything up.</p>
+    <div class="exam-pills">
+      <span class="pill pill-cpp">C++</span>
+      <span class="pill pill-cpp">Active Recall</span>
+      <span class="pill pill-cpp">Final · 10 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-cpp"></div>
+        <div>
+          <div class="subject-label">Self-Study · recall from memory</div>
+          <div class="subject-title" style="color:var(--cpp)">Build a Class End-to-End</div>
+        </div>
+        <div class="subject-exam-date"><strong>C++ Final</strong>10 June 2026</div>
+      </div>
+
+      <!-- ══ Challenge 1 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Recall 1</span>
+          <span class="problem-topic">Anatomy of a class</span>
+        </div>
+        <div class="problem-body">
+          <div class="recall-box">
+            <div class="rl">⌁ Do this from memory</div>
+            Write a <code>BankAccount</code> class with a private <code>owner</code> (string) and <code>balance</code> (double). Include: a constructor, a <code>deposit</code>, a <code>withdraw</code> that refuses overdrafts, and a <code>const</code> getter for the balance.
+            <ul>
+              <li>Which members are <code>private</code> vs <code>public</code>, and why?</li>
+              <li>Why is the getter marked <code>const</code>?</li>
+            </ul>
+          </div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Reveal Model Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Model</span>
+                <pre class="code"><span class="kw">class</span> <span class="fn">BankAccount</span> {
+<span class="kw">private</span>:
+    string owner;
+    <span class="kw">double</span> balance;
+<span class="kw">public</span>:
+    <span class="fn">BankAccount</span>(string o, <span class="kw">double</span> b) : owner(o), balance(b) {}
+
+    <span class="kw">void</span> <span class="fn">deposit</span>(<span class="kw">double</span> amt) { <span class="kw">if</span> (amt &gt; 0) balance += amt; }
+
+    <span class="kw">bool</span> <span class="fn">withdraw</span>(<span class="kw">double</span> amt) {
+        <span class="kw">if</span> (amt &gt; 0 &amp;&amp; amt &lt;= balance) { balance -= amt; <span class="kw">return</span> <span class="kw">true</span>; }
+        <span class="kw">return</span> <span class="kw">false</span>;            <span class="cm">// refuse overdraft</span>
+    }
+
+    <span class="kw">double</span> <span class="fn">getBalance</span>() <span class="kw">const</span> { <span class="kw">return</span> balance; }
+};</pre>
+                <div class="ans-note"><strong>Encapsulation:</strong> data is <code>private</code> so it can only change through validated methods. The getter is <code>const</code> because reading the balance must never modify the object — and only <code>const</code> methods are callable on a <code>const BankAccount</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Challenge 2 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Recall 2</span>
+          <span class="problem-topic">Constructors &amp; the initializer list</span>
+        </div>
+        <div class="problem-body">
+          <div class="recall-box">
+            <div class="rl">⌁ Do this from memory</div>
+            Without looking: what's the difference between initializing members in the <em>initializer list</em> versus assigning them in the constructor body? Write a small class that <em>must</em> use the initializer list, and say why.
+          </div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Reveal Model Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Model</span>
+                The initializer list constructs each member <em>once</em>, directly. Body assignment first default-constructs the member, then overwrites it. Three cases <strong>require</strong> the list: <code>const</code> members, reference members, and members with no default constructor.
+                <pre class="code"><span class="kw">class</span> <span class="fn">Sensor</span> {
+    <span class="kw">const</span> <span class="kw">int</span> id;     <span class="cm">// const → must be in the list</span>
+    <span class="kw">int</span>&amp; reading;     <span class="cm">// reference → must be in the list</span>
+<span class="kw">public</span>:
+    <span class="fn">Sensor</span>(<span class="kw">int</span> i, <span class="kw">int</span>&amp; r) : id(i), reading(r) {}
+};</pre>
+                <div class="ans-note">A <code>const</code> or reference member can never be assigned after construction, so it has to be set in the initializer list. Members are also initialized in <em>declaration order</em>, not list order — a classic gotcha.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Challenge 3 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Recall 3</span>
+          <span class="problem-topic">The Big Picture — 4 pillars</span>
+        </div>
+        <div class="problem-body">
+          <div class="recall-box">
+            <div class="rl">⌁ Explain aloud (Feynman)</div>
+            Name the four pillars of OOP and give a one-line C++ mechanism for each. Pretend you're teaching a friend who knows C but not C++.
+          </div>
+          <div class="ans-toggle">
+            <button class="ans-btn" onclick="toggleAns(this)">Reveal Model Answer</button>
+            <div class="answer">
+              <div class="ans-part">
+                <span class="ans-part-label">Model</span>
+                <strong>Encapsulation</strong> — bundle data + behaviour, hide internals with <code>private</code>.
+                <strong>Abstraction</strong> — expose a clean interface; hide the "how" (public methods, pure virtuals).
+                <strong>Inheritance</strong> — <code>class Derived : public Base</code> reuses and extends.
+                <strong>Polymorphism</strong> — one interface, many behaviours via <code>virtual</code> functions dispatched at runtime.
+                <div class="ans-note">If you can give a concrete C++ keyword for each pillar (<code>private</code>, interface, <code>: public</code>, <code>virtual</code>), you've got the conceptual scaffold the final tests.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      C++ · Classes &amp; OOP from Scratch · Tuesday 27 May 2026 · Recall, don't re-read ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Model Answer' : 'Reveal Model Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

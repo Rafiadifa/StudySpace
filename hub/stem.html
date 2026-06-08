@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STEM · Study Hub</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── Subject tab bar ── */
+    .subj-tabs {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; gap: 6px; flex-wrap: wrap;
+      padding: 12px 48px;
+      background: var(--topbar-bg); border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .subj-tab {
+      font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: .04em;
+      padding: 9px 18px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg2);
+      color: var(--text2); cursor: pointer; transition: .15s; white-space: nowrap;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .subj-tab:hover { color: var(--text); border-color: var(--text3); }
+    .subj-tab[data-subj="cpp"].active  { background: var(--cpp);  color: #fff; border-color: var(--cpp); }
+    .subj-tab[data-subj="calc"].active { background: var(--calc); color: #fff; border-color: var(--calc); }
+    .subj-tab[data-subj="la"].active   { background: var(--la);   color: #fff; border-color: var(--la); }
+    .subj-tab[data-subj="other"].active{ background: var(--text3);color: #fff; border-color: var(--text3); }
+    .tab-due-badge {
+      font-size: 0.58rem; background: var(--dt); color: #fff;
+      padding: 1px 6px; border-radius: 99px; display: none;
+    }
+    .tab-due-badge.show { display: inline; }
+
+    /* ── Subject panels ── */
+    .subj-panel { display: none; }
+    .subj-panel.active { display: block; }
+
+    /* ── Panel header (decorative) ── */
+    .panel-header {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 36px 0 24px;
+    }
+    .panel-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+    .panel-label { font-family: 'DM Mono',monospace; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+    .panel-title { font-family: 'DM Serif Display',serif; font-size: 1.55rem; letter-spacing: -.02em; }
+    .panel-exam { margin-left: auto; font-family: 'DM Mono',monospace; font-size: .7rem; color: var(--text3); text-align: right; line-height: 1.8; flex-shrink: 0; }
+    .panel-exam strong { display: block; font-weight: 500; color: var(--text2); }
+
+    /* ── Filter bar ── */
+    .filter-bar { display: flex; gap: 7px; flex-wrap: wrap; padding: 0 0 22px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+    .fpill { font-family: 'DM Mono',monospace; font-size: .64rem; letter-spacing: .07em; padding: 5px 13px; border-radius: 99px; border: 1px solid var(--border); background: var(--bg2); color: var(--text3); cursor: pointer; transition: .15s; }
+    .fpill:hover { color: var(--text); border-color: var(--text3); }
+    .fpill.active { background: var(--subj-color, var(--calc)); color: #fff; border-color: var(--subj-color, var(--calc)); }
+    .fpill.fpill-due { border-color: var(--dt); color: var(--dt); }
+    .fpill.fpill-due.active { background: var(--dt); color: #fff; border-color: var(--dt); }
+    .blk-cpp  { --subj-color: var(--cpp); }
+    .blk-calc { --subj-color: var(--calc); }
+    .blk-la   { --subj-color: var(--la); }
+
+    /* ── Unavailable (placeholder) cards ── */
+    .card-soon { opacity: .4; pointer-events: none; cursor: default; }
+    .card-soon .card-sub::before { content: 'Coming soon · '; font-style: italic; }
+
+    /* ── Cards ── */
+    .card { position: relative; }
+    .card[data-done="true"] { opacity: .45; }
+    .card[data-done="true"]:hover { opacity: .7; }
+    .card-check {
+      position: absolute; top: 10px; right: 10px; width: 20px; height: 20px;
+      border-radius: 50%; background: transparent; border: 1.5px solid var(--border);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 0; padding: 0; color: transparent; transition: .15s; flex-shrink: 0;
+    }
+    .card-check:hover { border-color: var(--subj-color,var(--calc)); background: var(--bg3); }
+    .card[data-done="true"] .card-check {
+      background: var(--subj-color,var(--calc)); border-color: var(--subj-color,var(--calc));
+    }
+    .card[data-done="true"] .card-check::after {
+      content: '✓'; font-size: .65rem; color: #fff; line-height: 1;
+    }
+
+    /* ── SR rating + notes popup ── */
+    .sr-popup {
+      display: none; position: absolute; bottom: calc(100% + 8px); right: 0; z-index: 50;
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px 14px 10px; box-shadow: 0 8px 28px rgba(0,0,0,.13);
+      min-width: 240px; max-width: 300px; flex-direction: column; gap: 10px;
+    }
+    .sr-popup.show { display: flex; }
+    .sr-popup-label { font-family: 'DM Mono',monospace; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); }
+    .sr-notes {
+      width: 100%; font-family: 'DM Sans',sans-serif; font-size: .82rem;
+      padding: 8px 10px; border: 1px solid var(--border); border-radius: 7px;
+      background: var(--bg); color: var(--text); resize: none;
+      outline: none; line-height: 1.5;
+    }
+    .sr-notes:focus { border-color: var(--text3); }
+    .sr-notes::placeholder { color: var(--text3); }
+    .sr-btns { display: flex; gap: 5px; }
+    .sr-btn { flex: 1; font-family: 'DM Mono',monospace; font-size: .61rem; padding: 6px 4px; border-radius: 6px; border: 1px solid; cursor: pointer; background: var(--bg); text-align: center; transition: .15s; line-height: 1.3; }
+    .sr-btn .sr-btn-label { display: block; font-size: .58rem; margin-top: 2px; }
+    .sr-btn:hover { filter: brightness(.97); }
+    .sr-btn[data-g="0"] { color: #dc2626; border-color: rgba(220,38,38,.35); }
+    .sr-btn[data-g="1"] { color: #ea580c; border-color: rgba(234,88,12,.35); }
+    .sr-btn[data-g="2"] { color: var(--calc); border-color: rgba(29,78,216,.35); }
+    .sr-btn[data-g="3"] { color: #16a34a; border-color: rgba(22,163,74,.35); }
+    .sr-hint { font-family: 'DM Mono',monospace; font-size: .56rem; color: var(--text3); text-align: center; min-height: 12px; }
+    .sr-due-badge { font-family: 'DM Mono',monospace; font-size: .56rem; letter-spacing: .05em; padding: 2px 7px; border-radius: 99px; background: rgba(194,87,12,.12); color: var(--dt); margin-left: 5px; vertical-align: middle; }
+
+    /* ── Search ── */
+    .search-strip { padding: 11px 48px; border-bottom: 1px solid var(--border); background: var(--bg2); display: flex; align-items: center; gap: 10px; }
+    .search-input { font-family: 'DM Mono',monospace; font-size: .8rem; padding: 7px 13px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; width: 260px; }
+    .search-input:focus { border-color: var(--text3); }
+    .search-clear { font-family: 'DM Mono',monospace; font-size: .65rem; color: var(--text3); cursor: pointer; display: none; }
+    .search-clear.show { display: inline; }
+    .card.fhide { display: none !important; }
+    .subsection-wrap.fhide { display: none !important; }
+
+    /* ── Progress ── */
+    .progress-strip {
+      background: var(--bg2); border-bottom: 1px solid var(--border);
+      padding: 12px 48px; display: flex; align-items: center; gap: 14px;
+    }
+    .progress-subject-name { font-family: 'DM Mono',monospace; font-size: .65rem; color: var(--text3); letter-spacing: .08em; white-space: nowrap; }
+
+    /* ── Session log ── */
+    .log-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px 28px; margin-top: 40px; }
+    .log-hd { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+    .log-title { font-family: 'DM Serif Display',serif; font-size: 1.1rem; }
+    .log-count { font-family: 'DM Mono',monospace; font-size: .68rem; color: var(--text3); }
+    .log-arrow { color: var(--text3); font-size: .85rem; margin-left: auto; transition: transform .2s; }
+    .log-panel.collapsed .log-arrow { transform: rotate(-90deg); }
+    .log-panel.collapsed .log-body { display: none; }
+    .log-actions { display: flex; gap: 8px; padding: 14px 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; flex-wrap: wrap; }
+    .log-btn { font-family: 'DM Mono',monospace; font-size: .64rem; letter-spacing: .07em; padding: 7px 14px; border-radius: 6px; border: 1px solid var(--border); background: none; cursor: pointer; color: var(--text2); transition: .15s; }
+    .log-btn:hover { background: var(--bg3); color: var(--text); }
+    .log-btn.primary { background: var(--calc); color: #fff; border-color: var(--calc); }
+    .log-btn.primary:hover { opacity: .85; }
+    .log-empty { font-family: 'DM Mono',monospace; font-size: .75rem; color: var(--text3); text-align: center; padding: 28px 0; }
+    .log-day-group { margin-bottom: 20px; }
+    .log-day-label { font-family: 'DM Mono',monospace; font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+    .log-entry { padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .log-entry:last-child { border-bottom: none; }
+    .log-entry-row { display: flex; align-items: center; gap: 9px; }
+    .log-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .log-name { flex: 1; font-size: .84rem; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .log-score-chip { font-family: 'DM Mono',monospace; font-size: .58rem; padding: 2px 7px; border-radius: 99px; flex-shrink: 0; }
+    .g0 { background: rgba(220,38,38,.1); color: #dc2626; }
+    .g1 { background: rgba(234,88,12,.1); color: #ea580c; }
+    .g2 { background: rgba(29,78,216,.1); color: var(--calc); }
+    .g3 { background: rgba(22,163,74,.1); color: #16a34a; }
+    .log-next { font-family: 'DM Mono',monospace; font-size: .61rem; color: var(--text3); flex-shrink: 0; }
+    .log-note { font-size: .8rem; color: var(--text3); font-style: italic; line-height: 1.5; padding: 5px 0 2px 16px; white-space: pre-wrap; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+
+  <!-- ── Top bar ── -->
+  <div class="topbar">
+    <span class="topbar-title">Study Hub</span>
+    <span class="topbar-sub">/ Rafi Adifa Maulana</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <!-- ── Hero ── -->
+  <div class="hero">
+    <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text3);margin-bottom:16px;">
+      <a href="../index.html" style="color:var(--text3);text-decoration:none;border-bottom:1px solid var(--border);">← All domains</a>
+      <span style="margin:0 6px;">/</span> STEM
+    </div>
+    <h1>Final Exam <em>Study Space</em></h1>
+    <p class="hero-meta">Practice sets, review notes, and mock exams. Pick a subject, filter by type, and rate each session to schedule reviews.</p>
+    <div class="exam-pills">
+      <span class="pill pill-cpp">C++ · Jun 10</span>
+      <span class="pill pill-calc">Calc A2 · Jun 23</span>
+      <span class="pill pill-la">Lin Alg · Jun 25</span>
+    </div>
+    <style>
+      .cal { margin-top:24px; max-width:660px; background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:16px 18px; }
+      .cal-head { display:flex; align-items:center; gap:10px; margin-bottom:13px; }
+      .cal-nav { background:none; border:1px solid var(--border); color:var(--text2); width:28px; height:28px; border-radius:7px; cursor:pointer; font-size:1rem; line-height:1; }
+      .cal-nav:hover { border-color:var(--text3); color:var(--text); }
+      .cal-range { font-family:'DM Serif Display',serif; font-size:1.05rem; color:var(--text); }
+      .cal-thisweek { margin-left:auto; font-family:'DM Mono',monospace; font-size:.58rem; letter-spacing:.06em; text-transform:uppercase; color:var(--text3); background:none; border:1px solid var(--border); border-radius:99px; padding:5px 12px; cursor:pointer; }
+      .cal-thisweek:hover { color:var(--text); border-color:var(--text3); }
+      .cal-strip { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+      .cal-cell { display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 2px 6px; border:1.5px solid transparent; border-radius:10px; cursor:pointer; transition:.12s; }
+      .cal-cell:hover { background:var(--bg3); }
+      .cal-dow { font-family:'DM Mono',monospace; font-size:.52rem; letter-spacing:.05em; color:var(--text3); }
+      .cal-dnum { font-family:'DM Sans',sans-serif; font-size:1.05rem; font-weight:600; color:var(--text); }
+      .cal-dots { display:flex; gap:2px; min-height:6px; align-items:center; }
+      .cal-dot { width:5px; height:5px; border-radius:50%; }
+      .cal-count { font-family:'DM Mono',monospace; font-size:.54rem; color:var(--text3); }
+      .cal-star { font-family:'DM Mono',monospace; font-size:.54rem; color:var(--dt); font-weight:600; }
+      .cal-cell.today { background:var(--accent-08); }
+      .cal-cell.today .cal-dnum { color:var(--accent); }
+      .cal-cell.sel { border-color:var(--accent); }
+      .cal-cell.empty .cal-dnum { color:var(--text3); font-weight:400; }
+      .cal-day { margin-top:15px; }
+      .cal-day-label { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+      .cal-row { display:flex; align-items:center; gap:10px; text-decoration:none; padding:7px 0; }
+      .cal-row:hover .ctitle { color:var(--text); }
+      .cal-row .cdot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+      .cal-row .ctitle { font-size:.88rem; color:var(--text2); transition:.12s; }
+      .cal-row .cmeta { font-family:'DM Mono',monospace; font-size:.66rem; color:var(--text3); margin-left:auto; white-space:nowrap; }
+      .cal-empty { font-family:'DM Mono',monospace; font-size:.74rem; color:var(--text3); padding:8px 0; }
+    </style>
+    <div class="cal" id="cal">
+      <div class="cal-head">
+        <button class="cal-nav" id="cal-prev" aria-label="Previous week">‹</button>
+        <div class="cal-range" id="cal-range"></div>
+        <button class="cal-nav" id="cal-next" aria-label="Next week">›</button>
+        <button class="cal-thisweek" id="cal-thisweek">this week</button>
+      </div>
+      <div class="cal-strip" id="cal-strip"></div>
+      <div class="cal-day" id="cal-day"></div>
+    </div>
+  </div>
+
+  <!-- ── Subject tab bar ── -->
+  <nav class="subj-tabs">
+    <button class="subj-tab active" data-subj="cpp"  onclick="selectSubject('cpp')">
+      C++ Programming
+      <span class="tab-due-badge" id="due-cpp">0</span>
+    </button>
+    <button class="subj-tab" data-subj="calc" onclick="selectSubject('calc')">
+      Calculus A2
+      <span class="tab-due-badge" id="due-calc">0</span>
+    </button>
+    <button class="subj-tab" data-subj="la"   onclick="selectSubject('la')">
+      Linear Algebra
+      <span class="tab-due-badge" id="due-la">0</span>
+    </button>
+    <button class="subj-tab" data-subj="other" onclick="selectSubject('other')">Other</button>
+  </nav>
+
+  <!-- ── Search + Progress ── -->
+  <div class="search-strip">
+    <input class="search-input" id="search-input" type="text" placeholder="Search cards in this subject…" autocomplete="off">
+    <span class="search-clear" id="search-clear">✕ clear</span>
+    <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text3);margin-left:auto;" id="search-count"></span>
+  </div>
+  <div class="progress-strip">
+    <span class="progress-subject-name" id="progress-subj-name">C++ PROGRAMMING</span>
+    <div style="flex:1;background:var(--bg3);border-radius:99px;height:4px;overflow:hidden;">
+      <div id="progress-fill" style="height:4px;border-radius:99px;background:var(--cpp);width:0%;transition:width .4s ease;"></div>
+    </div>
+    <span style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text2);white-space:nowrap;" id="progress-label">0 / 0</span>
+    <button onclick="resetProgress()" style="background:none;border:1px solid var(--border);color:var(--text3);font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:5px;cursor:pointer;">Reset</button>
+  </div>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main">
+
+    <!-- ═══ C++ ═══ -->
+    <div class="subj-panel blk-cpp active" data-subj="cpp">
+      <div class="panel-header">
+        <div class="panel-dot dot-cpp"></div>
+        <div>
+          <div class="panel-label">Subject 01</div>
+          <div class="panel-title" style="color:var(--cpp)">C++ Programming</div>
+        </div>
+        <div class="panel-exam"><strong>Final exam</strong>Jun 10, 2026</div>
+      </div>
+
+
+      <div class="subsection-wrap" data-section="review" data-pinned="true">
+        <div class="subsection-label">Review Notes</div>
+      <div class="filter-bar">
+        <button class="fpill active" data-filter="all">All</button>
+        <button class="fpill" data-filter="daily">Daily Practice</button>
+        <button class="fpill" data-filter="exams">Exams &amp; Mocks</button>
+        <button class="fpill fpill-due" data-filter="due">⭐ Due for Review</button>
+      </div>
+        <div class="card-grid">
+          <a href="../content/stem/cpp/code.html" class="card acc-cpp" data-id="cpp-code" data-nocheck="true">Review Code <span class="card-sub">All code</span></a>
+          <a href="../content/stem/cpp/Week2_Midterm_Review_EN.html" class="card acc-cpp" data-id="cpp-w2" data-nocheck="true">Week 2 <span class="card-sub">Data types</span></a>
+          <a href="../content/stem/cpp/Week3_Midterm_Review_EN.html" class="card acc-cpp" data-id="cpp-w3" data-nocheck="true">Week 3 <span class="card-sub">Control flow</span></a>
+          <a href="../content/stem/cpp/Week4_Midterm_Review_EN.html" class="card acc-cpp" data-id="cpp-w4" data-nocheck="true">Week 4 <span class="card-sub">Operators</span></a>
+          <a href="../content/stem/cpp/Week5_Midterm_Review_EN.html" class="card acc-cpp" data-id="cpp-w5" data-nocheck="true">Week 5 <span class="card-sub">Classes &amp; objects</span></a>
+          <a href="../content/stem/cpp/Week6_Midterm_Review_EN.html" class="card acc-cpp" data-id="cpp-w6" data-nocheck="true">Week 6 <span class="card-sub">Lifetimes</span></a>
+          <a href="../content/stem/cpp/Week7_Midterm_Review_EN.html" class="card acc-cpp" data-id="cpp-w7" data-nocheck="true">Week 7 <span class="card-sub">Inheritance</span></a>
+        </div>
+      </div>
+
+      <div class="subsection-wrap" data-section="daily">
+        <div class="subsection-label">Daily Practice</div>
+        <div class="card-grid">
+          <a href="../content/stem/cpp/Chapter1_Exercises_Interactive.html" class="card acc-cpp" data-id="cpp-ch1">Chapter 1 <span class="card-sub">Basic types &amp; math</span></a>
+          <a href="../content/stem/cpp/Chapter2_Exercises_Interactive.html" class="card acc-cpp" data-id="cpp-ch2">Chapter 2 <span class="card-sub">Control flow logic</span></a>
+          <a href="../content/stem/cpp/may26_dataflows.html" class="card acc-cpp" data-id="cpp-may26">Data Types &amp; Flow Control <span class="card-sub">May 26 Tue · P5</span></a>
+          <a href="../content/stem/cpp/Pointers_Memory_Interactive.html" class="card acc-cpp" data-id="cpp-pointers">Pointers &amp; Memory <span class="card-badge badge-new">NEW</span><span class="card-sub">May 27 Sat · P3 · Ch. 8 + 3 exercises</span></a>
+          <a href="../content/stem/cpp/Chapter_Inheritance_UML_Exercises_Interactive.html" class="card acc-cpp" data-id="cpp-inheritance">Inheritance &amp; UML <span class="card-sub">OOP principles</span></a>
+          <a href="../content/stem/cpp/may27_class.html" class="card acc-cpp" data-id="cpp-may27class">Classes &amp; Class Session <span class="card-sub">May 27 Wed · P4</span></a>
+          <a href="../content/stem/cpp/may27_oop_scratch.html" class="card acc-cpp" data-id="cpp-may27oop">Classes &amp; OOP from Scratch <span class="card-sub">May 27 Sat · P4</span></a>
+          <a href="../content/stem/cpp/OJ1.html" class="card acc-cpp" data-id="cpp-oj12">OJ Platform — Prob #1–2 <span class="card-sub">May 29 Fri · P5</span></a>
+          <a href="../content/stem/cpp/jun2_encapsulation.html" class="card acc-cpp" data-id="cpp-encap">Encapsulation &amp; Operator Overload <span class="card-sub">Jun 2 Tue · P4</span></a>
+          <a href="../content/stem/cpp/OJ2.html" class="card acc-cpp" data-id="cpp-oj34">OJ Platform — Prob #3–4 <span class="card-sub">Jun 2 Tue · P5</span></a>
+          <a href="../content/stem/cpp/jun4_mvc.html" class="card acc-cpp" data-id="cpp-mvc">MVC Pattern + Exception Handling <span class="card-sub">Jun 4 Thu · P4</span></a>
+          <a href="../content/stem/cpp/OJ3.html" class="card acc-cpp" data-id="cpp-oj56">OJ Platform — Prob #5–6 <span class="card-sub">Jun 5 Fri · P5</span></a>
+          <a href="../content/stem/cpp/jun6_shape_inheritance.html" class="card acc-cpp" data-id="cpp-shape">Inheritance — Shape→Circle <span class="card-sub">Jun 6 Sat · P3</span></a>
+          <a href="../content/stem/cpp/OJ2.html" class="card acc-cpp" data-id="cpp-oj35">OJ Platform — Prob #3–5 <span class="card-sub">Jun 6 Sat · P4</span></a>
+          <a href="../content/stem/cpp/jun8_finalreview.html" class="card acc-cpp" data-id="cpp-finalrev">Light Final Review <span class="card-sub">Jun 8 Mon · P1 · no new material</span></a>
+        </div>
+      </div>
+
+      <div class="subsection-wrap" data-section="exams">
+        <div class="subsection-label">Exams &amp; Mocks</div>
+        <div class="card-grid">
+          <a href="../content/stem/cpp/Practice_Midterm.html" class="card acc-cpp" data-id="cpp-mock1">Practice Midterm <span class="card-sub">20 questions · 60 min</span></a>
+          <a href="../content/stem/cpp/Hardmode.html" class="card acc-cpp" data-id="cpp-hard">Hard Mode Exam <span class="card-sub">18 questions · 75 min</span></a>
+          <a href="../content/stem/cpp/code_fixing.html" class="card acc-cpp" data-id="cpp-fix">Code Fixing Exam <span class="card-sub">18 questions · 60 min</span></a>
+          <a href="../content/stem/cpp/jun1_fullmock.html" class="card acc-cpp" data-id="cpp-fullmock">Full Mock Exam <span class="card-sub">Jun 1 Mon · P6 · 2 hr timed</span></a>
+          <a href="../content/stem/cpp/Midterm_Marathon_100.html" class="card acc-cpp card-wide card-hot" data-id="cpp-marathon">🔥 100-Question Marathon <span class="card-sub">Full cumulative review — save this for last</span></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CALC A2 ═══ -->
+    <div class="subj-panel blk-calc" data-subj="calc">
+      <div class="panel-header">
+        <div class="panel-dot dot-calc"></div>
+        <div>
+          <div class="panel-label">Subject 02</div>
+          <div class="panel-title" style="color:var(--calc)">Calculus A2</div>
+        </div>
+        <div class="panel-exam"><strong>Final exam</strong>Jun 23, 2026</div>
+      </div>
+
+
+      <div class="subsection-wrap" data-section="review" data-pinned="true">
+        <div class="subsection-label">Review Notes</div>
+      <div class="filter-bar">
+        <button class="fpill active" data-filter="all">All</button>
+        <button class="fpill" data-filter="daily">Daily Practice</button>
+        <button class="fpill" data-filter="exams">Exams &amp; Mocks</button>
+        <button class="fpill fpill-due" data-filter="due">⭐ Due for Review</button>
+      </div>
+        <div class="card-grid">
+          <a href="../content/stem/calc/theory.html" class="card acc-calc card-wide" data-id="calc-theory" data-nocheck="true">Theory Reference <span class="card-badge badge-new">NEW</span><span class="card-sub">Ch. 12–18 · definitions, theorems, proof intuitions</span></a>
+          <a href="../content/stem/calc/computational.html" class="card acc-calc card-wide" data-id="calc-compute" data-nocheck="true">Computational Reference <span class="card-badge badge-new">NEW</span><span class="card-sub">Ch. 12–18 · step-by-step method recipes</span></a>
+        </div>
+      </div>
+
+      <div class="subsection-wrap" data-section="daily">
+        <div class="subsection-label">Daily Practice</div>
+        <div class="card-grid">
+          <a href="../content/stem/calc/may26_partials.html" class="card acc-calc" data-id="calc-pd">Partial Derivatives Drill <span class="card-sub">May 26 Mon · P4 · Ch. 12.1–12.2</span></a>
+          <a href="../content/stem/calc/may26_ift.html" class="card acc-calc" data-id="calc-ift">Inverse Function Theorem <span class="card-sub">May 26 Mon · P6 · Ch. 13.5</span></a>
+          <a href="../content/stem/calc/may27_newton.html" class="card acc-calc" data-id="calc-may27">Newton's Method Drill <span class="card-sub">May 27 Wed · P5 · Ch. 13.4</span></a>
+          <a href="../content/stem/calc/may30_newton.html" class="card acc-calc" data-id="calc-may30">Newton's Method Self-Study <span class="card-sub">May 30 Sat · P1 · Ch. 13.4 · 1.5h</span></a>
+          <a href="../content/stem/calc/jun1_vector.html" class="card acc-calc" data-id="calc-vf">Vector Fields &amp; Derivatives <span class="card-sub">Jun 1 Mon · P5 · Ch. 13.7</span></a>
+          <a href="../content/stem/calc/jun6_line.html" class="card acc-calc" data-id="calc-line"><span class="card-badge badge-new">NEW</span> Work &amp; Line Integrals <span class="card-sub">Jun 6 Sat · P5 · Ch. 15.2</span></a>
+          <a href="../content/stem/calc/jun7_flux.html" class="card acc-calc" data-id="calc-flux"><span class="card-badge badge-new">NEW</span> Flux &amp; Surface Integrals <span class="card-sub">Jun 7 Sun · P5 · Ch. 15.3</span></a>
+          <a href="../content/stem/calc/jun13_divergence.html" class="card acc-calc" data-id="calc-div"><span class="card-badge badge-new">NEW</span> Divergence Theorem <span class="card-sub">Jun 13 Sat · P5 · Ch. 15.4</span></a>
+          <a href="../content/stem/calc/jun14_stokes.html" class="card acc-calc" data-id="calc-curl"><span class="card-badge badge-new">NEW</span> Curl Theorem (Stokes) <span class="card-sub">Jun 14 Sun · P5 · Ch. 15.5</span></a>
+          <a href="../content/stem/calc/jun4_improper.html" class="card acc-calc" data-id="calc-improper">Improper Integrals — 10 Problems <span class="card-sub">Jun 4 Thu · P5</span></a>
+          <a href="../content/stem/calc/jun5_partialfrac.html" class="card acc-calc" data-id="calc-pf">Partial Fractions + Improper Integ <span class="card-sub">Jun 5 Fri · P2</span></a>
+          <a href="../content/stem/calc/jun7_implicitft.html" class="card acc-calc" data-id="calc-implicitft">Implicit Function Theorem <span class="card-sub">Jun 7 Sun · P4 · Ch. 13.6</span></a>
+          <a href="../content/stem/calc/jun8_fubini.html" class="card acc-calc" data-id="calc-fubini">Fubini Theorem Drill <span class="card-sub">Jun 8 Mon · P4 · Ch. 14.3–14.4</span></a>
+          <a href="../content/stem/calc/jun10_convergence.html" class="card acc-calc" data-id="calc-conv">Ch.16 Convergence Tests <span class="card-sub">Jun 10 Wed · P5</span></a>
+          <a href="../content/stem/calc/jun11_15mixed.html" class="card acc-calc" data-id="calc-15mixed1">15 Mixed Integrals Timed <span class="card-sub">Jun 11 Thu · P5</span></a>
+          <a href="../content/stem/calc/jun12_mvint.html" class="card acc-calc" data-id="calc-mvint">Multivariable Integrals — Fubini <span class="card-sub">Jun 12 Fri · P2 · Ch. 14.1–14.3</span></a>
+          <a href="../content/stem/calc/jun13_arclength.html" class="card acc-calc" data-id="calc-arc">Arc Length &amp; Surface Area <span class="card-sub">Jun 13 Sat · P3</span></a>
+          <a href="../content/stem/calc/jun13_drill15.html" class="card acc-calc" data-id="calc-drill15">Integration Full Drill — 15 Problems <span class="card-sub">Jun 13 Sat · P4</span></a>
+          <a href="../content/stem/calc/jun15_derivreview.html" class="card acc-calc" data-id="calc-derivrev">Full Derivatives Review <span class="card-sub">Jun 15 Mon · P2</span></a>
+          <a href="../content/stem/calc/jun15_ch1314.html" class="card acc-calc" data-id="calc-ch1314">Ch. 13–14 Review <span class="card-sub">Jun 15 Mon · P5</span></a>
+          <a href="../content/stem/calc/jun15_formulasheet.html" class="card acc-calc" data-id="calc-fs1">Formula Sheet Prep <span class="card-sub">Jun 15 Mon · P6</span></a>
+          <a href="../content/stem/calc/jun16_taylor.html" class="card acc-calc" data-id="calc-taylor">Improper Integrals + Taylor Series <span class="card-sub">Jun 16 Tue · P4</span></a>
+          <a href="../content/stem/calc/jun17_master.html" class="card acc-calc" data-id="calc-master">Integration Master Drill <span class="card-sub">Jun 17 Wed · P2 · 15 problems</span></a>
+          <a href="../content/stem/calc/jun17_errorlog.html" class="card acc-calc" data-id="calc-errlog">Error Log Review <span class="card-sub">Jun 17 Wed · P6 · weak spots</span></a>
+          <a href="../content/stem/calc/jun18_15mixed.html" class="card acc-calc" data-id="calc-15mixed2">15 Mixed Integrals Timed <span class="card-sub">Jun 18 Thu · P4</span></a>
+          <a href="../content/stem/calc/jun18_powerseries.html" class="card acc-calc" data-id="calc-seq">Ch.17 Power Series + Taylor <span class="card-sub">Jun 18 Thu · P5</span></a>
+          <a href="../content/stem/calc/jun19_formulasheet.html" class="card acc-calc" data-id="calc-fs2">Formula Sheet Prep <span class="card-sub">Jun 19 Fri · P5</span></a>
+          <a href="../content/stem/calc/jun20_derivtimed.html" class="card acc-calc" data-id="calc-derivtimed">Derivatives &amp; All Rules Timed <span class="card-sub">Jun 20 Sat · P3</span></a>
+          <a href="../content/stem/calc/jun20_mv14.html" class="card acc-calc" data-id="calc-mv14">Multivariable Int Full Review <span class="card-sub">Jun 20 Sat · P4 · Ch. 14</span></a>
+          <a href="../content/stem/calc/jun20_fourier.html" class="card acc-calc" data-id="calc-fourier"><span class="card-badge badge-new">NEW</span> Ch.18 Fourier Series Setup <span class="card-sub">Jun 20 Sat · P5</span></a>
+        </div>
+      </div>
+
+      <div class="subsection-wrap" data-section="exams">
+        <div class="subsection-label">Exams &amp; Mocks</div>
+        <div class="card-grid">
+          <a href="../content/stem/calc/may31_mock.html" class="card acc-calc" data-id="calc-mock1">Weekly Mock — Ch. 12–13.3 <span class="card-sub">May 31 Sun · P1 · 60 min timed</span></a>
+          <a href="../content/stem/calc/jun6_mock.html" class="card acc-calc" data-id="calc-mock2">Mock — Full Integration <span class="card-sub">Jun 6 Sat · P1 · 75 min timed</span></a>
+          <a href="../content/stem/calc/jun20_mock.html" class="card acc-calc" data-id="calc-mock3">Full Mock Exam <span class="card-sub">Jun 20 Sat · P1 · 3 hr timed</span></a>
+          <a href="../content/stem/calc/jun21_weakspots.html" class="card acc-calc" data-id="calc-weak">Weak Spots from Mock <span class="card-sub">Jun 21 Sun · P2</span></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ LINEAR ALGEBRA ═══ -->
+    <div class="subj-panel blk-la" data-subj="la">
+      <div class="panel-header">
+        <div class="panel-dot dot-la"></div>
+        <div>
+          <div class="panel-label">Subject 03</div>
+          <div class="panel-title" style="color:var(--la)">Linear Algebra</div>
+        </div>
+        <div class="panel-exam"><strong>Final exam</strong>Jun 25, 2026</div>
+      </div>
+
+
+      <div class="subsection-wrap" data-section="review" data-pinned="true">
+        <div class="subsection-label">Review Notes</div>
+      <div class="filter-bar">
+        <button class="fpill active" data-filter="all">All</button>
+        <button class="fpill" data-filter="daily">Daily Practice</button>
+        <button class="fpill" data-filter="exams">Exams &amp; Mocks</button>
+        <button class="fpill fpill-due" data-filter="due">⭐ Due for Review</button>
+      </div>
+        <div class="card-grid">
+          <a href="../content/stem/la/theory.html" class="card acc-la card-wide" data-id="la-theory" data-nocheck="true"><span class="card-badge badge-new">NEW</span> Theory Summary · Ch. 3–8 <span class="card-sub">Definitions, theorems, proof sketches</span></a>
+          <a href="../content/stem/la/computation.html" class="card acc-la card-wide" data-id="la-compute" data-nocheck="true"><span class="card-badge badge-new">NEW</span> Computational Summary · Ch. 3–8 <span class="card-sub">Step-by-step recipes incl. QR procedure</span></a>
+        </div>
+      </div>
+
+      <div class="subsection-wrap" data-section="daily">
+        <div class="subsection-label">Daily Practice</div>
+        <div class="card-grid">
+          <a href="../content/stem/la/may25_basis5.html" class="card acc-la" data-id="la-basis5">Basis — 5 New Problems <span class="card-sub">May 25 Mon · P5 · EZ Ch. 5.3</span></a>
+          <a href="../content/stem/la/may28_linearalgebra.html" class="card acc-la" data-id="la-may28inv">Matrix Inverse <span class="card-sub">May 28 Thu · P4</span></a>
+          <a href="../content/stem/la/may28_linearalgebra.html" class="card acc-la" data-id="la-may28rn">Rank-Nullity Prove <span class="card-sub">May 28 Thu · P5 · EZ Ch. 5.6</span></a>
+          <a href="../content/stem/la/may29_flashcard.html" class="card acc-la" data-id="la-may29fc">Rank-Nullity Flashcards <span class="card-sub">May 29 Fri · P4 · EZ Ch. 5.6</span></a>
+          <a href="../content/stem/la/may29_basis.html" class="card acc-la" data-id="la-may29basis">Basis &amp; Span Drill <span class="card-sub">May 29 Fri · P2 · 5 problems</span></a>
+          <a href="../content/stem/la/may30_changeofbasis.html" class="card acc-la" data-id="la-cob">Change of Basis &amp; Coord Map <span class="card-sub">May 30 Sat · P2 · EZ Ch. 5.4</span></a>
+          <a href="../content/stem/la/may31_RREF.html" class="card acc-la" data-id="la-rref">Active Recall: RREF Rules <span class="card-sub">May 31 Sun · P3</span></a>
+          <a href="../content/stem/la/jun1_LUD.html" class="card acc-la" data-id="la-lu">LU Decomposition <span class="card-sub">Jun 1 Mon · P4 · 5 matrices drill</span></a>
+          <a href="../content/stem/la/jun3_ranknullity_scratch.html" class="card acc-la" data-id="la-rnscratch">Rank-Nullity Prove from Scratch <span class="card-sub">Jun 3 Wed · P5</span></a>
+          <a href="../content/stem/la/jun5_basis_feynman.html" class="card acc-la" data-id="la-feynman">Basis &amp; Dimensions — Feynman <span class="card-sub">Jun 5 Fri · P4</span></a>
+          <a href="../content/stem/la/jun6_innerproduct.html" class="card acc-la" data-id="la-inner">Inner Product Space <span class="card-sub">Jun 6 Sat · P1 · EZ Ch. 6.1–6.2</span></a>
+          <a href="../content/stem/la/jun7_ranknullity_scratch2.html" class="card acc-la" data-id="la-rnscratch2">Rank-Nullity Prove from Scratch <span class="card-sub">Jun 7 Sun · P2</span></a>
+          <a href="../content/stem/la/jun8_gramschmidt.html" class="card acc-la" data-id="la-gram">Orthogonality &amp; Gram-Schmidt <span class="card-sub">Jun 8 Mon · P5</span></a>
+          <a href="../content/stem/la/jun8_ch67.html" class="card acc-la" data-id="la-ch67">Ch. 6–7 Review <span class="card-sub">Jun 8 Mon · P6 · Inner Product + Det</span></a>
+          <a href="../content/stem/la/jun11_eigenvectors.html" class="card acc-la" data-id="la-eigvec">Eigenvectors Drill <span class="card-sub">Jun 11 Thu · P4 · 3 matrices</span></a>
+          <a href="../content/stem/la/jun12_eig3.html" class="card acc-la" data-id="la-eig3">Eigenvectors — 3 Matrix Examples <span class="card-sub">Jun 12 Fri · P2</span></a>
+          <a href="../content/stem/la/jun12_orthonormal.html" class="card acc-la" data-id="la-orthbasis">Inner Product &amp; Orthonormal Basis <span class="card-sub">Jun 12 Fri · P4 · Ch. 6.5</span></a>
+          <a href="../content/stem/la/jun12_nullcol.html" class="card acc-la" data-id="la-nullcol">Null &amp; Column Space <span class="card-sub">Jun 12 Fri · P5</span></a>
+          <a href="../content/stem/la/jun13_eigintro.html" class="card acc-la" data-id="la-eigintro">Eigenvalues Intro <span class="card-sub">Jun 13 Sat · P1 · 3B1B video</span></a>
+          <a href="../content/stem/la/jun13_nullcol2.html" class="card acc-la" data-id="la-nullcol2">Null &amp; Column Space <span class="card-sub">Jun 13 Sat · P4</span></a>
+          <a href="../content/stem/la/jun14_diagonalization.html" class="card acc-la" data-id="la-diag">Diagonalization <span class="card-sub">Jun 14 Sun · P2</span></a>
+          <a href="../content/stem/la/jun15_theorems_cold.html" class="card acc-la" data-id="la-thmcold">Key Theorems Reconstruct Cold <span class="card-sub">Jun 15 Mon · P4</span></a>
+          <a href="../content/stem/la/jun16_ch56.html" class="card acc-la" data-id="la-ch56rev">Full Ch. 5–6 Review <span class="card-sub">Jun 16 Tue · P2</span></a>
+          <a href="../content/stem/la/jun16_axioms.html" class="card acc-la" data-id="la-axioms">Abstract Spaces — Axioms <span class="card-sub">Jun 16 Tue · P5</span></a>
+          <a href="../content/stem/la/jun16_proofs.html" class="card acc-la" data-id="la-proofs">Active Recall: Recreate Proofs <span class="card-sub">Jun 16 Tue · P6</span></a>
+          <a href="../content/stem/la/jun17_eigdrill.html" class="card acc-la" data-id="la-eigdrill">Eigenvalues Full Drill <span class="card-sub">Jun 17 Wed · P4</span></a>
+          <a href="../content/stem/la/jun17_orthreview.html" class="card acc-la" data-id="la-orthrev">Orthogonality Review <span class="card-sub">Jun 17 Wed · P5</span></a>
+          <a href="../content/stem/la/jun18_ch78.html" class="card acc-la" data-id="la-ch78">Full Ch. 7–8 Review <span class="card-sub">Jun 18 Thu · P2</span></a>
+          <a href="../content/stem/la/jun18_errorlog.html" class="card acc-la" data-id="la-errlog">Error Log Review <span class="card-sub">Jun 18 Thu · P6 · weak spots</span></a>
+          <a href="../content/stem/la/jun19_eigfull.html" class="card acc-la" data-id="la-eigfull">Eigenvalue Full Computation <span class="card-sub">Jun 19 Fri · P2</span></a>
+          <a href="../content/stem/la/jun13_formulasheet.html" class="card acc-la" data-id="la-fs">Cheat Sheet Prep <span class="card-sub">Jun 13 Sat · P2 · before both mocks</span></a>
+          <a href="../content/stem/la/jun20_eig3mat.html" class="card acc-la" data-id="la-eig3mat">Eigenvalue — 3 Matrices <span class="card-sub">Jun 20 Sat · P3</span></a>
+          <a href="../content/stem/la/jun20_theorems.html" class="card acc-la" data-id="la-thmrec">Key Theorems Reconstruct <span class="card-sub">Jun 20 Sat · P4</span></a>
+          <a href="../content/stem/la/jun7_cholesky.html" class="card acc-la" data-id="la-cholesky"><span class="card-badge badge-new">NEW</span> Cholesky Decomposition <span class="card-sub">Jun 7 Sun · P3 · G=LL<sup>T</sup></span></a>
+          <a href="../content/stem/la/jun11_leastsquares.html" class="card acc-la" data-id="la-leastsq"><span class="card-badge badge-new">NEW</span> Projections &amp; Least Squares <span class="card-sub">Jun 11 Thu · P5 · EZ Ch. 6.10</span></a>
+          <a href="../content/stem/la/jun14_spectral.html" class="card acc-la" data-id="la-spectral"><span class="card-badge badge-new">NEW</span> Spectral Theorem <span class="card-sub">Jun 14 Sun · P4 · A=QΛQ<sup>T</sup></span></a>
+          <a href="../content/stem/la/jun18_svd.html" class="card acc-la" data-id="la-svd"><span class="card-badge badge-new">NEW</span> Singular Value Decomposition <span class="card-sub">Jun 18 Thu · P4 · A=UΣV<sup>T</sup></span></a>
+          <a href="../content/stem/la/jun19_quadforms.html" class="card acc-la" data-id="la-quadforms"><span class="card-badge badge-new">NEW</span> Quadratic Surfaces &amp; Definiteness <span class="card-sub">Jun 19 Fri · P6</span></a>
+          <a href="../content/stem/la/jun17_markov.html" class="card acc-la" data-id="la-markov"><span class="card-badge badge-new">NEW</span> Powers, Markov Chains &amp; Linear ODEs <span class="card-sub">Jun 17 Wed · P5</span></a>
+        </div>
+      </div>
+
+      <div class="subsection-wrap" data-section="exams">
+        <div class="subsection-label">Exams &amp; Mocks</div>
+        <div class="card-grid">
+          <a href="../content/stem/la/may31_mock.html" class="card acc-la" data-id="la-mock1">Mock — Ch. 5 Subspaces <span class="card-sub">May 31 Sun · P2 · 60 min timed</span></a>
+          <a href="../content/stem/la/jun14_mock.html" class="card acc-la" data-id="la-mock2">Mock — Full Lin Alg <span class="card-sub">Jun 14 Sun · P1 · 90 min timed</span></a>
+          <a href="../content/stem/la/jun21_mock.html" class="card acc-la" data-id="la-mock3">Full Mock Exam <span class="card-sub">Jun 21 Sun · P1 · 3 hr timed</span></a>
+          <a href="../content/stem/la/jun21_weakspots.html" class="card acc-la" data-id="la-weak">Weak Spots from Mock <span class="card-sub">Jun 21 Sun · P2</span></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ OTHER ═══ -->
+    <div class="subj-panel" data-subj="other">
+      <div class="panel-header">
+        <div class="panel-dot" style="background:var(--text3)"></div>
+        <div>
+          <div class="panel-label">Other Courses</div>
+          <div class="panel-title">Projects &amp; Case Studies</div>
+        </div>
+      </div>
+      <div class="card-grid">
+        <a href="../content/stem/other/design_thinking.html" class="card acc-dt" data-id="other-dt">Design Thinking <span class="card-sub">Smart Canteen Seating project</span></a>
+        <a href="../content/stem/other/management.html" class="card acc-mgmt" data-id="other-mgmt">General Management <span class="card-sub">NovaTech Inc. overview &amp; archives</span></a>
+      </div>
+    </div>
+
+    <!-- ═══ Session Log ═══ -->
+    <div class="log-panel" id="log-panel" style="margin-top:48px;">
+      <div class="log-hd" onclick="toggleLog()">
+        <div style="font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);">Study Log</div>
+        <div class="log-title">Session History</div>
+        <span class="log-count" id="log-count-badge"></span>
+        <span class="log-arrow">▾</span>
+      </div>
+      <div class="log-body" id="log-body">
+        <div class="log-actions">
+          <button class="log-btn primary" onclick="exportLog()">Export for AI analysis</button>
+          <button class="log-btn" onclick="clearLog()">Clear log</button>
+        </div>
+        <div id="log-entries"></div>
+      </div>
+    </div>
+
+  </div><!-- end .main -->
+
+  <div class="footer-note">RAFI ADIFA MAULANA · STUDY HUB · 2026</div>
+
+  <script>
+  /* ═══════════════════════════════════════
+     STORAGE
+  ═══════════════════════════════════════ */
+  const DONE_KEY  = 'studyhub_done';
+  const SR_KEY    = 'studyhub_sr';
+  const LOG_KEY   = 'studyhub_log';
+  const SUBJ_KEY  = 'studyhub_subj';
+  const DAY_MS    = 86400000;
+
+  const getDone = () => { try { return new Set(JSON.parse(localStorage.getItem(DONE_KEY)||'[]')); } catch { return new Set(); } };
+  const saveDone = s => localStorage.setItem(DONE_KEY, JSON.stringify([...s]));
+  const getSR    = () => { try { return JSON.parse(localStorage.getItem(SR_KEY)||'{}'); } catch { return {}; } };
+  const setSR    = s => localStorage.setItem(SR_KEY, JSON.stringify(s));
+  const getLog   = () => { try { return JSON.parse(localStorage.getItem(LOG_KEY)||'[]'); } catch { return []; } };
+  const setLog   = l => localStorage.setItem(LOG_KEY, JSON.stringify(l.slice(-400)));
+
+  /* ═══════════════════════════════════════
+     SUBJECT TABS
+  ═══════════════════════════════════════ */
+  const SUBJ_NAMES  = { cpp:'C++ PROGRAMMING', calc:'CALCULUS A2', la:'LINEAR ALGEBRA', other:'OTHER' };
+  const SUBJ_COLORS = { cpp:'var(--cpp)', calc:'var(--calc)', la:'var(--la)', other:'var(--text3)' };
+
+  function selectSubject(subj) {
+    document.querySelectorAll('.subj-tab').forEach(t => t.classList.toggle('active', t.dataset.subj === subj));
+    document.querySelectorAll('.subj-panel').forEach(p => p.classList.toggle('active', p.dataset.subj === subj));
+    localStorage.setItem(SUBJ_KEY, subj);
+
+    // Update progress for this subject
+    updateProgress(subj);
+
+    // Update progress bar color + label
+    const nameEl = document.getElementById('progress-subj-name');
+    if (nameEl) nameEl.textContent = SUBJ_NAMES[subj] || subj.toUpperCase();
+    const fill = document.getElementById('progress-fill');
+    if (fill) fill.style.background = SUBJ_COLORS[subj] || 'var(--calc)';
+
+    // Clear search
+    const inp = document.getElementById('search-input');
+    if (inp && inp.value) { inp.value = ''; inp.dispatchEvent(new Event('input')); }
+  }
+
+  function activeSubject() {
+    return localStorage.getItem(SUBJ_KEY) || 'cpp';
+  }
+
+  /* ═══════════════════════════════════════
+     SPACED REPETITION  (SM-2 lite)
+     Grades: 0=Again  1=Hard  2=Good  3=Easy
+  ═══════════════════════════════════════ */
+  const GRADE_LABELS = ['Again','Hard','Good','Easy'];
+
+  function srNextInterval(id, grade) {
+    const sr = getSR();
+    let r = sr[id] || { reps:0, ease:2.5, interval:0 };
+    if (grade===0) return '1 day';
+    if (grade===1) r.ease = Math.max(1.3, r.ease-.15);
+    if (grade===3) r.ease = Math.min(3.5, r.ease+.1);
+    let iv;
+    if      (r.reps===0) iv = grade===1?1:grade===3?4:2;
+    else if (r.reps===1) iv = grade===1?3:grade===3?7:4;
+    else { const m = grade===1?1.2:grade===3?r.ease*1.2:r.ease; iv = Math.max(1,Math.round(r.interval*m)); }
+    return iv===1?'1 day':iv+' days';
+  }
+
+  function gradeCard(id, grade) {
+    const sr = getSR();
+    let r = sr[id] || { reps:0, ease:2.5, interval:0, lapses:0 };
+    if (grade===0) {
+      r.reps=0; r.lapses++; r.ease=Math.max(1.3,r.ease-.2);
+      r.interval=1; r.due=Date.now()+DAY_MS;
+    } else {
+      if (grade===1) r.ease=Math.max(1.3,r.ease-.15);
+      if (grade===3) r.ease=Math.min(3.5,r.ease+.1);
+      if      (r.reps===0) r.interval=grade===1?1:grade===3?4:2;
+      else if (r.reps===1) r.interval=grade===1?3:grade===3?7:4;
+      else { const m=grade===1?1.2:grade===3?r.ease*1.2:r.ease; r.interval=Math.max(1,Math.round(r.interval*m)); }
+      r.reps++; r.due=Date.now()+r.interval*DAY_MS;
+    }
+    sr[id]=r; setSR(sr); return r;
+  }
+
+  function updateSRBadge(card) {
+    const r = getSR()[card.dataset.id];
+    let badge = card.querySelector('.sr-due-badge');
+    if (r && r.due<=Date.now()) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className='sr-due-badge'; badge.textContent='REVIEW';
+        const sub = card.querySelector('.card-sub');
+        if (sub) sub.before(badge); else card.appendChild(badge);
+      }
+    } else if (badge) badge.remove();
+  }
+
+  function refreshDueBadges() {
+    document.querySelectorAll('.card[data-id]').forEach(updateSRBadge);
+    // Update tab due counters
+    const sr = getSR(); const now = Date.now();
+    ['cpp','calc','la'].forEach(subj => {
+      const count = document.querySelectorAll(`.subj-panel[data-subj="${subj}"] [data-id]`);
+      let n = 0;
+      count.forEach(c => { const r=sr[c.dataset.id]; if(r&&r.due<=now) n++; });
+      const badge = document.getElementById('due-'+subj);
+      if (badge) { badge.textContent=n; badge.classList.toggle('show', n>0); }
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     SESSION LOG
+  ═══════════════════════════════════════ */
+  function cardSubject(id) {
+    if (id.startsWith('cpp'))  return 'cpp';
+    if (id.startsWith('calc')) return 'calc';
+    if (id.startsWith('la'))   return 'la';
+    return 'other';
+  }
+
+  function logSession(id, title, grade, nextDue, notes) {
+    const log = getLog();
+    log.push({ id, title, subject: cardSubject(id), grade, date: Date.now(), nextDue, notes: notes||'' });
+    setLog(log);
+    renderLog();
+  }
+
+  function renderLog() {
+    const log = getLog().slice().reverse();
+    const badge = document.getElementById('log-count-badge');
+    if (badge) badge.textContent = log.length ? log.length+' entries' : '';
+
+    const el = document.getElementById('log-entries');
+    if (!el) return;
+
+    if (!log.length) {
+      el.innerHTML = '<div class="log-empty">No sessions logged yet. Grade a session to start tracking.</div>';
+      return;
+    }
+
+    const groups = {};
+    log.forEach(e => {
+      const key = new Date(e.date).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      if (!groups[key]) groups[key]=[];
+      groups[key].push(e);
+    });
+
+    const SUBJ_COL = { cpp:'var(--cpp)', calc:'var(--calc)', la:'var(--la)', other:'var(--text3)' };
+    el.innerHTML = Object.entries(groups).map(([day,entries]) => `
+      <div class="log-day-group">
+        <div class="log-day-label">${day}</div>
+        ${entries.map(e => {
+          const col = SUBJ_COL[e.subject]||'var(--text3)';
+          const gradeHtml = e.grade!=null ? `<span class="log-score-chip g${e.grade}">${GRADE_LABELS[e.grade]}</span>` : '';
+          const nextHtml  = e.nextDue ? `<span class="log-next">↻ ${e.nextDue}</span>` : '';
+          const noteHtml  = e.notes ? `<div class="log-note">"${e.notes}"</div>` : '';
+          return `<div class="log-entry">
+            <div class="log-entry-row">
+              <div class="log-dot" style="background:${col}"></div>
+              <span class="log-name">${e.title}</span>
+              ${gradeHtml}${nextHtml}
+            </div>${noteHtml}
+          </div>`;
+        }).join('')}
+      </div>`).join('');
+  }
+
+  function clearLog() {
+    if (!confirm('Clear all session history?')) return;
+    localStorage.removeItem(LOG_KEY);
+    renderLog();
+  }
+
+  function exportLog() {
+    const log = getLog();
+    if (!log.length) { alert('No sessions logged yet.'); return; }
+
+    const lines = [
+      'STUDY LOG EXPORT — Rafi\'s Study Hub',
+      `Generated: ${new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}`,
+      '═'.repeat(60), ''
+    ];
+
+    const groups = {};
+    log.forEach(e => {
+      const key = new Date(e.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      if (!groups[key]) groups[key]=[];
+      groups[key].push(e);
+    });
+
+    Object.entries(groups).forEach(([day,entries]) => {
+      lines.push(`── ${day} ──`);
+      entries.forEach(e => {
+        const subj  = e.subject.toUpperCase();
+        const grade = e.grade!=null ? ` [${GRADE_LABELS[e.grade]}]` : '';
+        const next  = e.nextDue ? ` → next review: ${e.nextDue}` : '';
+        const laps  = (getSR()[e.id]?.lapses||0) > 0 ? ` (${getSR()[e.id].lapses} lapse(s))` : '';
+        lines.push(`  [${subj}] ${e.title}${grade}${next}${laps}`);
+        if (e.notes) lines.push(`    Notes: "${e.notes}"`);
+      });
+      lines.push('');
+    });
+
+    // Summary
+    lines.push('═'.repeat(60));
+    lines.push('SUMMARY');
+    lines.push('─'.repeat(40));
+
+    const bySub = {};
+    log.forEach(e => {
+      if (!bySub[e.subject]) bySub[e.subject]={total:0,g:[0,0,0,0],lapses:0};
+      bySub[e.subject].total++;
+      if (e.grade!=null) bySub[e.subject].g[e.grade]++;
+    });
+    Object.entries(bySub).forEach(([subj,d]) => {
+      lines.push(`${subj.toUpperCase()}: ${d.total} sessions  Again:${d.g[0]}  Hard:${d.g[1]}  Good:${d.g[2]}  Easy:${d.g[3]}`);
+    });
+
+    // Due cards
+    const sr = getSR(); const now = Date.now();
+    const dueNow = Object.entries(sr)
+      .filter(([,r]) => r.due<=now)
+      .map(([id,r]) => {
+        const el2 = document.querySelector(`[data-id="${id}"]`);
+        const title = el2 ? el2.childNodes[0].textContent.trim() : id;
+        return `  • ${title} (${cardSubject(id).toUpperCase()}${r.lapses?', '+r.lapses+' lapses':''})`;
+      });
+    if (dueNow.length) {
+      lines.push('');
+      lines.push('Topics due for review now:');
+      dueNow.forEach(t => lines.push(t));
+    }
+
+    // Weak topics (grade 0 or 1 with notes)
+    const weakNotes = log.filter(e => e.grade<=1 && e.notes);
+    if (weakNotes.length) {
+      lines.push('');
+      lines.push('Weak areas with notes:');
+      weakNotes.forEach(e => {
+        lines.push(`  • [${e.subject.toUpperCase()}] ${e.title}: "${e.notes}"`);
+      });
+    }
+
+    const text = lines.join('\n');
+    navigator.clipboard.writeText(text)
+      .then(()  => alert('Copied to clipboard! Paste it into your AI chat.'))
+      .catch(()  => { const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('Copied to clipboard!'); });
+  }
+
+  function toggleLog() {
+    document.getElementById('log-panel').classList.toggle('collapsed');
+  }
+
+  /* ═══════════════════════════════════════
+     FILTER PILLS
+  ═══════════════════════════════════════ */
+  function initFilters() {
+    document.querySelectorAll('.subj-panel').forEach(panel => {
+      const bar = panel.querySelector('.filter-bar');
+      if (!bar) return;
+      // Ensure "All" active on load
+      bar.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
+      bar.querySelector('[data-filter="all"]').classList.add('active');
+
+      bar.addEventListener('click', e => {
+        const pill = e.target.closest('.fpill');
+        if (!pill) return;
+        bar.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
+        pill.classList.add('active');
+        applyFilter(panel, pill.dataset.filter);
+      });
+    });
+  }
+
+  function applyFilter(panel, filter) {
+    const sr = getSR(); const now = Date.now();
+    panel.querySelectorAll('.subsection-wrap').forEach(wrap => {
+      // Pinned review section is always visible — never touched by filter
+      if (wrap.dataset.pinned) return;
+
+      if (filter==='all') {
+        wrap.classList.remove('fhide');
+        wrap.querySelectorAll('.card').forEach(c=>c.classList.remove('fhide'));
+        return;
+      }
+      if (filter==='due') {
+        wrap.classList.remove('fhide');
+        let any=false;
+        wrap.querySelectorAll('.card[data-id]:not([data-nocheck])').forEach(c => {
+          const r=sr[c.dataset.id]; const due=r&&r.due<=now;
+          c.classList.toggle('fhide',!due); if(due)any=true;
+        });
+        if(!any) wrap.classList.add('fhide');
+        return;
+      }
+      const sectionMap = {daily:'daily',exams:'exams'};
+      const matches = sectionMap[filter]===wrap.dataset.section;
+      wrap.classList.toggle('fhide',!matches);
+      if(matches) wrap.querySelectorAll('.card').forEach(c=>c.classList.remove('fhide'));
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     SEARCH
+  ═══════════════════════════════════════ */
+  function initSearch() {
+    const input = document.getElementById('search-input');
+    const clear = document.getElementById('search-clear');
+    const count = document.getElementById('search-count');
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      clear.classList.toggle('show', q.length>0);
+      const activePanel = document.querySelector('.subj-panel.active');
+      if (!activePanel) return;
+
+      if (!q) {
+        activePanel.querySelectorAll('.card').forEach(c=>c.classList.remove('fhide'));
+        activePanel.querySelectorAll('.subsection-wrap').forEach(w=>w.classList.remove('fhide'));
+        count.textContent='';
+        const activePill = activePanel.querySelector('.fpill.active');
+        if (activePill && activePill.dataset.filter!=='all') applyFilter(activePanel, activePill.dataset.filter);
+        return;
+      }
+      let vis=0;
+      activePanel.querySelectorAll('.card[data-id]').forEach(c => {
+        const m = c.textContent.toLowerCase().includes(q);
+        c.classList.toggle('fhide',!m); if(m)vis++;
+      });
+      activePanel.querySelectorAll('.subsection-wrap').forEach(w => {
+        const any=[...w.querySelectorAll('.card')].some(c=>!c.classList.contains('fhide'));
+        w.classList.toggle('fhide',!any);
+      });
+      count.textContent = vis ? `${vis} result${vis===1?'':'s'}` : 'no results';
+    });
+
+    clear.addEventListener('click', () => {
+      input.value=''; input.dispatchEvent(new Event('input')); input.focus();
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     CHECK BUTTON + SR POPUP WITH NOTES
+  ═══════════════════════════════════════ */
+  function injectChecks() {
+    document.querySelectorAll('.card[data-id]').forEach(card => {
+      if (card.dataset.nocheck) return;
+      if (card.querySelector('.card-check')) return;
+
+      const btn = document.createElement('button');
+      btn.className='card-check'; btn.title='Mark as done';
+      btn.setAttribute('aria-label','Mark session as done');
+
+      const popup = document.createElement('div');
+      popup.className='sr-popup';
+      popup.innerHTML=`
+        <div class="sr-popup-label">How did it go?</div>
+        <textarea class="sr-notes" rows="2" placeholder="What did you get wrong? How did it feel? (optional)"></textarea>
+        <div class="sr-btns">
+          ${GRADE_LABELS.map((l,g)=>`<button class="sr-btn" data-g="${g}">${l}<span class="sr-btn-label"></span></button>`).join('')}
+        </div>
+        <div class="sr-hint"></div>`;
+
+      // Hover preview on grade buttons
+      popup.querySelectorAll('.sr-btn').forEach(sb => {
+        sb.addEventListener('mouseenter', () => {
+          popup.querySelector('.sr-hint').textContent = 'Next review in: '+srNextInterval(card.dataset.id, +sb.dataset.g);
+        });
+        sb.addEventListener('mouseleave', () => {
+          popup.querySelector('.sr-hint').textContent = '';
+        });
+      });
+
+      // Grade click
+      popup.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        const sb = e.target.closest('.sr-btn');
+        if (!sb) return;
+        const grade  = +sb.dataset.g;
+        const id     = card.dataset.id;
+        const title  = card.childNodes[0].textContent.trim();
+        const notes  = popup.querySelector('.sr-notes').value.trim();
+        const r      = gradeCard(id, grade);
+        const nextLbl= grade===0?'1 day':r.interval===1?'1 day':r.interval+' days';
+
+        const done = getDone(); done.add(id); saveDone(done);
+        card.setAttribute('data-done','true');
+        updateSRBadge(card);
+        refreshDueBadges();
+        logSession(id, title, grade, nextLbl, notes);
+        updateProgress(activeSubject());
+        popup.classList.remove('show');
+        popup.querySelector('.sr-notes').value='';
+      });
+
+      btn.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        const done = getDone();
+        if (done.has(card.dataset.id)) {
+          done.delete(card.dataset.id); saveDone(done);
+          card.removeAttribute('data-done');
+          updateProgress(activeSubject());
+        } else {
+          document.querySelectorAll('.sr-popup.show').forEach(p=>p.classList.remove('show'));
+          popup.classList.add('show');
+          setTimeout(()=>popup.querySelector('.sr-notes').focus(),50);
+        }
+      });
+
+      document.addEventListener('click', e => {
+        if (!popup.contains(e.target) && e.target!==btn) popup.classList.remove('show');
+      }, true);
+
+      card.appendChild(btn);
+      card.appendChild(popup);
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     PROGRESS
+  ═══════════════════════════════════════ */
+  function updateProgress(subj) {
+    subj = subj || activeSubject();
+    const done  = getDone();
+    const panel = document.querySelector(`.subj-panel[data-subj="${subj}"]`);
+    if (!panel) return;
+    const all   = panel.querySelectorAll('[data-id]:not([data-nocheck])');
+    const total = all.length;
+    const count = [...all].filter(el=>done.has(el.dataset.id)).length;
+    const pct   = total?(count/total*100):0;
+    document.getElementById('progress-fill').style.width = pct+'%';
+    document.getElementById('progress-label').textContent = count+' / '+total;
+  }
+
+  function applyDoneStyles() {
+    const done = getDone();
+    document.querySelectorAll('[data-id]').forEach(c => {
+      if(done.has(c.dataset.id)) c.setAttribute('data-done','true');
+      else c.removeAttribute('data-done');
+    });
+  }
+
+  function resetProgress() {
+    if (!confirm('Clear all completed sessions for all subjects?')) return;
+    localStorage.removeItem(DONE_KEY);
+    applyDoneStyles();
+    updateProgress(activeSubject());
+  }
+
+  /* ═══════════════════════════════════════
+     TODAY BANNER
+  ═══════════════════════════════════════ */
+  const TODAY_SESSIONS = {
+    'May 25':['la-basis5'],
+    'May 26':['cpp-may26','cpp-ch1','cpp-ch2','calc-pd','calc-ift'],
+    'May 27':['cpp-pointers','cpp-may27class','cpp-may27oop','calc-may27'],
+    'May 28':['la-may28inv','la-may28rn'],
+    'May 29':['la-may29fc','la-may29basis','cpp-oj12'],
+    'May 30':['calc-may30','la-rref'],
+    'May 31':['calc-mock1','la-mock1','la-cob'],
+    'Jun 1': ['calc-vf','la-lu','cpp-fullmock'],
+    'Jun 2': ['cpp-encap','cpp-oj34'],
+    'Jun 3': ['la-rnscratch'],
+    'Jun 4': ['calc-improper','cpp-mvc'],
+    'Jun 5': ['calc-pf','la-feynman','cpp-oj56'],
+    'Jun 6': ['calc-mock2','calc-line','la-inner','cpp-shape','cpp-oj35'],
+    'Jun 7': ['calc-implicitft','calc-flux','la-rnscratch2','la-cholesky'],
+    'Jun 8': ['calc-fubini','la-gram','la-ch67','cpp-finalrev'],
+    'Jun 10':['calc-conv'],
+    'Jun 11':['calc-15mixed1','la-leastsq'],
+    'Jun 12':['calc-mvint','la-eig3','la-orthbasis','la-nullcol'],
+    'Jun 13':['calc-arc','calc-drill15','calc-div','la-eigintro','la-nullcol2','la-fs'],
+    'Jun 14':['calc-curl','la-diag','la-mock2','la-spectral'],
+    'Jun 15':['calc-derivrev','calc-ch1314','calc-fs1','la-thmcold'],
+    'Jun 16':['calc-taylor','la-ch56rev','la-axioms','la-proofs'],
+    'Jun 17':['calc-master','calc-errlog','la-eigdrill','la-orthrev','la-markov'],
+    'Jun 18':['calc-15mixed2','calc-seq','la-ch78','la-errlog','la-svd'],
+    'Jun 19':['calc-fs2','la-eigfull','la-quadforms'],
+    'Jun 20':['calc-derivtimed','calc-mv14','calc-fourier','la-eig3mat','la-thmrec'],
+    'Jun 21':['calc-weak','la-mock3','la-weak'],
+  };
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DAYS  =['SUN','MON','TUE','WED','THU','FRI','SAT'];
+
+  /* ── Week-strip calendar ── */
+  const CAL_SUBJ_COL={cpp:'var(--cpp)',calc:'var(--calc)',la:'var(--la)',other:'var(--text3)'};
+  const calSubjOf=id=>id.startsWith('cpp')?'cpp':id.startsWith('calc')?'calc':id.startsWith('la')?'la':'other';
+  const calKey=d=>MONTHS[d.getMonth()]+' '+d.getDate();
+  const calSame=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+  function calMonday(d){ const x=new Date(d); x.setHours(0,0,0,0); x.setDate(x.getDate()-((x.getDay()+6)%7)); return x; }
+  let calView, calSel;
+
+  function initCalendar(){
+    const today=new Date(); today.setHours(0,0,0,0);
+    document.getElementById('topbar-date').textContent=
+      DAYS[today.getDay()]+' · '+today.getDate()+' '+MONTHS[today.getMonth()].toUpperCase()+' '+today.getFullYear();
+    calView=calMonday(today);
+    calSel=new Date(today);
+    document.getElementById('cal-prev').onclick=()=>{ calView=new Date(calView.setDate(calView.getDate()-7)); calNavSelect(); };
+    document.getElementById('cal-next').onclick=()=>{ calView=new Date(calView.setDate(calView.getDate()+7)); calNavSelect(); };
+    document.getElementById('cal-thisweek').onclick=()=>{ const t=new Date(); t.setHours(0,0,0,0); calView=calMonday(t); calSel=t; renderCal(); };
+    renderCal();
+  }
+  function calNavSelect(){
+    const today=new Date(); today.setHours(0,0,0,0);
+    const end=new Date(calView); end.setDate(end.getDate()+6);
+    calSel=(today>=calView&&today<=end)?new Date(today):new Date(calView);
+    renderCal();
+  }
+  function renderCal(){
+    const today=new Date(); today.setHours(0,0,0,0);
+    const strip=document.getElementById('cal-strip'); strip.innerHTML='';
+    const end=new Date(calView); end.setDate(end.getDate()+6);
+    const sm=MONTHS[calView.getMonth()], em=MONTHS[end.getMonth()];
+    document.getElementById('cal-range').textContent=sm+' '+calView.getDate()+' – '+(sm===em?'':em+' ')+end.getDate();
+    const sr=getSR(), now=Date.now();
+    const dueCount=Object.values(sr).filter(r=>r.due<=now).length;
+    for(let i=0;i<7;i++){
+      const d=new Date(calView); d.setDate(d.getDate()+i);
+      const ids=TODAY_SESSIONS[calKey(d)]||[];
+      const subs=[...new Set(ids.map(calSubjOf))];
+      const cell=document.createElement('div');
+      cell.className='cal-cell'+(calSame(d,today)?' today':'')+(calSame(d,calSel)?' sel':'')+(ids.length?'':' empty');
+      const dots=subs.slice(0,3).map(s=>`<span class="cal-dot" style="background:${CAL_SUBJ_COL[s]}"></span>`).join('');
+      const foot=(calSame(d,today)&&dueCount)?`<span class="cal-star">★${dueCount}</span>`:(ids.length?`<span class="cal-count">${ids.length}</span>`:`<span class="cal-count">·</span>`);
+      cell.innerHTML=`<span class="cal-dow">${DAYS[d.getDay()]}</span><span class="cal-dnum">${d.getDate()}</span><span class="cal-dots">${dots}</span>${foot}`;
+      cell.onclick=()=>{ calSel=d; renderCal(); };
+      strip.appendChild(cell);
+    }
+    renderCalDay();
+  }
+  function renderCalDay(){
+    const wrap=document.getElementById('cal-day');
+    const today=new Date(); today.setHours(0,0,0,0);
+    const ids=TODAY_SESSIONS[calKey(calSel)]||[];
+    const label=(calSame(calSel,today)?'Today':DAYS[calSel.getDay()])+' · '+calSel.getDate()+' '+MONTHS[calSel.getMonth()];
+    let html=`<div class="cal-day-label">${label} — ${ids.length} session${ids.length===1?'':'s'}</div>`;
+    if(!ids.length){ wrap.innerHTML=html+'<div class="cal-empty">No sessions scheduled — rest day.</div>'; return; }
+    html+=ids.map(id=>{
+      const card=document.querySelector(`[data-id="${id}"]`);
+      if(!card) return '';
+      const title=card.childNodes[0].textContent.trim();
+      const sub=card.querySelector('.card-sub');
+      const meta=sub?(sub.textContent.trim().split('·')[1]||'').trim():'';
+      const href=card.getAttribute('href')||'#';
+      return `<a class="cal-row" href="${href}"><span class="cdot" style="background:${CAL_SUBJ_COL[calSubjOf(id)]}"></span><span class="ctitle">${title}</span><span class="cmeta">${meta}</span></a>`;
+    }).join('');
+    wrap.innerHTML=html;
+  }
+
+  /* ═══════════════════════════════════════
+     INIT
+  ═══════════════════════════════════════ */
+  // Mark placeholder cards as unavailable
+  document.querySelectorAll('a.card[href="../content/stem/other/placeholder.html"]').forEach(c => {
+    c.classList.add('card-soon');
+    c.removeAttribute('href');
+  });
+
+  initCalendar();
+  injectChecks();
+  applyDoneStyles();
+  refreshDueBadges();
+  initFilters();
+  initSearch();
+  renderLog();
+
+  // Restore last active subject (or default cpp)
+  const savedSubj = localStorage.getItem(SUBJ_KEY) || 'cpp';
+  selectSubject(savedSubj);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

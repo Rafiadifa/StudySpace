@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Inverse Function Theorem · 26 May</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title">Rafi's Study Hub</span>
+    <span class="topbar-sub">/ calc-a2 / inverse function theorem</span>
+    <span class="topbar-date">MON · 26 MAY 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Inverse <em>Function Theorem</em></h1>
+    <p class="hero-meta">P6 · Ch. 13.5. When is a map locally invertible, and what is the derivative of its inverse? The Jacobian determinant is the whole game.</p>
+    <div class="exam-pills">
+      <span class="pill pill-calc">∇ Calc A2</span>
+      <span class="pill pill-calc">Ch. 13.5</span>
+      <span class="pill pill-calc">Final · 23 June 2026</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="subject-block">
+
+      <div class="subject-header">
+        <div class="subject-dot dot-calc"></div>
+        <div>
+          <div class="subject-label">Daily Practice · 50 min · Ch. 13.5</div>
+          <div class="subject-title" style="color:var(--calc)">Inverse Function Theorem</div>
+        </div>
+        <div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div>
+      </div>
+
+      <div class="formula-ref">
+        <strong>Quick reference.</strong> A \(C^1\) map \(F:\mathbb R^n\to\mathbb R^n\) is <strong>locally invertible</strong> near \(\mathbf x_0\) iff \(\det[DF(\mathbf x_0)]\neq0\). When invertible, the inverse's derivative is \([DF^{-1}](F(\mathbf x_0))=[DF(\mathbf x_0)]^{-1}\). In 1-D this is just \((f^{-1})'(y)=1/f'(x)\). The theorem is <em>local and existential</em>: it guarantees an inverse exists nearby, rarely in closed form.
+      </div>
+
+      <!-- ══ Problem 1 ══ -->
+      <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">The complex-squaring map</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Let \(F(x,y)=(x^2-y^2,\ 2xy)\).<div class="conn-chain">chains: Jacobian · determinant · invertibility · derivative of the inverse</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Compute \([DF]\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\([DF]=\begin{pmatrix}2x&-2y\\2y&2x\end{pmatrix}\). <div class="key-result">as shown.</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Where is \(F\) locally invertible?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\det[DF]=4x^2+4y^2=4(x^2+y^2)\), nonzero except at the origin. <div class="key-result">Invertible everywhere except \((0,0)\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">At \(P=(1,1)\), give \([DF^{-1}]\) at the image point.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\([DF(1,1)]=\begin{pmatrix}2&-2\\2&2\end{pmatrix}\), \(\det=8\); \([DF^{-1}]=[DF]^{-1}=\tfrac18\begin{pmatrix}2&2\\-2&2\end{pmatrix}\). <div class="key-result">\(=\tfrac14\begin{pmatrix}1&1\\-1&1\end{pmatrix}\).</div></div></div></div></div></li><li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">What is that image point \(F(1,1)\)?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(F(1,1)=(1-1,\ 2)=(0,2)\). <div class="key-result">\((0,2)\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 1</span>
+          <span class="problem-topic">Where is the map invertible?</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">For \(F(x,y)=(e^x\cos y,\;e^x\sin y)\) (polar-like map), compute \([DF]\), its determinant, and state where \(F\) is locally invertible.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \([DF]=\begin{pmatrix}e^x\cos y &amp; -e^x\sin y\\ e^x\sin y &amp; e^x\cos y\end{pmatrix}\).
+              \(\det=e^{2x}\cos^2y+e^{2x}\sin^2y=e^{2x}\).
+              <div class="key-result">\(\det=e^{2x}>0\) everywhere — \(F\) is locally invertible at every point.</div>
+              <div class="ans-note">Locally invertible everywhere, yet not globally one-to-one (it's \(2\pi\)-periodic in \(y\)). Local ≠ global.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 2 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 2</span>
+          <span class="problem-topic">Derivative of the inverse</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">Let \(F(x,y)=(x+y,\;xy)\). At \((x,y)=(2,1)\), find \([DF]\), confirm invertibility, and give \([DF^{-1}]\) at the image point.</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \([DF]=\begin{pmatrix}1 &amp; 1\\ y &amp; x\end{pmatrix}=\begin{pmatrix}1 &amp; 1\\ 1 &amp; 2\end{pmatrix}\) at \((2,1)\). \(\det=2-1=1\neq0\) ✓.
+              Inverse of the derivative: \([DF^{-1}]=[DF]^{-1}=\dfrac{1}{1}\begin{pmatrix}2 &amp; -1\\ -1 &amp; 1\end{pmatrix}\).
+              <div class="key-result">\([DF^{-1}]=\begin{pmatrix}2 &amp; -1\\ -1 &amp; 1\end{pmatrix}\) at \(F(2,1)=(3,2)\).</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ Problem 3 ══ -->
+      <div class="problem">
+        <div class="problem-header">
+          <span class="problem-num">Problem 3</span>
+          <span class="problem-topic">Find the failure points</span>
+          <span class="problem-pts">10 pts</span>
+        </div>
+        <div class="problem-body">
+          <div class="context-box">For \(F(x,y)=(x^2-y^2,\;2xy)\) (the complex squaring map), where does the Inverse Function Theorem <em>fail</em>?</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \([DF]=\begin{pmatrix}2x &amp; -2y\\ 2y &amp; 2x\end{pmatrix}\), \(\det=4x^2+4y^2=4(x^2+y^2)\).
+              This vanishes only at \((x,y)=(0,0)\).
+              <div class="key-result">IFT fails only at the origin (where \(\det=0\)); invertible everywhere else.</div>
+              <div class="ans-note">Setting the Jacobian determinant to zero and solving is the standard "where does it fail to be smooth/invertible?" move.</div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end subject-block -->
+
+    <div class="footer-note">
+      Calc A2 · Inverse Function Theorem (Ch. 13.5) · Monday 26 May 2026 · Good luck Rafi ✦
+    </div>
+  </div>
+
+  <div class="timer-chip" id="timerChip">
+    <span class="timer-label">elapsed</span>
+    <span class="timer-display" id="timerDisplay">00:00</span>
+  </div>
+
+  <script>
+    function toggleAns(btn) {
+      const ans = btn.nextElementSibling;
+      ans.classList.toggle('open');
+      btn.textContent = ans.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+    }
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('pbar').style.width = pct + '%';
+    });
+    const start = Date.now();
+    const pad = n => String(n).padStart(2, '0');
+    setInterval(() => {
+      const e = Math.floor((Date.now() - start) / 1000);
+      document.getElementById('timerDisplay').textContent = pad(Math.floor(e/60)) + ':' + pad(e%60);
+    }, 1000);
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

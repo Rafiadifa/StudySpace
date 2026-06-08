@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercises · Chinese</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span> Exercises
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">练习 Exercises</span>
+    <span class="topbar-sub">/ exam format</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="main" style="padding-top:24px;">
+    <div class="panel">
+      <h3>Practice in your teacher's exam format</h3>
+      <p style="font-size:0.86rem;color:var(--text2);margin-bottom:14px;line-height:1.6;">
+        Pinyin, fill-in-the-blank, word reordering, error correction (改错), and translation.
+        Multiple-choice, pinyin, and word-order questions grade themselves.
+      </p>
+      <div class="field-row">
+        <div class="field"><label>Lessons</label><select id="e-lesson" class="flt"></select></div>
+        <div class="field"><label>&nbsp;</label><button class="btn btn-primary" id="e-start">Load exercises</button></div>
+      </div>
+    </div>
+
+    <div id="list"></div>
+    <div class="scoreboard" id="score" style="display:none;">
+      <span>Auto-graded score</span>
+      <span><span class="num" id="correct">0</span> / <span id="total">0</span></span>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    setTopbarDate();
+    const eL=$("#e-lesson"); fillLessonSelect(eL);
+    const list=$("#list"); let correct=0,total=0;
+
+    const TYPE_LABEL={ fill:"选词填空 · Fill in the blank", reorder:"连词成句 · Reorder the words",
+      truefalse:"改错 · Right or wrong?", pinyin:"写拼音 · Write the pinyin", translate:"翻译 · Translate" };
+
+    $("#e-start").addEventListener("click",()=>{
+      const lf=eL.value;
+      const items=EXERCISES.filter(x=>lf==="all"||x.lesson===+lf);
+      list.innerHTML=""; correct=0; total=0;
+      items.forEach(x=>list.appendChild(build(x)));
+      upd(); $("#score").style.display=items.length?"flex":"none";
+    });
+
+    function mark(ok){ total++; if(ok)correct++; upd(); }
+    function upd(){ $("#correct").textContent=correct; $("#total").textContent=total; }
+
+    function build(x){
+      const box=el("div","ex-q");
+      box.appendChild(el("div","qtype",TYPE_LABEL[x.type]||x.type));
+      const fb=el("div","feedback");
+
+      if(x.type==="fill"){
+        box.appendChild(el("div","qtext",x.q));
+        const row=el("div","opt-row"); let answered=false;
+        x.options.forEach((opt,oi)=>{ const b=el("div","opt",opt);
+          b.addEventListener("click",()=>{ if(answered)return; answered=true;
+            const ok=oi===x.answer; b.classList.add(ok?"correct":"wrong");
+            if(!ok) row.children[x.answer].classList.add("correct");
+            fb.className="feedback show "+(ok?"ok":"no"); fb.innerHTML=(ok?"✓ Correct. ":"✗ ")+(x.explain||""); mark(ok); });
+          row.appendChild(b); });
+        box.appendChild(row); box.appendChild(fb);
+      }
+      else if(x.type==="reorder"){
+        box.appendChild(el("div","qtext latin","Tap the words in the right order:"));
+        const line=el("div","tokenline"), pool=el("div","tokenpool"), chosen=[];
+        shuffle(x.tokens).forEach(tok=>{ const t=el("div","token",tok);
+          t.addEventListener("click",()=>{ if(t.dataset.used)return; t.dataset.used="1"; t.style.opacity=".3"; t.style.pointerEvents="none";
+            chosen.push(tok); const c=el("div","token",tok);
+            c.addEventListener("click",()=>{ c.remove(); const k=chosen.indexOf(tok); if(k>-1)chosen.splice(k,1); t.dataset.used=""; t.style.opacity="1"; t.style.pointerEvents="auto"; });
+            line.appendChild(c); });
+          pool.appendChild(t); });
+        const check=el("button","btn btn-ghost btn-sm","Check"); let done=false;
+        check.addEventListener("click",()=>{ if(done)return; const ok=chosen.join("")===x.answer;
+          if(ok){done=true; check.disabled=true; mark(true);} 
+          fb.className="feedback show "+(ok?"ok":"no");
+          fb.innerHTML=ok?`✓ Correct! <span class="ans">${x.answer}</span>`:`✗ Not yet — keep trying. ${x.explain||""}`; });
+        box.appendChild(line); box.appendChild(pool);
+        const wrap=el("div"); wrap.appendChild(check); box.appendChild(wrap); box.appendChild(fb);
+      }
+      else if(x.type==="truefalse"){
+        box.appendChild(el("div","qtext",x.q));
+        const row=el("div","tf-row");
+        const right=el("button","btn btn-ghost btn-sm","√ Correct"), wrong=el("button","btn btn-ghost btn-sm","✕ Wrong");
+        let answered=false;
+        const h=g=>{ if(answered)return; answered=true; const ok=g===x.correct;
+          fb.className="feedback show "+(ok?"ok":"no");
+          let m=ok?"✓ ":"✗ "; m+=x.correct?"This sentence is correct. ":`This sentence is wrong. Correct: <span class="ans">${x.fix}</span> `; m+=x.explain||"";
+          fb.innerHTML=m; mark(ok); };
+        right.addEventListener("click",()=>h(true)); wrong.addEventListener("click",()=>h(false));
+        row.appendChild(right); row.appendChild(wrong); box.appendChild(row); box.appendChild(fb);
+      }
+      else if(x.type==="pinyin"){
+        box.appendChild(el("div","qtext",`${x.q} <span style="font-size:.78rem;color:var(--text3)">— ${x.display}</span>`));
+        const inp=el("input","ex-input"); inp.type="text"; inp.placeholder="type pinyin…";
+        const check=el("button","btn btn-ghost btn-sm","Check"); check.style.marginLeft=".5rem"; let done=false;
+        const grade=()=>{ if(done)return; const ok=stripTones(inp.value)===stripTones(x.answer);
+          fb.className="feedback show "+(ok?"ok":"no");
+          fb.innerHTML=ok?`✓ Correct — <span class="ans">${x.q}</span> = ${x.answer}`:`✗ Not quite. Answer: <span class="ans">${x.answer}</span>`;
+          if(ok){done=true; mark(true);} };
+        check.addEventListener("click",grade); inp.addEventListener("keydown",e=>{if(e.key==="Enter")grade();});
+        const wrap=el("div"); wrap.style.cssText="display:flex;align-items:center;flex-wrap:wrap"; wrap.appendChild(inp); wrap.appendChild(check);
+        box.appendChild(wrap); box.appendChild(fb);
+      }
+      else if(x.type==="translate"){
+        box.appendChild(el("div","qtext latin",x.q));
+        const reveal=el("div","reveal-box",x.answer);
+        const btn=el("button","btn btn-ghost btn-sm","Reveal model answer");
+        btn.addEventListener("click",()=>{ reveal.classList.add("show"); btn.style.display="none"; });
+        box.appendChild(btn); box.appendChild(reveal);
+      }
+      return box;
+    }
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chinese · Study Hub</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span> Chinese
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">中文 Chinese</span>
+    <span class="topbar-sub">/ Zijing 2026 Spring</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="hero">
+    <h1>Chinese <em>library</em></h1>
+    <p class="hero-meta">Pre-intermediate · Lessons 11–16. Pick what to study below. Your review queue updates as you go.</p>
+    <div class="exam-pills lang-pills">
+      <span class="pill pill-lang">144 words</span>
+      <span class="pill pill-lang">19 grammar points</span>
+      <span class="pill pill-lang" id="due-pill">— due to review</span>
+    </div>
+  </div>
+
+  <div class="main" style="padding-top:40px;">
+
+    <div class="stat-row" style="margin-bottom:24px;">
+      <div class="stat"><div class="n" id="s-new">0</div><div class="l">New</div></div>
+      <div class="stat"><div class="n" id="s-learning">0</div><div class="l">Learning</div></div>
+      <div class="stat"><div class="n" id="s-learned">0</div><div class="l">Learned (7d+)</div></div>
+    </div>
+
+    <div class="menu-grid">
+      <a href="review.html" class="menu-card feature">
+        <span class="due-badge zero" id="due-badge">0 due</span>
+        <div class="mc-ic">复</div>
+        <div class="mc-title">Review</div>
+        <div class="mc-sub">Spaced repetition. Study the cards that are due today and lock them into memory.</div>
+      </a>
+      <a href="vocab.html" class="menu-card">
+        <div class="mc-ic">词</div>
+        <div class="mc-title">Vocabulary</div>
+        <div class="mc-sub">All 144 words, filterable by lesson, word type, or search. Pinyin, meaning, examples.</div>
+      </a>
+      <a href="flashcards.html" class="menu-card">
+        <div class="mc-ic">卡</div>
+        <div class="mc-title">Flashcards</div>
+        <div class="mc-sub">Free study. Build a deck from any lessons, choose the card direction, flip and shuffle.</div>
+      </a>
+      <a href="grammar.html" class="menu-card">
+        <div class="mc-ic">法</div>
+        <div class="mc-title">Grammar</div>
+        <div class="mc-sub">Every structure from the course, with the pattern and example sentences.</div>
+      </a>
+      <a href="exercises.html" class="menu-card">
+        <div class="mc-ic">练</div>
+        <div class="mc-title">Exercises</div>
+        <div class="mc-sub">Pinyin, fill-in-the-blank, reordering, error correction, and translation.</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-note">学而时习之，不亦说乎 · CHINESE LIBRARY</div>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    setTopbarDate();
+    const c = srsCounts("all");
+    const totalDue = c.due + c.fresh;
+    const badge = document.getElementById("due-badge");
+    badge.textContent = totalDue + " due";
+    badge.classList.toggle("zero", totalDue===0);
+    document.getElementById("due-pill").textContent =
+      totalDue>0 ? `${totalDue} due to review` : "all caught up";
+    const st = srsStats("all");
+    document.getElementById("s-new").textContent = st.fresh;
+    document.getElementById("s-learning").textContent = st.learning;
+    document.getElementById("s-learned").textContent = st.learned;
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

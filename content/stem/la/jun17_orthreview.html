@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lin Alg · Orthogonality Review</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    .recall-box { background:rgba(190,24,93,0.07); border:1px solid rgba(190,24,93,0.3); border-left:3px solid var(--la); border-radius:0 12px 12px 0; padding:20px 24px; margin-bottom:14px; }
+    .recall-box .rl { font-family:'DM Mono',monospace; font-size:0.64rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--la); margin-bottom:10px; }
+    .checklist { list-style:none; margin:6px 0 0; padding:0; }
+    .checklist li { padding:9px 0 9px 30px; position:relative; border-bottom:1px solid var(--border); font-size:0.95rem; line-height:1.55; }
+    .checklist li:last-child { border-bottom:none; }
+    .checklist li::before { content:'☐'; position:absolute; left:0; color:var(--la); font-size:1.05rem; }
+    .fcard { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+    .fcard h4 { color:var(--la); font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:6px; }
+  </style>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-la">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ lin-alg / orthogonality review</span><span class="topbar-date">WED · 17 JUN 2026</span></div>
+  <div class="hero">
+    <h1>Orthogonality <em>Review</em></h1>
+    <p class="hero-meta">P5 · 18:10–19:00 · 50 min · consolidation</p>
+    <div class="exam-pills"><span class="pill pill-la">Lin Alg</span><span class="pill pill-la">Final · 25 June 2026</span></div>
+  </div>
+  <div class="main"><div class="subject-block">
+    <div class="subject-header"><div class="subject-dot dot-la"></div><div><div class="subject-label">Self-Study · 50 min</div><div class="subject-title" style="color:var(--la)">Orthogonality Review</div></div><div class="subject-exam-date"><strong>Lin Alg Final</strong>25 June 2026</div></div>
+<div class="formula-ref"><strong>Scope.</strong> Inner products, norms, orthogonal/orthonormal sets, Gram–Schmidt, projections, and orthogonal matrices \((Q^TQ=I)\). Quick consolidation.</div><div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">From Gram–Schmidt to least squares</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">In \(\mathbb R^3\), let \(a_1=(1,1,0),\ a_2=(1,0,1)\) and target \(b=(2,1,1)\).<div class="conn-chain">chains: inner product · Gram–Schmidt · projection · least squares</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Orthogonalise \(\{a_1,a_2\}\) by Gram–Schmidt.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(u_1=(1,1,0)\); \(u_2=a_2-\tfrac{\langle a_2,u_1\rangle}{\langle u_1,u_1\rangle}u_1=(1,0,1)-\tfrac12(1,1,0)=(\tfrac12,-\tfrac12,1)\). <div class="key-result">orthogonal \(\{u_1,u_2\}\).</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Project \(b\) onto \(u_1\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\tfrac{\langle b,u_1\rangle}{\langle u_1,u_1\rangle}u_1=\tfrac{3}{2}(1,1,0)=(\tfrac32,\tfrac32,0)\). <div class="key-result">\((\tfrac32,\tfrac32,0)\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Set up the least-squares normal equations for \(A\mathbf x=b\) with \(A=[a_1\ a_2]\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(A^TA=\begin{pmatrix}2&1\\1&2\end{pmatrix},\ A^Tb=\begin{pmatrix}3\\3\end{pmatrix}\); solve \(A^TA\hat{\mathbf x}=A^Tb\). <div class="key-result">\(\hat{\mathbf x}=(1,1)\).</div></div></div></div></div></li><li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">What does \(A\hat{\mathbf x}\) represent?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>The orthogonal projection of \(b\) onto \(\operatorname{Col}(A)\); the residual \(b-A\hat{\mathbf x}\perp\operatorname{Col}(A)\). <div class="key-result">projection of \(b\).</div></div></div></div></div></li></ol></div></div>
+      <div class="problem"><div class="problem-header"><span class="problem-num">Problem 1</span><span class="problem-topic">Orthogonal matrix check</span><span class="problem-pts">8 pts</span></div><div class="problem-body"><div class="context-box">Is \(Q=\tfrac{1}{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix}\) orthogonal?</div><div class="ans-toggle"><button class="ans-btn" data-show="Show Answer" data-hide="Hide Answer" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>Columns are unit and mutually orthogonal: \(Q^TQ=I\) ✓.<div class="key-result">Yes — orthogonal (in fact a reflection, \(\det=-1\)).</div></div></div></div></div></div><div class="problem"><div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">Projection</span><span class="problem-pts">8 pts</span></div><div class="problem-body"><div class="context-box">Project \((2,3)\) onto the line spanned by \((1,1)\).</div><div class="ans-toggle"><button class="ans-btn" data-show="Show Answer" data-hide="Hide Answer" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\frac{\langle(2,3),(1,1)\rangle}{2}(1,1)=\tfrac52(1,1)=(2.5,2.5)\).<div class="key-result">\((2.5,2.5)\).</div></div></div></div></div></div>
+  </div>
+  <div class="footer-note">Lin Alg · Orthogonality Review · Wednesday 17 June 2026 · Good luck Rafi ✦</div></div>
+  <div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+  <script>
+    function toggleAns(btn){const a=btn.nextElementSibling;a.classList.toggle('open');const o=a.classList.contains('open');btn.textContent=o?btn.dataset.hide||'Hide Answer':btn.dataset.show||'Show Answer';}
+    window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+    const start=Date.now(),pad=n=>String(n).padStart(2,'0');
+    setInterval(()=>{const e=Math.floor((Date.now()-start)/1000);document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60);},1000);
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

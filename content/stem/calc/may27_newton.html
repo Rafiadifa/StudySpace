@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newton's Method — Practice Session</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f5f0e8;
+    --cream: #ede8dc;
+    --accent: #8b3a3a;
+    --accent2: #3a6b8b;
+    --rule: #c8bfa8;
+    --ans-bg: #eef4f0;
+    --ans-border: #6a9e7f;
+    --note: #7a6a4a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.75;
+    padding: 0 0 80px;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 36px 60px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 4px solid var(--accent);
+  }
+  header .course { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #a0a8c0; font-family: 'JetBrains Mono', monospace; }
+  header h1 { font-size: 28px; font-weight: 300; margin-top: 4px; }
+  header h1 span { font-weight: 600; color: #d4a0a0; }
+  header .meta { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #a0a8c0; }
+  header .meta strong { display: block; font-size: 13px; color: #c8d0e0; }
+
+  /* ── Layout ── */
+  .container { max-width: 820px; margin: 0 auto; padding: 0 40px; }
+
+  /* ── Formula box ── */
+  .formula-box {
+    background: var(--ink);
+    color: var(--paper);
+    border-left: 5px solid var(--accent);
+    padding: 22px 30px;
+    margin: 40px 0 10px;
+    border-radius: 0 4px 4px 0;
+  }
+  .formula-box .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: #a0a8c0; text-transform: uppercase; margin-bottom: 6px; }
+  .formula-box .formula { font-size: 20px; }
+
+  /* ── Section divider ── */
+  .section-title {
+    margin: 50px 0 0;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--note);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::before { content: ''; display: inline-block; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+
+  /* ── Problem ── */
+  .problem {
+    margin: 32px 0 0;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    background: #faf7f2;
+  }
+
+  .problem-header {
+    background: var(--cream);
+    padding: 14px 24px 10px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .problem-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .problem-title { font-size: 17px; font-weight: 600; }
+
+  .problem-body { padding: 20px 24px; }
+
+  .context {
+    background: #f0ecdf;
+    border-left: 3px solid var(--rule);
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    font-style: italic;
+    color: #4a4030;
+    font-size: 17px;
+  }
+
+  .define-block {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    text-align: center;
+  }
+
+  ol.parts { list-style: none; padding: 0; }
+  ol.parts li {
+    padding: 10px 0 10px 0;
+    border-bottom: 1px dashed #ddd6c0;
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+  }
+  ol.parts li:last-child { border-bottom: none; }
+  .part-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent2);
+    min-width: 28px;
+  }
+  .pts {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--note);
+    white-space: nowrap;
+  }
+
+  /* ── Answer toggle ── */
+  .ans-toggle {
+    margin-top: 18px;
+    border-top: 1px solid var(--rule);
+    padding-top: 14px;
+  }
+  .ans-btn {
+    background: none;
+    border: 1.5px solid var(--ans-border);
+    color: var(--ans-border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .ans-btn:hover { background: var(--ans-border); color: #fff; }
+
+  .answer {
+    display: none;
+    margin-top: 14px;
+    background: var(--ans-bg);
+    border: 1px solid #b8d4c0;
+    border-radius: 4px;
+    padding: 18px 22px;
+    font-size: 16.5px;
+  }
+  .answer.open { display: block; }
+
+  .answer-part {
+    margin: 10px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #c0d8c8;
+  }
+  .answer-part:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .answer-part-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ans-border);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  .key-result {
+    background: #d4ede0;
+    border-left: 3px solid var(--ans-border);
+    padding: 8px 14px;
+    margin: 8px 0;
+    border-radius: 0 3px 3px 0;
+    font-size: 16px;
+  }
+
+  .note-box {
+    margin-top: 8px;
+    font-style: italic;
+    color: var(--note);
+    font-size: 15px;
+  }
+
+  /* ── Concept summary ── */
+  .concept-card {
+    margin: 36px 0 0;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--accent2);
+    border-radius: 0 0 4px 4px;
+    padding: 20px 26px;
+  }
+  .concept-card h3 {
+    font-size: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 12px;
+  }
+  .concept-card ul { padding-left: 20px; }
+  .concept-card ul li { margin-bottom: 6px; font-size: 16.5px; }
+
+  /* ── Progress ── */
+  .progress-bar-wrap {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: rgba(0,0,0,0.1);
+    z-index: 100;
+  }
+  .progress-bar { height: 3px; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+  /* ── Timer ── */
+  .timer-chip {
+    position: fixed;
+    bottom: 28px; right: 32px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 8px 18px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+  }
+  .timer-chip span { color: #a0a8c0; font-size: 10px; display: block; text-align: center; }
+
+  @media (max-width: 640px) {
+    header { padding: 24px 20px 20px; flex-direction: column; gap: 8px; }
+    .container { padding: 0 16px; }
+    .problem-body { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+<header>
+  <div>
+    <div class="course">Calculus A2 (Engineering) · Practice Session</div>
+    <h1>Newton's Method in <span>ℝⁿ</span></h1>
+  </div>
+  <div class="meta">
+    <strong>4 Problems</strong>
+    Study: 18:10 – 19:00<br>50 minutes
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Key Formula -->
+  <div class="formula-box" style="margin-top:40px;">
+    <div class="label">Core Formula — Newton's Method (multivariable)</div>
+    <div class="formula">
+      \[ \mathbf{x}_{n+1} = \mathbf{x}_n - [DF(\mathbf{x}_n)]^{-1} F(\mathbf{x}_n) \]
+    </div>
+  </div>
+
+  <!-- Concept Summary -->
+  <div class="concept-card">
+    <h3>Key Ideas to Remember</h3>
+    <ul>
+      <li>Compute the <strong>Jacobian</strong> \([DF]\): the matrix of all partial derivatives of \(F\).</li>
+      <li>F is differentiable at a point if all partials are <strong>continuous</strong> there (sufficient condition).</li>
+      <li><strong>Linear approximation</strong>: \(F(\mathbf{x}_0 + \mathbf{h}) \approx F(\mathbf{x}_0) + [DF(\mathbf{x}_0)]\mathbf{h}\).</li>
+      <li>Each Newton step: invert the Jacobian, then subtract \([DF]^{-1}F\) from current guess.</li>
+      <li>For \(2\times 2\): \(\begin{pmatrix}a&b\\c&d\end{pmatrix}^{-1} = \frac{1}{ad-bc}\begin{pmatrix}d&-b\\-c&a\end{pmatrix}\).</li>
+    </ul>
+  </div>
+
+  <!-- ══════════ PROBLEM 1 ══════════ -->
+  <div class="section-title">Problem 1 — Warmup: Intersection of Two Curves</div>
+  <div class="problem">
+    <div class="problem-header">
+      <div class="problem-num">Problem 1</div>
+      <div class="problem-title">Ellipse and Hyperbola (Practice Midterm Style)</div>
+    </div>
+    <div class="problem-body">
+      <div class="context">
+        Consider the intersection of an ellipse and a hyperbola in the plane. We want to solve \(F(x,y)=\mathbf{0}\) where
+      </div>
+      <div class="define-block">
+        \[ F(x,y) = \begin{pmatrix} \dfrac{x^2}{9} + y^2 - 1 \\[6pt] xy - 1 \end{pmatrix}. \]
+        Assume an initial guess of \((x,y) = (3,\, 0.5)\).
+      </div>
+      <ol class="parts">
+        <li>
+          <span class="part-label">(a)</span>
+          <span>Calculate the Jacobian matrix \([DF(3,\, 0.5)]\) and explain why \(F\) is differentiable there.</span>
+          <span class="pts">4 pts</span>
+        </li>
+        <li>
+          <span class="part-label">(b)</span>
+          <span>Use linear approximation to estimate \(F(3.01,\, 0.49)\).</span>
+          <span class="pts">2 pts</span>
+        </li>
+        <li>
+          <span class="part-label">(c)</span>
+          <span>Perform one iteration of Newton's method starting from \((3,\, 0.5)\) to find a new approximate solution.</span>
+          <span class="pts">4 pts</span>
+        </li>
+      </ol>
+
+      <div class="ans-toggle">
+        <button class="ans-btn" onclick="toggleAnswer('a1')">Show Answer</button>
+        <div class="answer" id="a1">
+          <div class="answer-part">
+            <div class="answer-part-label">(a) Jacobian</div>
+            The partial derivatives of \(F_1 = \tfrac{x^2}{9}+y^2-1\) and \(F_2 = xy-1\) are:
+            \[\frac{\partial F_1}{\partial x}=\frac{2x}{9},\quad \frac{\partial F_1}{\partial y}=2y,\quad \frac{\partial F_2}{\partial x}=y,\quad \frac{\partial F_2}{\partial y}=x.\]
+            <div class="key-result">
+              \[[DF(3,\tfrac{1}{2})] = \begin{pmatrix} \tfrac{2}{3} & 1 \\ \tfrac{1}{2} & 3 \end{pmatrix}\]
+            </div>
+            All partial derivatives are polynomials, hence continuous everywhere. Therefore \(F\) is differentiable at \((3, 0.5)\).
+          </div>
+          <div class="answer-part">
+            <div class="answer-part-label">(b) Linear Approximation</div>
+            First evaluate: \(F(3,\tfrac{1}{2}) = \begin{pmatrix} 1/4 \\ 1/2 \end{pmatrix}\). Then with \(\mathbf{h} = \begin{pmatrix}0.01\\-0.01\end{pmatrix}\):
+            \[F(3.01,0.49)\approx \begin{pmatrix}1/4\\1/2\end{pmatrix}+\begin{pmatrix}2/3&1\\1/2&3\end{pmatrix}\begin{pmatrix}0.01\\-0.01\end{pmatrix}\]
+            <div class="key-result">
+              \[F(3.01,0.49)\approx \begin{pmatrix} 1/4 - 1/300 \\ 1/2 - 1/40 \end{pmatrix} \approx \begin{pmatrix} 0.2467 \\ 0.475 \end{pmatrix}\]
+            </div>
+          </div>
+          <div class="answer-part">
+            <div class="answer-part-label">(c) One Newton Step</div>
+            Let \(A = [DF(3,\tfrac12)]\). \(\det A = \tfrac23 \cdot 3 - 1 \cdot \tfrac12 = 2 - \tfrac12 = \tfrac32.\)
+            \[A^{-1} = \frac{2}{3}\begin{pmatrix}3&-1\\-1/2&2/3\end{pmatrix}=\begin{pmatrix}2&-2/3\\-1/3&4/9\end{pmatrix}\]
+            Update step: \(A^{-1}F(3,\tfrac12)=\begin{pmatrix}2&-2/3\\-1/3&4/9\end{pmatrix}\begin{pmatrix}1/4\\1/2\end{pmatrix}=\begin{pmatrix}1/6\\5/36\end{pmatrix}\)
+            <div class="key-result">
+              \[\mathbf{x}_1 = \begin{pmatrix}3\\1/2\end{pmatrix} - \begin{pmatrix}1/6\\5/36\end{pmatrix} = \begin{pmatrix}17/6\\13/36\end{pmatrix}\approx \begin{pmatrix}2.833\\0.361\end{pmatrix}\]
+            </div>
+            <div class="note-box">This step moves the guess toward the intersection where \(F(x,y)\approx\mathbf{0}\).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PROBLEM 2 ══════════ -->
+  <div class="section-title">Problem 2 — Unit Circle and Line (Midterm 2025 Style)</div>
+  <div class="problem">
+    <div class="problem-header">
+      <div class="problem-num">Problem 2</div>
+      <div class="problem-title">Circle–Line Intersection with Polar Coordinates</div>
+    </div>
+    <div class="problem-body">
+      <div class="context">
+        We want to find the intersection of the unit circle and the line \(x=y\). Define
+      </div>
+      <div class="define-block">
+        \[F(x,y)=\begin{pmatrix} x^2+y^2-1 \\ x-y \end{pmatrix}.\]
+        We guess \((x,y)=(1,1)\) as an initial point.
+      </div>
+      <ol class="parts">
+        <li>
+          <span class="part-label">(a)</span>
+          <span>Compute the Jacobian matrix at \((1,1)\) and explain why \(F\) is differentiable there.</span>
+          <span class="pts">4 pts</span>
+        </li>
+        <li>
+          <span class="part-label">(b)</span>
+          <span>Estimate \(F(1.001,\, 1.002)\) using linear approximation.</span>
+          <span class="pts">2 pts</span>
+        </li>
+        <li>
+          <span class="part-label">(c)</span>
+          <span>Compute the partial derivatives of \(F\) with respect to polar coordinates: \(D_r F\) and \(D_\theta F\).</span>
+          <span class="pts">4 pts</span>
+        </li>
+        <li>
+          <span class="part-label">(d)</span>
+          <span>Starting from \((1,1)\), perform one step of Newton's method. Is the new point closer to the true solution?</span>
+          <span class="pts">3 pts</span>
+        </li>
+      </ol>
+
+      <div class="ans-toggle">
+        <button class="ans-btn" onclick="toggleAnswer('a2')">Show Answer</button>
+        <div class="answer" id="a2">
+          <div class="answer-part">
+            <div class="answer-part-label">(a) Jacobian at (1,1)</div>
+            \[[DF(x,y)]=\begin{pmatrix}2x&2y\\1&-1\end{pmatrix}\]
+            <div class="key-result">
+              \[[DF(1,1)]=\begin{pmatrix}2&2\\1&-1\end{pmatrix}\]
+            </div>
+            All partial derivatives are polynomials — continuous everywhere — so \(F\) is differentiable at \((1,1)\).
+          </div>
+          <div class="answer-part">
+            <div class="answer-part-label">(b) Linear Approximation</div>
+            \(F(1,1)=\begin{pmatrix}1\\ 0\end{pmatrix}\), \(\mathbf{h}=\begin{pmatrix}0.001\\0.002\end{pmatrix}\).
+            <div class="key-result">
+              \[F(1.001,1.002)\approx\begin{pmatrix}1\\0\end{pmatrix}+\begin{pmatrix}2&2\\1&-1\end{pmatrix}\begin{pmatrix}0.001\\0.002\end{pmatrix}=\begin{pmatrix}1.006\\-0.001\end{pmatrix}\]
+            </div>
+          </div>
+          <div class="answer-part">
+            <div class="answer-part-label">(c) Polar Derivatives</div>
+            Substitute \(x=r\cos\theta,\;y=r\sin\theta\): \(F=\begin{pmatrix}r^2-1\\r(\cos\theta-\sin\theta)\end{pmatrix}\).
+            <div class="key-result">
+              \[D_r F = \begin{pmatrix}2r\\\cos\theta-\sin\theta\end{pmatrix},\qquad D_\theta F = \begin{pmatrix}0\\-r(\sin\theta+\cos\theta)\end{pmatrix}\]
+            </div>
+          </div>
+          <div class="answer-part">
+            <div class="answer-part-label">(d) One Newton Step</div>
+            \(\det[DF(1,1)]=2(-1)-2(1)=-4\).
+            \[[DF(1,1)]^{-1}=\frac{1}{-4}\begin{pmatrix}-1&-2\\-1&2\end{pmatrix}=\frac{1}{4}\begin{pmatrix}1&2\\1&-2\end{pmatrix}\]
+            Update: \(\frac{1}{4}\begin{pmatrix}1&2\\1&-2\end{pmatrix}\begin{pmatrix}1\\0\end{pmatrix}=\begin{pmatrix}1/4\\1/4\end{pmatrix}\).
+            <div class="key-result">
+              \[\mathbf{x}_1=\begin{pmatrix}1\\1\end{pmatrix}-\begin{pmatrix}1/4\\1/4\end{pmatrix}=\begin{pmatrix}3/4\\3/4\end{pmatrix}\]
+            </div>
+            <div class="note-box">The true solution is \((\tfrac{1}{\sqrt2},\tfrac{1}{\sqrt2})\approx(0.707,0.707)\). We went from distance \(\sqrt{2}\approx1.414\) to the origin → closer to the true answer ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PROBLEM 3 ══════════ -->
+  <div class="section-title">Problem 3 — New Scenario: Two Parabolas</div>
+  <div class="problem">
+    <div class="problem-header">
+      <div class="problem-num">Problem 3</div>
+      <div class="problem-title">Intersection of a Circle and Parabola</div>
+    </div>
+    <div class="problem-body">
+      <div class="context">
+        We want to find intersection points of the circle \(x^2+y^2=4\) and the parabola \(y=x^2-2\). Define
+      </div>
+      <div class="define-block">
+        \[F(x,y)=\begin{pmatrix}x^2+y^2-4\\y-x^2+2\end{pmatrix}.\]
+        Use initial guess \((x_0,y_0)=(1,\,-1)\).
+      </div>
+      <ol class="parts">
+        <li>
+          <span class="part-label">(a)</span>
+          <span>Compute the Jacobian \([DF(1,-1)]\) and state why \(F\) is differentiable everywhere.</span>
+          <span class="pts">4 pts</span>
+        </li>
+        <li>
+          <span class="part-label">(b)</span>
+          <span>Use linear approximation to estimate \(F(1.02,\,-0.98)\).</span>
+          <span class="pts">2 pts</span>
+        </li>
+        <li>
+          <span class="part-label">(c)</span>
+          <span>Perform one Newton step to find \(\mathbf{x}_1\). Verify qualitatively that the new point is a better guess.</span>
+          <span class="pts">4 pts</span>
+        </li>
+      </ol>
+
+      <div class="ans-toggle">
+        <button class="ans-btn" onclick="toggleAnswer('a3')">Show Answer</button>
+        <div class="answer" id="a3">
+          <div class="answer-part">
+            <div class="answer-part-label">(a) Jacobian</div>
+            \([DF(x,y)]=\begin{pmatrix}2x&2y\\-2x&1\end{pmatrix}\).
+            <div class="key-result">
+              \[[DF(1,-1)]=\begin{pmatrix}2&-2\\-2&1\end{pmatrix}\]
+            </div>
+            All entries are polynomials, so continuous everywhere → \(F\) is differentiable everywhere.
+          </div>
+          <div class="answer-part">
+            <div class="answer-part-label">(b) Linear Approximation</div>
+            First: \(F(1,-1)=\begin{pmatrix}1+1-4\\-1-1+2\end{pmatrix}=\begin{pmatrix}-2\\0\end{pmatrix}\). With \(\mathbf{h}=\begin{pmatrix}0.02\\0.02\end{pmatrix}\):
+            \[\begin{pmatrix}2&-2\\-2&1\end{pmatrix}\begin{pmatrix}0.02\\0.02\end{pmatrix}=\begin{pmatrix}0\\-0.02\end{pmatrix}\]
+            <div class="key-result">
+              \[F(1.02,-0.98)\approx\begin{pmatrix}-2\\0\end{pmatrix}+\begin{pmatrix}0\\-0.02\end{pmatrix}=\begin{pmatrix}-2\\-0.02\end{pmatrix}\]
+            </div>
+          </div>
+          <div class="answer-part">
+            <div class="answer-part-label">(c) Newton Step</div>
+            \(\det A = 2(1)-(-2)(-2)=2-4=-2\).
+            \[A^{-1}=\frac{1}{-2}\begin{pmatrix}1&2\\2&2\end{pmatrix}=\begin{pmatrix}-1/2&-1\\-1&-1\end{pmatrix}\]
+            Update: \(A^{-1}F(1,-1)=\begin{pmatrix}-1/2&-1\\-1&-1\end{pmatrix}\begin{pmatrix}-2\\0\end{pmatrix}=\begin{pmatrix}1\\2\end{pmatrix}\).
+            <div class="key-result">
+              \[\mathbf{x}_1=\begin{pmatrix}1\\-1\end{pmatrix}-\begin{pmatrix}1\\2\end{pmatrix}=\begin{pmatrix}0\\-3\end{pmatrix}\]
+            </div>
+            Check: \(F(0,-3)=\begin{pmatrix}0+9-4\\-3-0+2\end{pmatrix}=\begin{pmatrix}5\\-1\end{pmatrix}\). Still not zero, but convergence depends on the basin — the true solution near \((1,-1)\) is \((0, -2)\), and the method is heading there.
+            <div class="note-box">Note: Newton's method may take multiple iterations to converge; one step is rarely enough near a poor initial guess.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PROBLEM 4 ══════════ -->
+  <div class="section-title">Problem 4 — Conceptual + Inverse Function Theorem</div>
+  <div class="problem">
+    <div class="problem-header">
+      <div class="problem-num">Problem 4</div>
+      <div class="problem-title">Differentiability, Invertibility, and Iteration</div>
+    </div>
+    <div class="problem-body">
+      <div class="context">
+        Consider the function \(F:\mathbb{R}^2\to\mathbb{R}^2\) defined by
+      </div>
+      <div class="define-block">
+        \[F(x,y)=\begin{pmatrix}e^x\cos y - 1\\e^x\sin y\end{pmatrix}.\]
+      </div>
+      <ol class="parts">
+        <li>
+          <span class="part-label">(a)</span>
+          <span>Compute the Jacobian \([DF(x,y)]\) in general, and evaluate it at \((0,0)\). Is \(F\) differentiable at \((0,0)\)?</span>
+          <span class="pts">3 pts</span>
+        </li>
+        <li>
+          <span class="part-label">(b)</span>
+          <span>Is \([DF(0,0)]\) invertible? Compute \([DF(0,0)]^{-1}\).</span>
+          <span class="pts">3 pts</span>
+        </li>
+        <li>
+          <span class="part-label">(c)</span>
+          <span>Perform one Newton step from \((x_0, y_0)=(0,0)\). What can you conclude about \((0,0)\) as a solution?</span>
+          <span class="pts">2 pts</span>
+        </li>
+        <li>
+          <span class="part-label">(d)</span>
+          <span>The Inverse Function Theorem guarantees that \(F\) is locally invertible near \((0,0)\). What condition on \([DF]\) ensures this? Is that condition met here?</span>
+          <span class="pts">2 pts</span>
+        </li>
+      </ol>
+
+      <div class="ans-toggle">
+        <button class="ans-btn" onclick="toggleAnswer('a4')">Show Answer</button>
+        <div class="answer" id="a4">
+          <div class="answer-part">
+            <div class="answer-part-label">(a) Jacobian</div>
+            \[[DF(x,y)]=\begin{pmatrix}e^x\cos y & -e^x\sin y\\ e^x\sin y & e^x\cos y\end{pmatrix}\]
+            <div class="key-result">
+              \[[DF(0,0)]=\begin{pmatrix}1&0\\0&1\end{pmatrix}=I\]
+            </div>
+            All entries are products of smooth (infinitely differentiable) functions, so \(F\) is differentiable everywhere, including at \((0,0)\).
+          </div>
+          <div class="answer-part">
+            <div class="answer-part-label">(b) Invertibility</div>
+            \(\det[DF(0,0)]=\det(I)=1\neq 0\), so yes, \([DF(0,0)]\) is invertible.
+            <div class="key-result">
+              \[[DF(0,0)]^{-1}=I^{-1}=I=\begin{pmatrix}1&0\\0&1\end{pmatrix}\]
+            </div>
+          </div>
+          <div class="answer-part">
+            <div class="answer-part-label">(c) Newton Step from (0,0)</div>
+            \(F(0,0)=\begin{pmatrix}e^0\cos 0-1\\e^0\sin 0\end{pmatrix}=\begin{pmatrix}0\\0\end{pmatrix}\).
+            <div class="key-result">
+              \[\mathbf{x}_1=(0,0)-I^{-1}\begin{pmatrix}0\\0\end{pmatrix}=(0,0)\]
+            </div>
+            Since \(F(0,0)=\mathbf{0}\), the point \((0,0)\) is already an exact solution. Newton's method terminates in one step.
+          </div>
+          <div class="answer-part">
+            <div class="answer-part-label">(d) Inverse Function Theorem</div>
+            The IFT requires \(\det[DF(\mathbf{x}_0)]\neq 0\) — i.e., the Jacobian must be invertible. Here \(\det[DF(0,0)]=1\neq 0\), so the condition is met. Therefore \(F\) is locally invertible near \((0,0)\), and the IFT guarantees a local inverse \(F^{-1}\) near \(F(0,0)=\mathbf{0}\).
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:48px; text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--note); letter-spacing:0.12em;">
+    END OF SESSION · Good luck tomorrow ✦
+  </div>
+
+</div>
+
+<!-- Timer -->
+<div class="timer-chip" id="timer">
+  <span>elapsed</span>
+  00:00
+</div>
+
+<script>
+  // Toggle answers
+  function toggleAnswer(id) {
+    const el = document.getElementById(id);
+    const btn = el.previousElementSibling;
+    el.classList.toggle('open');
+    btn.textContent = el.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+  }
+
+  // Progress bar on scroll
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('pbar').style.width = (scrolled / total * 100) + '%';
+  });
+
+  // Session timer
+  const start = Date.now();
+  setInterval(() => {
+    const elapsed = Math.floor((Date.now() - start) / 1000);
+    const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+    const s = String(elapsed % 60).padStart(2, '0');
+    document.getElementById('timer').innerHTML = `<span>elapsed</span>${m}:${s}`;
+  }, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Practice Midterm Exam</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1f2937;
+        }
+        .scroll-progress {
+            position: fixed; top: 0; left: 0; width: 0%; height: 5px;
+            background: linear-gradient(90deg, #f59e0b, #ef4444, #8b5cf6);
+            z-index: 1000; transition: width 0.2s ease;
+        }
+        .container {
+            max-width: 960px; margin: 0 auto; background: #fff;
+            border-radius: 20px; overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d6a9f 100%);
+            color: #fff; padding: 32px 36px;
+        }
+        .header-top { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+        .exam-badge {
+            background: #f59e0b; color: #1a1a2e; padding: 4px 14px;
+            border-radius: 999px; font-size: 0.8rem; font-weight: 800; letter-spacing: 1px;
+        }
+        h1 { font-size: 2rem; margin-bottom: 6px; }
+        .header-meta { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 14px; opacity: 0.9; font-size: 0.95rem; }
+        .header-meta span { display: flex; align-items: center; gap: 6px; }
+
+        /* Progress */
+        .progress-wrap { padding: 16px 28px 6px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+        .progress-bar { background: #e2e8f0; height: 8px; border-radius: 8px; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, #2d6a9f, #8b5cf6); height: 100%; width: 0%; transition: width 0.5s ease; }
+        .progress-text { text-align: right; font-size: 0.8rem; color: #64748b; margin-top: 4px; font-weight: 600; }
+
+        .content { padding: 28px; }
+
+        /* Section headers */
+        .section-header {
+            background: linear-gradient(135deg, #1e3a5f, #2d6a9f);
+            color: #fff; padding: 12px 20px; border-radius: 10px;
+            margin: 28px 0 16px; font-size: 1.1rem; font-weight: 700;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-header .pts { margin-left: auto; background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 999px; font-size: 0.85rem; }
+
+        /* Question card */
+        .q-card {
+            background: #f8fafc; border: 2px solid #e2e8f0;
+            border-radius: 14px; padding: 22px; margin-bottom: 20px;
+            transition: box-shadow 0.2s;
+        }
+        .q-card:hover { box-shadow: 0 6px 24px rgba(45,106,159,0.12); }
+        .q-card.answered-correct { border-color: #22c55e; background: #f0fdf4; }
+        .q-card.answered-wrong { border-color: #ef4444; background: #fff5f5; }
+
+        .q-label {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-weight: 700; margin-bottom: 12px;
+        }
+        .q-num {
+            background: #2d6a9f; color: #fff;
+            padding: 3px 12px; border-radius: 999px; font-size: 0.85rem;
+        }
+        .difficulty {
+            padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; color: #fff; font-weight: 700;
+        }
+        .basic { background: #16a34a; }
+        .core { background: #ea580c; }
+        .challenge { background: #dc2626; }
+
+        .q-text { font-size: 1rem; color: #334155; line-height: 1.6; margin-bottom: 14px; }
+
+        .code-block {
+            background: #0f172a; color: #e2e8f0; border-radius: 10px; padding: 16px;
+            font-family: Consolas, Monaco, 'Courier New', monospace; font-size: 13.5px;
+            line-height: 1.55; margin: 12px 0; white-space: pre; overflow-x: auto;
+            tab-size: 4; position: relative;
+        }
+        .code-block::after {
+            content: 'C++'; position: absolute; top: 6px; right: 10px;
+            font-size: 0.65rem; color: #64748b; font-family: sans-serif;
+        }
+
+        /* MCQ */
+        .mcq-options { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .mcq-option {
+            padding: 12px 16px; background: #fff; border: 2px solid #cbd5e1;
+            border-radius: 9px; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: flex-start; gap: 10px; font-size: 0.97rem; color: #334155;
+        }
+        .mcq-option:hover { border-color: #2d6a9f; background: #eff6ff; }
+        .mcq-option.selected { border-color: #2d6a9f; background: #dbeafe; }
+        .mcq-option.correct { border-color: #22c55e; background: #dcfce7; color: #166534; font-weight: 600; }
+        .mcq-option.wrong { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+        .mcq-option.reveal-correct { border-color: #22c55e; background: #dcfce7; }
+        .opt-letter {
+            background: #e2e8f0; width: 26px; height: 26px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.8rem; flex-shrink: 0; margin-top: 1px;
+        }
+
+        /* Fill in blank */
+        .blank-input {
+            border: none; border-bottom: 2.5px solid #2d6a9f; background: transparent;
+            font-family: Consolas, monospace; font-size: 14px; padding: 2px 4px;
+            color: #1e3a5f; font-weight: 600; min-width: 100px; outline: none;
+            transition: border-color 0.2s;
+        }
+        .blank-input:focus { border-color: #8b5cf6; }
+        .blank-input.correct-blank { border-color: #22c55e; background: #dcfce7; color: #166534; }
+        .blank-input.wrong-blank { border-color: #ef4444; background: #fee2e2; color: #991b1b; }
+
+        /* Short answer / output prediction text box */
+        .text-answer {
+            width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 9px;
+            font-family: Consolas, monospace; font-size: 14px; line-height: 1.5;
+            resize: vertical; min-height: 80px; transition: border-color 0.2s;
+        }
+        .text-answer:focus { outline: none; border-color: #2d6a9f; }
+        .text-answer.correct-ans { border-color: #22c55e; background: #f0fdf4; }
+        .text-answer.wrong-ans { border-color: #ef4444; background: #fff5f5; }
+
+        /* Buttons */
+        .btn-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+        .btn {
+            padding: 10px 20px; border: none; border-radius: 8px;
+            font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-check {
+            background: linear-gradient(135deg, #1e3a5f, #2d6a9f);
+            color: #fff;
+        }
+        .btn-check:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(45,106,159,0.35); }
+        .btn-hint { background: #fef9c3; color: #92400e; border: 1px solid #fde68a; }
+        .btn-hint:hover { background: #fde68a; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+        /* Feedback */
+        .feedback {
+            margin-top: 14px; padding: 14px; border-radius: 10px; display: none;
+            font-size: 0.95rem; line-height: 1.6;
+        }
+        .feedback.show { display: block; animation: slideIn 0.25s ease; }
+        .feedback.correct { background: #dcfce7; border: 1.5px solid #22c55e; color: #166534; }
+        .feedback.wrong { background: #fee2e2; border: 1.5px solid #ef4444; color: #991b1b; }
+        .feedback.partial { background: #fef9c3; border: 1.5px solid #f59e0b; color: #92400e; }
+
+        .hint-box {
+            background: #fef9c3; border-left: 4px solid #f59e0b;
+            padding: 12px; border-radius: 0 9px 9px 0; margin-top: 10px; display: none; font-size: 0.92rem;
+        }
+        .hint-box.show { display: block; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Score panel */
+        #score-panel {
+            display: none; margin: 30px 0;
+            border-radius: 16px; overflow: hidden;
+            border: 2px solid #e2e8f0;
+        }
+        .score-header {
+            background: linear-gradient(135deg, #1e3a5f, #2d6a9f);
+            color: #fff; padding: 24px 28px; text-align: center;
+        }
+        .score-header h2 { font-size: 1.8rem; margin-bottom: 6px; }
+        .score-big {
+            font-size: 4rem; font-weight: 800; color: #f59e0b;
+            text-shadow: 0 2px 12px rgba(245,158,11,0.4);
+        }
+        .score-grade { font-size: 1.3rem; margin-top: 6px; }
+        .score-body { padding: 24px 28px; background: #f8fafc; }
+        .score-breakdown { margin-top: 16px; }
+        .score-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 14px; border-radius: 9px; margin-bottom: 8px; font-size: 0.95rem;
+        }
+        .score-row.correct-row { background: #dcfce7; color: #166534; }
+        .score-row.wrong-row { background: #fee2e2; color: #991b1b; }
+        .score-row.skip-row { background: #f1f5f9; color: #64748b; }
+        .score-icon { margin-right: 8px; }
+
+        .btn-retake {
+            display: block; margin: 16px auto 0;
+            padding: 14px 36px; border: none; border-radius: 10px;
+            background: linear-gradient(135deg, #1e3a5f, #2d6a9f);
+            color: #fff; font-size: 1.05rem; font-weight: 700; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-retake:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(45,106,159,0.35); }
+
+        .submit-wrap { text-align: center; padding: 28px 0 10px; }
+        .btn-submit {
+            padding: 16px 52px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, #2d6a9f, #8b5cf6);
+            color: #fff; font-size: 1.15rem; font-weight: 800; cursor: pointer;
+            transition: all 0.2s; letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(45,106,159,0.3);
+        }
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(45,106,159,0.45); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .timer-bar {
+            background: #e2e8f0; height: 6px; margin: 0 28px 16px; border-radius: 6px; overflow: hidden;
+        }
+        .timer-fill { background: #22c55e; height: 100%; width: 100%; transition: width 1s linear, background 0.5s; }
+
+        @media (max-width: 640px) {
+            body { padding: 10px; }
+            .content { padding: 16px; }
+            h1 { font-size: 1.5rem; }
+            .score-big { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProg"></div>
+<div class="container">
+    <header>
+        <div class="header-top">
+            <span class="exam-badge">PRACTICE MIDTERM</span>
+        </div>
+        <h1>C++ Programming — Midterm Practice</h1>
+        <p style="opacity:0.85;margin-top:4px;">Chapters 1–7 · Data Types · Control Flow · Functions · OOP · Inheritance</p>
+        <div class="header-meta">
+            <span>⏱ Suggested: 60 min</span>
+            <span>📋 20 Questions</span>
+            <span>⭐ 100 Points</span>
+            <span>📚 All weeks covered</span>
+        </div>
+    </header>
+
+    <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-text" id="progressText">0 / 20 answered</div>
+    </div>
+
+    <div class="content">
+
+        <!-- ===== SECTION 1: MCQ ===== -->
+        <div class="section-header">
+            📌 Section 1 — Single Choice (Multiple Choice)
+            <span class="pts">40 pts (2 pts each)</span>
+        </div>
+
+        <!-- Q1 -->
+        <div class="q-card" id="qc1">
+            <div class="q-label">
+                <span class="q-num">Q1</span>
+                <span class="difficulty basic">Basic</span>
+                <span style="color:#64748b;font-size:0.85rem;">Data Types</span>
+            </div>
+            <p class="q-text">Which of the following variable declarations is <strong>correct</strong> in C++?</p>
+            <div class="mcq-options" id="mc1">
+                <div class="mcq-option" onclick="selectMCQ('mc1',this,'A')"><span class="opt-letter">A</span><code>char A = "abc";</code></div>
+                <div class="mcq-option" onclick="selectMCQ('mc1',this,'B')"><span class="opt-letter">B</span><code>char A = 'a';</code></div>
+                <div class="mcq-option" onclick="selectMCQ('mc1',this,'C')"><span class="opt-letter">C</span><code>int x = 3.14;</code> (with no truncation warning)</div>
+                <div class="mcq-option" onclick="selectMCQ('mc1',this,'D')"><span class="opt-letter">D</span><code>string s = 'hello';</code></div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkMCQ('mc1','B','fb1',1)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('h1')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="h1">A <code>char</code> stores a <em>single</em> character — it must use single quotes. A <code>string</code> uses double quotes.</div>
+            <div class="feedback" id="fb1"></div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="q-card" id="qc2">
+            <div class="q-label">
+                <span class="q-num">Q2</span>
+                <span class="difficulty basic">Basic</span>
+                <span style="color:#64748b;font-size:0.85rem;">Operators</span>
+            </div>
+            <p class="q-text">What is the value of <code>x</code> after this statement?<br>
+            <code style="font-size:1rem;">int x = 17 % 5;</code></p>
+            <div class="mcq-options" id="mc2">
+                <div class="mcq-option" onclick="selectMCQ('mc2',this,'A')"><span class="opt-letter">A</span>3</div>
+                <div class="mcq-option" onclick="selectMCQ('mc2',this,'B')"><span class="opt-letter">B</span>2</div>
+                <div class="mcq-option" onclick="selectMCQ('mc2',this,'C')"><span class="opt-letter">C</span>3.4</div>
+                <div class="mcq-option" onclick="selectMCQ('mc2',this,'D')"><span class="opt-letter">D</span>5</div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkMCQ('mc2','B','fb2',2)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('h2')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="h2">The <code>%</code> operator gives the remainder after integer division. 17 ÷ 5 = 3 remainder ?</div>
+            <div class="feedback" id="fb2"></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="q-card" id="qc3">
+            <div class="q-label">
+                <span class="q-num">Q3</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Integer Division</span>
+            </div>
+            <p class="q-text">What does this print?<br><code>double d = 5 / 2; cout &lt;&lt; d;</code></p>
+            <div class="mcq-options" id="mc3">
+                <div class="mcq-option" onclick="selectMCQ('mc3',this,'A')"><span class="opt-letter">A</span>2.5</div>
+                <div class="mcq-option" onclick="selectMCQ('mc3',this,'B')"><span class="opt-letter">B</span>2</div>
+                <div class="mcq-option" onclick="selectMCQ('mc3',this,'C')"><span class="opt-letter">C</span>2.0</div>
+                <div class="mcq-option" onclick="selectMCQ('mc3',this,'D')"><span class="opt-letter">D</span>Compile error</div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkMCQ('mc3','C','fb3',3)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('h3')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="h3">Both <code>5</code> and <code>2</code> are integer literals → integer division happens first (result: 2), then the result is stored in a double.</div>
+            <div class="feedback" id="fb3"></div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="q-card" id="qc4">
+            <div class="q-label">
+                <span class="q-num">Q4</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Scope & Variables</span>
+            </div>
+            <p class="q-text">What is the output of the following code?</p>
+            <pre class="code-block">int x = 10;
+{
+    int x = 20;
+    cout &lt;&lt; x &lt;&lt; " ";
+}
+cout &lt;&lt; x;</pre>
+            <div class="mcq-options" id="mc4">
+                <div class="mcq-option" onclick="selectMCQ('mc4',this,'A')"><span class="opt-letter">A</span>10 10</div>
+                <div class="mcq-option" onclick="selectMCQ('mc4',this,'B')"><span class="opt-letter">B</span>20 20</div>
+                <div class="mcq-option" onclick="selectMCQ('mc4',this,'C')"><span class="opt-letter">C</span>20 10</div>
+                <div class="mcq-option" onclick="selectMCQ('mc4',this,'D')"><span class="opt-letter">D</span>Compile error: redefinition</div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkMCQ('mc4','C','fb4',4)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('h4')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="h4">The inner block creates a new <code>x</code> that shadows the outer one. When the block ends, the outer <code>x</code> (=10) is restored.</div>
+            <div class="feedback" id="fb4"></div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="q-card" id="qc5">
+            <div class="q-label">
+                <span class="q-num">Q5</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Functions — Pass by Reference</span>
+            </div>
+            <p class="q-text">What is the output?</p>
+            <pre class="code-block">void addTen(int &amp;n) {
+    n = n + 10;
+}
+int main() {
+    int a = 5;
+    addTen(a);
+    cout &lt;&lt; a;
+}</pre>
+            <div class="mcq-options" id="mc5">
+                <div class="mcq-option" onclick="selectMCQ('mc5',this,'A')"><span class="opt-letter">A</span>5</div>
+                <div class="mcq-option" onclick="selectMCQ('mc5',this,'B')"><span class="opt-letter">B</span>15</div>
+                <div class="mcq-option" onclick="selectMCQ('mc5',this,'C')"><span class="opt-letter">C</span>10</div>
+                <div class="mcq-option" onclick="selectMCQ('mc5',this,'D')"><span class="opt-letter">D</span>Compile error</div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkMCQ('mc5','B','fb5',5)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('h5')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="h5"><code>&amp;n</code> is a reference — changes inside the function directly modify the caller's variable.</div>
+            <div class="feedback" id="fb5"></div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="q-card" id="qc6">
+            <div class="q-label">
+                <span class="q-num">Q6</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">OOP — Access Specifiers</span>
+            </div>
+            <p class="q-text">Which statement about <code>private</code> members in a class is <strong>correct</strong>?</p>
+            <div class="mcq-options" id="mc6">
+                <div class="mcq-option" onclick="selectMCQ('mc6',this,'A')"><span class="opt-letter">A</span>They can be accessed from anywhere in the program.</div>
+                <div class="mcq-option" onclick="selectMCQ('mc6',this,'B')"><span class="opt-letter">B</span>They can only be accessed by the class's own member functions.</div>
+                <div class="mcq-option" onclick="selectMCQ('mc6',this,'C')"><span class="opt-letter">C</span>They are inherited directly as <code>public</code> in derived classes.</div>
+                <div class="mcq-option" onclick="selectMCQ('mc6',this,'D')"><span class="opt-letter">D</span>They are the same as <code>protected</code> members.</div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkMCQ('mc6','B','fb6',6)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('h6')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="h6">Think of <code>private</code> as "the class's own secret". Only its own methods (and <code>friend</code>s) can reach them.</div>
+            <div class="feedback" id="fb6"></div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="q-card" id="qc7">
+            <div class="q-label">
+                <span class="q-num">Q7</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Constructors</span>
+            </div>
+            <p class="q-text">What is the output?</p>
+            <pre class="code-block">class Dog {
+public:
+    Dog()  { cout &lt;&lt; "Born "; }
+    ~Dog() { cout &lt;&lt; "Gone"; }
+};
+int main() {
+    Dog d;
+    cout &lt;&lt; "Alive ";
+}</pre>
+            <div class="mcq-options" id="mc7">
+                <div class="mcq-option" onclick="selectMCQ('mc7',this,'A')"><span class="opt-letter">A</span>Alive Born Gone</div>
+                <div class="mcq-option" onclick="selectMCQ('mc7',this,'B')"><span class="opt-letter">B</span>Born Alive Gone</div>
+                <div class="mcq-option" onclick="selectMCQ('mc7',this,'C')"><span class="opt-letter">C</span>Born Gone Alive</div>
+                <div class="mcq-option" onclick="selectMCQ('mc7',this,'D')"><span class="opt-letter">D</span>Alive Gone Born</div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkMCQ('mc7','B','fb7',7)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('h7')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="h7">Constructor runs when the object is <em>created</em> (before main body continues). Destructor runs when the object <em>goes out of scope</em> (end of main).</div>
+            <div class="feedback" id="fb7"></div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="q-card" id="qc8">
+            <div class="q-label">
+                <span class="q-num">Q8</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Inheritance</span>
+            </div>
+            <p class="q-text">In C++ <code>public</code> inheritance, which members of the base class become <code>private</code> in the derived class?</p>
+            <div class="mcq-options" id="mc8">
+                <div class="mcq-option" onclick="selectMCQ('mc8',this,'A')"><span class="opt-letter">A</span>The base's <code>public</code> members</div>
+                <div class="mcq-option" onclick="selectMCQ('mc8',this,'B')"><span class="opt-letter">B</span>The base's <code>protected</code> members</div>
+                <div class="mcq-option" onclick="selectMCQ('mc8',this,'C')"><span class="opt-letter">C</span>The base's <code>private</code> members (they remain inaccessible, not inherited directly)</div>
+                <div class="mcq-option" onclick="selectMCQ('mc8',this,'D')"><span class="opt-letter">D</span>None — everything becomes public</div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkMCQ('mc8','C','fb8',8)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('h8')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="h8">With <code>public</code> inheritance: public→public, protected→protected. Private members of the base are never directly accessible in derived classes.</div>
+            <div class="feedback" id="fb8"></div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="q-card" id="qc9">
+            <div class="q-label">
+                <span class="q-num">Q9</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Static Members</span>
+            </div>
+            <p class="q-text">Which statement about <code>static</code> member variables in a class is <strong>true</strong>?</p>
+            <div class="mcq-options" id="mc9">
+                <div class="mcq-option" onclick="selectMCQ('mc9',this,'A')"><span class="opt-letter">A</span>Each object gets its own copy of the static variable.</div>
+                <div class="mcq-option" onclick="selectMCQ('mc9',this,'B')"><span class="opt-letter">B</span>A static variable is shared among all instances of the class.</div>
+                <div class="mcq-option" onclick="selectMCQ('mc9',this,'C')"><span class="opt-letter">C</span>Static variables are automatically initialized to -1.</div>
+                <div class="mcq-option" onclick="selectMCQ('mc9',this,'D')"><span class="opt-letter">D</span>You cannot access a static variable without creating an object.</div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkMCQ('mc9','B','fb9',9)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('h9')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="h9">Think of a <code>static</code> member as "the whole class's shared counter" — one box, shared by all objects.</div>
+            <div class="feedback" id="fb9"></div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="q-card" id="qc10">
+            <div class="q-label">
+                <span class="q-num">Q10</span>
+                <span class="difficulty challenge">Challenge</span>
+                <span style="color:#64748b;font-size:0.85rem;">Function Overloading</span>
+            </div>
+            <p class="q-text">Which pair of function declarations is <strong>NOT valid</strong> overloading in C++?</p>
+            <div class="mcq-options" id="mc10">
+                <div class="mcq-option" onclick="selectMCQ('mc10',this,'A')"><span class="opt-letter">A</span><code>int calc(int x);</code> and <code>int calc(double x);</code></div>
+                <div class="mcq-option" onclick="selectMCQ('mc10',this,'B')"><span class="opt-letter">B</span><code>int calc(int x, int y);</code> and <code>int calc(int y, int x);</code></div>
+                <div class="mcq-option" onclick="selectMCQ('mc10',this,'C')"><span class="opt-letter">C</span><code>void print(int x);</code> and <code>void print(int x, int y);</code></div>
+                <div class="mcq-option" onclick="selectMCQ('mc10',this,'D')"><span class="opt-letter">D</span><code>double calc(int x);</code> and <code>int calc(double x);</code></div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkMCQ('mc10','B','fb10',10)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('h10')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="h10">Overloading requires a difference in the <em>number or types</em> of parameters — not just parameter names. Return type alone is not enough either.</div>
+            <div class="feedback" id="fb10"></div>
+        </div>
+
+        <!-- ===== SECTION 2: OUTPUT PREDICTION ===== -->
+        <div class="section-header">
+            🖥️ Section 2 — Predict the Output
+            <span class="pts">20 pts (4 pts each)</span>
+        </div>
+
+        <!-- Q11 -->
+        <div class="q-card" id="qc11">
+            <div class="q-label">
+                <span class="q-num">Q11</span>
+                <span class="difficulty basic">Basic</span>
+                <span style="color:#64748b;font-size:0.85rem;">Loops</span>
+            </div>
+            <p class="q-text">What is the <strong>exact output</strong> of this program? (Write each value separated by spaces as printed)</p>
+            <pre class="code-block">for (int i = 1; i &lt;= 5; i++) {
+    if (i % 2 == 0)
+        cout &lt;&lt; i &lt;&lt; " ";
+}</pre>
+            <div class="input-area">
+                <label class="input-label">Your answer:</label>
+                <input type="text" class="text-answer" id="out11" placeholder="e.g.  2 4" style="min-height:unset;height:44px;"/>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkOutput('out11','2 4','fb11',11,['2 4','2 4 '])">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('hh11')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="hh11">The condition <code>i % 2 == 0</code> is true when <code>i</code> is even. Which values of i from 1 to 5 are even?</div>
+            <div class="feedback" id="fb11"></div>
+        </div>
+
+        <!-- Q12 -->
+        <div class="q-card" id="qc12">
+            <div class="q-label">
+                <span class="q-num">Q12</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Nested Loop</span>
+            </div>
+            <p class="q-text">What does this code print?</p>
+            <pre class="code-block">for (int i = 1; i &lt;= 3; i++) {
+    for (int j = 1; j &lt;= i; j++) {
+        cout &lt;&lt; "*";
+    }
+    cout &lt;&lt; endl;
+}</pre>
+            <div class="input-area">
+                <label class="input-label">Your answer (use new line for each row):</label>
+                <textarea class="text-answer" id="out12" placeholder="*&#10;**&#10;***"></textarea>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkOutput('out12','*\n**\n***','fb12',12,['*\n**\n***','*&#10;**&#10;***'])">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('hh12')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="hh12">The inner loop runs <code>i</code> times for each outer iteration. When i=1 → 1 star. When i=2 → 2 stars. When i=3 → ?</div>
+            <div class="feedback" id="fb12"></div>
+        </div>
+
+        <!-- Q13 -->
+        <div class="q-card" id="qc13">
+            <div class="q-label">
+                <span class="q-num">Q13</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Inheritance — Constructor Order</span>
+            </div>
+            <p class="q-text">What is the output?</p>
+            <pre class="code-block">class A {
+public:
+    A() { cout &lt;&lt; "A "; }
+    ~A() { cout &lt;&lt; "~A "; }
+};
+class B : public A {
+public:
+    B() { cout &lt;&lt; "B "; }
+    ~B() { cout &lt;&lt; "~B "; }
+};
+int main() {
+    B obj;
+}</pre>
+            <div class="input-area">
+                <label class="input-label">Your answer:</label>
+                <input type="text" class="text-answer" id="out13" placeholder="A B ~B ~A" style="min-height:unset;height:44px;"/>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkOutput('out13','A B ~B ~A','fb13',13,['A B ~B ~A'])">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('hh13')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="hh13">Base constructors run <em>before</em> derived constructors. Destructors run in <em>reverse</em> order.</div>
+            <div class="feedback" id="fb13"></div>
+        </div>
+
+        <!-- Q14 -->
+        <div class="q-card" id="qc14">
+            <div class="q-label">
+                <span class="q-num">Q14</span>
+                <span class="difficulty challenge">Challenge</span>
+                <span style="color:#64748b;font-size:0.85rem;">Static Member</span>
+            </div>
+            <p class="q-text">What is the output?</p>
+            <pre class="code-block">class Counter {
+    static int count;
+public:
+    Counter() { count++; }
+    static int getCount() { return count; }
+};
+int Counter::count = 0;
+
+int main() {
+    Counter a, b, c;
+    cout &lt;&lt; Counter::getCount();
+}</pre>
+            <div class="input-area">
+                <label class="input-label">Your answer:</label>
+                <input type="text" class="text-answer" id="out14" placeholder="..." style="min-height:unset;height:44px;"/>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkOutput('out14','3','fb14',14,['3'])">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('hh14')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="hh14">The static variable <code>count</code> is shared by all objects. Each constructor call increments it. How many objects are created?</div>
+            <div class="feedback" id="fb14"></div>
+        </div>
+
+        <!-- Q15 -->
+        <div class="q-card" id="qc15">
+            <div class="q-label">
+                <span class="q-num">Q15</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Bug Identification</span>
+            </div>
+            <p class="q-text">The code below is <strong>intended to find and print the largest value</strong> in an array with its index. What is its <strong>actual output</strong>, and does it achieve its goal? Write the actual output, then note the bug (if any).</p>
+            <pre class="code-block">int arr[] = {3, 9, 2, 7, 1};
+int maxVal = 0;
+int maxIdx = 0;
+for (int i = 0; i &lt; 5; i++) {
+    if (arr[i] &gt; maxVal) {
+        maxVal = arr[i];
+        maxIdx = i;
+    }
+}
+cout &lt;&lt; "Max: " &lt;&lt; maxVal &lt;&lt; " at index " &lt;&lt; maxIdx;</pre>
+            <div class="input-area">
+                <label class="input-label">Actual output + describe the bug (if any):</label>
+                <textarea class="text-answer" id="out15" placeholder="Output: ...&#10;Bug: ..."></textarea>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkBugQ15()">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('hh15')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="hh15">The code works here, but think: what if all values were <em>negative</em>? Initializing <code>maxVal = 0</code> would be wrong then. For this array, does it give the right answer?</div>
+            <div class="feedback" id="fb15"></div>
+        </div>
+
+        <!-- ===== SECTION 3: FILL IN THE BLANK ===== -->
+        <div class="section-header">
+            ✏️ Section 3 — Fill in the Blank
+            <span class="pts">20 pts (4 pts each)</span>
+        </div>
+
+        <!-- Q16 -->
+        <div class="q-card" id="qc16">
+            <div class="q-label">
+                <span class="q-num">Q16</span>
+                <span class="difficulty basic">Basic</span>
+                <span style="color:#64748b;font-size:0.85rem;">Functions</span>
+            </div>
+            <p class="q-text">Fill in the blank so that the function correctly <strong>returns the larger of two integers</strong>:</p>
+            <div class="code-block">int maxOf(int a, int b) {
+    <span style="color:#94a3b8;">// fill in the blank below</span>
+    return <input type="text" class="blank-input" id="b16" placeholder="?" style="width:200px;">;
+}</div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkBlank('b16',['a > b ? a : b','(a > b) ? a : b','a&gt;b?a:b'],'fb16',16)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('hb16')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="hb16">Use a ternary operator: <code>condition ? value_if_true : value_if_false</code></div>
+            <div class="feedback" id="fb16"></div>
+        </div>
+
+        <!-- Q17 -->
+        <div class="q-card" id="qc17">
+            <div class="q-label">
+                <span class="q-num">Q17</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">OOP — Constructor</span>
+            </div>
+            <p class="q-text">Complete the constructor using the <strong>initializer list</strong> syntax:</p>
+            <div class="code-block">class Circle {
+    double radius;
+public:
+    Circle(<input type="text" class="blank-input" id="b17a" placeholder="?" style="width:80px;">) 
+        : radius(<input type="text" class="blank-input" id="b17b" placeholder="?" style="width:80px;">) {}
+    double getRadius() { return radius; }
+};</div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkDoubleBlank('b17a',['double r','double radius','double rad'],'b17b',['r','radius','rad'],'fb17',17)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('hb17')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="hb17">The constructor parameter name can be anything (e.g. <code>r</code>). The initializer list uses <code>: memberName(paramName)</code>.</div>
+            <div class="feedback" id="fb17"></div>
+        </div>
+
+        <!-- Q18 -->
+        <div class="q-card" id="qc18">
+            <div class="q-label">
+                <span class="q-num">Q18</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Inheritance Syntax</span>
+            </div>
+            <p class="q-text">Fill in the blank to make <code>Cat</code> publicly inherit from <code>Animal</code>:</p>
+            <div class="code-block">class Animal {
+public:
+    void breathe() { cout &lt;&lt; "breathing"; }
+};
+
+class Cat <input type="text" class="blank-input" id="b18" placeholder="?" style="width:160px;"> {
+public:
+    void meow() { cout &lt;&lt; "meow"; }
+};</div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkBlank('b18',['public Animal',': public Animal'],'fb18',18)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('hb18')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="hb18">Inheritance syntax: <code>class Derived : accessSpecifier Base { };</code></div>
+            <div class="feedback" id="fb18"></div>
+        </div>
+
+        <!-- Q19 -->
+        <div class="q-card" id="qc19">
+            <div class="q-label">
+                <span class="q-num">Q19</span>
+                <span class="difficulty core">Core</span>
+                <span style="color:#64748b;font-size:0.85rem;">Header Guard</span>
+            </div>
+            <p class="q-text">Fill in the blanks to complete the header guard for <code>myclass.h</code>:</p>
+            <div class="code-block">#ifndef <input type="text" class="blank-input" id="b19a" placeholder="?" style="width:140px;">
+#define <input type="text" class="blank-input" id="b19b" placeholder="?" style="width:140px;">
+
+class MyClass { };
+
+#endif</div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkDoubleBlank('b19a',['MYCLASS_H','myclass_h','MYCLASS_H_'],'b19b',['MYCLASS_H','myclass_h','MYCLASS_H_'],'fb19',19)">Check</button>
+                <button class="btn btn-hint" onclick="toggleHint('hb19')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="hb19">The convention is to use the filename in UPPERCASE with <code>_H</code>: e.g., <code>myclass.h</code> → <code>MYCLASS_H</code>. Both <code>#ifndef</code> and <code>#define</code> must use the same token.</div>
+            <div class="feedback" id="fb19"></div>
+        </div>
+
+        <!-- ===== SECTION 4: CODE REWRITE ===== -->
+        <div class="section-header">
+            🔧 Section 4 — Find the Bug & Fix It
+            <span class="pts">20 pts (20 pts)</span>
+        </div>
+
+        <!-- Q20 -->
+        <div class="q-card" id="qc20">
+            <div class="q-label">
+                <span class="q-num">Q20</span>
+                <span class="difficulty challenge">Challenge</span>
+                <span style="color:#64748b;font-size:0.85rem;">OOP — Bug Fix</span>
+            </div>
+            <p class="q-text">The code below has <strong>3 bugs</strong>. The intended purpose is:
+            <br>• A <code>BankAccount</code> class with <code>private</code> balance.
+            <br>• A <code>deposit()</code> method that adds to the balance (reject negative amounts).
+            <br>• A <code>getBalance()</code> method that returns the balance.
+            <br><br>Identify all 3 bugs and explain the fix for each.</p>
+            <pre class="code-block">class BankAccount {
+public:                          // Bug ?
+    double balance;
+    
+    BankAccount(double b) {
+        balance = b;
+    }
+    
+    void deposit(double amount) {
+        if (amount &lt; 0) {        // Bug ?
+            balance += amount;
+        }
+    }
+    
+    double getBalance {          // Bug ?
+        return balance;
+    }
+};</pre>
+            <div class="input-area">
+                <label class="input-label">List the 3 bugs and their fixes:</label>
+                <textarea class="text-answer" id="out20" placeholder="Bug 1: ...&#10;Fix: ...&#10;&#10;Bug 2: ...&#10;Fix: ...&#10;&#10;Bug 3: ...&#10;Fix: ..."></textarea>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-check" onclick="checkQ20()">Check & Reveal Answer</button>
+                <button class="btn btn-hint" onclick="toggleHint('hh20')">💡 Hint</button>
+            </div>
+            <div class="hint-box" id="hh20">Look at: (1) access specifier for <code>balance</code>, (2) the logic of the deposit condition, (3) the function declaration syntax of <code>getBalance</code>.</div>
+            <div class="feedback" id="fb20"></div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="submit-wrap">
+            <button class="btn-submit" id="submitBtn" onclick="submitExam()">📊 Submit & See My Score</button>
+            <p style="color:#94a3b8;font-size:0.85rem;margin-top:10px;">Make sure you've answered all questions before submitting!</p>
+        </div>
+
+        <!-- SCORE PANEL -->
+        <div id="score-panel">
+            <div class="score-header">
+                <h2>Your Results</h2>
+                <div class="score-big" id="scorePct">—</div>
+                <div class="score-grade" id="scoreGrade"></div>
+                <div style="margin-top:8px;opacity:0.85;" id="scoreRaw"></div>
+            </div>
+            <div class="score-body">
+                <h3 style="margin-bottom:12px;color:#1e3a5f;">Question-by-Question Breakdown</h3>
+                <div class="score-breakdown" id="scoreBreakdown"></div>
+                <button class="btn-retake" onclick="retakeExam()">🔁 Retake Exam</button>
+            </div>
+        </div>
+
+    </div><!-- /content -->
+</div><!-- /container -->
+
+<script>
+// ─── State ───────────────────────────────────────────────
+const state = {
+    answers: {},   // qNum: {status: 'correct'|'wrong'|'partial'|'skipped', pts: n}
+    pts: {1:2,2:2,3:2,4:2,5:2,6:2,7:2,8:2,9:2,10:2, 11:4,12:4,13:4,14:4,15:4, 16:4,17:4,18:4,19:4, 20:20},
+    submitted: false
+};
+
+const qLabels = {
+    1:'Q1 — char declaration',2:'Q2 — Modulo',3:'Q3 — Integer division',4:'Q4 — Variable scope',
+    5:'Q5 — Pass by reference',6:'Q6 — Private access',7:'Q7 — Constructor/Destructor',
+    8:'Q8 — Public inheritance',9:'Q9 — Static members',10:'Q10 — Function overloading',
+    11:'Q11 — Loop output',12:'Q12 — Nested loop',13:'Q13 — Constructor order',
+    14:'Q14 — Static counter',15:'Q15 — Bug identification',
+    16:'Q16 — Return max value',17:'Q17 — Initializer list',18:'Q18 — Inheritance syntax',
+    19:'Q19 — Header guard',20:'Q20 — Bug fix (OOP)'
+};
+
+// ─── Progress ────────────────────────────────────────────
+function updateProgress() {
+    const done = Object.keys(state.answers).length;
+    document.getElementById('progressFill').style.width = (done/20*100)+'%';
+    document.getElementById('progressText').textContent = done+' / 20 answered';
+}
+
+// ─── Scroll progress bar ─────────────────────────────────
+window.addEventListener('scroll', () => {
+    const p = document.getElementById('scrollProg');
+    const s = document.documentElement;
+    const pct = s.scrollTop / (s.scrollHeight - s.clientHeight) * 100;
+    p.style.width = pct + '%';
+});
+
+// ─── MCQ ─────────────────────────────────────────────────
+const mcqSelected = {};
+function selectMCQ(id, el, val) {
+    if (mcqSelected[id+'_locked']) return;
+    document.querySelectorAll('#'+id+' .mcq-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    mcqSelected[id] = val;
+}
+
+function checkMCQ(id, correct, fbId, qNum) {
+    const sel = mcqSelected[id];
+    const fb = document.getElementById(fbId);
+    const card = document.getElementById('qc'+qNum);
+    if (!sel) { showFb(fb,'partial','⚠️ Please select an answer first.'); return; }
+    if (mcqSelected[id+'_locked']) return;
+    mcqSelected[id+'_locked'] = true;
+    document.querySelectorAll('#'+id+' .mcq-option').forEach(o => {
+        o.style.pointerEvents = 'none';
+        const ltr = o.querySelector('.opt-letter').textContent;
+        if (ltr === correct) o.classList.add('reveal-correct');
+    });
+    const selEl = document.querySelector('#'+id+' .mcq-option.selected');
+    if (sel === correct) {
+        selEl && selEl.classList.replace('selected','correct');
+        showFb(fb,'correct','✅ Correct! Well done.');
+        markQ(qNum,'correct',state.pts[qNum]);
+        card.classList.add('answered-correct');
+    } else {
+        selEl && selEl.classList.replace('selected','wrong');
+        showFb(fb,'wrong','❌ Incorrect. The highlighted option is the correct answer. Review the concept and try again!');
+        markQ(qNum,'wrong',0);
+        card.classList.add('answered-wrong');
+    }
+    updateProgress();
+}
+
+// ─── Output / text check ─────────────────────────────────
+function normalise(s){ return s.trim().replace(/\r\n/g,'\n').replace(/\r/g,'\n'); }
+
+function checkOutput(inpId, correct, fbId, qNum, alternates) {
+    const val = normalise(document.getElementById(inpId).value);
+    const fb = document.getElementById(fbId);
+    const card = document.getElementById('qc'+qNum);
+    if (!val) { showFb(fb,'partial','⚠️ Please write your answer first.'); return; }
+    const alts = alternates ? alternates.map(a => normalise(a)) : [];
+    const correctN = normalise(correct);
+    if (val === correctN || alts.some(a => val===a)) {
+        showFb(fb,'correct','✅ Correct!');
+        markQ(qNum,'correct',state.pts[qNum]);
+        card.classList.add('answered-correct');
+        document.getElementById(inpId).classList.add('correct-ans');
+    } else {
+        showFb(fb,'wrong','❌ Not quite. Expected output: <code style="background:#fee2e2;padding:2px 6px;border-radius:4px;">'+ correct.replace(/\n/g,'↵ ') +'</code>');
+        markQ(qNum,'wrong',0);
+        card.classList.add('answered-wrong');
+        document.getElementById(inpId).classList.add('wrong-ans');
+    }
+    updateProgress();
+}
+
+// Q15 special (lenient)
+function checkBugQ15() {
+    const val = normalise(document.getElementById('out15').value).toLowerCase();
+    const fb = document.getElementById('fb15');
+    const card = document.getElementById('qc15');
+    if (!val) { showFb(fb,'partial','⚠️ Please write your answer first.'); return; }
+    const hasOutput = val.includes('max: 9') || (val.includes('9') && val.includes('1'));
+    const hasBug = val.includes('negative') || val.includes('0') || val.includes('initiali') || val.includes('bug') || val.includes('wrong');
+    if (hasOutput && hasBug) {
+        showFb(fb,'correct','✅ Great analysis! <strong>Actual output:</strong> <code>Max: 9 at index 1</code>. <strong>Bug:</strong> Initializing <code>maxVal = 0</code> fails when all values are negative (e.g., {-3,-1,-5} would wrongly output Max: 0). Fix: initialize to <code>arr[0]</code>.');
+        markQ(15,'correct',state.pts[15]); card.classList.add('answered-correct');
+        document.getElementById('out15').classList.add('correct-ans');
+    } else if (hasOutput || hasBug) {
+        showFb(fb,'partial','⚠️ Partially correct. <strong>Actual output:</strong> <code>Max: 9 at index 1</code> ✓ <br><strong>Bug:</strong> <code>maxVal = 0</code> fails for all-negative arrays. Fix: use <code>maxVal = arr[0]</code> and start loop at i=1.');
+        markQ(15,'partial',Math.floor(state.pts[15]/2)); card.classList.add('answered-wrong');
+    } else {
+        showFb(fb,'wrong','❌ <strong>Actual output:</strong> <code>Max: 9 at index 1</code> (correct for this array, but the code has a latent bug). <strong>Bug:</strong> <code>maxVal = 0</code> fails when all values are negative. Fix: initialize <code>maxVal = arr[0]</code>, start loop at i=1.');
+        markQ(15,'wrong',0); card.classList.add('answered-wrong');
+        document.getElementById('out15').classList.add('wrong-ans');
+    }
+    updateProgress();
+}
+
+// ─── Blank checks ─────────────────────────────────────────
+function normaliseBlank(s){ return s.trim().toLowerCase().replace(/\s+/g,' '); }
+function checkBlank(inpId, corrects, fbId, qNum) {
+    const val = normaliseBlank(document.getElementById(inpId).value);
+    const fb = document.getElementById(fbId);
+    const card = document.getElementById('qc'+qNum);
+    if (!val) { showFb(fb,'partial','⚠️ Please fill in the blank.'); return; }
+    if (corrects.map(c=>normaliseBlank(c)).includes(val)) {
+        showFb(fb,'correct','✅ Correct!');
+        markQ(qNum,'correct',state.pts[qNum]);
+        card.classList.add('answered-correct');
+        document.getElementById(inpId).classList.add('correct-blank');
+    } else {
+        showFb(fb,'wrong','❌ Not quite. A correct answer: <code>'+corrects[0]+'</code>');
+        markQ(qNum,'wrong',0);
+        card.classList.add('answered-wrong');
+        document.getElementById(inpId).classList.add('wrong-blank');
+    }
+    updateProgress();
+}
+function checkDoubleBlank(id1, c1, id2, c2, fbId, qNum) {
+    const v1 = normaliseBlank(document.getElementById(id1).value);
+    const v2 = normaliseBlank(document.getElementById(id2).value);
+    const fb = document.getElementById(fbId);
+    const card = document.getElementById('qc'+qNum);
+    if (!v1 || !v2) { showFb(fb,'partial','⚠️ Please fill in both blanks.'); return; }
+    const ok1 = c1.map(c=>normaliseBlank(c)).includes(v1);
+    const ok2 = c2.map(c=>normaliseBlank(c)).includes(v2);
+    if (ok1 && ok2) {
+        showFb(fb,'correct','✅ Correct!');
+        markQ(qNum,'correct',state.pts[qNum]);
+        card.classList.add('answered-correct');
+        document.getElementById(id1).classList.add('correct-blank');
+        document.getElementById(id2).classList.add('correct-blank');
+    } else {
+        const hint = !ok1 ? 'First blank should be like: <code>'+c1[0]+'</code>' : 'Second blank should be like: <code>'+c2[0]+'</code>';
+        showFb(fb,'wrong','❌ Not quite. '+hint);
+        markQ(qNum,'wrong',0);
+        card.classList.add('answered-wrong');
+        if (!ok1) document.getElementById(id1).classList.add('wrong-blank');
+        if (!ok2) document.getElementById(id2).classList.add('wrong-blank');
+    }
+    updateProgress();
+}
+
+// Q20 special (lenient keyword check)
+function checkQ20() {
+    const val = normalise(document.getElementById('out20').value).toLowerCase();
+    const fb = document.getElementById('fb20');
+    const card = document.getElementById('qc20');
+    if (!val) { showFb(fb,'partial','⚠️ Please write your answer.'); return; }
+
+    let found = 0;
+    if (val.includes('private') || val.includes('encapsulat')) found++;         // bug1
+    if (val.includes('amount > 0') || val.includes('amount>=0') || val.includes('if (amount') || val.includes('>0') || val.includes('> 0')) found++;  // bug2
+    if (val.includes('()') || val.includes('parenthes') || val.includes('getbalance(')) found++;  // bug3
+
+    const correctAnswer = `
+<strong>Bug 1:</strong> <code>balance</code> is declared <code>public</code> — breaks encapsulation.<br>
+<strong>Fix:</strong> Change to <code>private: double balance;</code><br><br>
+<strong>Bug 2:</strong> The deposit condition is <code>if (amount &lt; 0)</code> — this adds only negative amounts!<br>
+<strong>Fix:</strong> Change to <code>if (amount &gt; 0)</code> to only add valid positive deposits.<br><br>
+<strong>Bug 3:</strong> <code>double getBalance</code> is missing parentheses — it's not a valid function declaration.<br>
+<strong>Fix:</strong> Change to <code>double getBalance()</code>`;
+
+    if (found >= 3) {
+        showFb(fb,'correct','✅ Excellent! All 3 bugs identified.<br>'+correctAnswer);
+        markQ(20,'correct',20); card.classList.add('answered-correct');
+        document.getElementById('out20').classList.add('correct-ans');
+    } else if (found >= 2) {
+        showFb(fb,'partial','⚠️ You found '+found+' of 3 bugs. Here is the full breakdown:<br>'+correctAnswer);
+        markQ(20,'partial',Math.round(20*(found/3))); card.classList.add('answered-wrong');
+    } else if (found === 1) {
+        showFb(fb,'wrong','❌ You found '+found+' of 3 bugs. Review the answer:<br>'+correctAnswer);
+        markQ(20,'wrong',5); card.classList.add('answered-wrong');
+        document.getElementById('out20').classList.add('wrong-ans');
+    } else {
+        showFb(fb,'wrong','❌ No bugs identified correctly. Here is the full breakdown:<br>'+correctAnswer);
+        markQ(20,'wrong',0); card.classList.add('answered-wrong');
+        document.getElementById('out20').classList.add('wrong-ans');
+    }
+    updateProgress();
+}
+
+// ─── Helpers ─────────────────────────────────────────────
+function showFb(el, type, html) {
+    el.className = 'feedback '+type+' show';
+    el.innerHTML = html;
+}
+function toggleHint(id) {
+    const h = document.getElementById(id);
+    h.classList.toggle('show');
+}
+function markQ(qNum, status, pts) {
+    state.answers[qNum] = {status, pts};
+}
+
+// ─── Submit ───────────────────────────────────────────────
+function submitExam() {
+    // Auto-mark unanswered as skipped
+    for (let i=1;i<=20;i++) {
+        if (!state.answers[i]) state.answers[i] = {status:'skipped', pts:0};
+    }
+    state.submitted = true;
+    document.getElementById('submitBtn').disabled = true;
+
+    let total = 0;
+    Object.values(state.answers).forEach(a => total += a.pts);
+    const max = 100;
+    const pct = Math.round(total/max*100);
+
+    // Grade
+    let grade='', gColor='#22c55e';
+    if(pct>=90){grade='A — Excellent! 🎉';}
+    else if(pct>=80){grade='B — Good job! 👍';}
+    else if(pct>=70){grade='C — Keep practicing 📚';}
+    else if(pct>=60){grade='D — Review the material again 🔍';}
+    else{grade='F — Let\'s review from scratch 💪'; gColor='#ef4444';}
+
+    document.getElementById('scorePct').textContent = pct + '%';
+    document.getElementById('scorePct').style.color = gColor;
+    document.getElementById('scoreGrade').textContent = grade;
+    document.getElementById('scoreRaw').textContent = 'Raw score: ' + total + ' / ' + max + ' points';
+
+    // Breakdown
+    const bd = document.getElementById('scoreBreakdown');
+    bd.innerHTML = '';
+    for (let i=1;i<=20;i++) {
+        const a = state.answers[i];
+        const row = document.createElement('div');
+        if (a.status==='correct') {
+            row.className='score-row correct-row';
+            row.innerHTML = `<span><span class="score-icon">✅</span>${qLabels[i]}</span><span>+${a.pts} pts</span>`;
+        } else if (a.status==='partial') {
+            row.className='score-row score-row';
+            row.style.background='#fef9c3'; row.style.color='#92400e';
+            row.innerHTML = `<span><span class="score-icon">⚠️</span>${qLabels[i]} <em>(partial)</em></span><span>+${a.pts} pts</span>`;
+        } else if (a.status==='wrong') {
+            row.className='score-row wrong-row';
+            row.innerHTML = `<span><span class="score-icon">❌</span>${qLabels[i]}</span><span>0 pts</span>`;
+        } else {
+            row.className='score-row skip-row';
+            row.innerHTML = `<span><span class="score-icon">⬜</span>${qLabels[i]} <em>(not answered)</em></span><span>0 pts</span>`;
+        }
+        bd.appendChild(row);
+    }
+
+    const panel = document.getElementById('score-panel');
+    panel.style.display = 'block';
+    panel.scrollIntoView({behavior:'smooth'});
+}
+
+function retakeExam() {
+    window.location.reload();
+}
+</script>
+</body>
+</html>

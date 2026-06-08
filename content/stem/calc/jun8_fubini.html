@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Fubini Theorem Drill · 8 Jun</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ calc-a2 / fubini</span><span class="topbar-date">MON · 8 JUN 2026</span></div>
+  <div class="hero">
+    <h1>Fubini Theorem <em>Drill</em></h1>
+    <p class="hero-meta">P4 · 15:20–16:55 · 95 min · Ch. 14.3–14.4. Iterated integrals, choosing the order, and swapping when the inner integral is intractable.</p>
+    <div class="exam-pills"><span class="pill pill-calc">∫∫ Calc A2</span><span class="pill pill-calc">Ch. 14.3–14.4</span><span class="pill pill-calc">Final · 23 June 2026</span></div>
+  </div>
+  <div class="main"><div class="subject-block">
+    <div class="subject-header"><div class="subject-dot dot-calc"></div><div><div class="subject-label">Daily Practice · 95 min · Ch. 14.3–14.4</div><div class="subject-title" style="color:var(--calc)">Fubini &amp; Iterated Integrals</div></div><div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div></div>
+
+    <div class="formula-ref"><strong>Quick reference.</strong> Over a region \(D\), iterate one variable at a time: inner limits may depend on the outer variable, outer limits are constants. <strong>Fubini:</strong> if the integrand is absolutely integrable, \(\iint_D f\,dA\) equals either order. When the inner integral has no elementary antiderivative, <strong>swap the order</strong> and re-read the limits from a sketch of \(D\).</div>
+
+    <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">A region between two curves</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Let \(D\) be bounded by \(y=x^2\) and \(y=x\), and evaluate \(\displaystyle\iint_D (x+y)\,dA\).<div class="conn-chain">chains: region sketch · iterate dy dx · reverse order · Fubini check</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Describe \(D\) and the intersection points.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(x^2=x\Rightarrow x=0,1\); for \(0\le x\le1\), \(x^2\le y\le x\). <div class="key-result">\(0\le x\le1,\ x^2\le y\le x\).</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Evaluate in order \(dy\,dx\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\int_0^1\!\big[xy+\tfrac{y^2}2\big]_{x^2}^{x}dx=\int_0^1(\tfrac{3x^2}2-x^3-\tfrac{x^4}2)dx=\tfrac12-\tfrac14-\tfrac1{10}=\tfrac{3}{20}\). <div class="key-result">\(\tfrac3{20}\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Set up the reverse order \(dx\,dy\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>For \(0\le y\le1\), \(y\le x\le\sqrt y\): \(\int_0^1\!\int_y^{\sqrt y}(x+y)\,dx\,dy\). <div class="key-result">limits \(y\le x\le\sqrt y\).</div></div></div></div></div></li><li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">What does Fubini guarantee here?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>The integrand is continuous (absolutely integrable) on the bounded \(D\), so both orders give the same value \(\tfrac3{20}\). <div class="key-result">Equal — Fubini applies.</div></div></div></div></div></li></ol></div></div>
+      <div class="problem"><div class="problem-header"><span class="problem-num">Problem 1</span><span class="problem-topic">Basic iterated integrals</span><span class="problem-pts">10 pts</span></div>
+      <div class="problem-body"><ol class="parts">
+        <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">\(\displaystyle\int_0^1\!\!\int_0^2 (x+2y)\,dx\,dy\). <span class="pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Inner: \(\int_0^2(x+2y)dx=[\tfrac{x^2}{2}+2yx]_0^2=2+4y\). Outer: \(\int_0^1(2+4y)dy=2+2=4\). <div class="key-result">\(=4\).</div></div></div></div></div></li>
+        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">\(\displaystyle\int_0^1\!\!\int_0^x xy\,dy\,dx\) (triangular region). <span class="pts">3 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Inner: \(\int_0^x xy\,dy=x\cdot\tfrac{x^2}{2}=\tfrac{x^3}{2}\). Outer: \(\int_0^1\tfrac{x^3}{2}dx=\tfrac18\). <div class="key-result">\(=\tfrac18\).</div></div></div></div></div></li>
+        <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">\(\displaystyle\int_0^{\pi}\!\!\int_0^1 r\sin\theta\,dr\,d\theta\). <span class="pts">4 pts</span></div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Inner: \(\int_0^1 r\,dr=\tfrac12\). Then \(\tfrac12\int_0^\pi\sin\theta\,d\theta=\tfrac12[-\cos\theta]_0^\pi=\tfrac12(2)=1\). <div class="key-result">\(=1\).</div></div></div></div></div></li>
+      </ol></div>
+    </div>
+
+    <div class="problem"><div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">Order swap to make it doable</span><span class="problem-pts">10 pts</span></div>
+      <div class="problem-body"><div class="context-box">\(\displaystyle\int_0^1\!\!\int_x^1 e^{y^2}\,dy\,dx\). The inner integral has no elementary form — swap.</div>
+        <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          Region: \(0\le x\le y\le1\). Reorder: \(\int_0^1\!\!\int_0^y e^{y^2}dx\,dy=\int_0^1 y e^{y^2}dy=[\tfrac12 e^{y^2}]_0^1=\tfrac12(e-1)\).
+          <div class="key-result">\(=\tfrac12(e-1)\).</div>
+          <div class="ans-note">Recognising "unintegrable as written → swap" is the entire point. Always sketch \(D\) to get the new limits.</div>
+        </div></div></div>
+      </div>
+    </div>
+
+    <div class="problem"><div class="problem-header"><span class="problem-num">Problem 3</span><span class="problem-topic">Volume under a surface</span><span class="problem-pts">10 pts</span></div>
+      <div class="problem-body"><div class="context-box">Find the volume under \(z=4-x^2-y^2\) over the square \([0,1]\times[0,1]\).</div>
+        <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+          \(\int_0^1\!\!\int_0^1(4-x^2-y^2)dx\,dy\). Inner: \(\int_0^1(4-x^2-y^2)dx=4-\tfrac13-y^2\). Outer: \(\int_0^1(\tfrac{11}{3}-y^2)dy=\tfrac{11}{3}-\tfrac13=\tfrac{10}{3}\).
+          <div class="key-result">Volume \(=\tfrac{10}{3}\).</div>
+        </div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-note">Calc A2 · Fubini Theorem Drill (Ch. 14.3–14.4) · Monday 8 June 2026 · Good luck Rafi ✦</div></div>
+  <div class="timer-chip" id="timerChip"><span class="timer-label">elapsed</span><span class="timer-display" id="timerDisplay">00:00</span></div>
+  <script>
+    function toggleAns(btn){const a=btn.nextElementSibling;a.classList.toggle('open');btn.textContent=a.classList.contains('open')?'Hide Answer':'Show Answer';}
+    window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+    const start=Date.now(),pad=n=>String(n).padStart(2,'0');
+    setInterval(()=>{const e=Math.floor((Date.now()-start)/1000);document.getElementById('timerDisplay').textContent=pad(Math.floor(e/60))+':'+pad(e%60);},1000);
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>
