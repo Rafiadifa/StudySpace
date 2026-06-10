@@ -19,7 +19,13 @@
       "Bash(git ls-tree *)",
       "Bash(pkill -f \"http.server 8799\")",
       "Bash(pkill -f \"http.server 8765\")",
-      "WebFetch(domain:hanziwriter.org)"
+      "WebFetch(domain:hanziwriter.org)",
+      "Bash(git checkout *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git restore *)",
+      "Bash(awk '{print $1}')",
+      "Bash(git check-ignore *)",
+      "Bash(awk '{print $5, $9}')"
     ]
   }
 }

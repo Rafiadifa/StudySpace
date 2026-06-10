@@ -1,0 +1,19 @@
+# ── Source material (kept local, NOT pushed to GitHub) ──────────────
+# These folders hold course slides + textbooks (large + copyrighted).
+# The live site doesn't need them, and pushing 190+ MB tends to fail.
+# They live on your computer only. Restored from git history on 2026-06-10.
+C++_Material/
+Calculus_Material/
+Linear_Algebra_Material/
+General_Management_Material/
+Chinese_Material/
+
+# ── OS / editor cruft ───────────────────────────────────────────────
+.DS_Store
+**/.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+
+# ── Local preview helper ────────────────────────────────────────────
+.claude/
