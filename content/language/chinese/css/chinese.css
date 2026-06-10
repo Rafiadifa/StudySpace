@@ -92,6 +92,9 @@ select.flt:focus{ outline:none; border-color:var(--accent); }
 .word-card .ex{ font-family:'Noto Serif SC',serif; color:var(--text2); font-size:0.85rem; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); }
 .pos-tag{ display:inline-block; font-family:'DM Mono',monospace; font-size:0.6rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--text2); background:var(--bg3); border-radius:5px; padding:3px 7px; margin-top:8px; }
 .lesson-tag{ position:absolute; top:13px; right:14px; font-family:'DM Mono',monospace; font-size:0.62rem; color:var(--text3); }
+.word-card.is-extra{ border-left-color:#d97706; }
+.lesson-tag .xt{ color:#d97706; font-weight:600; }
+.vtip{ font-size:0.78rem; color:var(--text2); margin-top:9px; padding-top:8px; border-top:1px dashed var(--border); line-height:1.5; }
 .srs-dot{ position:absolute; bottom:14px; right:14px; width:7px; height:7px; border-radius:50%; }
 .srs-dot.new{ background:var(--text3); } .srs-dot.learning{ background:#d97706; } .srs-dot.learned{ background:#15803d; }
 

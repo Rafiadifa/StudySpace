@@ -34,6 +34,11 @@
         <option value="learning">Learning</option>
         <option value="learned">Learned (7d+)</option>
       </select>
+      <select id="f-src" class="flt">
+        <option value="all">Official + extra</option>
+        <option value="official">Official list only</option>
+        <option value="extra">Extra only (class + 量词)</option>
+      </select>
     </div>
 
     <div class="ch-chiprow" id="chips"></div>
@@ -53,9 +58,14 @@
   <script src="js/store.js"></script>
   <script>
     setTopbarDate();
-    const q=$("#q"), fL=$("#f-lesson"), fP=$("#f-pos"), fS=$("#f-srs"), grid=$("#grid"), count=$("#count");
+    const q=$("#q"), fL=$("#f-lesson"), fP=$("#f-pos"), fS=$("#f-srs"), fSrc=$("#f-src"), grid=$("#grid"), count=$("#count");
     fillLessonSelect(fL); fillPosSelect(fP);
     buildLessonChips($("#chips"), id=>{ fL.value=id; render(); });
+
+    const officialCount = VOCAB.filter(w=>!w.extra).length;
+    const extraCount    = VOCAB.filter(w=>w.extra).length;
+    const subEl = document.querySelector(".topbar-sub");
+    if(subEl) subEl.textContent = `/ ${officialCount} official + ${extraCount} extra`;
 
     function srsState(hanzi){
       const r=getSRS()[hanzi];
@@ -65,11 +75,13 @@
 
     function render(){
       const term=q.value.trim().toLowerCase();
-      const lf=fL.value, pf=fP.value, sf=fS.value;
+      const lf=fL.value, pf=fP.value, sf=fS.value, sc=fSrc.value;
       const list=VOCAB.filter(w=>{
         if(lf!=="all" && w.lesson!==+lf) return false;
         if(pf!=="all" && w.pos!==pf) return false;
         if(sf!=="all" && srsState(w.hanzi)!==sf) return false;
+        if(sc==="official" && w.extra) return false;
+        if(sc==="extra" && !w.extra) return false;
         if(!term) return true;
         return w.hanzi.includes(q.value.trim())
             || stripTones(w.pinyin).includes(stripTones(term))
@@ -79,20 +91,21 @@
       grid.innerHTML="";
       list.forEach(w=>{
         const st=srsState(w.hanzi);
-        const card=el("div","word-card");
+        const card=el("div","word-card"+(w.extra?" is-extra":""));
         card.innerHTML=`
-          <span class="lesson-tag">L${w.lesson}</span>
+          <span class="lesson-tag">${w.extra?'<span class="xt">EXTRA</span> · ':""}L${w.lesson}</span>
           <div class="hz">${w.hanzi}</div>
           <div class="py">${w.pinyin}</div>
           <div class="en">${w.en}</div>
           <span class="pos-tag">${POS_LABELS[w.pos]||w.pos}</span>
           ${w.ex?`<div class="ex">${w.ex}</div>`:""}
+          ${w.tip?`<div class="vtip">💡 ${w.tip}</div>`:""}
           <span class="srs-dot ${st}" title="${st}"></span>`;
         grid.appendChild(card);
       });
     }
     q.addEventListener("input",render);
-    [fL,fP,fS].forEach(s=>s.addEventListener("change",()=>{
+    [fL,fP,fS,fSrc].forEach(s=>s.addEventListener("change",()=>{
       $$("#chips .ch-chip").forEach(c=>c.classList.toggle("active",c.dataset.lesson===fL.value));
       render();
     }));

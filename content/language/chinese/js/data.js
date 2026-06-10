@@ -113,7 +113,7 @@ const VOCAB = [
   { hanzi:"开门",   pinyin:"kāimén",     pos:"phr",  en:"to open (the door)", lesson:13, ex:"开 kāi = to open" },
 
   /* Lesson 4 — Clothes & Colors */
-  { hanzi:"件",     pinyin:"jiàn",       pos:"mw",   en:"(for clothing)",     lesson:14, ex:"一件毛衣" },
+  { hanzi:"件",     pinyin:"jiàn",       pos:"mw",   en:"(measure word) clothing & gifts", lesson:14, ex:"一件毛衣 / 一件礼物" },
   { hanzi:"白",     pinyin:"bái",        pos:"adj",  en:"white",              lesson:14 },
   { hanzi:"毛衣",   pinyin:"máoyī",      pos:"n",    en:"sweater",            lesson:14 },
   { hanzi:"挺",     pinyin:"tǐng",       pos:"adv",  en:"very, quite",        lesson:14, ex:"挺好看的。" },
@@ -191,6 +191,51 @@ const VOCAB = [
   { hanzi:"山",     pinyin:"shān",       pos:"n",    en:"mountain, hill",     lesson:16 },
   { hanzi:"听",     pinyin:"tīng",       pos:"v",    en:"to listen",          lesson:16, ex:"听音乐 / 听音乐会" },
   { hanzi:"音乐会", pinyin:"yīnyuèhuì",  pos:"n",    en:"concert",            lesson:16 },
+
+  /* ========== EXTRA / SUPPLEMENTARY ==========
+     Words the teacher used in class & homework that are NOT on the printed
+     list, plus the common measure words (量词). Marked extra:true → shown
+     with an "EXTRA" badge and isolable via the Source filter on the vocab page.
+     Sourced from the Week 11–14 homework PDFs + standard HSK1–2 measure words. */
+
+  /* — Measure words (量词) — */
+  { hanzi:"个",     pinyin:"gè",      pos:"mw", en:"general measure word — people, gifts, cakes…", lesson:15, extra:true, ex:"一个礼物 / 一个蛋糕", tip:"The all-purpose measure word. A gift can be 一个礼物 OR 一件礼物 — your homework uses 件." },
+  { hanzi:"杯",     pinyin:"bēi",     pos:"mw", en:"measure word — cups / glasses (drinks)",       lesson:12, extra:true, ex:"一杯咖啡 / 一杯茶" },
+  { hanzi:"块",     pinyin:"kuài",    pos:"mw", en:"measure word — pieces; also 'yuan' (money)",   lesson:13, extra:true, ex:"一块蛋糕 / 十块钱" },
+  { hanzi:"张",     pinyin:"zhāng",   pos:"mw", en:"measure word — flat things (paper, tickets, tables)", lesson:13, extra:true, ex:"一张票 / 一张桌子" },
+  { hanzi:"条",     pinyin:"tiáo",    pos:"mw", en:"measure word — long, thin things",             lesson:14, extra:true, ex:"一条裤子 / 一条围巾" },
+  { hanzi:"双",     pinyin:"shuāng",  pos:"mw", en:"measure word — pairs",                         lesson:14, extra:true, ex:"一双鞋 / 一双筷子" },
+  { hanzi:"本",     pinyin:"běn",     pos:"mw", en:"measure word — books / volumes",               lesson:13, extra:true, ex:"一本书" },
+  { hanzi:"位",     pinyin:"wèi",     pos:"mw", en:"measure word — people (polite)",               lesson:12, extra:true, ex:"一位老师" },
+  { hanzi:"盒",     pinyin:"hé",      pos:"mw", en:"measure word — boxes",                          lesson:15, extra:true, ex:"一盒巧克力（送礼物）" },
+
+  /* — From class & homework — */
+  { hanzi:"钱",       pinyin:"qián",         pos:"n",   en:"money",                          lesson:13, extra:true, ex:"换钱 / 花钱" },
+  { hanzi:"就",       pinyin:"jiù",          pos:"adv", en:"right away; just; then",         lesson:13, extra:true, ex:"银行很近，一分钟就到。" },
+  { hanzi:"听说",     pinyin:"tīngshuō",     pos:"v",   en:"to hear (it said); it's said that", lesson:12, extra:true, ex:"听说明天风挺大的。" },
+  { hanzi:"教室",     pinyin:"jiàoshì",      pos:"n",   en:"classroom",                      lesson:12, extra:true, ex:"我在教室里上课呢。" },
+  { hanzi:"宿舍",     pinyin:"sùshè",        pos:"n",   en:"dormitory",                      lesson:12, extra:true, ex:"下课以后我回宿舍。" },
+  { hanzi:"同屋",     pinyin:"tóngwū",       pos:"n",   en:"roommate",                       lesson:12, extra:true, ex:"我的同屋是日本人。" },
+  { hanzi:"图书馆",   pinyin:"túshūguǎn",    pos:"n",   en:"library",                        lesson:16, extra:true, ex:"我去图书馆看书。" },
+  { hanzi:"公园",     pinyin:"gōngyuán",     pos:"n",   en:"park",                           lesson:16, extra:true, ex:"周末去公园逛逛。" },
+  { hanzi:"电影",     pinyin:"diànyǐng",     pos:"n",   en:"movie, film",                    lesson:16, extra:true, ex:"这个电影没意思。" },
+  { hanzi:"电影院",   pinyin:"diànyǐngyuàn", pos:"n",   en:"cinema, movie theater",          lesson:16, extra:true, ex:"比如电影院、购物中心、公园。" },
+  { hanzi:"咖啡店",   pinyin:"kāfēidiàn",    pos:"n",   en:"coffee shop",                    lesson:12, extra:true, ex:"咖啡店有很多喝的。" },
+  { hanzi:"自行车",   pinyin:"zìxíngchē",    pos:"n",   en:"bicycle",                        lesson:14, extra:true, ex:"新的自行车有点儿贵。" },
+  { hanzi:"公共汽车", pinyin:"gōnggòng qìchē", pos:"n", en:"bus",                            lesson:13, extra:true, ex:"在公共汽车上看书。" },
+  { hanzi:"运动",     pinyin:"yùndòng",      pos:"n",   en:"sports, exercise; to work out",  lesson:16, extra:true, ex:"你喜欢什么运动？" },
+  { hanzi:"跑步",     pinyin:"pǎobù",        pos:"v",   en:"to run, to jog",                 lesson:16, extra:true, ex:"我喜欢跑步。" },
+  { hanzi:"早饭",     pinyin:"zǎofàn",       pos:"n",   en:"breakfast",                      lesson:16, extra:true, ex:"你早饭吃什么？" },
+  { hanzi:"高兴",     pinyin:"gāoxìng",      pos:"adj", en:"happy, glad",                    lesson:15, extra:true, ex:"你送我礼物，我很高兴。" },
+  { hanzi:"可能",     pinyin:"kěnéng",       pos:"adv", en:"maybe, possibly",                lesson:11, extra:true, ex:"今天天气不好，可能下雨。" },
+  { hanzi:"了解",     pinyin:"liǎojiě",      pos:"v",   en:"to understand, to know well",    lesson:16, extra:true, ex:"在公共汽车上好好儿了解中国人。" },
+  { hanzi:"告诉",     pinyin:"gàosu",        pos:"v",   en:"to tell",                        lesson:15, extra:true, ex:"同学告诉我她喜欢花儿。" },
+  { hanzi:"一定",     pinyin:"yídìng",       pos:"adv", en:"certainly, surely, must",        lesson:15, extra:true, ex:"送她花儿，她一定喜欢。" },
+  { hanzi:"最后",     pinyin:"zuìhòu",       pos:"n",   en:"finally, in the end",            lesson:16, extra:true, ex:"最后一个同学告诉我。" },
+  { hanzi:"生词",     pinyin:"shēngcí",      pos:"n",   en:"new word, vocabulary",           lesson:15, extra:true, ex:"可准备的东西很多，比如生词、课文。" },
+  { hanzi:"课文",     pinyin:"kèwén",        pos:"n",   en:"text (of a lesson)",             lesson:15, extra:true, ex:"先看生词，然后读课文。" },
+  { hanzi:"圣诞节",   pinyin:"shèngdànjié",  pos:"n",   en:"Christmas",                      lesson:15, extra:true, ex:"圣诞节快到了，送什么礼物好？" },
+  { hanzi:"女孩子",   pinyin:"nǚháizi",      pos:"n",   en:"girl",                           lesson:15, extra:true, ex:"女孩子一般都喜欢花儿。" },
 ];
 
 /* ---------- GRAMMAR ----------

@@ -25,7 +25,7 @@
     <h1>Chinese <em>library</em></h1>
     <p class="hero-meta">Pre-intermediate · Lessons 11–16. Pick what to study below. Your review queue updates as you go.</p>
     <div class="exam-pills lang-pills">
-      <span class="pill pill-lang">144 words</span>
+      <span class="pill pill-lang" id="vocab-count-pill">144 words</span>
       <span class="pill pill-lang">19 grammar points</span>
       <span class="pill pill-lang" id="due-pill">— due to review</span>
     </div>
@@ -55,7 +55,7 @@
       <a href="vocab.html" class="menu-card">
         <div class="mc-ic">词</div>
         <div class="mc-title">Vocabulary</div>
-        <div class="mc-sub">All 144 words, filterable by lesson, word type, or search. Pinyin, meaning, examples.</div>
+        <div class="mc-sub">Every word, filterable by lesson, word type, or source. Includes extra class vocab &amp; measure words.</div>
       </a>
       <a href="flashcards.html" class="menu-card">
         <div class="mc-ic">卡</div>
@@ -86,6 +86,8 @@
   <script src="js/store.js"></script>
   <script>
     setTopbarDate();
+    const vp = document.getElementById("vocab-count-pill");
+    if(vp) vp.textContent = `${VOCAB.length} words`;
     const c = srsCounts("all");
     const totalDue = c.due + c.fresh;
     const badge = document.getElementById("due-badge");
