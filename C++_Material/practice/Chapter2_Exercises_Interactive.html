@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2: Control Flow - Interactive Exercises</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #0d47a1 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        h1 { font-size: 2.2em; margin-bottom: 8px; }
+        .subtitle { font-size: 1.1em; opacity: 0.9; }
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            margin: 20px 30px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #0d47a1, #42a5f5);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .progress-text {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+            font-weight: 600;
+        }
+        .exercise-section {
+            padding: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .exercise-section:last-of-type { border-bottom: none; }
+        .section-title {
+            font-size: 1.6em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #1565c0;
+            display: inline-block;
+        }
+        .exercise-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #1565c0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .exercise-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(21, 101, 192, 0.2);
+        }
+        .exercise-number {
+            display: inline-block;
+            background: #1565c0;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        .difficulty-basic { background: #4CAF50; color: white; }
+        .difficulty-intermediate { background: #FF9800; color: white; }
+        .difficulty-advanced { background: #f44336; color: white; }
+        .exercise-title { font-size: 1.2em; color: #333; margin-bottom: 12px; }
+        .exercise-description { color: #555; line-height: 1.6; margin-bottom: 15px; }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 12px 0;
+            tab-size: 4;
+        }
+        .code-block::before {
+            content: 'C++';
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 0.7em;
+            color: #999;
+        }
+        .input-area { margin: 15px 0; }
+        .input-label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        .text-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Consolas', monospace;
+        }
+        .text-input:focus { outline: none; border-color: #1565c0; }
+        .mcq-options { margin: 12px 0; }
+        .mcq-option {
+            display: block;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .mcq-option:hover { border-color: #1565c0; background: #e3f2fd; }
+        .mcq-option.selected { border-color: #1565c0; background: #e3f2fd; }
+        .mcq-option.correct { border-color: #4CAF50; background: #e8f5e9; }
+        .mcq-option.wrong { border-color: #f44336; background: #ffebee; }
+        .button-group { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(21, 101, 192, 0.4);
+        }
+        .btn-secondary { background: #e0e0e0; color: #333; }
+        .btn-secondary:hover { background: #bdbdbd; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .feedback {
+            margin-top: 18px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+        .feedback.correct { display: block; background: #e8f5e9; border: 2px solid #4CAF50; color: #2e7d32; }
+        .feedback.wrong { display: block; background: #ffebee; border: 2px solid #f44336; color: #c62828; }
+        .feedback.info { display: block; background: #e3f2fd; border: 2px solid #2196F3; color: #1565c0; }
+        .answer-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff3e0;
+            border: 2px solid #FF9800;
+            border-radius: 10px;
+            display: none;
+        }
+        .answer-title { font-weight: bold; color: #e65100; margin-bottom: 12px; font-size: 1.05em; }
+        .hint-box {
+            background: #fff9c4;
+            border-left: 4px solid #fbc02d;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        .completion-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .stats {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .stat-number { font-size: 2em; font-weight: bold; color: #1565c0; }
+        .stat-label { color: #666; margin-top: 5px; }
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .exercise-card { padding: 15px; }
+            .button-group { flex-direction: column; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chapter 2: Control Flow</h1>
+            <p class="subtitle">if / else / switch / loops / arrays — Interactive Practice</p>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">Progress: 0 / 20 exercises completed</div>
+
+        <!-- Part 1: if and common mistakes -->
+        <section class="exercise-section">
+            <h2 class="section-title">Part 1: if Statements &amp; Common Mistakes</h2>
+
+            <div class="exercise-card" data-exercise="2.1">
+                <span class="exercise-number">Exercise 2.1</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">= vs == in conditions</h3>
+                <p class="exercise-description">What is wrong with this code? What will actually happen when it runs?</p>
+                <div class="code-block">int x = 5;
+if (x = 10)
+    cout &lt;&lt; "x is 10" &lt;&lt; endl;</div>
+                <div class="mcq-options" id="mcq-2-1">
+                    <label class="mcq-option" onclick="selectOption('2.1', 0)">A) Nothing wrong; it checks if x equals 10.</label>
+                    <label class="mcq-option" onclick="selectOption('2.1', 1)">B) = assigns 10 to x; the condition is always true.</label>
+                    <label class="mcq-option" onclick="selectOption('2.1', 2)">C) = should be == to compare; otherwise x is changed and condition is always true.</label>
+                    <label class="mcq-option" onclick="selectOption('2.1', 3)">D) Missing braces around the cout.</label>
+                </div>
+                <div class="hint-box" id="hint-2-1"><strong>Hint:</strong> In C++, <code>=</code> is assignment; <code>==</code> is comparison. The result of an assignment is the value assigned.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.1', 2)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.1')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.1')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-1"></div>
+                <div class="answer-section" id="answer-2-1">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>C</strong> is correct. Use <code>if (x == 10)</code> to test equality. With <code>if (x = 10)</code>, x becomes 10 and the expression evaluates to 10 (non-zero = true), so the body always runs.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.2">
+                <span class="exercise-number">Exercise 2.2</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">Missing braces</h3>
+                <p class="exercise-description">If <code>x</code> is 0, which lines run?</p>
+                <div class="code-block">if (x &gt; 0)
+    cout &lt;&lt; "A" &lt;&lt; endl;
+    cout &lt;&lt; "B" &lt;&lt; endl;</div>
+                <div class="mcq-options" id="mcq-2-2">
+                    <label class="mcq-option" onclick="selectOption('2.2', 0)">A) Neither A nor B</label>
+                    <label class="mcq-option" onclick="selectOption('2.2', 1)">B) Only A</label>
+                    <label class="mcq-option" onclick="selectOption('2.2', 2)">C) Only B</label>
+                    <label class="mcq-option" onclick="selectOption('2.2', 3)">D) Both A and B</label>
+                </div>
+                <div class="hint-box" id="hint-2-2"><strong>Hint:</strong> Without braces, only the immediately following statement is part of the if. Indentation does not change behavior.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.2', 2)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.2')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.2')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-2"></div>
+                <div class="answer-section" id="answer-2-2">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>C</strong>. Only the first <code>cout</code> is inside the if. The second <code>cout</code> always runs. Use <code>{ }</code> to group both statements.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.3">
+                <span class="exercise-number">Exercise 2.3</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">Semicolon after if</h3>
+                <p class="exercise-description">What does this program print when x is 5?</p>
+                <div class="code-block">if (x &gt; 0);
+{
+    cout &lt;&lt; "Positive" &lt;&lt; endl;
+}</div>
+                <div class="input-area">
+                    <label class="input-label">Output (one word):</label>
+                    <input type="text" class="text-input" id="input-2-3" placeholder="e.g. Positive or nothing">
+                </div>
+                <div class="hint-box" id="hint-2-3"><strong>Hint:</strong> The semicolon after <code>if (x &gt; 0)</code> ends the if statement. The block <code>{ ... }</code> is then a normal block, not part of the if.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkAnswer('2.3', 'positive')">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.3')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.3')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-3"></div>
+                <div class="answer-section" id="answer-2-3">
+                    <div class="answer-title">Solution</div>
+                    <p>It always prints <strong>Positive</strong>. The <code>;</code> makes the if body empty, so the block below runs unconditionally. Remove the semicolon to fix.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.4">
+                <span class="exercise-number">Exercise 2.4</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">Comparison operators</h3>
+                <p class="exercise-description">Which expression is true when we want "score is in the range 60 to 100 (inclusive)"?</p>
+                <div class="mcq-options" id="mcq-2-4">
+                    <label class="mcq-option" onclick="selectOption('2.4', 0)">A) score &gt;= 60 && score &lt;= 100</label>
+                    <label class="mcq-option" onclick="selectOption('2.4', 1)">B) 60 &lt;= score &lt;= 100</label>
+                    <label class="mcq-option" onclick="selectOption('2.4', 2)">C) score &gt;= 60 || score &lt;= 100</label>
+                    <label class="mcq-option" onclick="selectOption('2.4', 3)">D) score &gt; 60 && score &lt; 100</label>
+                </div>
+                <div class="hint-box" id="hint-2-4"><strong>Hint:</strong> "Between 60 and 100 inclusive" means score ≥ 60 and score ≤ 100. C++ does not support chained comparisons like 60 &lt;= score &lt;= 100 the way math does.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.4', 0)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.4')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.4')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-4"></div>
+                <div class="answer-section" id="answer-2-4">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>A</strong>. Use <code>&&</code> to require both conditions. B is wrong (chained comparison evaluates differently); C would be true for any score; D excludes 60 and 100.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 2: if-else and if-else-if -->
+        <section class="exercise-section">
+            <h2 class="section-title">Part 2: if-else and if-else-if</h2>
+
+            <div class="exercise-card" data-exercise="2.5">
+                <span class="exercise-number">Exercise 2.5</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">if-else: exactly one path</h3>
+                <p class="exercise-description">With <code>score = 45</code>, what is printed?</p>
+                <div class="code-block">if (score &gt;= 60)
+    cout &lt;&lt; "Pass" &lt;&lt; endl;
+else
+    cout &lt;&lt; "Fail" &lt;&lt; endl;</div>
+                <div class="mcq-options" id="mcq-2-5">
+                    <label class="mcq-option" onclick="selectOption('2.5', 0)">A) Pass</label>
+                    <label class="mcq-option" onclick="selectOption('2.5', 1)">B) Fail</label>
+                    <label class="mcq-option" onclick="selectOption('2.5', 2)">C) Both</label>
+                    <label class="mcq-option" onclick="selectOption('2.5', 3)">D) Nothing</label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.5', 1)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.5')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-5"></div>
+                <div class="answer-section" id="answer-2-5">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>B) Fail</strong>. 45 &lt; 60, so the else branch runs. In if-else, exactly one of the two blocks runs.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.6">
+                <span class="exercise-number">Exercise 2.6</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">if-else-if order (common bug)</h3>
+                <p class="exercise-description">What grade is printed when <code>score = 95</code> with this buggy code?</p>
+                <div class="code-block">if (score &gt;= 60)
+    cout &lt;&lt; "D" &lt;&lt; endl;
+else if (score &gt;= 80)
+    cout &lt;&lt; "B" &lt;&lt; endl;
+else if (score &gt;= 90)
+    cout &lt;&lt; "A" &lt;&lt; endl;
+else
+    cout &lt;&lt; "F" &lt;&lt; endl;</div>
+                <div class="mcq-options" id="mcq-2-6">
+                    <label class="mcq-option" onclick="selectOption('2.6', 0)">A) A</label>
+                    <label class="mcq-option" onclick="selectOption('2.6', 1)">B) B</label>
+                    <label class="mcq-option" onclick="selectOption('2.6', 2)">C) D</label>
+                    <label class="mcq-option" onclick="selectOption('2.6', 3)">D) F</label>
+                </div>
+                <div class="hint-box" id="hint-2-6"><strong>Hint:</strong> Conditions are checked top to bottom. The first true condition wins. 95 &gt;= 60 is true, so we never reach the 80 or 90 checks.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.6', 2)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.6')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.6')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-6"></div>
+                <div class="answer-section" id="answer-2-6">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>C) D</strong>. Order matters! Check from highest first: <code>score &gt;= 90</code>, then 80, then 60, then else for F.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.7">
+                <span class="exercise-number">Exercise 2.7</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">Even or odd</h3>
+                <p class="exercise-description">What is the correct condition to check if <code>n</code> is even?</p>
+                <div class="mcq-options" id="mcq-2-7">
+                    <label class="mcq-option" onclick="selectOption('2.7', 0)">A) n % 2 == 0</label>
+                    <label class="mcq-option" onclick="selectOption('2.7', 1)">B) n % 2 = 0</label>
+                    <label class="mcq-option" onclick="selectOption('2.7', 2)">C) n / 2 == 0</label>
+                    <label class="mcq-option" onclick="selectOption('2.7', 3)">D) n % 0 == 2</label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.7', 0)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.7')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-7"></div>
+                <div class="answer-section" id="answer-2-7">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>A</strong>. <code>n % 2</code> is the remainder when n is divided by 2. Even numbers have remainder 0. Use <code>==</code> for comparison.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 3: switch -->
+        <section class="exercise-section">
+            <h2 class="section-title">Part 3: switch Statement</h2>
+
+            <div class="exercise-card" data-exercise="2.8">
+                <span class="exercise-number">Exercise 2.8</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Missing break (fall-through)</h3>
+                <p class="exercise-description">What is the output when <code>choice = 1</code>?</p>
+                <div class="code-block">switch (choice) {
+    case 1: cout &lt;&lt; "One" &lt;&lt; endl;
+    case 2: cout &lt;&lt; "Two" &lt;&lt; endl;
+    case 3: cout &lt;&lt; "Three" &lt;&lt; endl;
+}</div>
+                <div class="mcq-options" id="mcq-2-8">
+                    <label class="mcq-option" onclick="selectOption('2.8', 0)">A) One</label>
+                    <label class="mcq-option" onclick="selectOption('2.8', 1)">B) One, then Two</label>
+                    <label class="mcq-option" onclick="selectOption('2.8', 2)">C) One, Two, Three (all three)</label>
+                    <label class="mcq-option" onclick="selectOption('2.8', 3)">D) Nothing</label>
+                </div>
+                <div class="hint-box" id="hint-2-8"><strong>Hint:</strong> Without <code>break</code>, execution falls through to the next case. So after "One", it continues into case 2 and case 3.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.8', 2)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.8')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.8')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-8"></div>
+                <div class="answer-section" id="answer-2-8">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>C</strong>. Without <code>break</code>, control falls through: One, Two, Three. Add <code>break;</code> after each case to exit the switch.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.9">
+                <span class="exercise-number">Exercise 2.9</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">switch expression type</h3>
+                <p class="exercise-description">Which type can you use in <code>switch (expression)</code>?</p>
+                <div class="mcq-options" id="mcq-2-9">
+                    <label class="mcq-option" onclick="selectOption('2.9', 0)">A) int and char only</label>
+                    <label class="mcq-option" onclick="selectOption('2.9', 1)">B) int, char, and string</label>
+                    <label class="mcq-option" onclick="selectOption('2.9', 2)">C) double and float</label>
+                    <label class="mcq-option" onclick="selectOption('2.9', 3)">D) Any type</label>
+                </div>
+                <div class="hint-box" id="hint-2-9"><strong>Hint:</strong> switch works with integral types (int, char) and enums. It does not work with floating-point or string.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.9', 0)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.9')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.9')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-9"></div>
+                <div class="answer-section" id="answer-2-9">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>A</strong>. switch requires an integer-like expression (int, char, enum). Not double, float, or string. For strings use if-else-if.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.10">
+                <span class="exercise-number">Exercise 2.10</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">default case</h3>
+                <p class="exercise-description">When does the <code>default</code> case in a switch run?</p>
+                <div class="mcq-options" id="mcq-2-10">
+                    <label class="mcq-option" onclick="selectOption('2.10', 0)">A) Always first</label>
+                    <label class="mcq-option" onclick="selectOption('2.10', 1)">B) When no other case matches</label>
+                    <label class="mcq-option" onclick="selectOption('2.10', 2)">C) Only when expression is 0</label>
+                    <label class="mcq-option" onclick="selectOption('2.10', 3)">D) Never</label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.10', 1)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.10')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-10"></div>
+                <div class="answer-section" id="answer-2-10">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>B</strong>. <code>default</code> runs when the expression does not match any <code>case</code> value. Use it for invalid or unexpected values.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 4: for, while, arrays, break/continue -->
+        <section class="exercise-section">
+            <h2 class="section-title">Part 4: Loops and Arrays</h2>
+
+            <div class="exercise-card" data-exercise="2.11">
+                <span class="exercise-number">Exercise 2.11</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">for loop: how many iterations?</h3>
+                <p class="exercise-description">How many times does the loop body run?</p>
+                <div class="code-block">for (int i = 0; i &lt; 5; i++)
+    cout &lt;&lt; i;</div>
+                <div class="mcq-options" id="mcq-2-11">
+                    <label class="mcq-option" onclick="selectOption('2.11', 0)">A) 4</label>
+                    <label class="mcq-option" onclick="selectOption('2.11', 1)">B) 5</label>
+                    <label class="mcq-option" onclick="selectOption('2.11', 2)">C) 6</label>
+                    <label class="mcq-option" onclick="selectOption('2.11', 3)">D) 0</label>
+                </div>
+                <div class="hint-box" id="hint-2-11"><strong>Hint:</strong> i = 0,1,2,3,4 satisfy i &lt; 5. When i becomes 5, the condition fails. So 5 iterations.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.11', 1)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.11')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.11')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-11"></div>
+                <div class="answer-section" id="answer-2-11">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>B) 5</strong>. i takes values 0,1,2,3,4. Use <code>i &lt; 5</code> for exactly 5 iterations (not <code>i &lt;= 5</code>, which would be 6).</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.12">
+                <span class="exercise-number">Exercise 2.12</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Off-by-one error</h3>
+                <p class="exercise-description">We have <code>int arr[5] = {10, 20, 30, 40, 50};</code>. What does <code>arr[5]</code> refer to?</p>
+                <div class="mcq-options" id="mcq-2-12">
+                    <label class="mcq-option" onclick="selectOption('2.12', 0)">A) The last element (50)</label>
+                    <label class="mcq-option" onclick="selectOption('2.12', 1)">B) The fifth element (50)</label>
+                    <label class="mcq-option" onclick="selectOption('2.12', 2)">C) Out of bounds; undefined behavior</label>
+                    <label class="mcq-option" onclick="selectOption('2.12', 3)">D) 0</label>
+                </div>
+                <div class="hint-box" id="hint-2-12"><strong>Hint:</strong> Valid indices for an array of size 5 are 0, 1, 2, 3, 4. The last element is arr[4].</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.12', 2)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.12')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.12')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-12"></div>
+                <div class="answer-section" id="answer-2-12">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>C</strong>. Indices are 0..4. <code>arr[5]</code> is out of bounds (off-by-one). Last element is <code>arr[4]</code>. Accessing arr[5] is undefined behavior.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.13">
+                <span class="exercise-number">Exercise 2.13</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">break vs continue</h3>
+                <p class="exercise-description">What does this loop output?</p>
+                <div class="code-block">for (int i = 0; i &lt; 6; i++) {
+    if (i == 3) break;
+    cout &lt;&lt; i &lt;&lt; " ";
+}</div>
+                <div class="input-area">
+                    <label class="input-label">Output (e.g. 0 1 2):</label>
+                    <input type="text" class="text-input" id="input-2-13" placeholder="e.g. 0 1 2 ">
+                </div>
+                <div class="hint-box" id="hint-2-13"><strong>Hint:</strong> <code>break</code> exits the loop entirely. So we print for i=0,1,2 and then break at i=3.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkAnswer('2.13', '0 1 2')">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.13')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.13')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-13"></div>
+                <div class="answer-section" id="answer-2-13">
+                    <div class="answer-title">Solution</div>
+                    <p>Output: <strong>0 1 2 </strong>. When i is 3, <code>break</code> runs and the loop ends. So 3, 4, 5 are never printed.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.14">
+                <span class="exercise-number">Exercise 2.14</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">continue: skip iteration</h3>
+                <p class="exercise-description">What does this loop output?</p>
+                <div class="code-block">for (int i = 0; i &lt; 5; i++) {
+    if (i % 2 == 0) continue;
+    cout &lt;&lt; i &lt;&lt; " ";
+}</div>
+                <div class="input-area">
+                    <label class="input-label">Output:</label>
+                    <input type="text" class="text-input" id="input-2-14" placeholder="e.g. 1 3 ">
+                </div>
+                <div class="hint-box" id="hint-2-14"><strong>Hint:</strong> <code>continue</code> skips the rest of the current iteration and goes to the next. So we only print when i is odd (1, 3).</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkAnswer('2.14', '1 3')">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.14')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.14')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-14"></div>
+                <div class="answer-section" id="answer-2-14">
+                    <div class="answer-title">Solution</div>
+                    <p>Output: <strong>1 3 </strong>. When i is even (0,2,4), continue skips the cout. So only 1 and 3 are printed.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.15">
+                <span class="exercise-number">Exercise 2.15</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">while vs for</h3>
+                <p class="exercise-description">When is a <code>while</code> loop typically preferred over <code>for</code>?</p>
+                <div class="mcq-options" id="mcq-2-15">
+                    <label class="mcq-option" onclick="selectOption('2.15', 0)">A) When you know the exact number of iterations</label>
+                    <label class="mcq-option" onclick="selectOption('2.15', 1)">B) When the number of iterations is not known in advance</label>
+                    <label class="mcq-option" onclick="selectOption('2.15', 2)">C) Only for reading input</label>
+                    <label class="mcq-option" onclick="selectOption('2.15', 3)">D) Never; for is always better</label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.15', 1)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.15')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-15"></div>
+                <div class="answer-section" id="answer-2-15">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>B</strong>. Use <code>while</code> when you don't know how many times to repeat (e.g. "read until valid input"). Use <code>for</code> when you have a clear count or range.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 5: Logical operators and algorithms -->
+        <section class="exercise-section">
+            <h2 class="section-title">Part 5: Logical Operators &amp; Output Prediction</h2>
+
+            <div class="exercise-card" data-exercise="2.16">
+                <span class="exercise-number">Exercise 2.16</span>
+                <span class="difficulty difficulty-basic">Basic</span>
+                <h3 class="exercise-title">Logical AND and OR</h3>
+                <p class="exercise-description">What is the value of <code>(true && false) || true</code>?</p>
+                <div class="mcq-options" id="mcq-2-16">
+                    <label class="mcq-option" onclick="selectOption('2.16', 0)">A) false</label>
+                    <label class="mcq-option" onclick="selectOption('2.16', 1)">B) true</label>
+                    <label class="mcq-option" onclick="selectOption('2.16', 2)">C) 1</label>
+                    <label class="mcq-option" onclick="selectOption('2.16', 3)">D) Error</label>
+                </div>
+                <div class="hint-box" id="hint-2-16"><strong>Hint:</strong> && is true only when both sides are true. || is true when at least one side is true. (true && false) is false; false || true is true.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.16', 1)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.16')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.16')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-16"></div>
+                <div class="answer-section" id="answer-2-16">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>B) true</strong>. (true && false) = false. false || true = true.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.17">
+                <span class="exercise-number">Exercise 2.17</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Reverse number output</h3>
+                <p class="exercise-description">After this loop, what is the value of <code>reversed</code>?</p>
+                <div class="code-block">int number = 123;
+int reversed = 0;
+while (number &gt; 0) {
+    int digit = number % 10;
+    reversed = reversed * 10 + digit;
+    number /= 10;
+}</div>
+                <div class="input-area">
+                    <label class="input-label">Value of reversed (integer):</label>
+                    <input type="text" class="text-input" id="input-2-17" placeholder="e.g. 321">
+                </div>
+                <div class="hint-box" id="hint-2-17"><strong>Hint:</strong> Each iteration: digit = number % 10 (last digit), reversed = reversed*10 + digit, number = number/10. Trace: 3, then 32, then 321.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkAnswer('2.17', '321')">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.17')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.17')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-17"></div>
+                <div class="answer-section" id="answer-2-17">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>321</strong>. The loop strips digits from number (123 → 12 → 1 → 0) and builds reversed (0 → 3 → 32 → 321).</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.18">
+                <span class="exercise-number">Exercise 2.18</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">Find maximum in array</h3>
+                <p class="exercise-description">What is the output? <code>int arr[] = {3, 7, 2, 9, 1}; int size = 5;</code></p>
+                <div class="code-block">int maxVal = arr[0];
+for (int i = 1; i &lt; size; i++) {
+    if (arr[i] &gt; maxVal)
+        maxVal = arr[i];
+}
+cout &lt;&lt; maxVal;</div>
+                <div class="input-area">
+                    <label class="input-label">Output (one number):</label>
+                    <input type="text" class="text-input" id="input-2-18" placeholder="e.g. 9">
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkAnswer('2.18', '9')">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.18')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-18"></div>
+                <div class="answer-section" id="answer-2-18">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>9</strong>. The loop keeps the largest value seen so far in maxVal. The maximum in {3,7,2,9,1} is 9.</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.19">
+                <span class="exercise-number">Exercise 2.19</span>
+                <span class="difficulty difficulty-advanced">Advanced</span>
+                <h3 class="exercise-title">Loop output prediction</h3>
+                <p class="exercise-description">What does this program print?</p>
+                <div class="code-block">int sum = 0;
+for (int i = 0; i &lt;= 4; i++)
+    sum += i;
+cout &lt;&lt; sum;</div>
+                <div class="input-area">
+                    <label class="input-label">Output (one number):</label>
+                    <input type="text" class="text-input" id="input-2-19" placeholder="e.g. 10">
+                </div>
+                <div class="hint-box" id="hint-2-19"><strong>Hint:</strong> i goes 0, 1, 2, 3, 4. sum = 0+1+2+3+4 = 10.</div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkAnswer('2.19', '10')">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showHint('2.19')">Show Hint</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.19')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-19"></div>
+                <div class="answer-section" id="answer-2-19">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>10</strong>. sum = 0+1+2+3+4 = 10. Note: i &lt;= 4 gives five iterations (0..4).</p>
+                </div>
+            </div>
+
+            <div class="exercise-card" data-exercise="2.20">
+                <span class="exercise-number">Exercise 2.20</span>
+                <span class="difficulty difficulty-intermediate">Intermediate</span>
+                <h3 class="exercise-title">enum and switch</h3>
+                <p class="exercise-description">What is the first value in an enum if not specified?</p>
+                <div class="code-block">enum Color { RED, GREEN, BLUE };</div>
+                <div class="mcq-options" id="mcq-2-20">
+                    <label class="mcq-option" onclick="selectOption('2.20', 0)">A) 0</label>
+                    <label class="mcq-option" onclick="selectOption('2.20', 1)">B) 1</label>
+                    <label class="mcq-option" onclick="selectOption('2.20', 2)">C) RED</label>
+                    <label class="mcq-option" onclick="selectOption('2.20', 3)">Undefined</label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkMCQ('2.20', 0)">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="showAnswer('2.20')">Show Solution</button>
+                </div>
+                <div class="feedback" id="feedback-2-20"></div>
+                <div class="answer-section" id="answer-2-20">
+                    <div class="answer-title">Solution</div>
+                    <p><strong>A) 0</strong>. RED=0, GREEN=1, BLUE=2 by default. Each subsequent value is one more unless you assign explicitly.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="exercise-section">
+            <div class="stats">
+                <h3 style="margin-bottom: 10px;">Your Progress</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="completedCount">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="correctCount">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="accuracyPercent">0%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="completion-badge" id="completionBadge">
+        <h3>🎉 Well done!</h3>
+        <p>You've completed all Chapter 2 exercises.</p>
+    </div>
+
+    <script>
+        const completedExercises = new Set();
+        const correctAnswers = new Set();
+        const totalExercises = 20;
+
+        function updateProgress() {
+            const progress = (completedExercises.size / totalExercises) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent =
+                'Progress: ' + completedExercises.size + ' / ' + totalExercises + ' exercises completed';
+
+            document.getElementById('completedCount').textContent = completedExercises.size;
+            document.getElementById('correctCount').textContent = correctAnswers.size;
+            const accuracy = completedExercises.size > 0
+                ? Math.round((correctAnswers.size / completedExercises.size) * 100)
+                : 0;
+            document.getElementById('accuracyPercent').textContent = accuracy + '%';
+
+            if (completedExercises.size === totalExercises) {
+                document.getElementById('completionBadge').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('completionBadge').style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function showHint(exerciseId) {
+            const id = exerciseId.replace('.', '-');
+            const hintBox = document.getElementById('hint-' + id);
+            if (hintBox) hintBox.style.display = 'block';
+        }
+
+        function showAnswer(exerciseId) {
+            const id = exerciseId.replace('.', '-');
+            const answerSection = document.getElementById('answer-' + id);
+            if (answerSection) {
+                answerSection.style.display = 'block';
+                completedExercises.add(exerciseId);
+                updateProgress();
+            }
+        }
+
+        function selectOption(exerciseId, optionIndex) {
+            const id = exerciseId.replace('.', '-');
+            const options = document.querySelectorAll('#mcq-' + id + ' .mcq-option');
+            options.forEach(function(opt, idx) {
+                opt.classList.remove('selected');
+                if (idx === optionIndex) opt.classList.add('selected');
+            });
+        }
+
+        function checkMCQ(exerciseId, correctOption) {
+            const id = exerciseId.replace('.', '-');
+            const options = document.querySelectorAll('#mcq-' + id + ' .mcq-option');
+            var selected = -1;
+            options.forEach(function(opt, idx) {
+                if (opt.classList.contains('selected')) selected = idx;
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            var feedback = document.getElementById('feedback-' + id);
+            if (selected === -1) {
+                feedback.textContent = 'Please select an answer first.';
+                feedback.className = 'feedback info';
+                return;
+            }
+
+            completedExercises.add(exerciseId);
+            if (selected === correctOption) {
+                options[selected].classList.add('correct');
+                feedback.textContent = '✓ Correct!';
+                feedback.className = 'feedback correct';
+                correctAnswers.add(exerciseId);
+            } else {
+                options[selected].classList.add('wrong');
+                options[correctOption].classList.add('correct');
+                feedback.textContent = '✗ Incorrect. The correct option is highlighted in green.';
+                feedback.className = 'feedback wrong';
+            }
+            updateProgress();
+        }
+
+        function checkAnswer(exerciseId, expected) {
+            const id = exerciseId.replace('.', '-');
+            const input = document.getElementById('input-' + id);
+            const feedback = document.getElementById('feedback-' + id);
+            if (!input || !feedback) return;
+
+            var value = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+            var expectedNorm = (expected + '').trim().toLowerCase().replace(/\s+/g, ' ');
+
+            if (!value) {
+                feedback.textContent = 'Please enter an answer first.';
+                feedback.className = 'feedback info';
+                return;
+            }
+
+            completedExercises.add(exerciseId);
+            var isCorrect = (value === expectedNorm);
+
+            if (isCorrect) {
+                feedback.textContent = '✓ Correct!';
+                feedback.className = 'feedback correct';
+                correctAnswers.add(exerciseId);
+            } else {
+                feedback.textContent = '✗ Not quite. Check the solution or try again.';
+                feedback.className = 'feedback wrong';
+            }
+            updateProgress();
+        }
+
+        updateProgress();
+    </script>
+</body>
+</html>

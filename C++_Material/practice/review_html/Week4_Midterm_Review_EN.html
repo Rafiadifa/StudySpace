@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: Control Statements & Operators - Midterm Review</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1f2937;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 6px;
+            background: linear-gradient(90deg, #22c55e, #14b8a6);
+            z-index: 1000;
+            transition: width 0.2s ease;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        header {
+            background: linear-gradient(135deg, #5b6df5 0%, #7e57c2 100%);
+            color: #ffffff;
+            padding: 28px;
+        }
+
+        h1 { font-size: 2rem; margin-bottom: 6px; }
+        .subtitle { opacity: 0.95; }
+
+        .content { padding: 24px; }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 { font-size: 1.4rem; margin-bottom: 12px; color: #2f3f9c; }
+        h3 { font-size: 1.1rem; margin: 10px 0; color: #334155; }
+
+        ul { padding-left: 20px; }
+        li { margin: 5px 0; }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+            border-left: 4px solid #6366f1;
+            border-radius: 10px;
+            padding: 14px;
+            margin: 10px 0;
+        }
+
+        .warning {
+            background: #fff1f2;
+            border-left: 4px solid #e11d48;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .tip {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 10px 0;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        th { background: #eef2ff; color: #1e293b; }
+        tr:nth-child(even) { background: #f8fafc; }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tab-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 14px;
+            cursor: pointer;
+            background: #e2e8f0;
+            color: #1f2937;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #5b6df5 0%, #7e57c2 100%);
+            color: #ffffff;
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .exercise {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 14px 0;
+        }
+
+        .difficulty {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            color: #ffffff;
+        }
+        .basic { background: #16a34a; }
+        .core { background: #ea580c; }
+
+        .answer-btn {
+            margin-top: 8px;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #5b6df5 0%, #7e57c2 100%);
+        }
+
+        .answer-section {
+            display: none;
+            margin-top: 10px;
+            border-radius: 10px;
+            padding: 12px;
+            background: #ecfdf5;
+            border: 1px solid #86efac;
+        }
+
+        .answer-section.show { display: block; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 14px; }
+            h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <div class="container">
+        <header>
+            <h1>Chapter 3: Control Statements & Operators</h1>
+            <p class="subtitle">Midterm Review (English) - Focus on execution flow and common traps</p>
+        </header>
+
+        <main class="content">
+            <!-- Section A: Quick Focus -->
+            <section class="card">
+                <h2>A. Exam Focus in 60 Seconds</h2>
+                <div class="highlight-box">
+                    <ul>
+                        <li><strong>Integer division truncates:</strong> 7/2 = 3, not 3.5! Use <code>(double)a/b</code> for decimals.</li>
+                        <li><strong>Prefix vs Postfix:</strong> ++x (increment first), x++ (use first). Know the difference!</li>
+                        <li><strong>Short-circuit:</strong> && stops if first is false, || stops if first is true.</li>
+                        <li><strong>switch fall-through:</strong> Missing break executes the next case!</li>
+                        <li><strong>Dangling else:</strong> else pairs with the nearest unmatched if - always use braces!</li>
+                        <li><strong>while vs do-while:</strong> while checks first (may skip), do-while checks last (runs at least once).</li>
+                        <li><strong>break vs continue:</strong> break exits the loop, continue skips to next iteration.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section B: Operator Precedence & Common Traps -->
+            <section class="card">
+                <h2>B. Operator Precedence & Traps</h2>
+                
+                <div class="warning">
+                    <strong>Top 5 Deadly Mistakes:</strong>
+                    <ol>
+                        <li><code>if (x = 5)</code> → Assignment, always true! Use <code>==</code> for comparison.</li>
+                        <li><code>7 / 2</code> expecting 3.5 → Integer division truncates to 3.</li>
+                        <li>Missing <code>i++</code> in loop → Infinite loop!</li>
+                        <li>Semicolon after <code>if (...);</code> → Empty statement, braces always execute!</li>
+                        <li><code>arr[5]</code> for size-5 array → Off-by-one error, valid indices are 0-4!</li>
+                    </ol>
+                </div>
+
+                <h3>Precedence Priority (High to Low)</h3>
+                <table>
+                    <tr><th>Priority</th><th>Operators</th><th>Example Trap</th></tr>
+                    <tr><td>1</td><td>() [] ++(postfix)</td><td><code>a.b++</code> - member first, then increment</td></tr>
+                    <tr><td>2</td><td>++(prefix) ! sizeof</td><td><code>!x++</code> tricky - postfix before prefix</td></tr>
+                    <tr><td>3</td><td>* / %</td><td><code>a + b * c</code> - multiplication first</td></tr>
+                    <tr><td>4</td><td>+ -</td><td>Left to right associativity</td></tr>
+                    <tr><td>5</td><td>&lt; &lt;= &gt; &gt;=</td><td><code>a &lt; b &lt; c</code> - compiles but wrong logic!</td></tr>
+                    <tr><td>6</td><td>== !=</td><td>Assignment (=) has lower precedence!</td></tr>
+                    <tr><td>7</td><td>&&</td><td>Short-circuit evaluation</td></tr>
+                    <tr><td>8</td><td>||</td><td>Short-circuit evaluation</td></tr>
+                    <tr><td>9</td><td>?:</td><td>Right-to-left associativity</td></tr>
+                    <tr><td>10</td><td>= += -= ...</td><td>Right-to-left: a = b = c = 0</td></tr>
+                    <tr><td>11</td><td>, (comma)</td><td>LOWEST - use parentheses!</td></tr>
+                </table>
+            </section>
+
+            <!-- Section C: Control Structures -->
+            <section class="card">
+                <h2>C. Control Structures Quick Reference</h2>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('tab-if', this)">if-else</button>
+                    <button class="tab-btn" onclick="showTab('tab-switch', this)">switch</button>
+                    <button class="tab-btn" onclick="showTab('tab-while', this)">while/do-while</button>
+                    <button class="tab-btn" onclick="showTab('tab-for', this)">for</button>
+                    <button class="tab-btn" onclick="showTab('tab-jump', this)">break/continue</button>
+                </div>
+
+                <div id="tab-if" class="tab-panel active">
+                    <div class="code-block">if (condition) {
+    // executes if true
+} else if (other) {
+    // else-if ladder
+} else {
+    // default
+}</div>
+                    <div class="tip">
+                        <strong>Dangling Else Rule:</strong> else pairs with the nearest unmatched if. Always use braces to avoid ambiguity!
+                    </div>
+                </div>
+
+                <div id="tab-switch" class="tab-panel">
+                    <div class="code-block">switch (expression) {
+    case 1: 
+        // code
+        break;  // DON'T forget!
+    case 2:
+        // falls through if no break
+    default:
+        // catch-all
+}</div>
+                    <div class="warning">
+                        <strong>Fall-through:</strong> Without break, execution continues to the next case! Useful for grouping (e.g., cases A, B, C all do the same thing), but dangerous if accidental.
+                    </div>
+                </div>
+
+                <div id="tab-while" class="tab-panel">
+                    <div class="code-block">// while: check first, may never execute
+while (condition) {
+    // loop body
+    // MUST modify condition variable!
+}
+
+// do-while: execute first, check last
+do {
+    // runs at least once
+} while (condition);</div>
+                    <div class="tip">
+                        Use <strong>while</strong> when you might need zero iterations. Use <strong>do-while</strong> when you need at least one execution (e.g., menu systems).
+                    </div>
+                </div>
+
+                <div id="tab-for" class="tab-panel">
+                    <div class="code-block">for (init; condition; increment) {
+    // loop body
+}
+
+// Example: print 0-9
+for (int i = 0; i < 10; i++) {
+    cout &lt;&lt; i &lt;&lt; " ";
+}
+
+// Multiple variables with comma operator
+for (int i = 0, j = 9; i < j; i++, j--) {
+    // process from both ends
+}</div>
+                    <div class="tip">
+                        <strong>Best for:</strong> Known iteration count. Can use comma operator for multiple initializations/increments.
+                    </div>
+                </div>
+
+                <div id="tab-jump" class="tab-panel">
+                    <table>
+                        <tr><th>Statement</th><th>Effect</th><th>Use Case</th></tr>
+                        <tr><td>break</td><td>Exit loop/switch immediately</td><td>Found what you need, stop searching</td></tr>
+                        <tr><td>continue</td><td>Skip to next iteration</td><td>Skip invalid data, process rest</td></tr>
+                    </table>
+                    <div class="code-block">// break example: find first match
+for (int i = 0; i < n; i++) {
+    if (arr[i] == target) {
+        index = i;
+        break;  // exit immediately
+    }
+}
+
+// continue example: skip invalid
+for (int i = 0; i < n; i++) {
+    if (arr[i] < 0) continue;  // skip negative
+    sum += arr[i];  // only positives
+}</div>
+                </div>
+            </section>
+
+            <!-- Section D: Execution Tracing -->
+            <section class="card">
+                <h2>D. Execution Tracing Drills</h2>
+                
+                <div class="exercise">
+                    <h3>Drill 1: Pre/Post Increment <span class="difficulty core">core</span></h3>
+                    <div class="code-block">int x = 5, y = 5;
+int a = x++;    // a = ?, x = ?
+int b = ++y;    // b = ?, y = ?
+int c = a + b;  // c = ?</div>
+                    <button class="answer-btn" onclick="toggleAnswer('ans1')">Show Answer</button>
+                    <div id="ans1" class="answer-section">
+                        a = 5 (use first), x = 6<br>
+                        b = 6 (increment first), y = 6<br>
+                        c = 11
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h3>Drill 2: Short-Circuit <span class="difficulty core">core</span></h3>
+                    <div class="code-block">int a = 3, b = 5, c = 7;
+bool r1 = (a > b) && (++c > b);  // c = ?
+bool r2 = (a < b) || (++c > b);  // c = ?</div>
+                    <button class="answer-btn" onclick="toggleAnswer('ans2')">Show Answer</button>
+                    <div id="ans2" class="answer-section">
+                        After r1: c = 7 (&& short-circuits, ++c never executes)<br>
+                        After r2: c = 7 (|| short-circuits, ++c never executes)<br>
+                        <strong>Key:</strong> && stops if first is false, || stops if first is true.
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h3>Drill 3: Loop Output <span class="difficulty core">core</span></h3>
+                    <div class="code-block">for (int i = 1; i <= 5; i++) {
+    if (i == 2) continue;
+    if (i == 4) break;
+    cout &lt;&lt; i &lt;&lt; " ";
+}</div>
+                    <button class="answer-btn" onclick="toggleAnswer('ans3')">Show Answer</button>
+                    <div id="ans3" class="answer-section">
+                        Output: <strong>1 3</strong><br>
+                        i=1: printed<br>
+                        i=2: continue (skipped)<br>
+                        i=3: printed<br>
+                        i=4: break (loop ends)
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h3>Drill 4: switch Fall-Through <span class="difficulty basic">basic</span></h3>
+                    <div class="code-block">char grade = 'B';
+switch (grade) {
+    case 'A': cout &lt;&lt; "Excellent ";
+    case 'B': cout &lt;&lt; "Good ";
+    case 'C': cout &lt;&lt; "Average ";
+              break;
+    default:  cout &lt;&lt; "Poor";
+}</div>
+                    <button class="answer-btn" onclick="toggleAnswer('ans4')">Show Answer</button>
+                    <div id="ans4" class="answer-section">
+                        Output: <strong>Good Average </strong><br>
+                        'B' matches, prints "Good ", falls through to 'C', prints "Average ", hits break.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section E: Common Bugs -->
+            <section class="card">
+                <h2>E. Common Bug Patterns</h2>
+                
+                <table>
+                    <tr><th>Bug Pattern</th><th>Why It Happens</th><th>The Fix</th></tr>
+                    <tr>
+                        <td><code>if (x = 5)</code></td>
+                        <td>= is assignment, returns 5 (truthy)</td>
+                        <td>Use <code>==</code> for comparison</td>
+                    </tr>
+                    <tr>
+                        <td><code>7/2 == 3.5</code></td>
+                        <td>Integer division truncates to 3</td>
+                        <td><code>7.0/2</code> or <code>(double)7/2</code></td>
+                    </tr>
+                    <tr>
+                        <td>while without i++</td>
+                        <td>Condition never becomes false</td>
+                        <td>Always modify loop variable</td>
+                    </tr>
+                    <tr>
+                        <td><code>if (...); {...}</code></td>
+                        <td>Semicolon creates empty statement</td>
+                        <td>Remove semicolon after if()</td>
+                    </tr>
+                    <tr>
+                        <td><code>for (i=0; i<=5; i++)</code> on arr[5]</td>
+                        <td>Valid indices are 0-4 only</td>
+                        <td>Use <code>i < 5</code> not <code>i <= 5</code></td>
+                    </tr>
+                    <tr>
+                        <td>Missing break in switch</td>
+                        <td>Falls through to next case</td>
+                        <td>Add break or comment // intentional</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Section F: Quick Reference Table -->
+            <section class="card">
+                <h2>F. Operator Quick Reference</h2>
+                <table>
+                    <tr><th>Operator</th><th>Name</th><th>Example</th><th>Key Point</th></tr>
+                    <tr><td>+ - * /</td><td>Arithmetic</td><td>7 / 2 = 3</td><td>Integer division truncates</td></tr>
+                    <tr><td>%</td><td>Modulo</td><td>17 % 5 = 2</td><td>Remainder, sign follows dividend</td></tr>
+                    <tr><td>++ --</td><td>Increment/Decrement</td><td>++x vs x++</td><td>Pre: change then use; Post: use then change</td></tr>
+                    <tr><td>&& || !</td><td>Logical</td><td>a && b</td><td>&& higher precedence than ||</td></tr>
+                    <tr><td>& | ^ ~</td><td>Bitwise</td><td>flags & mask</td><td>Use parentheses: (flags & mask) == value</td></tr>
+                    <tr><td>< <= > >=</td><td>Relational</td><td>a < b</td><td>Left-to-right: a < b < c is (a < b) < c</td></tr>
+                    <tr><td>== !=</td><td>Equality</td><td>a == b</td><td>Lower than relational!</td></tr>
+                    <tr><td>?:</td><td>Ternary</td><td>max = a > b ? a : b</td><td>Right-to-left associativity</td></tr>
+                    <tr><td>,</td><td>Comma</td><td>a, b, c</td><td>Lowest precedence! Evaluates left to right</td></tr>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Scroll progress
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scrollProgress").style.width = scrolled + "%";
+        };
+
+        // Tab switching
+        function showTab(tabId, btn) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // Toggle answer
+        function toggleAnswer(id) {
+            const ans = document.getElementById(id);
+            ans.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>
