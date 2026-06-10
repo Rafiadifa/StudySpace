@@ -80,7 +80,15 @@
       return shuffle(VOCAB.filter(w=>(lf==="all"||w.lesson===+lf)&&(pf==="all"||w.pos===pf))); }
     function render(){
       const w=deck[idx]; if(!w) return;
-      card.classList.remove("flipped");
+      // If the card was showing its answer, snap it back to the front WITHOUT animating,
+      // otherwise the old answer visibly rotates away (the "split-second flash").
+      if(card.classList.contains("flipped")){
+        const inner=card.querySelector(".fc-inner");
+        inner.style.transition="none";
+        card.classList.remove("flipped");
+        void inner.offsetWidth;          // force reflow so the change is instant
+        inner.style.transition="";
+      }
       $("#progress").textContent=`Card ${idx+1} of ${deck.length} — ${lessonName(w.lesson)}`;
       if(mode==="hz"){ $("#front").innerHTML=`<div class="big-hz">${w.hanzi}</div>`;
         $("#back").innerHTML=`<div class="mid-py">${w.pinyin}</div><div class="mid-en">${w.en}</div><div class="sub">${POS_LABELS[w.pos]||w.pos}</div>${w.ex?`<div class="sub-ex">${w.ex}</div>`:""}`; }

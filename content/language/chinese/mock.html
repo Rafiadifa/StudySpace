@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock Exam · Chinese</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span> Mock Exam
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">模拟考试 Mock Exam</span>
+    <span class="topbar-sub">/ Lessons 11–16</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="main" style="padding-top:24px;">
+
+    <!-- ── Intro / start ── -->
+    <div class="panel" id="intro">
+      <h3>Chinese Final · Mock Exam</h3>
+      <p style="font-size:0.86rem;color:var(--text2);margin-bottom:6px;line-height:1.65;">
+        Five sections in your teacher's exam format — <span class="hz">写拼音</span> (write the pinyin),
+        <span class="hz">选词填空</span> (fill in the blank), <span class="hz">改错</span> (right or wrong),
+        <span class="hz">连词成句</span> (reorder), and <span class="hz">翻译</span> (translate).
+      </p>
+      <p style="font-size:0.86rem;color:var(--text2);margin-bottom:16px;line-height:1.65;">
+        <strong>Tones count.</strong> In the pinyin section, type tone numbers — e.g. 你好 = <code>ni3hao3</code>
+        (tone marks like <code>nǐhǎo</code> are accepted too). Fill in everything, then press <em>Finish&nbsp;&amp;&nbsp;grade</em>.
+      </p>
+      <div class="field-row">
+        <div class="field"><label>Time limit</label>
+          <select id="m-time" class="flt">
+            <option value="60">60 minutes</option>
+            <option value="45">45 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="0">No limit (practice)</option>
+          </select>
+        </div>
+        <div class="field"><label>&nbsp;</label><button class="btn btn-primary" id="m-start">Start exam</button></div>
+      </div>
+    </div>
+
+    <!-- ── Exam ── -->
+    <div id="exam" style="display:none;">
+      <div class="mock-bar">
+        <div>
+          <div class="mock-timer-label">Time left</div>
+          <div class="mock-timer" id="timer">60:00</div>
+        </div>
+        <span class="mock-progress" id="answered">0 answered</span>
+        <button class="btn btn-primary btn-sm" id="m-finish">Finish &amp; grade</button>
+      </div>
+      <div id="sections"></div>
+      <div style="text-align:center;margin:24px 0 40px;">
+        <button class="btn btn-primary" id="m-finish2">Finish &amp; grade exam</button>
+      </div>
+    </div>
+
+    <!-- ── Results ── -->
+    <div id="results" style="display:none;"></div>
+
+  </div>
+
+  <div class="footer-note">CHINESE LIBRARY · MOCK EXAM</div>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+  setTopbarDate();
+
+  /* ============================================================
+     MOCK EXAM CONTENT  (Lessons 11–16) — answers carry tones
+     ============================================================ */
+  const MOCK = {
+    pinyin: [   // write the pinyin (with tones)
+      { hz:"天气",     py:"tiānqì" },
+      { hz:"季节",     py:"jìjié" },
+      { hz:"比较",     py:"bǐjiào" },
+      { hz:"银行",     py:"yínháng" },
+      { hz:"颜色",     py:"yánsè" },
+      { hz:"漂亮",     py:"piàoliang" },
+      { hz:"准备",     py:"zhǔnbèi" },
+      { hz:"礼物",     py:"lǐwù" },
+      { hz:"舒服",     py:"shūfu" },
+      { hz:"巧克力",   py:"qiǎokèlì" },
+      { hz:"购物中心", py:"gòuwù zhōngxīn" },
+      { hz:"音乐会",   py:"yīnyuèhuì" },
+    ],
+    fill: [     // choose the right word (options + answer index)
+      { q:"今天没有云，是个______。", options:["晴天","零下","季节"], answer:0, explain:"晴天 = a clear/sunny day." },
+      { q:"咱们先去银行换钱，______去商店买东西。", options:["然后","比如","所以"], answer:0, explain:"先……然后…… = first … then …" },
+      { q:"这件毛衣______好看的，我很喜欢。", options:["挺","有点儿","最"], answer:0, explain:"挺 … 的 = quite / pretty." },
+      { q:"这件衣服______贵，所以我没买。", options:["有点儿","一点儿","多"], answer:0, explain:"有点儿 + adj. = a bit too (negative feeling)." },
+      { q:"你的生日想要花______巧克力？", options:["还是","或者","然后"], answer:0, explain:"还是 offers a choice inside a question." },
+      { q:"从星期一______星期五，我每天都有课。", options:["到","在","跟"], answer:0, explain:"从……到…… = from … to …" },
+      { q:"我______喜欢秋天，因为不太冷也不太热。", options:["最","又","还"], answer:0, explain:"最 = most / best." },
+      { q:"妈妈______准备晚饭呢，你别打扰她。", options:["在","了","也"], answer:0, explain:"在 + V (+呢) marks an action in progress." },
+      { q:"明天我们一起去爬山，______？", options:["好不好","好吗不","好吧吗"], answer:0, explain:"好不好 is the V不V tag question." },
+      { q:"这些颜色我都不喜欢，请给我看看______的。", options:["别的","它","新"], answer:0, explain:"别的 = another / a different one." },
+      { q:"他每天______六点起床，然后去跑步。", options:["都","也","还"], answer:0, explain:"每……都…… — 每 almost always pairs with 都." },
+      { q:"这个电影没意思，我______想看。", options:["不太","有点儿","比较"], answer:0, explain:"不太 + V = not really / not too." },
+    ],
+    truefalse: [   // 改错 — judge right/wrong, give the fix
+      { q:"你在看什么吗？", correct:false, fix:"你在看什么呢？", explain:"A question with a question word (什么) ends in 呢, not 吗." },
+      { q:"这件衣服挺漂亮。", correct:false, fix:"这件衣服挺漂亮的。", explain:"挺 … 的 needs the closing 的." },
+      { q:"今天有点儿冷。", correct:true, explain:"Correct — 有点儿 + adjective." },
+      { q:"我在打算去银行。", correct:false, fix:"我打算去银行。", explain:"在 marks a visible action in progress; it can't go with a mental verb like 打算." },
+      { q:"你去不去图书馆吗？", correct:false, fix:"你去不去图书馆？", explain:"Don't mix the V不V pattern with 吗 — choose one." },
+      { q:"从星期一到星期五我有课每天。", correct:false, fix:"从星期一到星期五我每天都有课。", explain:"Time word 每天都 goes before the verb, not after." },
+      { q:"我买了一件车。", correct:false, fix:"我买了一辆车。", explain:"辆 is the measure word for vehicles; 件 is for clothing." },
+      { q:"她送给我一束花。", correct:true, explain:"Correct — 束 is the right measure word for a bouquet of flowers." },
+    ],
+    reorder: [   // 连词成句
+      { tokens:["我","每天","都","有","汉语课"], answer:"我每天都有汉语课", py:"Wǒ měi tiān dōu yǒu Hànyǔ kè.", explain:"每……都…… before the verb." },
+      { tokens:["这件","毛衣","挺","好看","的"], answer:"这件毛衣挺好看的", py:"Zhè jiàn máoyī tǐng hǎokàn de.", explain:"挺 + adj. + 的." },
+      { tokens:["周末","我","可以","睡懒觉"], answer:"周末我可以睡懒觉", py:"Zhōumò wǒ kěyǐ shuì lǎnjiào.", explain:"Time + S + 可以 + V." },
+      { tokens:["咱们","先","去","银行","换钱"], answer:"咱们先去银行换钱", py:"Zánmen xiān qù yínháng huàn qián.", explain:"先 + V; serial verb 去 + place + V." },
+      { tokens:["你","送","花","还是","送","巧克力"], answer:"你送花还是送巧克力", py:"Nǐ sòng huā háishi sòng qiǎokèlì?", explain:"A 还是 B choice question." },
+      { tokens:["看起来","今天","天气","不太","好"], answer:"看起来今天天气不太好", py:"Kàn qǐlái jīntiān tiānqì bú tài hǎo.", explain:"看起来 at the front gives an impression." },
+    ],
+    translate: [   // 翻译 — model answer + pinyin (self-checked)
+      { q:"What's the weather like today? It's not too cold.", answer:"今天天气怎么样？今天不太冷。", py:"Jīntiān tiānqì zěnmeyàng? Jīntiān bú tài lěng." },
+      { q:"I'll go to the bank to change money first, then go shopping.", answer:"我先去银行换钱，然后去商店买东西。", py:"Wǒ xiān qù yínháng huàn qián, ránhòu qù shāngdiàn mǎi dōngxi." },
+      { q:"This sweater is a bit expensive. Do you have a cheaper one?", answer:"这件毛衣有点儿贵，你有便宜的吗？", py:"Zhè jiàn máoyī yǒudiǎnr guì, nǐ yǒu piányi de ma?" },
+      { q:"What are your plans for the weekend?", answer:"你周末有什么安排？", py:"Nǐ zhōumò yǒu shénme ānpái?" },
+      { q:"I like autumn best, because it's relatively comfortable.", answer:"我最喜欢秋天，因为秋天比较舒服。", py:"Wǒ zuì xǐhuan qiūtiān, yīnwèi qiūtiān bǐjiào shūfu." },
+      { q:"Are you giving her flowers or chocolate for her birthday?", answer:"她的生日你送花还是送巧克力？", py:"Tā de shēngrì nǐ sòng huā háishi sòng qiǎokèlì?" },
+    ],
+  };
+
+  /* ============================================================
+     TONE-AWARE PINYIN PARSING
+     Accepts tone marks (nǐhǎo) OR tone numbers (ni3hao3) OR plain.
+     Returns { letters, tones[] } so we can grade letters and tones.
+     ============================================================ */
+  const TONE_MAP = {
+    "ā":"a1","á":"a2","ǎ":"a3","à":"a4","a":"a",
+    "ē":"e1","é":"e2","ě":"e3","è":"e4","e":"e",
+    "ī":"i1","í":"i2","ǐ":"i3","ì":"i4","i":"i",
+    "ō":"o1","ó":"o2","ǒ":"o3","ò":"o4","o":"o",
+    "ū":"u1","ú":"u2","ǔ":"u3","ù":"u4","u":"u",
+    "ǖ":"v1","ǘ":"v2","ǚ":"v3","ǜ":"v4","ü":"v",
+  };
+  function pyParse(str){
+    str = (str||"").toLowerCase().replace(/[\s'·,，。、？?!！]/g,"");
+    let letters="", tones=[];
+    for(const ch of str){
+      if(ch>="0" && ch<="5"){ const t=+ch; if(t>=1&&t<=4) tones.push(t); continue; } // 0/5 = neutral → ignore
+      const m=TONE_MAP[ch];
+      if(m){ letters+=m[0]; if(m.length>1) tones.push(+m[1]); }
+      else letters+=ch;
+    }
+    letters = letters.replace(/v/g,"u").replace(/r$/,"r"); // lenient: ü→u
+    return { letters, tones };
+  }
+  function gradePinyin(input, answer){
+    const A=pyParse(answer), U=pyParse(input);
+    const lettersOk = A.letters===U.letters;
+    const tonesOk = lettersOk && A.tones.length===U.tones.length && A.tones.every((t,i)=>t===U.tones[i]);
+    return { lettersOk, tonesOk };
+  }
+
+  /* ============================================================
+     EXAM ENGINE
+     ============================================================ */
+  const $sections=$("#sections");
+  let graders=[];        // each returns {credit:0|1, max:1}
+  let answeredFns=[];    // each returns bool (has the user answered?)
+  let timerId=null, finished=false;
+
+  function sectionHead(zh,en,pts){
+    const h=el("div","sec-head");
+    h.innerHTML=`<span class="sec-zh">${zh}</span><span class="sec-en">${en}</span><span class="sec-pts">${pts}</span>`;
+    return h;
+  }
+
+  function buildExam(){
+    $sections.innerHTML=""; graders=[]; answeredFns=[]; let n=0;
+
+    /* ---- Section I: 写拼音 ---- */
+    let sec=el("div","mock-section");
+    sec.appendChild(sectionHead("一、写拼音","Write the pinyin (with tones)", MOCK.pinyin.length+" pts"));
+    MOCK.pinyin.forEach(item=>{
+      n++; const box=el("div","ex-q");
+      box.appendChild(el("div","qtext",`<span class="q-num">${n}</span>${item.hz}`));
+      const inp=el("input","ex-input"); inp.type="text"; inp.placeholder="pinyin with tone numbers, e.g. ni3hao3"; inp.autocapitalize="off"; inp.autocomplete="off"; inp.spellcheck=false;
+      const fb=el("div","feedback");
+      box.appendChild(inp); box.appendChild(fb);
+      sec.appendChild(box);
+      answeredFns.push(()=>inp.value.trim()!=="");
+      graders.push(()=>{
+        const {lettersOk,tonesOk}=gradePinyin(inp.value,item.py);
+        box.classList.add(tonesOk?"correct-q":"wrong-q");
+        if(tonesOk){ fb.className="feedback show ok"; fb.innerHTML=`✓ <span class="py">${item.py}</span> — perfect, tones correct.`; }
+        else if(lettersOk){ fb.className="feedback show warn"; fb.innerHTML=`≈ Right syllables, but check the tones → <span class="py">${item.py}</span>`; }
+        else { fb.className="feedback show no"; fb.innerHTML=`✗ Answer: <span class="py">${item.py}</span>`; }
+        return { section:"pinyin", credit: tonesOk?1:0, max:1 };
+      });
+    });
+    $sections.appendChild(sec);
+
+    /* ---- Section II: 选词填空 ---- */
+    sec=el("div","mock-section");
+    sec.appendChild(sectionHead("二、选词填空","Fill in the blank", MOCK.fill.length+" pts"));
+    MOCK.fill.forEach(item=>{
+      n++; const box=el("div","ex-q");
+      box.appendChild(el("div","qtext",`<span class="q-num">${n}</span>${item.q}`));
+      const row=el("div","opt-row"); let chosen=-1;
+      item.options.forEach((opt,oi)=>{
+        const b=el("div","opt",opt);
+        b.addEventListener("click",()=>{ if(finished)return;
+          chosen=oi; [...row.children].forEach(c=>c.classList.remove("chosen")); b.classList.add("chosen"); updateAnswered(); });
+        row.appendChild(b);
+      });
+      const fb=el("div","feedback");
+      box.appendChild(row); box.appendChild(fb); sec.appendChild(box);
+      answeredFns.push(()=>chosen>-1);
+      graders.push(()=>{
+        const ok=chosen===item.answer;
+        [...row.children].forEach((c,ci)=>{ if(ci===item.answer)c.classList.add("correct"); if(ci===chosen&&!ok)c.classList.add("wrong"); });
+        box.classList.add(ok?"correct-q":"wrong-q");
+        fb.className="feedback show "+(ok?"ok":"no");
+        fb.innerHTML=(ok?"✓ Correct. ":"✗ ")+(item.explain||"");
+        return { section:"fill", credit: ok?1:0, max:1 };
+      });
+    });
+    $sections.appendChild(sec);
+
+    /* ---- Section III: 改错 ---- */
+    sec=el("div","mock-section");
+    sec.appendChild(sectionHead("三、判断对错 / 改错","Right or wrong? (correct it)", MOCK.truefalse.length+" pts"));
+    MOCK.truefalse.forEach(item=>{
+      n++; const box=el("div","ex-q");
+      box.appendChild(el("div","qtext",`<span class="q-num">${n}</span>${item.q}`));
+      const rowEl=el("div","tf-row");
+      const right=el("button","btn btn-ghost btn-sm","√ Correct"), wrong=el("button","btn btn-ghost btn-sm","✕ Wrong");
+      let chosen=null;
+      const pick=(v,btn)=>{ if(finished)return; chosen=v; right.classList.remove("chosen"); wrong.classList.remove("chosen"); btn.classList.add("chosen"); updateAnswered(); };
+      right.addEventListener("click",()=>pick(true,right)); wrong.addEventListener("click",()=>pick(false,wrong));
+      const fb=el("div","feedback");
+      rowEl.appendChild(right); rowEl.appendChild(wrong); box.appendChild(rowEl); box.appendChild(fb); sec.appendChild(box);
+      answeredFns.push(()=>chosen!==null);
+      graders.push(()=>{
+        const ok=chosen===item.correct;
+        box.classList.add(ok?"correct-q":"wrong-q");
+        fb.className="feedback show "+(ok?"ok":"no");
+        let m=ok?"✓ ":"✗ ";
+        m+= item.correct ? "This sentence is correct. " : `Wrong — should be <span class="ans">${item.fix}</span>. `;
+        fb.innerHTML=m+(item.explain||"");
+        return { section:"truefalse", credit: ok?1:0, max:1 };
+      });
+    });
+    $sections.appendChild(sec);
+
+    /* ---- Section IV: 连词成句 ---- */
+    sec=el("div","mock-section");
+    sec.appendChild(sectionHead("四、连词成句","Reorder the words", MOCK.reorder.length+" pts"));
+    MOCK.reorder.forEach(item=>{
+      n++; const box=el("div","ex-q");
+      box.appendChild(el("div","qtext",`<span class="q-num">${n}</span><span style="font-family:'DM Sans',sans-serif;font-size:.92rem;color:var(--text3)">Tap the words in order:</span>`));
+      const line=el("div","tokenline"), pool=el("div","tokenpool"), chosen=[];
+      shuffle(item.tokens).forEach(tok=>{
+        const t=el("div","token",tok);
+        t.addEventListener("click",()=>{ if(finished||t.dataset.used)return; t.dataset.used="1"; t.style.opacity=".3"; t.style.pointerEvents="none";
+          chosen.push(tok); const c=el("div","token",tok);
+          c.addEventListener("click",()=>{ if(finished)return; c.remove(); const k=chosen.indexOf(tok); if(k>-1)chosen.splice(k,1); t.dataset.used=""; t.style.opacity="1"; t.style.pointerEvents="auto"; updateAnswered(); });
+          line.appendChild(c); updateAnswered(); });
+        pool.appendChild(t);
+      });
+      const fb=el("div","feedback");
+      box.appendChild(line); box.appendChild(pool); box.appendChild(fb); sec.appendChild(box);
+      answeredFns.push(()=>chosen.length>0);
+      graders.push(()=>{
+        const ok=chosen.join("")===item.answer;
+        box.classList.add(ok?"correct-q":"wrong-q");
+        fb.className="feedback show "+(ok?"ok":"no");
+        fb.innerHTML=(ok?"✓ Correct! ":"✗ ")+`<span class="ans">${item.answer}</span> <span class="py">${item.py}</span><br><span style="color:var(--text3)">${item.explain||""}</span>`;
+        return { section:"reorder", credit: ok?1:0, max:1 };
+      });
+    });
+    $sections.appendChild(sec);
+
+    /* ---- Section V: 翻译 (self-graded) ---- */
+    sec=el("div","mock-section");
+    sec.appendChild(sectionHead("五、翻译","Translate into Chinese (self-check)", MOCK.translate.length+" pts · self"));
+    MOCK.translate.forEach(item=>{
+      n++; const box=el("div","ex-q");
+      box.appendChild(el("div","qtext latin",`<span class="q-num">${n}</span>${item.q}`));
+      const ta=el("textarea","ta-input"); ta.placeholder="write your Chinese here…";
+      const fb=el("div","feedback");
+      box.appendChild(ta); box.appendChild(fb); sec.appendChild(box);
+      answeredFns.push(()=>ta.value.trim()!=="");
+      let selfRight=false;
+      graders.push(()=>{
+        fb.className="feedback show ok";
+        fb.innerHTML=`Model answer: <span class="ans">${item.answer}</span> <span class="py">${item.py}</span>
+          <div class="self-row"><span class="self-lbl">Did you get the meaning across?</span>
+          <button class="btn btn-ghost btn-sm self-y">I got it ✓</button>
+          <button class="btn btn-ghost btn-sm self-n">Missed it ✕</button></div>`;
+        const y=fb.querySelector(".self-y"), no=fb.querySelector(".self-n");
+        y.addEventListener("click",()=>{ selfRight=true; y.classList.add("chosen"); no.classList.remove("chosen"); recountSelf(); });
+        no.addEventListener("click",()=>{ selfRight=false; no.classList.add("chosen"); y.classList.remove("chosen"); recountSelf(); });
+        return { section:"translate", credit:0, max:0, self:()=>selfRight };  // excluded from auto score
+      });
+    });
+    $sections.appendChild(sec);
+  }
+
+  function updateAnswered(){
+    const done=answeredFns.filter(f=>f()).length;
+    $("#answered").textContent=`${done} / ${answeredFns.length} answered`;
+  }
+  // live answer counting for inputs
+  $sections.addEventListener("input",updateAnswered);
+
+  let selfResults=[];
+  function recountSelf(){
+    const got=selfResults.filter(f=>f()).length;
+    const elx=$("#self-tally"); if(elx) elx.textContent=`${got} / ${selfResults.length}`;
+  }
+
+  /* ---- Timer ---- */
+  function startTimer(mins){
+    const t=$("#timer");
+    if(!mins){ t.textContent="∞"; $(".mock-timer-label").textContent="Practice"; return; }
+    let left=mins*60;
+    const tick=()=>{
+      const m=Math.floor(left/60), s=left%60;
+      t.textContent=`${m}:${String(s).padStart(2,"0")}`;
+      t.classList.toggle("low", left<=120);
+      if(left<=0){ clearInterval(timerId); finish(true); return; }
+      left--;
+    };
+    tick(); timerId=setInterval(tick,1000);
+  }
+
+  /* ---- Finish & grade ---- */
+  function finish(auto){
+    if(finished) return; finished=true;
+    if(timerId) clearInterval(timerId);
+
+    let credit=0, max=0;
+    const perSection={pinyin:[0,0],fill:[0,0],truefalse:[0,0],reorder:[0,0]};
+    selfResults=[];
+    graders.forEach(g=>{
+      const r=g();
+      if(r.self){ selfResults.push(r.self); return; }
+      credit+=r.credit; max+=r.max;
+      if(perSection[r.section]){ perSection[r.section][0]+=r.credit; perSection[r.section][1]+=r.max; }
+    });
+
+    const pct=max?Math.round(credit/max*100):0;
+    const res=$("#results");
+    res.style.display="block";
+    res.innerHTML=`
+      <div class="result-card">
+        <div class="result-score">${credit} / ${max}</div>
+        <div class="result-sub">${pct}% on the auto-graded sections${auto?" · ⏰ time up":""}</div>
+        <div class="result-breakdown">
+          <div class="rb"><div class="rb-n">${perSection.pinyin[0]}/${perSection.pinyin[1]}</div><div class="rb-l">写拼音 Pinyin (tones)</div></div>
+          <div class="rb"><div class="rb-n">${perSection.fill[0]}/${perSection.fill[1]}</div><div class="rb-l">选词填空 Fill</div></div>
+          <div class="rb"><div class="rb-n">${perSection.truefalse[0]}/${perSection.truefalse[1]}</div><div class="rb-l">改错 Right/Wrong</div></div>
+          <div class="rb"><div class="rb-n">${perSection.reorder[0]}/${perSection.reorder[1]}</div><div class="rb-l">连词成句 Reorder</div></div>
+          <div class="rb"><div class="rb-n" id="self-tally">0 / ${selfResults.length}</div><div class="rb-l">翻译 (self-graded)</div></div>
+        </div>
+        <p style="font-size:.85rem;color:var(--text2);margin-top:16px;line-height:1.6;">
+          Scroll up — every question now shows the right answer, the tones, and a short note.
+          Red border = missed, green = correct, amber = right word but wrong tone.
+        </p>
+        <button class="btn btn-primary" style="margin-top:6px;" onclick="location.reload()">↻ Retake</button>
+      </div>`;
+    res.scrollIntoView({behavior:"smooth",block:"start"});
+    $("#m-finish").disabled=true; $("#m-finish2").disabled=true;
+  }
+
+  /* ---- Wire up ---- */
+  $("#m-start").addEventListener("click",()=>{
+    buildExam();
+    $("#intro").style.display="none";
+    $("#exam").style.display="block";
+    updateAnswered();
+    startTimer(+$("#m-time").value);
+    $("#exam").scrollIntoView({behavior:"smooth",block:"start"});
+  });
+  $("#m-finish").addEventListener("click",()=>{ if(confirm("Finish and grade the exam?")) finish(false); });
+  $("#m-finish2").addEventListener("click",()=>{ if(confirm("Finish and grade the exam?")) finish(false); });
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

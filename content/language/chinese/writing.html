@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stroke Order · Chinese</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span> Stroke Order
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">笔顺 Stroke Order</span>
+    <span class="topbar-sub">/ how to write</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="main" style="padding-top:24px;">
+
+    <div class="panel">
+      <h3>Learn to write the characters</h3>
+      <p style="font-size:0.86rem;color:var(--text2);line-height:1.6;">
+        Pick a word — watch the animated stroke order, then tap <strong>Practice</strong> to draw it yourself
+        and get checked stroke by stroke. Powered by
+        <a href="https://hanziwriter.org" target="_blank" rel="noopener" style="color:var(--accent)">Hanzi Writer</a>
+        (needs an internet connection for the stroke data).
+      </p>
+      <div class="ch-chiprow" id="chips" style="margin-top:14px;"></div>
+    </div>
+
+    <!-- Active word stage -->
+    <div class="write-stage" id="stage" style="display:none;">
+      <div class="ws-meta">
+        <div class="ws-py" id="ws-py"></div>
+        <div class="ws-en" id="ws-en"></div>
+      </div>
+      <div class="hw-row" id="hw-row"></div>
+      <div class="hw-controls">
+        <button class="btn btn-primary btn-sm" id="hw-animate">▶ Animate</button>
+        <button class="btn btn-ghost btn-sm" id="hw-loop">↻ Loop</button>
+        <button class="btn btn-ghost btn-sm" id="hw-quiz">✎ Practice</button>
+        <button class="btn btn-ghost btn-sm" id="hw-outline">◌ Outline</button>
+      </div>
+      <div id="hw-msg" style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text3);margin-top:12px;min-height:1em;"></div>
+    </div>
+
+    <div class="count" id="count" style="margin-top:18px;"></div>
+    <div class="write-grid" id="grid"></div>
+
+  </div>
+
+  <div class="footer-note">CHINESE LIBRARY · STROKE ORDER</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+  setTopbarDate();
+  const isHanzi = ch => /[一-鿿]/.test(ch);
+  const grid=$("#grid"), stage=$("#stage"), hwRow=$("#hw-row"), msg=$("#hw-msg");
+  let writers=[], current=null, outline=true, lessonFilter="all";
+
+  buildLessonChips($("#chips"), lf=>{ lessonFilter=lf; renderGrid(); });
+
+  function wordsFor(lf){
+    return VOCAB.filter(w=>(lf==="all"||w.lesson===+lf) && [...w.hanzi].some(isHanzi));
+  }
+
+  function renderGrid(){
+    const words=wordsFor(lessonFilter);
+    $("#count").textContent=`${words.length} words · ${lessonFilter==="all"?"all lessons":"Lesson "+lessonFilter}`;
+    grid.innerHTML="";
+    words.forEach(w=>{
+      const tile=el("div","write-tile");
+      tile.innerHTML=`<div class="wt-hz">${w.hanzi}</div><div class="wt-py">${w.pinyin}</div><div class="wt-en">${w.en}</div>`;
+      tile.addEventListener("click",()=>openWord(w));
+      grid.appendChild(tile);
+    });
+  }
+
+  function openWord(w){
+    current=w;
+    $("#ws-py").textContent=w.pinyin;
+    $("#ws-en").textContent=`${w.en} · ${POS_LABELS[w.pos]||w.pos}`;
+    msg.textContent="";
+    hwRow.innerHTML=""; writers=[];
+    const chars=[...w.hanzi].filter(isHanzi);
+    const size = chars.length>4 ? 96 : chars.length>2 ? 116 : 140;
+    chars.forEach(ch=>{
+      const box=el("div","hw-box");
+      hwRow.appendChild(box);
+      if(typeof HanziWriter==="undefined"){ msg.textContent="Couldn't load Hanzi Writer — check your internet connection."; return; }
+      const writer=HanziWriter.create(box, ch, {
+        width:size, height:size, padding:6,
+        showCharacter:false, showOutline:outline,
+        strokeColor:"#c0392b", outlineColor:"#d9d2cb", radicalColor:"#8a8a8a",
+        drawingColor:"#15803d", drawingWidth:28,
+        strokeAnimationSpeed:1, delayBetweenStrokes:140, delayBetweenLoops:900,
+        onLoadCharDataError:()=>{ box.innerHTML=`<div style="padding:18px;font-size:.7rem;color:var(--text3);font-family:'DM Mono',monospace">no data for ${ch}</div>`; }
+      });
+      writers.push(writer);
+    });
+    stage.style.display="block";
+    stage.scrollIntoView({behavior:"smooth",block:"center"});
+    animateAll();
+  }
+
+  function animateAll(){
+    msg.textContent="Watch the stroke order →";
+    writers.forEach((wr,i)=>{ wr.cancelQuiz&&wr.cancelQuiz(); setTimeout(()=>wr.animateCharacter(),i*250); });
+  }
+  function loopAll(){
+    msg.textContent="Looping… (click Animate to stop)";
+    writers.forEach(wr=>{ wr.cancelQuiz&&wr.cancelQuiz(); wr.loopCharacterAnimation(); });
+  }
+  function quizAll(){
+    msg.textContent="Your turn — draw each stroke in order. Green = correct.";
+    writers.forEach(wr=>{
+      wr.showOutline();
+      wr.quiz({
+        onMistake:()=>{},
+        onComplete:()=>{ msg.textContent="✓ Nicely written! Try another word, or Practice again."; }
+      });
+    });
+  }
+
+  $("#hw-animate").addEventListener("click",animateAll);
+  $("#hw-loop").addEventListener("click",loopAll);
+  $("#hw-quiz").addEventListener("click",quizAll);
+  $("#hw-outline").addEventListener("click",()=>{
+    outline=!outline;
+    writers.forEach(wr=> outline?wr.showOutline():wr.hideOutline());
+    msg.textContent= outline?"Outline on.":"Outline off — write from memory.";
+  });
+
+  renderGrid();
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>
