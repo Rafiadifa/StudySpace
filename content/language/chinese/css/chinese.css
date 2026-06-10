@@ -257,6 +257,22 @@ select.flt:focus{ outline:none; border-color:var(--accent); }
 .hw-box{ background:var(--bg); border:1px solid var(--border); border-radius:12px; }
 .hw-box svg{ display:block; }
 .hw-controls{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+/* per-character stepping */
+.ws-hz{ font-family:'Noto Serif SC',serif; font-size:1.7rem; font-weight:600; color:var(--text); line-height:1.1; }
+.ws-chars{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:10px 0 14px; }
+.ws-char{ font-family:'Noto Serif SC',serif; font-size:1.5rem; width:48px; height:48px; line-height:1;
+  display:flex; align-items:center; justify-content:center; background:var(--bg); border:1.5px solid var(--border);
+  border-radius:10px; color:var(--text); cursor:pointer; transition:.13s; }
+.ws-char:hover{ border-color:var(--accent); }
+.ws-char.active{ border-color:var(--accent); background:var(--accent-08); color:var(--accent); }
+.ws-char-hint{ font-family:'DM Mono',monospace; font-size:.6rem; color:var(--text3); margin-bottom:6px; letter-spacing:.06em; text-transform:uppercase; }
+.hw-focus{ display:flex; justify-content:center; margin:6px 0; }
+.hw-focus .hw-box{ border-radius:14px; }
+.hw-step{ font-family:'DM Mono',monospace; font-size:.82rem; color:var(--text2); margin:8px 0 12px; letter-spacing:.04em; }
+.hw-legend{ display:flex; gap:18px; justify-content:center; margin-top:16px; font-family:'DM Mono',monospace; font-size:.64rem; color:var(--text3); }
+.hw-legend span{ display:inline-flex; align-items:center; gap:6px; }
+.hw-legend i{ width:16px; height:5px; border-radius:2px; display:inline-block; }
+.hw-nodata{ padding:36px 14px; font-size:.72rem; color:var(--text3); font-family:'DM Mono',monospace; }
 
 @media (max-width:640px){
   .crumbs,.topbar{ padding-left:20px; padding-right:20px; }

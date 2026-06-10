@@ -18,7 +18,8 @@
       "Bash(curl -s https://rafiadifa.github.io/StudySpace/)",
       "Bash(git ls-tree *)",
       "Bash(pkill -f \"http.server 8799\")",
-      "Bash(pkill -f \"http.server 8765\")"
+      "Bash(pkill -f \"http.server 8765\")",
+      "WebFetch(domain:hanziwriter.org)"
     ]
   }
 }

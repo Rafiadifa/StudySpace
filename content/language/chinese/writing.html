@@ -27,8 +27,9 @@
     <div class="panel">
       <h3>Learn to write the characters</h3>
       <p style="font-size:0.86rem;color:var(--text2);line-height:1.6;">
-        Pick a word — watch the animated stroke order, then tap <strong>Practice</strong> to draw it yourself
-        and get checked stroke by stroke. Powered by
+        Pick a word, then study <strong>one character at a time</strong>. Step through the strokes with
+        <strong>Next / Prev</strong>, play the whole animation, or tap <strong>Practice</strong> to draw it
+        yourself and get checked stroke by stroke. Powered by
         <a href="https://hanziwriter.org" target="_blank" rel="noopener" style="color:var(--accent)">Hanzi Writer</a>
         (needs an internet connection for the stroke data).
       </p>
@@ -41,12 +42,25 @@
         <div class="ws-py" id="ws-py"></div>
         <div class="ws-en" id="ws-en"></div>
       </div>
-      <div class="hw-row" id="hw-row"></div>
+
+      <div class="ws-char-hint" id="ws-char-hint" style="display:none;">Tap a character to focus it</div>
+      <div class="ws-chars" id="ws-chars"></div>
+
+      <div class="hw-focus"><div class="hw-box" id="hw-box"></div></div>
+      <div class="hw-step" id="hw-step"></div>
+
       <div class="hw-controls">
-        <button class="btn btn-primary btn-sm" id="hw-animate">▶ Animate</button>
-        <button class="btn btn-ghost btn-sm" id="hw-loop">↻ Loop</button>
+        <button class="btn btn-ghost btn-sm" id="hw-prev">◀ Prev</button>
+        <button class="btn btn-primary btn-sm" id="hw-next">Next stroke ▶</button>
+        <button class="btn btn-ghost btn-sm" id="hw-play">▶▶ Play all</button>
+        <button class="btn btn-ghost btn-sm" id="hw-reset">↻ Reset</button>
         <button class="btn btn-ghost btn-sm" id="hw-quiz">✎ Practice</button>
         <button class="btn btn-ghost btn-sm" id="hw-outline">◌ Outline</button>
+      </div>
+
+      <div class="hw-legend">
+        <span><i style="background:#c0392b"></i> stroke</span>
+        <span><i style="background:#8a8a8a"></i> radical — the character's meaning root</span>
       </div>
       <div id="hw-msg" style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text3);margin-top:12px;min-height:1em;"></div>
     </div>
@@ -64,15 +78,16 @@
   <script>
   setTopbarDate();
   const isHanzi = ch => /[一-鿿]/.test(ch);
-  const grid=$("#grid"), stage=$("#stage"), hwRow=$("#hw-row"), msg=$("#hw-msg");
-  let writers=[], current=null, outline=true, lessonFilter="all";
+  const grid=$("#grid"), stage=$("#stage"), box=$("#hw-box"), msg=$("#hw-msg");
+  let lessonFilter="all", outline=true;
+  // focused-character state
+  let writer=null, focusChar=null, step=0, strokeCount=0, busy=false;
 
   buildLessonChips($("#chips"), lf=>{ lessonFilter=lf; renderGrid(); });
 
   function wordsFor(lf){
     return VOCAB.filter(w=>(lf==="all"||w.lesson===+lf) && [...w.hanzi].some(isHanzi));
   }
-
   function renderGrid(){
     const words=wordsFor(lessonFilter);
     $("#count").textContent=`${words.length} words · ${lessonFilter==="all"?"all lessons":"Lesson "+lessonFilter}`;
@@ -86,58 +101,82 @@
   }
 
   function openWord(w){
-    current=w;
     $("#ws-py").textContent=w.pinyin;
     $("#ws-en").textContent=`${w.en} · ${POS_LABELS[w.pos]||w.pos}`;
-    msg.textContent="";
-    hwRow.innerHTML=""; writers=[];
     const chars=[...w.hanzi].filter(isHanzi);
-    const size = chars.length>4 ? 96 : chars.length>2 ? 116 : 140;
-    chars.forEach(ch=>{
-      const box=el("div","hw-box");
-      hwRow.appendChild(box);
-      if(typeof HanziWriter==="undefined"){ msg.textContent="Couldn't load Hanzi Writer — check your internet connection."; return; }
-      const writer=HanziWriter.create(box, ch, {
-        width:size, height:size, padding:6,
-        showCharacter:false, showOutline:outline,
-        strokeColor:"#c0392b", outlineColor:"#d9d2cb", radicalColor:"#8a8a8a",
-        drawingColor:"#15803d", drawingWidth:28,
-        strokeAnimationSpeed:1, delayBetweenStrokes:140, delayBetweenLoops:900,
-        onLoadCharDataError:()=>{ box.innerHTML=`<div style="padding:18px;font-size:.7rem;color:var(--text3);font-family:'DM Mono',monospace">no data for ${ch}</div>`; }
-      });
-      writers.push(writer);
+    const wc=$("#ws-chars"); wc.innerHTML="";
+    $("#ws-char-hint").style.display = chars.length>1 ? "block" : "none";
+    chars.forEach((ch,i)=>{
+      const c=el("button","ws-char"+(i===0?" active":""),ch);
+      c.addEventListener("click",()=>{ $$(".ws-char",wc).forEach(x=>x.classList.remove("active")); c.classList.add("active"); focusOn(ch); });
+      wc.appendChild(c);
     });
     stage.style.display="block";
     stage.scrollIntoView({behavior:"smooth",block:"center"});
-    animateAll();
+    focusOn(chars[0]);
   }
 
-  function animateAll(){
-    msg.textContent="Watch the stroke order →";
-    writers.forEach((wr,i)=>{ wr.cancelQuiz&&wr.cancelQuiz(); setTimeout(()=>wr.animateCharacter(),i*250); });
-  }
-  function loopAll(){
-    msg.textContent="Looping… (click Animate to stop)";
-    writers.forEach(wr=>{ wr.cancelQuiz&&wr.cancelQuiz(); wr.loopCharacterAnimation(); });
-  }
-  function quizAll(){
-    msg.textContent="Your turn — draw each stroke in order. Green = correct.";
-    writers.forEach(wr=>{
-      wr.showOutline();
-      wr.quiz({
-        onMistake:()=>{},
-        onComplete:()=>{ msg.textContent="✓ Nicely written! Try another word, or Practice again."; }
-      });
+  function focusOn(ch){
+    focusChar=ch; step=0; strokeCount=0; busy=false;
+    box.innerHTML=""; msg.textContent="";
+    if(typeof HanziWriter==="undefined"){ msg.textContent="Couldn't load Hanzi Writer — check your internet connection."; return; }
+    writer=HanziWriter.create(box, ch, {
+      width:200, height:200, padding:8,
+      showCharacter:false, showOutline:outline,
+      strokeColor:"#c0392b", outlineColor:"#d9d2cb", radicalColor:"#8a8a8a",
+      drawingColor:"#15803d", drawingWidth:30,
+      strokeAnimationSpeed:1.4, delayBetweenStrokes:50,
+      onLoadCharDataError:()=>{ box.innerHTML=`<div class="hw-nodata">no stroke data for ${ch}</div>`; }
     });
+    HanziWriter.loadCharacterData(ch).then(d=>{ strokeCount=d.strokes.length; updateStep(); }).catch(()=>{});
+    updateStep();
   }
 
-  $("#hw-animate").addEventListener("click",animateAll);
-  $("#hw-loop").addEventListener("click",loopAll);
-  $("#hw-quiz").addEventListener("click",quizAll);
-  $("#hw-outline").addEventListener("click",()=>{
-    outline=!outline;
-    writers.forEach(wr=> outline?wr.showOutline():wr.hideOutline());
-    msg.textContent= outline?"Outline on.":"Outline off — write from memory.";
+  function updateStep(){ $("#hw-step").textContent = strokeCount ? `Stroke ${step} / ${strokeCount}` : "loading…"; }
+  function setMsg(m){ msg.textContent=m||""; }
+
+  function nextStroke(){
+    if(!writer||busy) return;
+    if(strokeCount && step>=strokeCount){ setMsg("✓ Character complete — try Practice, or pick another character."); return; }
+    busy=true; setMsg("");
+    writer.animateStroke(step, { onComplete:()=>{ step++; busy=false; updateStep();
+      if(strokeCount && step>=strokeCount) setMsg("✓ Character complete."); } });
+  }
+  function redrawTo(k){
+    if(!writer) return; busy=true; setMsg("");
+    writer.hideCharacter({duration:0});
+    let i=0;
+    (function seq(){ if(i>=k){ busy=false; step=k; updateStep(); return; }
+      writer.animateStroke(i, { onComplete:()=>{ i++; seq(); } }); })();
+  }
+  function prevStroke(){ if(!writer||busy||step<=0) return; redrawTo(step-1); }
+  function reset(){ if(!writer||busy) return; writer.hideCharacter({duration:140}); step=0; updateStep(); setMsg(""); }
+  function playAll(){
+    if(!writer||busy) return; busy=true; step=0; updateStep(); setMsg("Watch the stroke order →");
+    writer.hideCharacter({duration:0});
+    writer.animateCharacter({ onComplete:()=>{ busy=false; step=strokeCount; updateStep(); setMsg("✓ Character complete."); } });
+  }
+  function quiz(){
+    if(!writer) return; writer.showOutline();
+    setMsg("Your turn — draw each stroke in order. Green = correct.");
+    writer.quiz({ onComplete:()=>setMsg("✓ Nicely written! Try another character or Practice again.") });
+  }
+  function toggleOutline(){
+    outline=!outline; if(writer){ outline?writer.showOutline():writer.hideOutline(); }
+    setMsg(outline?"Outline on.":"Outline off — write from memory.");
+  }
+
+  $("#hw-next").addEventListener("click",nextStroke);
+  $("#hw-prev").addEventListener("click",prevStroke);
+  $("#hw-play").addEventListener("click",playAll);
+  $("#hw-reset").addEventListener("click",reset);
+  $("#hw-quiz").addEventListener("click",quiz);
+  $("#hw-outline").addEventListener("click",toggleOutline);
+  // keyboard: ← / → to step
+  document.addEventListener("keydown",e=>{
+    if(stage.style.display==="none") return;
+    if(e.key==="ArrowRight"){ e.preventDefault(); nextStroke(); }
+    if(e.key==="ArrowLeft"){ e.preventDefault(); prevStroke(); }
   });
 
   renderGrid();
