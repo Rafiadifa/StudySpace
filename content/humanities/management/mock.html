@@ -36,6 +36,7 @@
     .t-define { background:rgba(29,78,216,.1); color:var(--calc); }
     .t-compare { background:rgba(109,40,217,.12); color:var(--mgmt); }
     .t-apply { background:rgba(21,128,61,.1); color:var(--cpp); }
+    .t-identify { background:rgba(180,83,9,.12); color:#b45309; }
     .q-marks { margin-left:auto; font-family:'DM Mono',monospace; font-size:0.66rem; color:var(--text3); }
     .q-prompt { font-size:1rem; line-height:1.6; color:var(--text); margin-bottom:6px; }
     .q-prompt .scenario { display:block; background:var(--bg3); border-radius:8px; padding:12px 14px; font-size:0.92rem; color:var(--text2); margin-bottom:10px; font-style:italic; }
@@ -124,9 +125,9 @@
   <script>
   /* ═══════════ QUESTION BANK ═══════════ */
   const QUESTIONS = [
-    { id:'q1', type:'apply', marks:'10', topic:'Decision Making',
-      scenario:'A regional manager, under heavy time pressure and with incomplete information, picks the first supplier that "seems fine" rather than comparing all options.',
-      prompt:'Explain this behaviour using <strong>bounded rationality</strong> and <strong>satisficing</strong>. Why do managers rarely reach the fully "rational" ideal?',
+    { id:'q1', type:'identify', marks:'10', topic:'Decision Making',
+      scenario:'A regional manager must choose a supplier by the end of the day. There are dozens of options with full data available, but she is short on time and can’t process it all. She reviews the first few, picks one that "seems good enough," and stops searching — without comparing every option to find the best.',
+      prompt:'<strong>Name the decision-making concept(s)</strong> this behaviour illustrates, then explain why managers rarely reach the fully "rational" ideal.',
       kp:['The <strong>rational model</strong> is the ideal: define problem → criteria → weight them → generate alternatives → evaluate → pick the optimum.',
           '<strong>Bounded rationality (Simon):</strong> real cognition is limited by information, time, and processing capacity.',
           '<strong>Satisficing:</strong> the manager simplifies the problem, scans a limited set of options, and stops at the first "good enough" one — not the optimum.',
@@ -137,15 +138,16 @@
           '<strong>Dunning–Kruger:</strong> low-skill individuals overestimate competence because they lack the metacognition to see their own gaps.',
           '<strong>Ethics link:</strong> being "unskilled and unaware" lets people rationalise unethical acts and not perceive the lapse as wrong.',
           'Mention self-serving bias / motivated reasoning as reinforcing it.'] },
-    { id:'q3', type:'apply', marks:'12', topic:'Group Decision Making',
-      scenario:'Engineers raised O-ring concerns before the Challenger launch, but the group pressed ahead and approved the launch.',
-      prompt:'Use <strong>Groupthink</strong> to explain the Challenger disaster. Identify at least three symptoms and how the pressure for consensus produced a catastrophic decision.',
+    { id:'q3', type:'identify', marks:'12', topic:'Group Decision Making',
+      scenario:'A tight-knit, confident team must approve a high-stakes product launch on a tight schedule. Several engineers warn that a known component may fail in the launch-day conditions. The team waves the warnings away; the engineers who disagree fall silent, no one voices remaining doubts, and everyone signs off as though in full agreement. The component fails and the launch ends in disaster.',
+      prompt:'<strong>Name the group decision-making phenomenon</strong> at work here. Identify at least <strong>three</strong> of its symptoms in this scenario, and explain how the pressure for consensus produced a catastrophic decision.',
       kp:['<strong>Groupthink:</strong> in highly cohesive groups the drive for unanimity overrides realistic appraisal of alternatives.',
           'Symptoms (name ≥3): <strong>illusion of invulnerability, collective rationalisation, self-censorship, illusion of unanimity, direct pressure on dissenters, mindguards</strong>.',
           'Application: dissenting engineers self-censored / were pressured; the group rationalised away the risk to preserve consensus and schedule.',
           'Note the antecedents: cohesion + external pressure + directive leadership.'] },
-    { id:'q4', type:'apply', marks:'10', topic:'Groups',
-      prompt:'Define <strong>social loafing</strong>. Using group properties (size, cohesiveness, norms), explain <strong>two</strong> concrete ways a manager could reduce it.',
+    { id:'q4', type:'identify', marks:'10', topic:'Groups',
+      scenario:'On a six-person group project, the team’s total output is noticeably lower than the sum of what each member produces working alone. A couple of members quietly coast, assuming the others will pick up the slack.',
+      prompt:'<strong>Name the group phenomenon</strong> this describes, then explain <strong>two</strong> concrete ways a manager could reduce it (refer to group size, cohesiveness, and norms).',
       kp:['<strong>Social loafing:</strong> individuals exert less effort working collectively than alone (Ringelmann) — diffusion of responsibility.',
           'Fix 1: make individual contributions <strong>identifiable / accountable</strong> (measure individual output).',
           'Fix 2: smaller groups, meaningful tasks, and strong <strong>positive norms + cohesiveness</strong> so effort is socially expected.',
@@ -156,8 +158,9 @@
           '<strong>Conscientiousness → supplementary:</strong> you want everyone reliable; one low-conscientiousness member becomes a weak link.',
           '<strong>Extraversion → complementary:</strong> too many extraverts compete for airtime/status; a mix balances leading and listening.',
           'Frame as team composition / deep-level diversity.'] },
-    { id:'q6', type:'apply', marks:'10', topic:'Motivation',
-      prompt:'Explain the <strong>"crowding out"</strong> effect. Why can rewarding an intrinsically interesting task actually <strong>undermine</strong> motivation?',
+    { id:'q6', type:'identify', marks:'10', topic:'Motivation',
+      scenario:'A student volunteers as a tutor for free and clearly loves doing it. The school then starts paying her a small fee per session. Over the next few weeks her enthusiasm fades, and when the payment is later stopped she quits altogether — now less motivated than she was before any money was involved.',
+      prompt:'<strong>Name the motivation effect</strong> at work here, and explain why adding a reward to an already-enjoyable task can <strong>undermine</strong> motivation.',
       kp:['<strong>Intrinsic motivation:</strong> doing a task for its inherent interest/enjoyment.',
           '<strong>Crowding out / over-justification:</strong> an extrinsic reward leads people to re-attribute their behaviour to the reward, not the interest.',
           'Controlling rewards reduce <strong>autonomy</strong> (self-determination); when the reward is removed, motivation can fall below the original baseline.',
@@ -174,8 +177,9 @@
           '<strong>Schein:</strong> artifacts (visible) → espoused values → basic underlying assumptions (invisible, taken for granted).',
           '<strong>Strong culture:</strong> core values intensely held <em>and</em> widely shared → more behavioural influence, cohesion, lower turnover.',
           '<strong>Liability:</strong> barrier to change/diversity/M&A; institutionalisation (58% of mergers fail on culture clash).'] },
-    { id:'q9', type:'apply', marks:'12', topic:'Change Management',
-      prompt:'Using <strong>planned vs unplanned change</strong> and <strong>Kotter’s 8-step model</strong>, explain Blockbuster’s failure and Netflix’s rise.',
+    { id:'q9', type:'identify', marks:'12', topic:'Change Management',
+      scenario:'Two firms face the same shift in their market. Firm A is the comfortable market leader; it dismisses the new trend, clings to its profitable old model, and only reacts once customers have already left. Firm B anticipates the shift, reinvents its business around the new technology, and brings its people along with a clear vision. Firm A collapses; Firm B thrives.',
+      prompt:'<strong>Name the change-management concepts</strong> that explain this contrast, then walk through the steps an effective leader should have followed to drive the change.',
       kp:['<strong>Unplanned (reactive)</strong> vs <strong>planned (proactive)</strong> change. Blockbuster reacted too late; Netflix led the change (mail → streaming).',
           'Blockbuster: complacency, no sense of urgency, clung to the late-fee model — strong culture as a barrier to change.',
           '<strong>Kotter steps</strong> (use several): create urgency, build a coalition, form a vision, communicate it, empower action, short-term wins, consolidate, anchor in culture.',
@@ -189,7 +193,7 @@
   ];
 
   const PREFIX='gm_mock_';
-  const TYPE_LABEL={define:'Define',compare:'Compare',apply:'Apply'};
+  const TYPE_LABEL={define:'Define',compare:'Compare',apply:'Apply',identify:'Identify the framework'};
 
   /* ── render ── */
   function render(){
