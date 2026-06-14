@@ -25,7 +25,25 @@
       "Bash(git restore *)",
       "Bash(awk '{print $1}')",
       "Bash(git check-ignore *)",
-      "Bash(awk '{print $5, $9}')"
+      "Bash(awk '{print $5, $9}')",
+      "Bash(which pdftotext *)",
+      "Bash(python3 -c \"import pypdf\")",
+      "Bash(python3 -c \"import PyPDF2\")",
+      "Bash(python3 -c \"import fitz\")",
+      "Bash(python3 -c \"import pdfplumber\")",
+      "Bash(pdftotext -layout -f 20 -l 23 \"Session 9_posted.pdf\" -)",
+      "Bash(pdftotext -layout -f 15 -l 15 \"Session 11_posted.pdf\" -)",
+      "Bash(pdftotext -layout -f 27 -l 36 \"Session 7 and Session 8_posted.pdf\" -)",
+      "Bash(pdftotext -layout -f 28 -l 34 \"Session 11_posted.pdf\" -)",
+      "Bash(pdftotext -layout \"Session 7 and Session 8_posted.pdf\" -)",
+      "Bash(awk 'BEGIN{RS=\"\\\\f\"} {t=$0; gsub\\(/\\\\n+/,\" \",t\\); if\\(t ~ /Technique #|How to prevent social loafing|Brainstorming|Nominal group|Electronic meeting|Devil/\\) printf \"p%d: %s\\\\n\", NR, substr\\(t,1,75\\)}')",
+      "Bash(pdftotext -layout \"Session 11_posted.pdf\" -)",
+      "Bash(awk 'BEGIN{RS=\"\\\\f\"} {t=$0; gsub\\(/\\\\n+/,\" \",t\\); if\\(t ~ /Conflict Management Styles/\\) printf \"p%d: %s\\\\n\", NR, substr\\(t,1,120\\)}')",
+      "Bash(awk 'BEGIN{RS=\"\\\\f\"} {t=$0; gsub\\(/\\\\n+/,\" \",t\\); if\\(t ~ /prevent social loafing|Group Decision Making|Improving Group|Strengths and Weaknesses/\\) printf \"p%d: %s\\\\n\", NR, substr\\(t,1,70\\)}')",
+      "Bash(awk 'BEGIN{RS=\"\\\\f\"} tolower\\($0\\) ~ /prevent social loafing/ {t=$0; gsub\\(/\\\\n+/,\" \",t\\); printf \"p%d: %s\\\\n\", NR, substr\\(t,1,90\\)}')",
+      "Bash(pdftotext -layout -f 44 -l 46 \"Session 3 Personality_posted.pdf\" -)",
+      "Bash(pdftotext \"Session 3 Personality_posted.pdf\" -)",
+      "Bash(awk 'BEGIN{RS=\"\\\\f\"} END{print NR}')"
     ]
   }
 }

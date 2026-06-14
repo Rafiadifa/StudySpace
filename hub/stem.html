@@ -152,6 +152,39 @@
     .g3 { background: rgba(22,163,74,.1); color: #16a34a; }
     .log-next { font-family: 'DM Mono',monospace; font-size: .61rem; color: var(--text3); flex-shrink: 0; }
     .log-note { font-size: .8rem; color: var(--text3); font-style: italic; line-height: 1.5; padding: 5px 0 2px 16px; white-space: pre-wrap; }
+
+    /* ── On-card understanding badge ── */
+    .card-score { position:absolute; top:10px; right:36px; font-family:'DM Mono',monospace; font-size:.55rem; padding:2px 6px; border-radius:99px; background:var(--subj-color,var(--calc)); color:#fff; pointer-events:none; }
+
+    /* ── Review modal ── */
+    .rv-overlay { position:fixed; inset:0; z-index:200; background:rgba(20,18,28,.55); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:20px; }
+    .rv-overlay.show { display:flex; }
+    .rv-modal { width:min(560px,100%); max-height:90vh; overflow-y:auto; background:var(--bg2); border:1px solid var(--border); border-radius:16px; padding:24px 26px 22px; box-shadow:0 18px 50px rgba(0,0,0,.3); position:relative; }
+    .rv-close { position:absolute; top:14px; right:16px; background:none; border:none; color:var(--text3); font-size:1.1rem; cursor:pointer; line-height:1; }
+    .rv-close:hover { color:var(--text); }
+    .rv-title { font-family:'DM Serif Display',serif; font-size:1.25rem; color:var(--text); padding-right:26px; line-height:1.3; }
+    .rv-sub { font-family:'DM Mono',monospace; font-size:.63rem; color:var(--text3); margin:5px 0 18px; }
+    .rv-field { margin-bottom:17px; }
+    .rv-field > label { display:block; font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+    .rv-field > label #rv-score-val { color:var(--accent); }
+    .rv-score { display:flex; gap:5px; flex-wrap:wrap; }
+    .rv-chip { width:34px; height:34px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text2); font-family:'DM Mono',monospace; font-size:.8rem; cursor:pointer; transition:.12s; }
+    .rv-chip:hover { border-color:var(--accent); color:var(--text); }
+    .rv-chip.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .rv-band { font-size:.8rem; color:var(--text2); margin-top:9px; min-height:1.1em; font-style:italic; }
+    .rv-diff { display:flex; gap:6px; flex-wrap:wrap; }
+    .rv-dchip { font-family:'DM Sans',sans-serif; font-size:.74rem; padding:7px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text2); cursor:pointer; transition:.12s; }
+    .rv-dchip:hover { border-color:var(--accent); color:var(--text); }
+    .rv-dchip.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .rv-wrong { width:100%; font-family:'DM Mono',monospace; font-size:.82rem; padding:9px 12px; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); outline:none; box-sizing:border-box; }
+    .rv-wrong:focus { border-color:var(--accent); }
+    .rv-notes { width:100%; min-height:90px; font-family:'DM Sans',sans-serif; font-size:.88rem; line-height:1.55; padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); resize:vertical; outline:none; box-sizing:border-box; }
+    .rv-notes:focus { border-color:var(--accent); }
+    .rv-actions { display:flex; gap:10px; align-items:center; margin-top:4px; }
+    .rv-save { flex:1; background:var(--accent); color:#fff; border:none; border-radius:9px; padding:11px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:.9rem; cursor:pointer; }
+    .rv-save:hover { filter:brightness(.94); }
+    .rv-del { background:none; border:1px solid var(--border); color:var(--text3); border-radius:9px; padding:11px 16px; font-family:'DM Mono',monospace; font-size:.66rem; cursor:pointer; }
+    .rv-del:hover { color:#dc2626; border-color:rgba(220,38,38,.4); }
   </style>
   <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 </head>
@@ -865,78 +898,127 @@
   /* ═══════════════════════════════════════
      CHECK BUTTON + SR POPUP WITH NOTES
   ═══════════════════════════════════════ */
+  function cardTitle(card){
+    const t=[...card.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join(' ').replace(/\s+/g,' ').trim();
+    return t || card.textContent.trim();
+  }
   function injectChecks() {
     document.querySelectorAll('.card[data-id]').forEach(card => {
       if (card.dataset.nocheck) return;
       if (card.querySelector('.card-check')) return;
-
       const btn = document.createElement('button');
-      btn.className='card-check'; btn.title='Mark as done';
-      btn.setAttribute('aria-label','Mark session as done');
-
-      const popup = document.createElement('div');
-      popup.className='sr-popup';
-      popup.innerHTML=`
-        <div class="sr-popup-label">How did it go?</div>
-        <textarea class="sr-notes" rows="2" placeholder="What did you get wrong? How did it feel? (optional)"></textarea>
-        <div class="sr-btns">
-          ${GRADE_LABELS.map((l,g)=>`<button class="sr-btn" data-g="${g}">${l}<span class="sr-btn-label"></span></button>`).join('')}
-        </div>
-        <div class="sr-hint"></div>`;
-
-      // Hover preview on grade buttons
-      popup.querySelectorAll('.sr-btn').forEach(sb => {
-        sb.addEventListener('mouseenter', () => {
-          popup.querySelector('.sr-hint').textContent = 'Next review in: '+srNextInterval(card.dataset.id, +sb.dataset.g);
-        });
-        sb.addEventListener('mouseleave', () => {
-          popup.querySelector('.sr-hint').textContent = '';
-        });
-      });
-
-      // Grade click
-      popup.addEventListener('click', e => {
-        e.preventDefault(); e.stopPropagation();
-        const sb = e.target.closest('.sr-btn');
-        if (!sb) return;
-        const grade  = +sb.dataset.g;
-        const id     = card.dataset.id;
-        const title  = card.childNodes[0].textContent.trim();
-        const notes  = popup.querySelector('.sr-notes').value.trim();
-        const r      = gradeCard(id, grade);
-        const nextLbl= grade===0?'1 day':r.interval===1?'1 day':r.interval+' days';
-
-        const done = getDone(); done.add(id); saveDone(done);
-        card.setAttribute('data-done','true');
-        updateSRBadge(card);
-        refreshDueBadges();
-        logSession(id, title, grade, nextLbl, notes);
-        updateProgress(activeSubject());
-        popup.classList.remove('show');
-        popup.querySelector('.sr-notes').value='';
-      });
-
+      btn.className='card-check'; btn.title='Log / review this session';
+      btn.setAttribute('aria-label','Log or review this session');
       btn.addEventListener('click', e => {
         e.preventDefault(); e.stopPropagation();
-        const done = getDone();
-        if (done.has(card.dataset.id)) {
-          done.delete(card.dataset.id); saveDone(done);
-          card.removeAttribute('data-done');
-          updateProgress(activeSubject());
-        } else {
-          document.querySelectorAll('.sr-popup.show').forEach(p=>p.classList.remove('show'));
-          popup.classList.add('show');
-          setTimeout(()=>popup.querySelector('.sr-notes').focus(),50);
-        }
+        openReview(card.dataset.id, cardTitle(card), card);
       });
-
-      document.addEventListener('click', e => {
-        if (!popup.contains(e.target) && e.target!==btn) popup.classList.remove('show');
-      }, true);
-
       card.appendChild(btn);
-      card.appendChild(popup);
+      renderCardReview(card);
     });
+  }
+
+  /* ═══════════════════════════════════════
+     REVIEW MODAL  (understanding 1–10, difficulty, wrong-Qs, notes)
+  ═══════════════════════════════════════ */
+  const REVIEW_KEY='studyhub_review';
+  const getReview=()=>{ try{return JSON.parse(localStorage.getItem(REVIEW_KEY)||'{}');}catch{return{};} };
+  const setReview=r=>localStorage.setItem(REVIEW_KEY, JSON.stringify(r));
+  const RV_BANDS=[
+    {lo:9,hi:10,txt:'Mastered — no cheat sheet needed'},
+    {lo:7,hi:8, txt:'Mastered — but I’d keep a cheat sheet / formula handy'},
+    {lo:5,hi:6, txt:'Struggling, but do-able without the answer or AI'},
+    {lo:3,hi:4, txt:'Got there via a parallel example from AI'},
+    {lo:1,hi:2, txt:'Worked it out only with AI'},
+  ];
+  const RV_DIFF=['Very easy','Easy','Moderate','Hard','Very hard'];
+  const rvBand=s=> (RV_BANDS.find(b=>s>=b.lo&&s<=b.hi)||{}).txt||'';
+  const rvDueDays=s=> s>=9?7 : s>=7?4 : s>=5?2 : 1;
+  let RV={ id:null, card:null, score:null, diff:null };
+
+  function setupReviewModal(){
+    const ov=document.getElementById('rv-overlay'); if(!ov) return;
+    const sc=document.getElementById('rv-score'); sc.innerHTML='';
+    for(let i=1;i<=10;i++){
+      const b=document.createElement('button'); b.className='rv-chip'; b.textContent=i; b.dataset.v=i;
+      b.addEventListener('click',()=>{ RV.score=i; paintScore(); });
+      sc.appendChild(b);
+    }
+    const df=document.getElementById('rv-diff'); df.innerHTML='';
+    RV_DIFF.forEach((l,idx)=>{
+      const b=document.createElement('button'); b.className='rv-dchip'; b.textContent=l; b.dataset.v=idx+1;
+      b.addEventListener('click',()=>{ RV.diff=idx+1; paintDiff(); });
+      df.appendChild(b);
+    });
+    document.getElementById('rv-close').addEventListener('click',closeReview);
+    ov.addEventListener('click',e=>{ if(e.target===ov) closeReview(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape' && ov.classList.contains('show')) closeReview(); });
+    document.getElementById('rv-save').addEventListener('click',saveReview);
+    document.getElementById('rv-del').addEventListener('click',clearReview);
+  }
+  function paintScore(){
+    document.querySelectorAll('#rv-score .rv-chip').forEach(c=>c.classList.toggle('on', +c.dataset.v===RV.score));
+    document.getElementById('rv-score-val').textContent = RV.score?RV.score+'/10':'—';
+    document.getElementById('rv-band').textContent = RV.score?rvBand(RV.score):'';
+  }
+  function paintDiff(){
+    document.querySelectorAll('#rv-diff .rv-dchip').forEach(c=>c.classList.toggle('on', +c.dataset.v===RV.diff));
+  }
+  function openReview(id, title, card){
+    RV={ id, card, score:null, diff:null };
+    const rv=getReview()[id];
+    if(rv){ RV.score=(rv.score??null); RV.diff=(rv.difficulty??null); }
+    document.getElementById('rv-title').textContent=title;
+    document.getElementById('rv-wrong').value = (rv&&rv.wrong)||'';
+    document.getElementById('rv-notes').value = (rv&&rv.notes)||'';
+    paintScore(); paintDiff();
+    document.getElementById('rv-overlay').classList.add('show');
+  }
+  function closeReview(){ document.getElementById('rv-overlay').classList.remove('show'); }
+  function saveReview(){
+    if(!RV.id) return;
+    if(RV.score==null){ alert('Pick a self-understanding score (1–10) first.'); return; }
+    const r=getReview();
+    const first=!r[RV.id];
+    const days=rvDueDays(RV.score);
+    const rec={ score:RV.score, difficulty:RV.diff,
+      wrong:document.getElementById('rv-wrong').value.trim(),
+      notes:document.getElementById('rv-notes').value.trim(),
+      date:Date.now(), due:Date.now()+days*DAY_MS };
+    r[RV.id]=rec; setReview(r);
+    // keep the existing 'done' + spaced-review plumbing working off the score
+    const done=getDone(); done.add(RV.id); saveDone(done);
+    const sr=getSR(); sr[RV.id]=Object.assign({},sr[RV.id],{ due:rec.due, interval:days }); setSR(sr);
+    if(RV.card){ RV.card.setAttribute('data-done','true'); updateSRBadge(RV.card); renderCardReview(RV.card); }
+    refreshDueBadges(); updateProgress(activeSubject());
+    if(first){
+      const grade=RV.score>=9?3:RV.score>=7?2:RV.score>=5?1:0;
+      const parts=[`Understanding ${RV.score}/10`];
+      if(RV.diff) parts.push('Difficulty: '+RV_DIFF[RV.diff-1]);
+      if(rec.wrong) parts.push('Wrong: '+rec.wrong);
+      let note=parts.join(' · '); if(rec.notes) note+='\n'+rec.notes;
+      logSession(RV.id, RV.card?cardTitle(RV.card):RV.id, grade, days===1?'1 day':days+' days', note);
+    }
+    closeReview();
+  }
+  function clearReview(){
+    if(!RV.id) return;
+    if(!confirm('Remove your review for this card?')) return;
+    const r=getReview(); delete r[RV.id]; setReview(r);
+    const done=getDone(); done.delete(RV.id); saveDone(done);
+    if(RV.card){ RV.card.removeAttribute('data-done'); renderCardReview(RV.card); }
+    refreshDueBadges(); updateProgress(activeSubject());
+    closeReview();
+  }
+  function renderCardReview(card){
+    const rv=getReview()[card.dataset.id];
+    let badge=card.querySelector('.card-score');
+    if(rv){
+      if(!badge){ badge=document.createElement('span'); badge.className='card-score'; card.appendChild(badge); }
+      badge.textContent=rv.score+'/10';
+      badge.title='Understanding '+rv.score+'/10'+(rv.difficulty?' · '+RV_DIFF[rv.difficulty-1]:'')+(rv.wrong?' · wrong: '+rv.wrong:'');
+      card.setAttribute('data-done','true');
+    } else if(badge){ badge.remove(); }
   }
 
   /* ═══════════════════════════════════════
@@ -1138,6 +1220,7 @@
   });
 
   initCalendar();
+  setupReviewModal();
   injectChecks();
   applyDoneStyles();
   refreshDueBadges();
@@ -1149,6 +1232,41 @@
   const savedSubj = localStorage.getItem(SUBJ_KEY) || 'cpp';
   selectSubject(savedSubj);
   </script>
+
+  <!-- ── Review / mistakes modal ── -->
+  <div class="rv-overlay" id="rv-overlay">
+    <div class="rv-modal">
+      <button class="rv-close" id="rv-close" aria-label="Close">✕</button>
+      <div class="rv-title" id="rv-title"></div>
+      <div class="rv-sub">Log how this session went — it saves to your Study Log and schedules a review.</div>
+
+      <div class="rv-field">
+        <label>Self-understanding score <span id="rv-score-val">—</span></label>
+        <div class="rv-score" id="rv-score"></div>
+        <div class="rv-band" id="rv-band"></div>
+      </div>
+
+      <div class="rv-field">
+        <label>Difficulty</label>
+        <div class="rv-diff" id="rv-diff"></div>
+      </div>
+
+      <div class="rv-field">
+        <label>Questions I got wrong <span style="color:var(--text3);text-transform:none;letter-spacing:0;">(optional)</span></label>
+        <input class="rv-wrong" id="rv-wrong" type="text" placeholder="e.g. Q2, Q5, part (c)…" autocomplete="off">
+      </div>
+
+      <div class="rv-field">
+        <label>Notes <span style="color:var(--text3);text-transform:none;letter-spacing:0;">(editable — reopen any time)</span></label>
+        <textarea class="rv-notes" id="rv-notes" placeholder="What tripped you up? Which method/theorem to review? Anything to remember next time."></textarea>
+      </div>
+
+      <div class="rv-actions">
+        <button class="rv-del" id="rv-del">Clear</button>
+        <button class="rv-save" id="rv-save">Save review</button>
+      </div>
+    </div>
+  </div>
 
   <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
 </body>
