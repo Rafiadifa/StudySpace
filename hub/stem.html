@@ -153,8 +153,10 @@
     .log-next { font-family: 'DM Mono',monospace; font-size: .61rem; color: var(--text3); flex-shrink: 0; }
     .log-note { font-size: .8rem; color: var(--text3); font-style: italic; line-height: 1.5; padding: 5px 0 2px 16px; white-space: pre-wrap; }
 
-    /* ── On-card understanding badge ── */
-    .card-score { position:absolute; top:10px; right:36px; font-family:'DM Mono',monospace; font-size:.55rem; padding:2px 6px; border-radius:99px; background:var(--subj-color,var(--calc)); color:#fff; pointer-events:none; }
+    /* ── Per-card review (pencil) button ── */
+    .card-review { position:absolute; top:10px; right:36px; width:20px; height:20px; border-radius:50%; background:transparent; border:1.5px solid var(--border); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.62rem; line-height:1; padding:0; color:var(--text3); transition:.15s; }
+    .card-review:hover { border-color:var(--subj-color,var(--calc)); background:var(--bg3); color:var(--text); }
+    .card-review.has-review { border-color:var(--subj-color,var(--calc)); color:var(--subj-color,var(--calc)); background:var(--bg3); }
 
     /* ── Review modal ── */
     .rv-overlay { position:fixed; inset:0; z-index:200; background:rgba(20,18,28,.55); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; padding:20px; }
@@ -180,6 +182,9 @@
     .rv-wrong:focus { border-color:var(--accent); }
     .rv-notes { width:100%; min-height:90px; font-family:'DM Sans',sans-serif; font-size:.88rem; line-height:1.55; padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); resize:vertical; outline:none; box-sizing:border-box; }
     .rv-notes:focus { border-color:var(--accent); }
+    .rv-donerow { display:flex; align-items:center; gap:9px; font-family:'DM Sans',sans-serif; font-size:.9rem; color:var(--text2); margin:2px 0 16px; cursor:pointer; }
+    .rv-donerow input { width:17px; height:17px; accent-color:var(--accent); cursor:pointer; }
+    .rv-donerow strong { color:var(--text); }
     .rv-actions { display:flex; gap:10px; align-items:center; margin-top:4px; }
     .rv-save { flex:1; background:var(--accent); color:#fff; border:none; border-radius:9px; padding:11px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:.9rem; cursor:pointer; }
     .rv-save:hover { filter:brightness(.94); }
@@ -902,14 +907,26 @@
     document.querySelectorAll('.card[data-id]').forEach(card => {
       if (card.dataset.nocheck) return;
       if (card.querySelector('.card-check')) return;
-      const btn = document.createElement('button');
-      btn.className='card-check'; btn.title='Log / review this session';
-      btn.setAttribute('aria-label','Log or review this session');
-      btn.addEventListener('click', e => {
+      // Done toggle (circle) — quick mark complete
+      const chk = document.createElement('button');
+      chk.className='card-check'; chk.title='Mark as done';
+      chk.setAttribute('aria-label','Mark as done');
+      chk.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        const done=getDone(), id=card.dataset.id;
+        if(done.has(id)){ done.delete(id); card.removeAttribute('data-done'); }
+        else { done.add(id); card.setAttribute('data-done','true'); }
+        saveDone(done); updateProgress(activeSubject());
+      });
+      // Review / notes (pencil) — opens the modal
+      const rev = document.createElement('button');
+      rev.className='card-review'; rev.textContent='✎';
+      rev.title='Review & notes'; rev.setAttribute('aria-label','Open review and notes');
+      rev.addEventListener('click', e => {
         e.preventDefault(); e.stopPropagation();
         openReview(card.dataset.id, cardTitle(card), card);
       });
-      card.appendChild(btn);
+      card.appendChild(chk); card.appendChild(rev);
       renderCardReview(card);
     });
   }
@@ -937,13 +954,13 @@
     const sc=document.getElementById('rv-score'); sc.innerHTML='';
     for(let i=1;i<=10;i++){
       const b=document.createElement('button'); b.className='rv-chip'; b.textContent=i; b.dataset.v=i;
-      b.addEventListener('click',()=>{ RV.score=i; paintScore(); });
+      b.addEventListener('click',()=>{ RV.score=(RV.score===i?null:i); paintScore(); });
       sc.appendChild(b);
     }
     const df=document.getElementById('rv-diff'); df.innerHTML='';
     RV_DIFF.forEach((l,idx)=>{
       const b=document.createElement('button'); b.className='rv-dchip'; b.textContent=l; b.dataset.v=idx+1;
-      b.addEventListener('click',()=>{ RV.diff=idx+1; paintDiff(); });
+      b.addEventListener('click',()=>{ RV.diff=(RV.diff===idx+1?null:idx+1); paintDiff(); });
       df.appendChild(b);
     });
     document.getElementById('rv-close').addEventListener('click',closeReview);
@@ -967,54 +984,55 @@
     document.getElementById('rv-title').textContent=title;
     document.getElementById('rv-wrong').value = (rv&&rv.wrong)||'';
     document.getElementById('rv-notes').value = (rv&&rv.notes)||'';
+    document.getElementById('rv-done-chk').checked = getDone().has(id);
     paintScore(); paintDiff();
     document.getElementById('rv-overlay').classList.add('show');
   }
   function closeReview(){ document.getElementById('rv-overlay').classList.remove('show'); }
   function saveReview(){
     if(!RV.id) return;
-    if(RV.score==null){ alert('Pick a self-understanding score (1–10) first.'); return; }
     const r=getReview();
     const first=!r[RV.id];
-    const days=rvDueDays(RV.score);
-    const rec={ score:RV.score, difficulty:RV.diff,
+    const s=RV.score;                         // score is optional now
+    const rec={ score:s, difficulty:RV.diff,
       wrong:document.getElementById('rv-wrong').value.trim(),
       notes:document.getElementById('rv-notes').value.trim(),
-      date:Date.now(), due:Date.now()+days*DAY_MS };
+      date:Date.now() };
+    if(s!=null) rec.due=Date.now()+rvDueDays(s)*DAY_MS;
     r[RV.id]=rec; setReview(r);
-    // keep the existing 'done' + spaced-review plumbing working off the score
-    const done=getDone(); done.add(RV.id); saveDone(done);
-    const sr=getSR(); sr[RV.id]=Object.assign({},sr[RV.id],{ due:rec.due, interval:days }); setSR(sr);
-    if(RV.card){ RV.card.setAttribute('data-done','true'); updateSRBadge(RV.card); renderCardReview(RV.card); }
+    // 'done' is controlled by the checkbox inside the modal
+    const done=getDone(), wantDone=document.getElementById('rv-done-chk').checked;
+    if(wantDone) done.add(RV.id); else done.delete(RV.id); saveDone(done);
+    if(RV.card){ if(wantDone) RV.card.setAttribute('data-done','true'); else RV.card.removeAttribute('data-done'); }
+    // spaced-review scheduling off the score (only if scored)
+    if(s!=null){ const sr=getSR(); sr[RV.id]=Object.assign({},sr[RV.id],{ due:rec.due, interval:rvDueDays(s) }); setSR(sr); if(RV.card) updateSRBadge(RV.card); }
+    if(RV.card) renderCardReview(RV.card);
     refreshDueBadges(); updateProgress(activeSubject());
     if(first){
-      const grade=RV.score>=9?3:RV.score>=7?2:RV.score>=5?1:0;
-      const parts=[`Understanding ${RV.score}/10`];
+      const grade = s==null?null : (s>=9?3:s>=7?2:s>=5?1:0);
+      const parts=[]; if(s!=null) parts.push('Understanding '+s+'/10');
       if(RV.diff) parts.push('Difficulty: '+RV_DIFF[RV.diff-1]);
       if(rec.wrong) parts.push('Wrong: '+rec.wrong);
-      let note=parts.join(' · '); if(rec.notes) note+='\n'+rec.notes;
-      logSession(RV.id, RV.card?cardTitle(RV.card):RV.id, grade, days===1?'1 day':days+' days', note);
+      let note=parts.join(' · '); if(rec.notes) note+=(note?'\n':'')+rec.notes;
+      if(note || s!=null) logSession(RV.id, RV.card?cardTitle(RV.card):RV.id, grade, s!=null?(rvDueDays(s)===1?'1 day':rvDueDays(s)+' days'):'', note);
     }
     closeReview();
   }
   function clearReview(){
     if(!RV.id) return;
-    if(!confirm('Remove your review for this card?')) return;
+    if(!confirm('Remove your review (score & notes) for this card? (Done status is kept.)')) return;
     const r=getReview(); delete r[RV.id]; setReview(r);
-    const done=getDone(); done.delete(RV.id); saveDone(done);
-    if(RV.card){ RV.card.removeAttribute('data-done'); renderCardReview(RV.card); }
-    refreshDueBadges(); updateProgress(activeSubject());
+    if(RV.card) renderCardReview(RV.card);
+    refreshDueBadges();
     closeReview();
   }
   function renderCardReview(card){
     const rv=getReview()[card.dataset.id];
-    let badge=card.querySelector('.card-score');
-    if(rv){
-      if(!badge){ badge=document.createElement('span'); badge.className='card-score'; card.appendChild(badge); }
-      badge.textContent=rv.score+'/10';
-      badge.title='Understanding '+rv.score+'/10'+(rv.difficulty?' · '+RV_DIFF[rv.difficulty-1]:'')+(rv.wrong?' · wrong: '+rv.wrong:'');
-      card.setAttribute('data-done','true');
-    } else if(badge){ badge.remove(); }
+    const rev=card.querySelector('.card-review');
+    if(rev){
+      rev.classList.toggle('has-review', !!rv);
+      rev.title = rv ? ('Reviewed: '+(rv.score!=null?rv.score+'/10':'noted')+' — click to edit') : 'Review & notes';
+    }
   }
 
   /* ═══════════════════════════════════════
@@ -1216,7 +1234,9 @@
   });
 
   initCalendar();
-  setupReviewModal();
+  // modal markup sits after this script, so wire it once the DOM is fully parsed
+  if(document.getElementById('rv-overlay')) setupReviewModal();
+  else document.addEventListener('DOMContentLoaded', setupReviewModal);
   injectChecks();
   applyDoneStyles();
   refreshDueBadges();
@@ -1256,6 +1276,8 @@
         <label>Notes <span style="color:var(--text3);text-transform:none;letter-spacing:0;">(editable — reopen any time)</span></label>
         <textarea class="rv-notes" id="rv-notes" placeholder="What tripped you up? Which method/theorem to review? Anything to remember next time."></textarea>
       </div>
+
+      <label class="rv-donerow"><input type="checkbox" id="rv-done-chk"> Mark this card as <strong>done</strong></label>
 
       <div class="rv-actions">
         <button class="rv-del" id="rv-del">Clear</button>
