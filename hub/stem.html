@@ -898,10 +898,6 @@
   /* ═══════════════════════════════════════
      CHECK BUTTON + SR POPUP WITH NOTES
   ═══════════════════════════════════════ */
-  function cardTitle(card){
-    const t=[...card.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join(' ').replace(/\s+/g,' ').trim();
-    return t || card.textContent.trim();
-  }
   function injectChecks() {
     document.querySelectorAll('.card[data-id]').forEach(card => {
       if (card.dataset.nocheck) return;
