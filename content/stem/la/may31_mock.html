@@ -8,7 +8,14 @@
 <link href="../../../style.css" rel="stylesheet"/>
 <script>
   window.MathJax = {
-    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    tex: {
+      inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']],
+      environments: {
+        psmallmatrix: ['\\left(\\begin{smallmatrix}', '\\end{smallmatrix}\\right)'],
+        bsmallmatrix: ['\\left[\\begin{smallmatrix}', '\\end{smallmatrix}\\right]'],
+        vsmallmatrix: ['\\left|\\begin{smallmatrix}', '\\end{smallmatrix}\\right|']
+      }
+    },
     svg: { fontCache: 'global' }
   };
 </script>

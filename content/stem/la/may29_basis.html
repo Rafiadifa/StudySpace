@@ -8,7 +8,17 @@
 <link href="../../../style.css" rel="stylesheet"/>
 <script>
   window.MathJax = {
-    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    tex: {
+      inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']],
+      // mathtools' small-matrix environments aren't built into MathJax — define them
+      environments: {
+        psmallmatrix: ['\\left(\\begin{smallmatrix}', '\\end{smallmatrix}\\right)'],
+        bsmallmatrix: ['\\left[\\begin{smallmatrix}', '\\end{smallmatrix}\\right]'],
+        vsmallmatrix: ['\\left|\\begin{smallmatrix}', '\\end{smallmatrix}\\right|'],
+        Bsmallmatrix: ['\\left\\{\\begin{smallmatrix}', '\\end{smallmatrix}\\right\\}'],
+        Vsmallmatrix: ['\\left\\|\\begin{smallmatrix}', '\\end{smallmatrix}\\right\\|']
+      }
+    },
     svg: { fontCache: 'global' }
   };
 </script>
