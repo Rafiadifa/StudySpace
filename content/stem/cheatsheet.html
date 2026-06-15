@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheat-Sheet Builder · Study Hub</title>
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = { tex: { inlineMath:[['\\(','\\)']], displayMath:[['\\[','\\]']] }, svg:{ fontCache:'global' } };
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<style>
+  .cs-wrap { max-width: 1080px; margin: 0 auto; padding: 24px 48px 80px; }
+  .cs-intro { font-size:.92rem; color:var(--text2); line-height:1.7; max-width:760px; }
+  .cs-intro b { color:var(--text); }
+  .cs-stat { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--text3); margin:14px 0 4px; letter-spacing:.04em; }
+  .cs-layout { display:grid; grid-template-columns: 1.1fr 1fr; gap:26px; margin-top:18px; align-items:start; }
+  @media (max-width:900px){ .cs-layout{ grid-template-columns:1fr; } }
+
+  /* quiz column */
+  .cs-grp-label { font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:24px 0 10px; padding-bottom:7px; border-bottom:1px solid var(--border); }
+  .cs-q { background:var(--bg2); border:1px solid var(--border); border-radius:11px; padding:13px 15px; margin-bottom:9px; transition:.15s; }
+  .cs-q.need { border-left:3px solid var(--dt,#c2570c); }
+  .cs-q.know { opacity:.5; }
+  .cs-q-text { font-size:.92rem; color:var(--text); line-height:1.5; margin-bottom:9px; }
+  .cs-q-text .meth { color:var(--accent); font-weight:600; }
+  .cs-btns { display:flex; gap:8px; }
+  .cs-b { font-family:'DM Mono',monospace; font-size:.64rem; letter-spacing:.05em; padding:6px 12px; border-radius:7px; border:1px solid var(--border); background:var(--bg); color:var(--text3); cursor:pointer; transition:.13s; }
+  .cs-b:hover { color:var(--text); border-color:var(--text3); }
+  .cs-b.know-b.on { background:#15803d; border-color:#15803d; color:#fff; }
+  .cs-b.need-b.on { background:var(--dt,#c2570c); border-color:var(--dt,#c2570c); color:#fff; }
+
+  /* cheat-sheet column */
+  .cs-sheet { position:sticky; top:16px; background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:20px 22px; }
+  .cs-sheet h2 { font-family:'DM Serif Display',serif; font-size:1.2rem; color:var(--text); }
+  .cs-sheet-sub { font-family:'DM Mono',monospace; font-size:.62rem; color:var(--text3); margin:3px 0 14px; }
+  .cs-sheet-actions { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+  .cs-act { font-family:'DM Mono',monospace; font-size:.64rem; padding:7px 13px; border-radius:7px; border:1px solid var(--border); background:none; cursor:pointer; color:var(--text2); }
+  .cs-act.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .cs-act:hover { filter:brightness(.96); }
+  .cs-item { padding:11px 0; border-top:1px dashed var(--border); }
+  .cs-item:first-child { border-top:none; }
+  .cs-item-q { font-size:.82rem; color:var(--text2); margin-bottom:5px; }
+  .cs-item-f { font-size:.9rem; color:var(--text); line-height:1.6; overflow-x:auto; }
+  .cs-empty { font-family:'DM Mono',monospace; font-size:.78rem; color:var(--text3); text-align:center; padding:28px 8px; line-height:1.6; }
+  mjx-container[display="true"]{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+
+  /* print: only the cheat sheet, compact, 2-column */
+  @media print {
+    .topbar, .crumbs, .cs-intro, .cs-stat, .cs-quiz-col, .cs-sheet-actions, .theme-toggle, .footer-note { display:none !important; }
+    .cs-layout { display:block; }
+    .cs-sheet { position:static; border:none; padding:0; columns:2; column-gap:22px; }
+    .cs-sheet h2 { column-span:all; }
+    .cs-item { break-inside:avoid; }
+    body { background:#fff; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="topbar-title">Study Hub</span>
+  <span class="topbar-sub" id="crumb-sub">CHEAT-SHEET BUILDER</span>
+  <span class="topbar-date" id="td"></span>
+</header>
+
+<div class="cs-wrap">
+  <h1 style="font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,4vw,2.4rem);" id="cs-title">Cheat-Sheet Builder</h1>
+  <p class="cs-intro" id="cs-intro"></p>
+  <div class="cs-stat" id="cs-stat"></div>
+
+  <div class="cs-layout">
+    <div class="cs-quiz-col" id="cs-quiz"></div>
+
+    <div>
+      <div class="cs-sheet">
+        <h2>My Cheat Sheet</h2>
+        <div class="cs-sheet-sub" id="cs-sheet-sub">things you said you'd need to look up</div>
+        <div class="cs-sheet-actions">
+          <button class="cs-act primary" onclick="window.print()">⎙ Print / Save PDF</button>
+          <button class="cs-act" id="cs-reset">Reset answers</button>
+        </div>
+        <div id="cs-sheet-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-note">RAFI ADIFA MAULANA · CHEAT-SHEET BUILDER</div>
+
+<script>
+/* ════════════════ SKILL BANKS ════════════════
+   Each item: { topic, q (the "can you do this?" prompt), f (the formula/method
+   that goes on the cheat sheet if you say you need it) }.
+   Built from the topics that actually appear on the past finals.            */
+const BANKS = {
+  la: {
+    name:'Linear Algebra',
+    exam:'Final: open notes, but only ONE A4 cheat sheet (double-sided). Curate ruthlessly — only put what you can\'t reconstruct.',
+    skills:[
+      ['Eigenvalues & determinants','find \\(\\det A\\) and \\(\\operatorname{tr}(A^k)\\) from the eigenvalues',
+        '\\(\\det A=\\prod\\lambda_i,\\quad \\operatorname{tr}A=\\sum\\lambda_i,\\quad \\operatorname{tr}(A^k)=\\sum\\lambda_i^{\\,k}\\)'],
+      ['Eigenvalues & determinants','use determinant rules (scalar, inverse, product, transpose)',
+        '\\(\\det(cA)=c^n\\det A,\\ \\det(A^{-1})=\\tfrac1{\\det A},\\ \\det(AB)=\\det A\\det B,\\ \\det(A^{\\mathsf T})=\\det A\\)'],
+      ['Eigenvalues & determinants','decide linear (in)dependence of vectors',
+        'Square: dependent \\(\\iff\\det=0\\). Otherwise row-reduce — dependent \\(\\iff\\operatorname{rank}<\\) number of vectors.'],
+      ['Char. poly & Cayley–Hamilton','write the characteristic polynomial',
+        '\\(p(\\lambda)=\\det(A-\\lambda I)\\); its roots are the eigenvalues. \\(A\\) singular \\(\\iff\\det A=0\\iff 0\\) is an eigenvalue.'],
+      ['Char. poly & Cayley–Hamilton','use Cayley–Hamilton to get \\(A^{-1}\\) or high powers as a polynomial in \\(A\\)',
+        '\\(p(A)=0\\). E.g. if \\(A^2-2A+I=0\\Rightarrow A^{-1}=2I-A\\). Reduce \\(A^n\\) mod \\(p(A)\\).'],
+      ['Spectral & definiteness','diagonalize a symmetric matrix \\(A=Q\\Lambda Q^{\\mathsf T}\\)',
+        'Eigenvalues → \\(\\Lambda\\); orthonormal eigenvectors → columns of \\(Q\\) (\\(Q^{\\mathsf T}=Q^{-1}\\)). Distinct \\(\\lambda\\) ⇒ orthogonal eigenvectors.'],
+      ['Spectral & definiteness','classify definiteness (pos/neg/indefinite)',
+        'By eigenvalues: all \\(>0\\) pos-def, all \\(<0\\) neg-def, mixed signs indefinite. Or leading principal minors all \\(>0\\) ⇒ pos-def.'],
+      ['Spectral & definiteness','diagonalize a general matrix & take powers',
+        '\\(A=PDP^{-1}\\) (\\(P\\)=eigenvectors, \\(D\\)=eigenvalues). Then \\(A^k=PD^kP^{-1}\\). Needs \\(n\\) independent eigenvectors.'],
+      ['Diagonalizability','test diagonalizability via multiplicities',
+        'Diagonalizable \\(\\iff\\) for every \\(\\lambda\\), geometric mult \\((=\\dim\\ker(A-\\lambda I))\\) \\(=\\) algebraic mult.'],
+      ['SVD','find singular values and the SVD \\(A=U\\Sigma V^{\\mathsf T}\\)',
+        '\\(\\sigma_i=\\sqrt{\\lambda_i(A^{\\mathsf T}A)}\\). \\(V\\): orthonormal eigenvectors of \\(A^{\\mathsf T}A\\); \\(u_i=\\tfrac1{\\sigma_i}Av_i\\). Image of unit sphere = ellipse with semi-axes \\(\\sigma_i\\) along \\(u_i\\).'],
+      ['QR & least squares','QR via Gram–Schmidt',
+        '\\(A=QR\\): \\(Q\\) = Gram–Schmidt orthonormalized columns, \\(R=Q^{\\mathsf T}A\\) (upper-triangular). Keep \\(R\\) diagonal \\(>0\\).'],
+      ['QR & least squares','solve least squares & build the projection matrix',
+        'Normal equations \\(A^{\\mathsf T}A\\hat x=A^{\\mathsf T}b\\). Projection onto \\(\\operatorname{Ran}(A)\\): \\(P=A(A^{\\mathsf T}A)^{-1}A^{\\mathsf T}\\).'],
+      ['Gram–Schmidt','orthonormalize a set of vectors',
+        '\\(u_k=v_k-\\sum_{j<k}\\langle v_k,e_j\\rangle e_j,\\quad e_k=u_k/\\lVert u_k\\rVert\\).'],
+      ['Decompositions','LU decomposition & solving \\(Ax=b\\) with it',
+        '\\(PA=LU\\). Solve \\(Ly=Pb\\) (forward), then \\(Ux=y\\) (back). \\(L\\) unit-lower, \\(U\\) upper.'],
+      ['Change of basis','change-of-coordinate matrix & similar matrices',
+        '\\([v]_{\\mathcal C}=P_{\\mathcal C\\leftarrow\\mathcal B}[v]_{\\mathcal B}\\); columns of \\(P_{\\mathcal C\\leftarrow\\mathcal B}\\) are old basis in new coords. \\([T]_{\\mathcal C}=P[T]_{\\mathcal B}P^{-1}\\).'],
+      ['Rank–nullity','apply rank–nullity & decide injective/surjective',
+        '\\(\\operatorname{rank}+\\operatorname{nullity}=\\) #columns. Injective \\(\\iff\\)nullity\\(=0\\); surjective \\(\\iff\\operatorname{rank}=\\dim\\)codomain.'],
+      ['Abstract linear maps','build the matrix of a linear map on an abstract space (matrices/polynomials)',
+        'Apply \\(T\\) to each basis vector, write the result in coordinates — those coordinate columns form \\([T]_{\\mathcal B}\\). (Works for \\(T(X)=AX-XA\\), differentiation, etc.)'],
+      ['Block matrices','determinant & inverse of a block matrix',
+        'Block-triangularize (Schur complement \\(S=D-CA^{-1}B\\)): \\(\\det=\\det A\\det S\\). Solve block systems by elimination, don\'t expand entrywise.'],
+    ]
+  },
+  calc: {
+    name:'Calculus A2',
+    exam:'Final: fully open book (textbook + notes), 3 hours, multi-part chained problems. Always explain — a bare answer earns 0.',
+    skills:[
+      ['Multivariable derivatives','compute the Jacobian & say why \\(F\\) is differentiable',
+        '\\([DF]\\) = matrix of all partials \\(\\partial F_i/\\partial x_j\\). \\(F\\) differentiable at a point if all partials are continuous there.'],
+      ['Multivariable derivatives','one Newton step in \\(\\mathbb R^n\\)',
+        '\\(\\mathbf x_{n+1}=\\mathbf x_n-[DF(\\mathbf x_n)]^{-1}F(\\mathbf x_n)\\). \\(2\\times2\\) inverse \\(=\\tfrac1{ad-bc}\\bigl(\\begin{smallmatrix}d&-b\\\\-c&a\\end{smallmatrix}\\bigr)\\).'],
+      ['Multivariable derivatives','linear approximation',
+        '\\(F(\\mathbf x_0+\\mathbf h)\\approx F(\\mathbf x_0)+[DF(\\mathbf x_0)]\\,\\mathbf h\\).'],
+      ['Multiple integrals','swap order of integration (Fubini)',
+        'Draw the region, re-describe it with the other variable outside, rewrite both bounds. Useful when one order is impossible.'],
+      ['Multiple integrals','change of variables / Jacobian for area',
+        '\\(dA_{xy}=\\left|\\dfrac{\\partial(x,y)}{\\partial(u,v)}\\right|dA_{uv}\\). Note \\(\\dfrac{\\partial(x,y)}{\\partial(u,v)}=\\Big(\\dfrac{\\partial(u,v)}{\\partial(x,y)}\\Big)^{-1}\\).'],
+      ['Coordinates','spherical & cylindrical volume elements',
+        'Spherical: \\(x=\\rho\\sin\\phi\\cos\\theta,\\dots,\\ dV=\\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta\\). Cylindrical: \\(dV=r\\,dr\\,d\\theta\\,dz\\).'],
+      ['Line integrals','work integral & Green\'s theorem',
+        '\\(\\int_\\gamma F\\cdot d\\gamma=\\int F(\\gamma(t))\\cdot\\gamma\'(t)\\,dt\\). Green: \\(\\oint F\\cdot d\\gamma=\\iint(\\partial_xQ-\\partial_yP)\\,dA\\).'],
+      ['Line integrals','flux in the plane & 2-D divergence',
+        '\\(\\oint_\\gamma F\\cdot n\\,ds=\\iint_D(\\partial_xP+\\partial_yQ)\\,dA=\\iint_D\\nabla\\!\\cdot F\\,dA\\) (outward normal).'],
+      ['Vector calculus','curl, divergence & conservative test',
+        '\\(\\nabla\\!\\cdot F=\\partial_xP+\\partial_yQ+\\partial_zR\\); \\(\\nabla\\times F=\\det\\bigl(\\begin{smallmatrix}i&j&k\\\\\\partial_x&\\partial_y&\\partial_z\\\\P&Q&R\\end{smallmatrix}\\bigr)\\). \\(F=\\nabla\\phi\\iff\\nabla\\times F=0\\) (simply connected) ⇒ path-independent.'],
+      ['Big theorems','divergence theorem',
+        '\\(\\oiint_{\\partial U}F\\cdot n\\,dS=\\iiint_U\\nabla\\!\\cdot F\\,dV\\). Turn a messy surface flux into a volume integral.'],
+      ['Big theorems','Stokes\' theorem',
+        '\\(\\oint_{\\partial S}F\\cdot d\\gamma=\\iint_S(\\nabla\\times F)\\cdot n\\,dS\\). Replace a hard line integral with a flux of the curl through any spanning surface.'],
+      ['Surfaces','surface integral & normal of a parametrized surface',
+        '\\(dS=\\lVert \\Phi_u\\times\\Phi_v\\rVert\\,du\\,dv\\); normal \\(=\\Phi_u\\times\\Phi_v\\) (check outward/inward by plugging a point).'],
+      ['Surfaces','centroid of a surface / solid',
+        '\\(\\bar x=\\dfrac{\\iint x\\,dS}{\\iint dS}\\) (and similarly \\(\\bar y,\\bar z\\)); use symmetry to kill components.'],
+      ['Differential forms','evaluate a form like \\(\\int_C z^2\\,dy\\wedge dx\\)',
+        '\\(dy\\wedge dx=-\\,dx\\wedge dy\\). Pull back to parameters; orientation sign matters.'],
+      ['Series','pick the right convergence test; absolute vs conditional',
+        'Ratio/root for factorials & powers; comparison/\\(p\\)-series \\((\\sum 1/n^p\\) conv. \\(\\iff p>1)\\); alternating-series test. Absolutely conv. \\(\\Rightarrow\\) conv.; conv. but not absolutely \\(=\\) conditional.'],
+      ['Series','radius & interval of convergence',
+        '\\(R=\\lim|a_n/a_{n+1}|\\) (or \\(1/\\limsup|a_n|^{1/n}\\)). Then test BOTH endpoints separately.'],
+      ['Series','Taylor series',
+        '\\(f(x)=\\sum_{n\\ge0}\\dfrac{f^{(n)}(a)}{n!}(x-a)^n\\). Know \\(e^x,\\sin,\\cos,\\tfrac1{1-x}\\) by heart.'],
+      ['Series','Fourier series coefficients (period \\(2\\pi\\))',
+        '\\(a_0=\\tfrac1{2\\pi}\\!\\int_0^{2\\pi}\\!f,\\ a_n=\\tfrac1\\pi\\!\\int_0^{2\\pi}\\!f\\cos nx,\\ b_n=\\tfrac1\\pi\\!\\int_0^{2\\pi}\\!f\\sin nx\\). At a jump, the series gives the midpoint.'],
+    ]
+  }
+};
+
+const params=new URLSearchParams(location.search);
+const SUBJ = (params.get('subj')==='calc') ? 'calc' : 'la';
+const BANK = BANKS[SUBJ];
+const KEY  = 'studyhub_cheat_'+SUBJ;
+document.body.classList.add(SUBJ==='calc'?'subject-calc':'subject-la');
+
+let state = (()=>{ try{return JSON.parse(localStorage.getItem(KEY)||'{}');}catch{return{};} })();
+const save = ()=>localStorage.setItem(KEY, JSON.stringify(state));
+
+document.getElementById('cs-title').textContent = BANK.name+' — Cheat-Sheet Builder';
+document.getElementById('crumb-sub').textContent = 'CHEAT SHEET · '+BANK.name.toUpperCase();
+document.getElementById('cs-intro').innerHTML =
+  'Go down the list and answer one question for each method: <b>do you actually know how to do it</b>, cold, without looking? '+
+  'Anything you mark <b>“need it”</b> drops into your cheat sheet on the right, with the formula — so the sheet ends up being exactly the things you don\'t trust yourself to remember. '+
+  '<br><span style="color:var(--text3)">'+BANK.exam+'</span>';
+
+function render(){
+  // quiz column grouped by topic
+  const quiz=document.getElementById('cs-quiz');
+  const groups={};
+  BANK.skills.forEach((s,i)=>{ (groups[s[0]]=groups[s[0]]||[]).push([i,s]); });
+  quiz.innerHTML = Object.entries(groups).map(([topic,items])=>`
+    <div class="cs-grp-label">${topic}</div>
+    ${items.map(([i,s])=>{
+      const st=state[i]; // 'know' | 'need' | undefined
+      return `<div class="cs-q ${st||''}" data-i="${i}">
+        <div class="cs-q-text">Can you <span class="meth">${s[1]}</span>?</div>
+        <div class="cs-btns">
+          <button class="cs-b know-b ${st==='know'?'on':''}" data-v="know" data-i="${i}">✓ I know it</button>
+          <button class="cs-b need-b ${st==='need'?'on':''}" data-v="need" data-i="${i}">✗ Need it on my sheet</button>
+        </div>
+      </div>`;
+    }).join('')}`).join('');
+
+  // cheat-sheet column
+  const need = BANK.skills.map((s,i)=>[i,s]).filter(([i])=>state[i]==='need');
+  const body=document.getElementById('cs-sheet-body');
+  if(!need.length){
+    body.innerHTML='<div class="cs-empty">Nothing here yet.<br>Mark a method “Need it on my sheet” and it appears here with the formula.</div>';
+  } else {
+    body.innerHTML=need.map(([i,s])=>`
+      <div class="cs-item">
+        <div class="cs-item-q">${s[1].charAt(0).toUpperCase()+s[1].slice(1)}</div>
+        <div class="cs-item-f">${s[2]}</div>
+      </div>`).join('');
+  }
+  // stats
+  const known=BANK.skills.filter((s,i)=>state[i]==='know').length;
+  document.getElementById('cs-stat').textContent =
+    `${known} mastered · ${need.length} on your cheat sheet · ${BANK.skills.length-known-need.length} unmarked`;
+  document.getElementById('cs-sheet-sub').textContent = need.length+' item'+(need.length===1?'':'s')+' · print double-sided A4';
+  if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([quiz,body]);
+}
+
+document.getElementById('cs-quiz').addEventListener('click',e=>{
+  const b=e.target.closest('.cs-b'); if(!b) return;
+  const i=b.dataset.i, v=b.dataset.v;
+  state[i] = (state[i]===v) ? undefined : v;   // click again to clear
+  if(state[i]===undefined) delete state[i];
+  save(); render();
+});
+document.getElementById('cs-reset').addEventListener('click',()=>{
+  if(!confirm('Clear all your answers for '+BANK.name+'?')) return;
+  state={}; save(); render();
+});
+
+const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],D=['SUN','MON','TUE','WED','THU','FRI','SAT'],d=new Date();
+document.getElementById('td').textContent=`${D[d.getDay()]} · ${d.getDate()} ${M[d.getMonth()].toUpperCase()} ${d.getFullYear()}`;
+render();
+</script>
+<button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>
