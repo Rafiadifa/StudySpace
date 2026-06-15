@@ -11,49 +11,63 @@
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <style>
-  .cs-wrap { max-width: 1080px; margin: 0 auto; padding: 24px 48px 80px; }
-  .cs-intro { font-size:.92rem; color:var(--text2); line-height:1.7; max-width:760px; }
+  .cs-wrap { max-width: 1140px; margin: 0 auto; padding: 24px 48px 90px; }
+  .cs-intro { font-size:.9rem; color:var(--text2); line-height:1.65; max-width:780px; }
   .cs-intro b { color:var(--text); }
   .cs-stat { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--text3); margin:14px 0 4px; letter-spacing:.04em; }
-  .cs-layout { display:grid; grid-template-columns: 1.1fr 1fr; gap:26px; margin-top:18px; align-items:start; }
-  @media (max-width:900px){ .cs-layout{ grid-template-columns:1fr; } }
+  .cs-layout { display:grid; grid-template-columns: 1.05fr 1fr; gap:26px; margin-top:18px; align-items:start; }
+  @media (max-width:920px){ .cs-layout{ grid-template-columns:1fr; } }
 
-  /* quiz column */
-  .cs-grp-label { font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:24px 0 10px; padding-bottom:7px; border-bottom:1px solid var(--border); }
-  .cs-q { background:var(--bg2); border:1px solid var(--border); border-radius:11px; padding:13px 15px; margin-bottom:9px; transition:.15s; }
+  .cs-grp-label { font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:22px 0 9px; padding-bottom:7px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+  .cs-grp-label .gc { margin-left:auto; color:var(--text3); font-size:.58rem; }
+  .cs-q { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:11px 13px; margin-bottom:8px; transition:.15s; }
   .cs-q.need { border-left:3px solid var(--dt,#c2570c); }
-  .cs-q.know { opacity:.5; }
-  .cs-q-text { font-size:.92rem; color:var(--text); line-height:1.5; margin-bottom:9px; }
+  .cs-q.know { opacity:.45; }
+  .cs-q-text { font-size:.88rem; color:var(--text); line-height:1.45; margin-bottom:8px; }
   .cs-q-text .meth { color:var(--accent); font-weight:600; }
-  .cs-btns { display:flex; gap:8px; }
-  .cs-b { font-family:'DM Mono',monospace; font-size:.64rem; letter-spacing:.05em; padding:6px 12px; border-radius:7px; border:1px solid var(--border); background:var(--bg); color:var(--text3); cursor:pointer; transition:.13s; }
+  .cs-btns { display:flex; gap:7px; }
+  .cs-b { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.04em; padding:5px 10px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--text3); cursor:pointer; transition:.13s; }
   .cs-b:hover { color:var(--text); border-color:var(--text3); }
   .cs-b.know-b.on { background:#15803d; border-color:#15803d; color:#fff; }
   .cs-b.need-b.on { background:var(--dt,#c2570c); border-color:var(--dt,#c2570c); color:#fff; }
+  .cs-bulk { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 2px; }
+  .cs-bulk button { font-family:'DM Mono',monospace; font-size:.6rem; padding:5px 11px; border-radius:6px; border:1px solid var(--border); background:none; color:var(--text2); cursor:pointer; }
+  .cs-bulk button:hover { color:var(--text); border-color:var(--text3); }
 
   /* cheat-sheet column */
-  .cs-sheet { position:sticky; top:16px; background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:20px 22px; }
-  .cs-sheet h2 { font-family:'DM Serif Display',serif; font-size:1.2rem; color:var(--text); }
-  .cs-sheet-sub { font-family:'DM Mono',monospace; font-size:.62rem; color:var(--text3); margin:3px 0 14px; }
-  .cs-sheet-actions { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+  .cs-sheet { position:sticky; top:16px; background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:18px 20px; }
+  .cs-sheet h2 { font-family:'DM Serif Display',serif; font-size:1.15rem; color:var(--text); }
+  .cs-gauge-wrap { margin:8px 0 12px; }
+  .cs-gauge-bar { height:7px; border-radius:99px; background:var(--bg3); overflow:hidden; }
+  .cs-gauge-fill { height:7px; border-radius:99px; transition:width .3s, background .3s; }
+  .cs-gauge-txt { font-family:'DM Mono',monospace; font-size:.62rem; margin-top:5px; }
+  .cs-sheet-actions { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
   .cs-act { font-family:'DM Mono',monospace; font-size:.64rem; padding:7px 13px; border-radius:7px; border:1px solid var(--border); background:none; cursor:pointer; color:var(--text2); }
   .cs-act.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
   .cs-act:hover { filter:brightness(.96); }
-  .cs-item { padding:11px 0; border-top:1px dashed var(--border); }
+  .cs-sheet-body { columns: 2; column-gap:18px; }
+  @media (max-width:920px){ .cs-sheet-body{ columns:1; } }
+  .cs-item { padding:8px 0; border-top:1px dashed var(--border); break-inside:avoid; }
   .cs-item:first-child { border-top:none; }
-  .cs-item-q { font-size:.82rem; color:var(--text2); margin-bottom:5px; }
-  .cs-item-f { font-size:.9rem; color:var(--text); line-height:1.6; overflow-x:auto; }
-  .cs-empty { font-family:'DM Mono',monospace; font-size:.78rem; color:var(--text3); text-align:center; padding:28px 8px; line-height:1.6; }
+  .cs-item-q { font-size:.74rem; color:var(--text2); font-weight:600; margin-bottom:3px; }
+  .cs-item-f { font-size:.82rem; color:var(--text); line-height:1.5; overflow-x:auto; }
+  .cs-empty { font-family:'DM Mono',monospace; font-size:.76rem; color:var(--text3); text-align:center; padding:26px 8px; line-height:1.6; }
   mjx-container[display="true"]{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
 
-  /* print: only the cheat sheet, compact, 2-column */
+  /* PRINT: only the cheat sheet — dense 3-column, tiny font, to fit ≤2 A4 pages */
+  @page { size: A4; margin: 8mm; }
   @media print {
-    .topbar, .crumbs, .cs-intro, .cs-stat, .cs-quiz-col, .cs-sheet-actions, .theme-toggle, .footer-note { display:none !important; }
+    .topbar, .crumbs, .cs-intro, .cs-stat, .cs-quiz-col, .cs-sheet-actions, .cs-gauge-wrap, .theme-toggle, .footer-note, h1 { display:none !important; }
+    .cs-wrap { max-width:none; padding:0; }
     .cs-layout { display:block; }
-    .cs-sheet { position:static; border:none; padding:0; columns:2; column-gap:22px; }
-    .cs-sheet h2 { column-span:all; }
-    .cs-item { break-inside:avoid; }
-    body { background:#fff; }
+    .cs-sheet { position:static; border:none; padding:0; background:#fff; }
+    .cs-sheet h2 { font-size:11pt; margin-bottom:4pt; column-span:all; }
+    .cs-sheet-body { columns:3; column-gap:6mm; font-size:7.4pt; line-height:1.28; }
+    .cs-item { padding:2.5pt 0; }
+    .cs-item-q { font-size:6.8pt; margin-bottom:1pt; }
+    .cs-item-f { font-size:7.4pt; line-height:1.3; }
+    body { background:#fff; color:#000; }
+    mjx-container { font-size:92% !important; }
   }
 </style>
 </head>
@@ -65,9 +79,13 @@
 </header>
 
 <div class="cs-wrap">
-  <h1 style="font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,4vw,2.4rem);" id="cs-title">Cheat-Sheet Builder</h1>
+  <h1 style="font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,4vw,2.3rem);" id="cs-title">Cheat-Sheet Builder</h1>
   <p class="cs-intro" id="cs-intro"></p>
   <div class="cs-stat" id="cs-stat"></div>
+  <div class="cs-bulk">
+    <button id="bulk-need">Add ALL to sheet</button>
+    <button id="bulk-know">Mark all “I know it”</button>
+  </div>
 
   <div class="cs-layout">
     <div class="cs-quiz-col" id="cs-quiz"></div>
@@ -75,12 +93,15 @@
     <div>
       <div class="cs-sheet">
         <h2>My Cheat Sheet</h2>
-        <div class="cs-sheet-sub" id="cs-sheet-sub">things you said you'd need to look up</div>
+        <div class="cs-gauge-wrap">
+          <div class="cs-gauge-bar"><div class="cs-gauge-fill" id="cs-gauge-fill"></div></div>
+          <div class="cs-gauge-txt" id="cs-gauge-txt"></div>
+        </div>
         <div class="cs-sheet-actions">
           <button class="cs-act primary" onclick="window.print()">⎙ Print / Save PDF</button>
-          <button class="cs-act" id="cs-reset">Reset answers</button>
+          <button class="cs-act" id="cs-reset">Reset</button>
         </div>
-        <div id="cs-sheet-body"></div>
+        <div class="cs-sheet-body" id="cs-sheet-body"></div>
       </div>
     </div>
   </div>
@@ -89,93 +110,134 @@
 <div class="footer-note">RAFI ADIFA MAULANA · CHEAT-SHEET BUILDER</div>
 
 <script>
-/* ════════════════ SKILL BANKS ════════════════
-   Each item: { topic, q (the "can you do this?" prompt), f (the formula/method
-   that goes on the cheat sheet if you say you need it) }.
-   Built from the topics that actually appear on the past finals.            */
+/* ════════════════ SKILL BANKS — fine-grained "do you know this trick?" ════════════════
+   Each item: [ topic , q (the prompt) , f (formula/method for the printed sheet) ]      */
 const BANKS = {
   la: {
     name:'Linear Algebra',
-    exam:'Final: open notes, but only ONE A4 cheat sheet (double-sided). Curate ruthlessly — only put what you can\'t reconstruct.',
+    exam:'Final: only ONE A4 cheat sheet (double-sided = 2 pages). Mark a method “need it” ONLY if you can\'t reconstruct it cold — keep the sheet to its 2-page budget below.',
     skills:[
-      ['Eigenvalues & determinants','find \\(\\det A\\) and \\(\\operatorname{tr}(A^k)\\) from the eigenvalues',
-        '\\(\\det A=\\prod\\lambda_i,\\quad \\operatorname{tr}A=\\sum\\lambda_i,\\quad \\operatorname{tr}(A^k)=\\sum\\lambda_i^{\\,k}\\)'],
-      ['Eigenvalues & determinants','use determinant rules (scalar, inverse, product, transpose)',
-        '\\(\\det(cA)=c^n\\det A,\\ \\det(A^{-1})=\\tfrac1{\\det A},\\ \\det(AB)=\\det A\\det B,\\ \\det(A^{\\mathsf T})=\\det A\\)'],
-      ['Eigenvalues & determinants','decide linear (in)dependence of vectors',
-        'Square: dependent \\(\\iff\\det=0\\). Otherwise row-reduce — dependent \\(\\iff\\operatorname{rank}<\\) number of vectors.'],
-      ['Char. poly & Cayley–Hamilton','write the characteristic polynomial',
-        '\\(p(\\lambda)=\\det(A-\\lambda I)\\); its roots are the eigenvalues. \\(A\\) singular \\(\\iff\\det A=0\\iff 0\\) is an eigenvalue.'],
-      ['Char. poly & Cayley–Hamilton','use Cayley–Hamilton to get \\(A^{-1}\\) or high powers as a polynomial in \\(A\\)',
-        '\\(p(A)=0\\). E.g. if \\(A^2-2A+I=0\\Rightarrow A^{-1}=2I-A\\). Reduce \\(A^n\\) mod \\(p(A)\\).'],
-      ['Spectral & definiteness','diagonalize a symmetric matrix \\(A=Q\\Lambda Q^{\\mathsf T}\\)',
-        'Eigenvalues → \\(\\Lambda\\); orthonormal eigenvectors → columns of \\(Q\\) (\\(Q^{\\mathsf T}=Q^{-1}\\)). Distinct \\(\\lambda\\) ⇒ orthogonal eigenvectors.'],
-      ['Spectral & definiteness','classify definiteness (pos/neg/indefinite)',
-        'By eigenvalues: all \\(>0\\) pos-def, all \\(<0\\) neg-def, mixed signs indefinite. Or leading principal minors all \\(>0\\) ⇒ pos-def.'],
-      ['Spectral & definiteness','diagonalize a general matrix & take powers',
-        '\\(A=PDP^{-1}\\) (\\(P\\)=eigenvectors, \\(D\\)=eigenvalues). Then \\(A^k=PD^kP^{-1}\\). Needs \\(n\\) independent eigenvectors.'],
-      ['Diagonalizability','test diagonalizability via multiplicities',
-        'Diagonalizable \\(\\iff\\) for every \\(\\lambda\\), geometric mult \\((=\\dim\\ker(A-\\lambda I))\\) \\(=\\) algebraic mult.'],
-      ['SVD','find singular values and the SVD \\(A=U\\Sigma V^{\\mathsf T}\\)',
-        '\\(\\sigma_i=\\sqrt{\\lambda_i(A^{\\mathsf T}A)}\\). \\(V\\): orthonormal eigenvectors of \\(A^{\\mathsf T}A\\); \\(u_i=\\tfrac1{\\sigma_i}Av_i\\). Image of unit sphere = ellipse with semi-axes \\(\\sigma_i\\) along \\(u_i\\).'],
-      ['QR & least squares','QR via Gram–Schmidt',
-        '\\(A=QR\\): \\(Q\\) = Gram–Schmidt orthonormalized columns, \\(R=Q^{\\mathsf T}A\\) (upper-triangular). Keep \\(R\\) diagonal \\(>0\\).'],
-      ['QR & least squares','solve least squares & build the projection matrix',
-        'Normal equations \\(A^{\\mathsf T}A\\hat x=A^{\\mathsf T}b\\). Projection onto \\(\\operatorname{Ran}(A)\\): \\(P=A(A^{\\mathsf T}A)^{-1}A^{\\mathsf T}\\).'],
-      ['Gram–Schmidt','orthonormalize a set of vectors',
-        '\\(u_k=v_k-\\sum_{j<k}\\langle v_k,e_j\\rangle e_j,\\quad e_k=u_k/\\lVert u_k\\rVert\\).'],
-      ['Decompositions','LU decomposition & solving \\(Ax=b\\) with it',
-        '\\(PA=LU\\). Solve \\(Ly=Pb\\) (forward), then \\(Ux=y\\) (back). \\(L\\) unit-lower, \\(U\\) upper.'],
-      ['Change of basis','change-of-coordinate matrix & similar matrices',
-        '\\([v]_{\\mathcal C}=P_{\\mathcal C\\leftarrow\\mathcal B}[v]_{\\mathcal B}\\); columns of \\(P_{\\mathcal C\\leftarrow\\mathcal B}\\) are old basis in new coords. \\([T]_{\\mathcal C}=P[T]_{\\mathcal B}P^{-1}\\).'],
-      ['Rank–nullity','apply rank–nullity & decide injective/surjective',
-        '\\(\\operatorname{rank}+\\operatorname{nullity}=\\) #columns. Injective \\(\\iff\\)nullity\\(=0\\); surjective \\(\\iff\\operatorname{rank}=\\dim\\)codomain.'],
-      ['Abstract linear maps','build the matrix of a linear map on an abstract space (matrices/polynomials)',
-        'Apply \\(T\\) to each basis vector, write the result in coordinates — those coordinate columns form \\([T]_{\\mathcal B}\\). (Works for \\(T(X)=AX-XA\\), differentiation, etc.)'],
-      ['Block matrices','determinant & inverse of a block matrix',
-        'Block-triangularize (Schur complement \\(S=D-CA^{-1}B\\)): \\(\\det=\\det A\\det S\\). Solve block systems by elimination, don\'t expand entrywise.'],
+      /* ── RREF & linear maps ── */
+      ['RREF & linear maps','find RREF, rank & free columns','Eliminate below pivots → above → scale pivots to 1. #pivots \\(=\\operatorname{rank}\\); columns without a pivot are free.'],
+      ['RREF & linear maps','turn a geometric map into its matrix','Track each \\(e_i\\): column \\(i=Ae_i\\). Build rotations/reflections/shears/scalings directly from the action on \\(e_i\\).'],
+      ['RREF & linear maps','projection / reflection / rotation matrices','Proj onto \\(n^\\perp\\): \\(P=I-\\tfrac{nn^{\\mathsf T}}{n^{\\mathsf T}n}\\). Reflection: \\(H=I-\\tfrac{2nn^{\\mathsf T}}{n^{\\mathsf T}n}\\ (H^2=I)\\). Rotation \\(\\theta\\): \\(\\bigl(\\begin{smallmatrix}\\cos\\theta&-\\sin\\theta\\\\\\sin\\theta&\\cos\\theta\\end{smallmatrix}\\bigr)\\).'],
+      ['RREF & linear maps','recover \\(A\\) from RREF + column relations','RREF encodes every dependency: free col \\(=\\) combo of preceding pivot cols. Anchor pivot columns with known entries, rebuild the rest.'],
+      ['RREF & linear maps','solve \\(Ax=b\\) (full solution set)','Row-reduce \\([A\\,|\\,b]\\); consistent if no pivot in the aug. col. \\(x=x_p+x_h,\\ x_h\\in\\ker A\\) (one per free var).'],
+      ['RREF & linear maps','rank identities','\\(\\operatorname{rank}A=\\operatorname{rank}A^{\\mathsf T}\\); \\(\\operatorname{rank}(AB)\\le\\min\\); \\(\\operatorname{rank}(A^{\\mathsf T}A)=\\operatorname{rank}A\\); invertible \\(C\\Rightarrow\\operatorname{rank}(AC)=\\operatorname{rank}A\\).'],
+      /* ── Inverses, LU/LDU ── */
+      ['Inverses & LU/LDU','inverse by row reduction','\\([A\\,|\\,I]\\xrightarrow{\\text{row ops}}[I\\,|\\,A^{-1}]\\).'],
+      ['Inverses & LU/LDU','LU / LDU decomposition','Forward elim: multipliers → \\(L\\) (unit lower), pivots → \\(D\\), unit upper → \\(U\\). Exists \\(\\iff\\) every leading principal minor \\(\\neq0\\).'],
+      ['Inverses & LU/LDU','solve \\(Ax=b\\) using a known \\(LU\\)','\\(PA=LU\\): solve \\(Ly=Pb\\) (forward), then \\(Ux=y\\) (back). Don\'t re-invert \\(A\\) for new \\(b\\)\'s.'],
+      ['Inverses & LU/LDU','inverse of a product','\\((AB)^{-1}=B^{-1}A^{-1}\\); \\((ABC)^{-1}=C^{-1}B^{-1}A^{-1}\\); \\((A^{\\mathsf T})^{-1}=(A^{-1})^{\\mathsf T}\\).'],
+      ['Inverses & LU/LDU','Sherman–Morrison (rank-1 update)','\\((A+uv^{\\mathsf T})^{-1}=A^{-1}-\\dfrac{A^{-1}uv^{\\mathsf T}A^{-1}}{1+v^{\\mathsf T}A^{-1}u}\\).'],
+      ['Inverses & LU/LDU','pseudo-inverse & polynomial of a projection','Full col rank: \\(A^{+}=(A^{\\mathsf T}A)^{-1}A^{\\mathsf T}\\); \\(AA^{+}\\) is an orthogonal projection, so \\((AA^{+})^k=AA^{+}\\) and \\(p(AA^{+})=p(1)AA^{+}+p(0)(I-AA^{+})\\).'],
+      /* ── Determinants ── */
+      ['Determinants','cofactor / expansion & triangular det','\\(\\det=\\sum_j(-1)^{i+j}a_{ij}M_{ij}\\); triangular \\(\\Rightarrow\\det=\\prod\\) diagonal. Row swap flips sign; add-multiple-of-row leaves it.'],
+      ['Determinants','determinant rules','\\(\\det(cA)=c^n\\det A,\\ \\det(A^{-1})=\\tfrac1{\\det A},\\ \\det(AB)=\\det A\\det B,\\ \\det A^{\\mathsf T}=\\det A,\\ \\det A=\\prod\\lambda_i\\).'],
+      ['Determinants','Cramer\'s rule','\\(x_i=\\dfrac{\\det A_i}{\\det A}\\), \\(A_i=A\\) with column \\(i\\) replaced by \\(b\\).'],
+      /* ── Four subspaces & projections ── */
+      ['Four subspaces & projections','find the four fundamental subspaces','From RREF\\((A)\\): col space = original pivot cols; \\(\\ker A\\) from free vars; row space = nonzero RREF rows; \\(\\ker A^{\\mathsf T}\\) (\\(\\dim=m-r\\)).'],
+      ['Four subspaces & projections','rank–nullity','\\(\\operatorname{rank}A+\\operatorname{nullity}A=\\) #cols. \\(\\mathbb R^n=\\operatorname{Ran}A^{\\mathsf T}\\oplus\\ker A\\), \\(\\mathbb R^m=\\operatorname{Ran}A\\oplus\\ker A^{\\mathsf T}\\).'],
+      ['Four subspaces & projections','\\(V\\cap W\\), \\(V+W\\) and their dimensions','Write each as \\(\\ker C\\). \\(V\\cap W\\): stack systems. \\(V+W\\): concatenate bases, reduce. \\(\\dim(V+W)=\\dim V+\\dim W-\\dim(V\\cap W)\\).'],
+      ['Four subspaces & projections','projection matrices','Onto \\(\\operatorname{Ran}A\\): \\(P=A(A^{\\mathsf T}A)^{-1}A^{\\mathsf T}\\). Onto \\(\\operatorname{span}(w)\\): \\(\\tfrac{ww^{\\mathsf T}}{w^{\\mathsf T}w}\\). Complement: \\(I-P\\). Always \\(P^2=P=P^{\\mathsf T}\\).'],
+      /* ── Least squares ── */
+      ['Least squares','least-squares solution','\\(\\hat x=(A^{\\mathsf T}A)^{-1}A^{\\mathsf T}b\\) solves the normal equations \\(A^{\\mathsf T}A\\hat x=A^{\\mathsf T}b\\); minimizes \\(\\lVert Ax-b\\rVert\\). Residual \\(\\perp\\operatorname{Ran}A\\).'],
+      /* ── Eigenvalues & diagonalization ── */
+      ['Eigenvalues & diagonalization','characteristic polynomial & eigen-pairs','\\(p(\\lambda)=\\det(A-\\lambda I)=0\\) gives \\(\\lambda\\); solve \\((A-\\lambda I)v=0\\) for eigenvectors.'],
+      ['Eigenvalues & diagonalization','eigenvalues → det, trace, powers','\\(\\det A=\\prod\\lambda_i,\\ \\operatorname{tr}A=\\sum\\lambda_i,\\ \\operatorname{tr}(A^k)=\\sum\\lambda_i^k\\). Eigenvalues of \\(A^{-1}\\) are \\(1/\\lambda\\), of \\(A+cI\\) are \\(\\lambda+c\\).'],
+      ['Eigenvalues & diagonalization','diagonalize & take powers','\\(A=PDP^{-1}\\) (\\(P\\) eigenvectors, \\(D\\) eigenvalues) \\(\\Rightarrow A^k=PD^kP^{-1}\\). Needs \\(n\\) independent eigenvectors.'],
+      ['Eigenvalues & diagonalization','test diagonalizability (multiplicities)','Diagonalizable \\(\\iff\\) for every \\(\\lambda\\), geometric mult \\(\\dim\\ker(A-\\lambda I)\\) \\(=\\) algebraic mult.'],
+      ['Eigenvalues & diagonalization','Cayley–Hamilton trick','\\(p(A)=0\\). Use it to write \\(A^{-1}\\) and high powers as low-degree polynomials in \\(A\\) (e.g. \\(A^2=2A-I\\Rightarrow A^{-1}=2I-A\\)).'],
+      ['Eigenvalues & diagonalization','similar matrices invariants','\\(B=P^{-1}AP\\) share det, trace, char. poly, eigenvalues, rank — but NOT eigenvectors.'],
+      /* ── Symmetric, spectral, definiteness ── */
+      ['Symmetric, spectral & definiteness','spectral theorem','Symmetric \\(A=Q\\Lambda Q^{\\mathsf T}\\): real \\(\\lambda\\), orthonormal eigenvectors (columns of \\(Q\\), \\(Q^{\\mathsf T}=Q^{-1}\\)); distinct \\(\\lambda\\Rightarrow\\) orthogonal eigenvectors.'],
+      ['Symmetric, spectral & definiteness','classify definiteness','Pos-def \\(\\iff\\) all \\(\\lambda>0\\iff\\) all leading principal minors \\(>0\\) (Sylvester). Indefinite \\(\\iff\\) mixed-sign eigenvalues.'],
+      ['Symmetric, spectral & definiteness','quadratic forms & surfaces','\\(q(x)=x^{\\mathsf T}Ax\\) (\\(A\\) symmetric). Diagonalize \\(A=Q\\Lambda Q^{\\mathsf T}\\); in \\(y=Q^{\\mathsf T}x\\) coords \\(q=\\sum\\lambda_i y_i^2\\) → surface type from signs of \\(\\lambda_i\\).'],
+      /* ── Orthogonality, Gram–Schmidt, QR ── */
+      ['Orthogonality, Gram–Schmidt, QR','Gram–Schmidt orthonormalization','\\(u_k=v_k-\\sum_{j<k}\\langle v_k,e_j\\rangle e_j,\\quad e_k=\\dfrac{u_k}{\\lVert u_k\\rVert}\\). (Subtract projections onto the ones you already have, then normalize.)'],
+      ['Orthogonality, Gram–Schmidt, QR','QR decomposition','\\(A=QR\\): \\(Q\\)= Gram–Schmidt orthonormal columns, \\(R=Q^{\\mathsf T}A\\) (upper-triangular). Make \\(R\\)\'s diagonal \\(>0\\) by sign choice.'],
+      ['Orthogonality, Gram–Schmidt, QR','orthogonal complement & decomposition','\\(W^\\perp=\\ker(\\text{rows}=W\\text{ basis})\\); any \\(v=\\operatorname{proj}_W v+\\operatorname{proj}_{W^\\perp}v\\).'],
+      /* ── SVD ── */
+      ['SVD','singular values & SVD','\\(A=U\\Sigma V^{\\mathsf T}\\): \\(\\sigma_i=\\sqrt{\\lambda_i(A^{\\mathsf T}A)}\\); \\(V\\)= orthonormal eigenvectors of \\(A^{\\mathsf T}A\\); \\(u_i=\\tfrac1{\\sigma_i}Av_i\\).'],
+      ['SVD','SVD as geometry (ellipse image)','\\(A(\\text{unit sphere})\\) is an ellipsoid with semi-axis lengths \\(\\sigma_i\\) pointing along the \\(u_i\\). Largest stretch \\(=\\sigma_{\\max}\\).'],
+      /* ── Cholesky & factorizations ── */
+      ['Cholesky & factorizations','Cholesky \\(A=LL^{\\mathsf T}\\) (the trick)','SPD only. Column by column: \\(l_{jj}=\\sqrt{a_{jj}-\\sum_{k<j}l_{jk}^2}\\), \\(l_{ij}=\\dfrac{a_{ij}-\\sum_{k<j}l_{ik}l_{jk}}{l_{jj}}\\ (i>j)\\). Exists \\(\\iff A\\) symmetric pos-def.'],
+      ['Cholesky & factorizations','\\(LDL^{\\mathsf T}\\) variant','Symmetric \\(A=LDL^{\\mathsf T}\\) (unit-lower \\(L\\), diagonal \\(D\\)) — Cholesky with \\(\\sqrt D\\) pulled out; avoids square roots.'],
+      /* ── Abstract spaces & change of basis ── */
+      ['Abstract spaces & change of basis','matrix of a map on a function/poly space','Basis \\(B=(f_1,\\dots)\\); apply \\(T\\) (e.g. \\(D=d/dx\\)) to each \\(f_i\\), write the result in \\(B\\)-coords → those columns form \\([T]_B\\).'],
+      ['Abstract spaces & change of basis','matrix of \\(T(X)=AX+XA\\) or commutator \\(AX-XA\\)','Use basis \\((E_{11},E_{12},E_{21},E_{22})\\); compute \\(T(E_{ij})\\), express in that basis → columns of \\([T]_B\\).'],
+      ['Abstract spaces & change of basis','coordinates & map under an exotic basis','\\(P=[\\,b_1|\\dots|b_n\\,]\\) (std→\\(B\\)). \\([x]_B=P^{-1}x\\); \\([T]_B=P^{-1}T_{\\text{std}}P\\).'],
+      ['Abstract spaces & change of basis','change-of-coordinate matrices','\\([v]_{\\mathcal C}=P_{\\mathcal C\\leftarrow\\mathcal B}[v]_{\\mathcal B}\\); columns of \\(P_{\\mathcal C\\leftarrow\\mathcal B}\\) = \\(\\mathcal B\\)-vectors in \\(\\mathcal C\\)-coords; \\(P_{\\mathcal B\\leftarrow\\mathcal C}=(P_{\\mathcal C\\leftarrow\\mathcal B})^{-1}\\); \\([T]_{\\mathcal C}=P[T]_{\\mathcal B}P^{-1}\\).'],
+      ['Abstract spaces & change of basis','linearity check / nilpotent operator powers','\\(T(X+Y)=TX+TY,\\ T(kX)=kTX\\). If \\(A^k=O\\) then \\(T(X)=AX+XA\\) has \\(T^{2k-1}=O\\) (binomial in \\(L_A,R_A\\)).'],
+      /* ── Block matrices ── */
+      ['Block matrices','block LDU & Schur complement','\\(\\bigl(\\begin{smallmatrix}R&B\\\\C&D\\end{smallmatrix}\\bigr)\\), \\(R\\) invertible: \\(\\det=\\det R\\,\\det S\\), \\(S=D-CR^{-1}B\\). Kill the \\((1,2)\\) block: \\(\\text{row}_1-BD^{-1}\\text{row}_2\\).'],
+      ['Block matrices','block inverse / solving \\(MX=N\\)','Treat blocks like scalars but keep order. Augment \\([M\\,|\\,N]\\) and block-eliminate to \\([I\\,|\\,X]\\). Block rank \\(\\le\\) sum of diagonal-block ranks.'],
+      /* ── Applications ── */
+      ['Applications','Markov chains / steady state','Stochastic \\(P\\) (columns sum to 1): steady state \\(\\pi\\) solves \\(P\\pi=\\pi\\) — eigenvector for \\(\\lambda=1\\), normalized so \\(\\sum\\pi_i=1\\).'],
+      ['Applications','powers \\(A^k\\) & linear ODE systems','\\(A^k=PD^kP^{-1}\\) (or via Cayley–Hamilton). \\(x\'=Ax\\Rightarrow x(t)=Pe^{Dt}P^{-1}x_0=\\sum c_ie^{\\lambda_it}v_i\\).'],
+      ['Applications','nilpotent inverse series','\\(N^k=O\\Rightarrow(I+N)^{-1}=I-N+N^2-\\dots+(-1)^{k-1}N^{k-1}\\).'],
+      /* ── Quick reference ── */
+      ['Quick reference','invertibility equivalences','\\(A\\) invertible \\(\\iff\\) full rank \\(\\iff\\) RREF \\(=I\\iff\\ker=\\{0\\}\\iff\\det\\neq0\\iff0\\) not an eigenvalue.'],
     ]
   },
   calc: {
     name:'Calculus A2',
-    exam:'Final: fully open book (textbook + notes), 3 hours, multi-part chained problems. Always explain — a bare answer earns 0.',
+    exam:'Covers the differential-calculus midterm tricks AND the integral/series final. Final is open-book, but a sheet still buys speed — mark a method “need it” only if it slows you down.',
     skills:[
-      ['Multivariable derivatives','compute the Jacobian & say why \\(F\\) is differentiable',
-        '\\([DF]\\) = matrix of all partials \\(\\partial F_i/\\partial x_j\\). \\(F\\) differentiable at a point if all partials are continuous there.'],
-      ['Multivariable derivatives','one Newton step in \\(\\mathbb R^n\\)',
-        '\\(\\mathbf x_{n+1}=\\mathbf x_n-[DF(\\mathbf x_n)]^{-1}F(\\mathbf x_n)\\). \\(2\\times2\\) inverse \\(=\\tfrac1{ad-bc}\\bigl(\\begin{smallmatrix}d&-b\\\\-c&a\\end{smallmatrix}\\bigr)\\).'],
-      ['Multivariable derivatives','linear approximation',
-        '\\(F(\\mathbf x_0+\\mathbf h)\\approx F(\\mathbf x_0)+[DF(\\mathbf x_0)]\\,\\mathbf h\\).'],
-      ['Multiple integrals','swap order of integration (Fubini)',
-        'Draw the region, re-describe it with the other variable outside, rewrite both bounds. Useful when one order is impossible.'],
-      ['Multiple integrals','change of variables / Jacobian for area',
-        '\\(dA_{xy}=\\left|\\dfrac{\\partial(x,y)}{\\partial(u,v)}\\right|dA_{uv}\\). Note \\(\\dfrac{\\partial(x,y)}{\\partial(u,v)}=\\Big(\\dfrac{\\partial(u,v)}{\\partial(x,y)}\\Big)^{-1}\\).'],
-      ['Coordinates','spherical & cylindrical volume elements',
-        'Spherical: \\(x=\\rho\\sin\\phi\\cos\\theta,\\dots,\\ dV=\\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta\\). Cylindrical: \\(dV=r\\,dr\\,d\\theta\\,dz\\).'],
-      ['Line integrals','work integral & Green\'s theorem',
-        '\\(\\int_\\gamma F\\cdot d\\gamma=\\int F(\\gamma(t))\\cdot\\gamma\'(t)\\,dt\\). Green: \\(\\oint F\\cdot d\\gamma=\\iint(\\partial_xQ-\\partial_yP)\\,dA\\).'],
-      ['Line integrals','flux in the plane & 2-D divergence',
-        '\\(\\oint_\\gamma F\\cdot n\\,ds=\\iint_D(\\partial_xP+\\partial_yQ)\\,dA=\\iint_D\\nabla\\!\\cdot F\\,dA\\) (outward normal).'],
-      ['Vector calculus','curl, divergence & conservative test',
-        '\\(\\nabla\\!\\cdot F=\\partial_xP+\\partial_yQ+\\partial_zR\\); \\(\\nabla\\times F=\\det\\bigl(\\begin{smallmatrix}i&j&k\\\\\\partial_x&\\partial_y&\\partial_z\\\\P&Q&R\\end{smallmatrix}\\bigr)\\). \\(F=\\nabla\\phi\\iff\\nabla\\times F=0\\) (simply connected) ⇒ path-independent.'],
-      ['Big theorems','divergence theorem',
-        '\\(\\oiint_{\\partial U}F\\cdot n\\,dS=\\iiint_U\\nabla\\!\\cdot F\\,dV\\). Turn a messy surface flux into a volume integral.'],
-      ['Big theorems','Stokes\' theorem',
-        '\\(\\oint_{\\partial S}F\\cdot d\\gamma=\\iint_S(\\nabla\\times F)\\cdot n\\,dS\\). Replace a hard line integral with a flux of the curl through any spanning surface.'],
-      ['Surfaces','surface integral & normal of a parametrized surface',
-        '\\(dS=\\lVert \\Phi_u\\times\\Phi_v\\rVert\\,du\\,dv\\); normal \\(=\\Phi_u\\times\\Phi_v\\) (check outward/inward by plugging a point).'],
-      ['Surfaces','centroid of a surface / solid',
-        '\\(\\bar x=\\dfrac{\\iint x\\,dS}{\\iint dS}\\) (and similarly \\(\\bar y,\\bar z\\)); use symmetry to kill components.'],
-      ['Differential forms','evaluate a form like \\(\\int_C z^2\\,dy\\wedge dx\\)',
-        '\\(dy\\wedge dx=-\\,dx\\wedge dy\\). Pull back to parameters; orientation sign matters.'],
-      ['Series','pick the right convergence test; absolute vs conditional',
-        'Ratio/root for factorials & powers; comparison/\\(p\\)-series \\((\\sum 1/n^p\\) conv. \\(\\iff p>1)\\); alternating-series test. Absolutely conv. \\(\\Rightarrow\\) conv.; conv. but not absolutely \\(=\\) conditional.'],
-      ['Series','radius & interval of convergence',
-        '\\(R=\\lim|a_n/a_{n+1}|\\) (or \\(1/\\limsup|a_n|^{1/n}\\)). Then test BOTH endpoints separately.'],
-      ['Series','Taylor series',
-        '\\(f(x)=\\sum_{n\\ge0}\\dfrac{f^{(n)}(a)}{n!}(x-a)^n\\). Know \\(e^x,\\sin,\\cos,\\tfrac1{1-x}\\) by heart.'],
-      ['Series','Fourier series coefficients (period \\(2\\pi\\))',
-        '\\(a_0=\\tfrac1{2\\pi}\\!\\int_0^{2\\pi}\\!f,\\ a_n=\\tfrac1\\pi\\!\\int_0^{2\\pi}\\!f\\cos nx,\\ b_n=\\tfrac1\\pi\\!\\int_0^{2\\pi}\\!f\\sin nx\\). At a jump, the series gives the midpoint.'],
+      /* ── Limits & continuity ── */
+      ['Limits & continuity','test a 2-variable limit / continuity at a point','Try paths (\\(y=mx,\\ y=x^2\\)) — different limits ⇒ DNE. To prove it exists, bound \\(|f-L|\\le g(r)\\to0\\) (squeeze, polar).'],
+      ['Limits & continuity','continuity of a piecewise function at the boundary','Both pieces must give the same value as the boundary point: \\(\\lim_{\\text{both sides}}f=f(x_0,y_0)\\). Handy bound \\(\\bigl|\\tfrac{x^2-y^2}{x^2+y^2}\\bigr|\\le1\\).'],
+      /* ── Partial derivatives ── */
+      ['Partial derivatives','partial derivative from the definition','\\(f_x(x_0,y_0)=\\lim_{h\\to0}\\dfrac{f(x_0+h,y_0)-f(x_0,y_0)}{h}\\). Check \\(h\\to0^{+}\\) and \\(0^{-}\\); if they differ ⇒ DNE. Needed at corners/boundaries.'],
+      ['Partial derivatives','Clairaut\'s theorem (mixed partials)','\\(f_{xy}=f_{yx}\\) at \\(p\\) IF \\(f_{xy}\\) is continuous at \\(p\\). They can fail to match at a bad point — verify from the definition there.'],
+      ['Partial derivatives','partials in polar (chain rule)','\\(x=r\\cos\\theta,\\ y=r\\sin\\theta\\): \\(D_rF=F_x\\cos\\theta+F_y\\sin\\theta\\), \\(D_\\theta F=-F_x r\\sin\\theta+F_y r\\cos\\theta\\).'],
+      /* ── Differentiability ── */
+      ['Differentiability','Jacobian & the differentiability criterion','\\([DF]_{ij}=\\partial F_i/\\partial x_j\\). \\(F\\) differentiable at a point if all partials are continuous there (sufficient).'],
+      ['Differentiability','prove differentiability at the origin','Check \\(\\lim_{\\mathbf h\\to0}\\dfrac{|f(\\mathbf h)-f(0)-\\nabla f(0)\\cdot\\mathbf h|}{\\lVert\\mathbf h\\rVert}=0\\). Trick: if \\(|f(\\mathbf h)|\\le C\\lVert\\mathbf h\\rVert^{k}\\) with \\(k>1\\), it\'s differentiable.'],
+      ['Differentiability','linear approximation','\\(F(\\mathbf x_0+\\mathbf h)\\approx F(\\mathbf x_0)+[DF(\\mathbf x_0)]\\mathbf h\\).'],
+      ['Differentiability','tangent plane to a level set \\(F=0\\)','\\(\\nabla F(p)\\cdot(\\mathbf x-p)=0\\); \\(\\nabla F(p)\\) is the normal.'],
+      /* ── Newton, inverse & implicit ── */
+      ['Newton, inverse & implicit','one Newton step in \\(\\mathbb R^n\\)','\\(\\mathbf x_{n+1}=\\mathbf x_n-[DF(\\mathbf x_n)]^{-1}F(\\mathbf x_n)\\). \\(2\\times2\\) inverse \\(\\tfrac1{ad-bc}\\bigl(\\begin{smallmatrix}d&-b\\\\-c&a\\end{smallmatrix}\\bigr)\\).'],
+      ['Newton, inverse & implicit','Inverse Function Theorem','\\(F\\) is locally invertible near \\(p\\) iff \\(\\det[DF(p)]\\neq0\\), and then \\([DF^{-1}(F(p))]=[DF(p)]^{-1}\\).'],
+      ['Newton, inverse & implicit','implicit differentiation (IFT partials)','From \\(F(\\dots)=0\\): \\(\\dfrac{\\partial R}{\\partial I}=-\\dfrac{F_I}{F_R}\\), \\(\\dfrac{dy}{dx}=-\\dfrac{F_x}{F_y}\\). (Solve for the variable whose partial sits in the denominator.)'],
+      ['Newton, inverse & implicit','source / sink via eigenvalues of \\([DF]\\)','All \\(\\operatorname{Re}\\lambda>0\\) ⇒ source; all \\(<0\\) ⇒ sink; mixed ⇒ saddle. \\(2\\times2\\): \\(\\lambda^2-\\operatorname{tr}\\lambda+\\det=0\\).'],
+      /* ── Optimization ── */
+      ['Optimization','critical points & the Hessian test','\\(\\nabla f=0\\); \\(D=f_{xx}f_{yy}-f_{xy}^2\\). \\(D>0,f_{xx}<0\\)→max; \\(D>0,f_{xx}>0\\)→min; \\(D<0\\)→saddle; \\(D=0\\)→inconclusive.'],
+      ['Optimization','constrained optimization on a boundary','On \\(x=c\\), substitute → \\(g(y)=f(c,y)\\), solve \\(g\'(y)=0\\). Always also check the segment ENDPOINTS / corners.'],
+      ['Optimization','Lagrange multipliers','Extremize \\(f\\) s.t. \\(g=c\\): \\(\\nabla f=\\lambda\\nabla g,\\ g=c\\). Two constraints: \\(\\nabla f=\\lambda\\nabla g+\\mu\\nabla h\\).'],
+      ['Optimization','gradient, directional derivative, steepest ascent','\\(\\nabla f\\) = steepest-ascent direction; \\(D_uf=\\nabla f\\cdot u\\) (\\(u\\) unit). On a constraint surface \\(F=0\\), steepest ascent of \\(T\\) is along \\((\\nabla T,\\,|\\nabla T|^2)\\)-type tangent.'],
+      /* ── Matrix-valued / abstract derivatives ── */
+      ['Matrix-valued derivatives','derivative of a matrix-valued map','\\(h(A)=A^2\\Rightarrow[Dh(A)](X)=AX+XA\\). For linear \\(L\\): \\([DL](v)=L(v)\\). Product rule \\(D(xy^{\\mathsf T})=x\\,(dy)^{\\mathsf T}+(dx)\\,y^{\\mathsf T}\\).'],
+      /* ── Multiple integrals ── */
+      ['Multiple integrals','swap order of integration (Fubini)','Redraw the region, re-describe it with the other variable outside, rewrite both bounds. Switch when one order is intractable.'],
+      ['Multiple integrals','change of variables / Jacobian for area','\\(dA_{xy}=\\bigl|\\tfrac{\\partial(x,y)}{\\partial(u,v)}\\bigr|dA_{uv}\\), and \\(\\tfrac{\\partial(x,y)}{\\partial(u,v)}=\\bigl(\\tfrac{\\partial(u,v)}{\\partial(x,y)}\\bigr)^{-1}\\).'],
+      ['Multiple integrals','polar / cylindrical / spherical volume','Polar \\(dA=r\\,dr\\,d\\theta\\); cyl. \\(dV=r\\,dr\\,d\\theta\\,dz\\); spherical \\(dV=\\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta\\).'],
+      /* ── Line integrals & Green ── */
+      ['Line integrals','work integral & Green\'s theorem','\\(\\int_\\gamma F\\cdot d\\gamma=\\int F(\\gamma)\\cdot\\gamma\'\\,dt\\). Green: \\(\\oint F\\cdot d\\gamma=\\iint(\\partial_xQ-\\partial_yP)\\,dA\\).'],
+      ['Line integrals','flux in the plane (2-D divergence)','\\(\\oint_\\gamma F\\cdot n\\,ds=\\iint_D(\\partial_xP+\\partial_yQ)\\,dA\\) (outward normal).'],
+      ['Line integrals','conservative field / potential / path independence','\\(F=\\nabla\\phi\\iff\\nabla\\times F=0\\) (simply connected) \\(\\Rightarrow\\int_\\gamma F\\cdot d\\gamma=\\phi(\\text{end})-\\phi(\\text{start})\\).'],
+      /* ── Vector calculus ── */
+      ['Vector calculus','curl & divergence','\\(\\nabla\\!\\cdot F=\\partial_xP+\\partial_yQ+\\partial_zR\\); \\(\\nabla\\times F=\\det\\bigl(\\begin{smallmatrix}i&j&k\\\\\\partial_x&\\partial_y&\\partial_z\\\\P&Q&R\\end{smallmatrix}\\bigr)\\).'],
+      ['Vector calculus','identities \\(\\nabla\\times\\nabla f=0,\\ \\nabla\\!\\cdot(\\nabla\\times F)=0\\)','A gradient is curl-free; a curl is divergence-free. Use to spot when a field is exact or solenoidal.'],
+      ['Vector calculus','Helmholtz decomposition trick','Split \\(F=\\nabla\\phi+(F-\\nabla\\phi)\\): pick \\(\\phi\\) with \\(\\Delta\\phi=\\nabla\\!\\cdot F\\); then \\(\\nabla\\phi\\) is curl-free and \\(F-\\nabla\\phi\\) is divergence-free.'],
+      /* ── Big theorems ── */
+      ['Big theorems','divergence theorem','\\(\\oiint_{\\partial U}F\\cdot n\\,dS=\\iiint_U\\nabla\\!\\cdot F\\,dV\\) — convert messy surface flux to a volume integral.'],
+      ['Big theorems','Stokes\' theorem','\\(\\oint_{\\partial S}F\\cdot d\\gamma=\\iint_S(\\nabla\\times F)\\cdot n\\,dS\\) — swap a hard line integral for a flux of the curl through any spanning surface.'],
+      /* ── Surfaces ── */
+      ['Surfaces','surface integral, area & normal','Parametrize \\(\\Phi(u,v)\\): \\(dS=\\lVert\\Phi_u\\times\\Phi_v\\rVert\\,du\\,dv\\), normal \\(=\\Phi_u\\times\\Phi_v\\) (check direction at a point).'],
+      ['Surfaces','centroid / mass / moment','\\(\\bar x=\\iint x\\,dS/\\iint dS\\); mass \\(=\\iint\\rho\\,dS\\). Use symmetry to zero components.'],
+      ['Surfaces','arc length','\\(L=\\int\\lVert\\mathbf r\'(t)\\rVert\\,dt\\).'],
+      /* ── Differential forms ── */
+      ['Differential forms','evaluate a form (e.g. \\(\\int_C z^2\\,dy\\wedge dx\\))','\\(dy\\wedge dx=-dx\\wedge dy\\); pull back to parameters; orientation sign matters.'],
+      /* ── Series ── */
+      ['Series','choose a convergence test','Ratio/root for factorials & \\(n\\)th powers; \\(p\\)-series \\(\\sum1/n^p\\) conv \\(\\iff p>1\\); comparison / limit comparison; integral test; alternating-series test.'],
+      ['Series','absolute vs conditional convergence','Abs. conv. \\(\\Rightarrow\\) conv. Conv. but \\(\\sum|a_n|\\) diverges \\(=\\) conditional. (Rearranging a conditional series can change the sum.)'],
+      ['Series','alternating-series error bound','For a convergent alternating series, \\(|S-s_n|\\le\\) first omitted term \\(|a_{n+1}|\\).'],
+      ['Series','radius & interval of convergence','\\(R=\\lim|a_n/a_{n+1}|\\) (or \\(1/\\limsup|a_n|^{1/n}\\)); then test BOTH endpoints separately.'],
+      ['Series','Taylor / Maclaurin + known series','\\(f(x)=\\sum\\tfrac{f^{(n)}(a)}{n!}(x-a)^n\\). Memorize \\(e^x,\\sin x,\\cos x,\\tfrac1{1-x},\\ln(1+x)\\); differentiate/integrate term-by-term.'],
+      /* ── Fourier ── */
+      ['Fourier','Fourier coefficients (period \\(2\\pi\\))','\\(a_0=\\tfrac1{2\\pi}\\!\\int_0^{2\\pi}\\!f,\\ a_n=\\tfrac1\\pi\\!\\int_0^{2\\pi}\\!f\\cos nx,\\ b_n=\\tfrac1\\pi\\!\\int_0^{2\\pi}\\!f\\sin nx\\). At a jump → midpoint value.'],
+      ['Fourier','odd/even & half-range symmetry','Even \\(f\\) → only \\(\\cos\\) (\\(b_n=0\\)); odd \\(f\\) → only \\(\\sin\\) (\\(a_n=0\\)). Saves half the integrals.'],
     ]
   }
 };
@@ -185,6 +247,7 @@ const SUBJ = (params.get('subj')==='calc') ? 'calc' : 'la';
 const BANK = BANKS[SUBJ];
 const KEY  = 'studyhub_cheat_'+SUBJ;
 document.body.classList.add(SUBJ==='calc'?'subject-calc':'subject-la');
+const CAP = 40;   // ≈ how many dense items fit on a 2-page (double-sided A4) sheet
 
 let state = (()=>{ try{return JSON.parse(localStorage.getItem(KEY)||'{}');}catch{return{};} })();
 const save = ()=>localStorage.setItem(KEY, JSON.stringify(state));
@@ -192,33 +255,33 @@ const save = ()=>localStorage.setItem(KEY, JSON.stringify(state));
 document.getElementById('cs-title').textContent = BANK.name+' — Cheat-Sheet Builder';
 document.getElementById('crumb-sub').textContent = 'CHEAT SHEET · '+BANK.name.toUpperCase();
 document.getElementById('cs-intro').innerHTML =
-  'Go down the list and answer one question for each method: <b>do you actually know how to do it</b>, cold, without looking? '+
-  'Anything you mark <b>“need it”</b> drops into your cheat sheet on the right, with the formula — so the sheet ends up being exactly the things you don\'t trust yourself to remember. '+
+  'Go through every method — the small tricks too — and answer one thing: <b>can you do it cold, without looking?</b> '+
+  'Mark <b>“need it”</b> and it drops into your sheet with the formula. The right-hand sheet prints <b>dense, 3-column, ≤ 2 pages</b> (one double-sided A4). '+
   '<br><span style="color:var(--text3)">'+BANK.exam+'</span>';
 
 function render(){
-  // quiz column grouped by topic
   const quiz=document.getElementById('cs-quiz');
   const groups={};
   BANK.skills.forEach((s,i)=>{ (groups[s[0]]=groups[s[0]]||[]).push([i,s]); });
-  quiz.innerHTML = Object.entries(groups).map(([topic,items])=>`
-    <div class="cs-grp-label">${topic}</div>
+  quiz.innerHTML = Object.entries(groups).map(([topic,items])=>{
+    const need=items.filter(([i])=>state[i]==='need').length;
+    return `<div class="cs-grp-label">${topic}<span class="gc">${need?need+' on sheet':''}</span></div>
     ${items.map(([i,s])=>{
-      const st=state[i]; // 'know' | 'need' | undefined
+      const st=state[i];
       return `<div class="cs-q ${st||''}" data-i="${i}">
         <div class="cs-q-text">Can you <span class="meth">${s[1]}</span>?</div>
         <div class="cs-btns">
           <button class="cs-b know-b ${st==='know'?'on':''}" data-v="know" data-i="${i}">✓ I know it</button>
-          <button class="cs-b need-b ${st==='need'?'on':''}" data-v="need" data-i="${i}">✗ Need it on my sheet</button>
+          <button class="cs-b need-b ${st==='need'?'on':''}" data-v="need" data-i="${i}">✗ Need it</button>
         </div>
       </div>`;
-    }).join('')}`).join('');
+    }).join('')}`;
+  }).join('');
 
-  // cheat-sheet column
   const need = BANK.skills.map((s,i)=>[i,s]).filter(([i])=>state[i]==='need');
   const body=document.getElementById('cs-sheet-body');
   if(!need.length){
-    body.innerHTML='<div class="cs-empty">Nothing here yet.<br>Mark a method “Need it on my sheet” and it appears here with the formula.</div>';
+    body.innerHTML='<div class="cs-empty">Nothing here yet.<br>Mark a method “Need it” and it appears here with its formula.</div>';
   } else {
     body.innerHTML=need.map(([i,s])=>`
       <div class="cs-item">
@@ -226,21 +289,31 @@ function render(){
         <div class="cs-item-f">${s[2]}</div>
       </div>`).join('');
   }
-  // stats
+
+  // page-fill gauge
+  const n=need.length, pct=Math.min(100, Math.round(n/CAP*100));
+  const fill=document.getElementById('cs-gauge-fill');
+  fill.style.width=pct+'%';
+  fill.style.background = n<=CAP*0.8 ? '#15803d' : n<=CAP ? '#d97706' : '#dc2626';
+  const pages = n===0?0 : (n<=CAP?'≤ 2':'> 2');
+  document.getElementById('cs-gauge-txt').innerHTML =
+    `<b style="color:${n>CAP?'#dc2626':'var(--text2)'}">${n}</b> on sheet · ≈ ${pages} pages`+
+    (n>CAP?` · <span style="color:#dc2626">trim ${n-CAP} to fit one double-sided A4</span>`:` <span style="color:var(--text3)">(target ≤ ${CAP})</span>`);
+
   const known=BANK.skills.filter((s,i)=>state[i]==='know').length;
   document.getElementById('cs-stat').textContent =
-    `${known} mastered · ${need.length} on your cheat sheet · ${BANK.skills.length-known-need.length} unmarked`;
-  document.getElementById('cs-sheet-sub').textContent = need.length+' item'+(need.length===1?'':'s')+' · print double-sided A4';
+    `${known} mastered · ${n} on cheat sheet · ${BANK.skills.length-known-n} unmarked · ${BANK.skills.length} total`;
   if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([quiz,body]);
 }
 
 document.getElementById('cs-quiz').addEventListener('click',e=>{
   const b=e.target.closest('.cs-b'); if(!b) return;
   const i=b.dataset.i, v=b.dataset.v;
-  state[i] = (state[i]===v) ? undefined : v;   // click again to clear
-  if(state[i]===undefined) delete state[i];
+  if(state[i]===v) delete state[i]; else state[i]=v;
   save(); render();
 });
+document.getElementById('bulk-need').addEventListener('click',()=>{ BANK.skills.forEach((s,i)=>state[i]='need'); save(); render(); });
+document.getElementById('bulk-know').addEventListener('click',()=>{ BANK.skills.forEach((s,i)=>state[i]='know'); save(); render(); });
 document.getElementById('cs-reset').addEventListener('click',()=>{
   if(!confirm('Clear all your answers for '+BANK.name+'?')) return;
   state={}; save(); render();
