@@ -11,63 +11,62 @@
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <style>
-  .cs-wrap { max-width: 1140px; margin: 0 auto; padding: 24px 48px 90px; }
-  .cs-intro { font-size:.9rem; color:var(--text2); line-height:1.65; max-width:780px; }
+  .cs-wrap { max-width: 1120px; margin: 0 auto; padding: 22px 48px 90px; }
+  .cs-intro { font-size:.9rem; color:var(--text2); line-height:1.6; max-width:820px; }
   .cs-intro b { color:var(--text); }
-  .cs-stat { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--text3); margin:14px 0 4px; letter-spacing:.04em; }
-  .cs-layout { display:grid; grid-template-columns: 1.05fr 1fr; gap:26px; margin-top:18px; align-items:start; }
-  @media (max-width:920px){ .cs-layout{ grid-template-columns:1fr; } }
 
-  .cs-grp-label { font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:22px 0 9px; padding-bottom:7px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
-  .cs-grp-label .gc { margin-left:auto; color:var(--text3); font-size:.58rem; }
-  .cs-q { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:11px 13px; margin-bottom:8px; transition:.15s; }
-  .cs-q.need { border-left:3px solid var(--dt,#c2570c); }
-  .cs-q.know { opacity:.45; }
-  .cs-q-text { font-size:.88rem; color:var(--text); line-height:1.45; margin-bottom:8px; }
-  .cs-q-text .meth { color:var(--accent); font-weight:600; }
-  .cs-btns { display:flex; gap:7px; }
-  .cs-b { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.04em; padding:5px 10px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--text3); cursor:pointer; transition:.13s; }
-  .cs-b:hover { color:var(--text); border-color:var(--text3); }
-  .cs-b.know-b.on { background:#15803d; border-color:#15803d; color:#fff; }
-  .cs-b.need-b.on { background:var(--dt,#c2570c); border-color:var(--dt,#c2570c); color:#fff; }
-  .cs-bulk { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 2px; }
-  .cs-bulk button { font-family:'DM Mono',monospace; font-size:.6rem; padding:5px 11px; border-radius:6px; border:1px solid var(--border); background:none; color:var(--text2); cursor:pointer; }
-  .cs-bulk button:hover { color:var(--text); border-color:var(--text3); }
-
-  /* cheat-sheet column */
-  .cs-sheet { position:sticky; top:16px; background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:18px 20px; }
-  .cs-sheet h2 { font-family:'DM Serif Display',serif; font-size:1.15rem; color:var(--text); }
-  .cs-gauge-wrap { margin:8px 0 12px; }
+  /* sticky toolbar (gauge + actions) */
+  .cs-bar { position:sticky; top:0; z-index:30; display:flex; flex-wrap:wrap; align-items:center; gap:14px;
+    background:var(--topbar-bg,var(--bg)); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); padding:12px 0; margin:16px 0; }
+  .cs-gauge-wrap { flex:1 1 220px; min-width:190px; }
   .cs-gauge-bar { height:7px; border-radius:99px; background:var(--bg3); overflow:hidden; }
   .cs-gauge-fill { height:7px; border-radius:99px; transition:width .3s, background .3s; }
   .cs-gauge-txt { font-family:'DM Mono',monospace; font-size:.62rem; margin-top:5px; }
-  .cs-sheet-actions { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
-  .cs-act { font-family:'DM Mono',monospace; font-size:.64rem; padding:7px 13px; border-radius:7px; border:1px solid var(--border); background:none; cursor:pointer; color:var(--text2); }
+  .cs-bar-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .cs-stat { font-family:'DM Mono',monospace; font-size:.6rem; color:var(--text3); margin-right:4px; }
+  .cs-act { font-family:'DM Mono',monospace; font-size:.63rem; padding:7px 12px; border-radius:7px; border:1px solid var(--border); background:none; cursor:pointer; color:var(--text2); }
+  .cs-act:hover { color:var(--text); border-color:var(--text3); }
   .cs-act.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .cs-act:hover { filter:brightness(.96); }
-  .cs-sheet-body { columns: 2; column-gap:18px; }
-  @media (max-width:920px){ .cs-sheet-body{ columns:1; } }
-  .cs-item { padding:8px 0; border-top:1px dashed var(--border); break-inside:avoid; }
-  .cs-item:first-child { border-top:none; }
-  .cs-item-q { font-size:.74rem; color:var(--text2); font-weight:600; margin-bottom:3px; }
-  .cs-item-f { font-size:.82rem; color:var(--text); line-height:1.5; overflow-x:auto; }
-  .cs-empty { font-family:'DM Mono',monospace; font-size:.76rem; color:var(--text3); text-align:center; padding:26px 8px; line-height:1.6; }
+  .cs-act.primary:hover { filter:brightness(.95); color:#fff; }
+
+  /* continuous multi-column flow — headers + items pack like a real cheat sheet */
+  #cs-quiz { column-count:2; column-gap:16px; }
+  @media (min-width:1080px){ #cs-quiz{ column-count:3; } }
+  @media (max-width:680px){ #cs-quiz{ column-count:1; } }
+  .cs-grp-label { break-inside:avoid; break-after:avoid; font-family:'DM Mono',monospace; font-size:.63rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin:4px 0 8px; padding-bottom:5px; border-bottom:1px solid var(--accent-25,var(--border)); display:flex; align-items:baseline; gap:8px; }
+  .cs-grp-label .gc { margin-left:auto; color:var(--text3); font-size:.54rem; letter-spacing:.03em; }
+  .cs-q { break-inside:avoid; background:var(--bg2); border:1px solid var(--border); border-radius:9px; padding:9px 11px; margin:0 0 8px; transition:.12s; }
+  .cs-q.need { border-left:3px solid var(--dt,#c2570c); }
+  .cs-q.know { opacity:.42; }
+  .cs-q-text { font-size:.84rem; color:var(--text); line-height:1.4; margin-bottom:7px; }
+  .cs-q-text .meth { color:var(--accent); font-weight:600; }
+  .cs-btns { display:flex; gap:6px; }
+  .cs-b { font-family:'DM Mono',monospace; font-size:.58rem; letter-spacing:.03em; padding:4px 9px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--text3); cursor:pointer; transition:.12s; white-space:nowrap; }
+  .cs-b:hover { color:var(--text); border-color:var(--text3); }
+  .cs-b.know-b.on { background:#15803d; border-color:#15803d; color:#fff; }
+  .cs-b.need-b.on { background:var(--dt,#c2570c); border-color:var(--dt,#c2570c); color:#fff; }
+  .cs-formula { margin-top:8px; padding-top:7px; border-top:1px dashed var(--border); }
+  .cs-q:not(.need) .cs-formula { display:none; }
+  .cs-print-q { display:none; }
+  .cs-item-f { font-size:.82rem; line-height:1.5; color:var(--text); overflow-x:auto; }
   mjx-container[display="true"]{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
 
-  /* PRINT: only the cheat sheet — dense 3-column, tiny font, to fit ≤2 A4 pages */
-  @page { size: A4; margin: 8mm; }
+  /* PRINT — only the marked formulas, continuous dense 3-column, inline headers, NO clipping */
+  @page { size: A4; margin: 7mm; }
   @media print {
-    .topbar, .crumbs, .cs-intro, .cs-stat, .cs-quiz-col, .cs-sheet-actions, .cs-gauge-wrap, .theme-toggle, .footer-note, h1 { display:none !important; }
+    .topbar, .crumbs, .cs-intro, .cs-bar, .theme-toggle, .footer-note, h1,
+    .cs-q-text, .cs-btns, .cs-grp-label .gc { display:none !important; }
     .cs-wrap { max-width:none; padding:0; }
-    .cs-layout { display:block; }
-    .cs-sheet { position:static; border:none; padding:0; background:#fff; }
-    .cs-sheet h2 { font-size:11pt; margin-bottom:4pt; column-span:all; }
-    .cs-sheet-body { columns:3; column-gap:6mm; font-size:7.4pt; line-height:1.28; }
-    .cs-item { padding:2.5pt 0; }
-    .cs-item-q { font-size:6.8pt; margin-bottom:1pt; }
-    .cs-item-f { font-size:7.4pt; line-height:1.3; }
+    #cs-quiz { column-count:3; column-gap:5mm; }
+    .cs-grp-label { color:#000; font-weight:700; font-size:7.6pt; letter-spacing:.02em; text-transform:none; border-bottom:.6pt solid #888; margin:1pt 0 1.5pt; padding-bottom:.5pt; }
+    .cs-grp-label[data-need="0"] { display:none !important; }
+    .cs-q { background:none !important; border:none !important; padding:0 !important; margin:0 0 3pt !important; }
+    .cs-q:not(.need) { display:none !important; }
+    .cs-formula { margin:0 !important; padding:0 !important; border:none !important; }
+    .cs-print-q { display:block; font-size:6.6pt; font-weight:700; color:#000; margin-bottom:.4pt; }
+    .cs-item-f { font-size:7.2pt; line-height:1.26; color:#000; overflow:visible !important; }
+    mjx-container { overflow:visible !important; font-size:80% !important; }
     body { background:#fff; color:#000; }
-    mjx-container { font-size:92% !important; }
   }
 </style>
 </head>
@@ -81,30 +80,22 @@
 <div class="cs-wrap">
   <h1 style="font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,4vw,2.3rem);" id="cs-title">Cheat-Sheet Builder</h1>
   <p class="cs-intro" id="cs-intro"></p>
-  <div class="cs-stat" id="cs-stat"></div>
-  <div class="cs-bulk">
-    <button id="bulk-need">Add ALL to sheet</button>
-    <button id="bulk-know">Mark all “I know it”</button>
-  </div>
 
-  <div class="cs-layout">
-    <div class="cs-quiz-col" id="cs-quiz"></div>
-
-    <div>
-      <div class="cs-sheet">
-        <h2>My Cheat Sheet</h2>
-        <div class="cs-gauge-wrap">
-          <div class="cs-gauge-bar"><div class="cs-gauge-fill" id="cs-gauge-fill"></div></div>
-          <div class="cs-gauge-txt" id="cs-gauge-txt"></div>
-        </div>
-        <div class="cs-sheet-actions">
-          <button class="cs-act primary" onclick="window.print()">⎙ Print / Save PDF</button>
-          <button class="cs-act" id="cs-reset">Reset</button>
-        </div>
-        <div class="cs-sheet-body" id="cs-sheet-body"></div>
-      </div>
+  <div class="cs-bar">
+    <div class="cs-gauge-wrap">
+      <div class="cs-gauge-bar"><div class="cs-gauge-fill" id="cs-gauge-fill"></div></div>
+      <div class="cs-gauge-txt" id="cs-gauge-txt"></div>
+    </div>
+    <div class="cs-bar-actions">
+      <span class="cs-stat" id="cs-stat"></span>
+      <button class="cs-act" id="bulk-need">Add all</button>
+      <button class="cs-act" id="bulk-know">All known</button>
+      <button class="cs-act" id="cs-reset">Reset</button>
+      <button class="cs-act primary" onclick="window.print()">⎙ Print / Save PDF</button>
     </div>
   </div>
+
+  <div id="cs-quiz"></div>
 </div>
 
 <div class="footer-note">RAFI ADIFA MAULANA · CHEAT-SHEET BUILDER</div>
@@ -256,7 +247,7 @@ document.getElementById('cs-title').textContent = BANK.name+' — Cheat-Sheet Bu
 document.getElementById('crumb-sub').textContent = 'CHEAT SHEET · '+BANK.name.toUpperCase();
 document.getElementById('cs-intro').innerHTML =
   'Go through every method — the small tricks too — and answer one thing: <b>can you do it cold, without looking?</b> '+
-  'Mark <b>“need it”</b> and it drops into your sheet with the formula. The right-hand sheet prints <b>dense, 3-column, ≤ 2 pages</b> (one double-sided A4). '+
+  'Mark <b>“need it”</b> and its formula joins your sheet right below. Then <b>⎙ Print / Save PDF</b> gives a dense, headed, <b>≤ 2-page</b> sheet (one double-sided A4). '+
   '<br><span style="color:var(--text3)">'+BANK.exam+'</span>';
 
 function render(){
@@ -264,46 +255,36 @@ function render(){
   const groups={};
   BANK.skills.forEach((s,i)=>{ (groups[s[0]]=groups[s[0]]||[]).push([i,s]); });
   quiz.innerHTML = Object.entries(groups).map(([topic,items])=>{
-    const need=items.filter(([i])=>state[i]==='need').length;
-    return `<div class="cs-grp-label">${topic}<span class="gc">${need?need+' on sheet':''}</span></div>
-    ${items.map(([i,s])=>{
-      const st=state[i];
-      return `<div class="cs-q ${st||''}" data-i="${i}">
-        <div class="cs-q-text">Can you <span class="meth">${s[1]}</span>?</div>
-        <div class="cs-btns">
-          <button class="cs-b know-b ${st==='know'?'on':''}" data-v="know" data-i="${i}">✓ I know it</button>
-          <button class="cs-b need-b ${st==='need'?'on':''}" data-v="need" data-i="${i}">✗ Need it</button>
-        </div>
-      </div>`;
-    }).join('')}`;
+    const gn=items.filter(([i])=>state[i]==='need').length;
+    return `<div class="cs-grp-label" data-need="${gn}">${topic}<span class="gc">${gn?gn+' on sheet':''}</span></div>`+
+      items.map(([i,s])=>{
+        const st=state[i];
+        return `<div class="cs-q ${st||''}" data-i="${i}">
+          <div class="cs-q-text">Can you <span class="meth">${s[1]}</span>?</div>
+          <div class="cs-btns">
+            <button class="cs-b know-b ${st==='know'?'on':''}" data-v="know" data-i="${i}">✓ I know it</button>
+            <button class="cs-b need-b ${st==='need'?'on':''}" data-v="need" data-i="${i}">✗ Need it</button>
+          </div>
+          <div class="cs-formula">
+            <div class="cs-print-q">${s[1].charAt(0).toUpperCase()+s[1].slice(1)}</div>
+            <div class="cs-item-f">${s[2]}</div>
+          </div>
+        </div>`;
+      }).join('');
   }).join('');
 
-  const need = BANK.skills.map((s,i)=>[i,s]).filter(([i])=>state[i]==='need');
-  const body=document.getElementById('cs-sheet-body');
-  if(!need.length){
-    body.innerHTML='<div class="cs-empty">Nothing here yet.<br>Mark a method “Need it” and it appears here with its formula.</div>';
-  } else {
-    body.innerHTML=need.map(([i,s])=>`
-      <div class="cs-item">
-        <div class="cs-item-q">${s[1].charAt(0).toUpperCase()+s[1].slice(1)}</div>
-        <div class="cs-item-f">${s[2]}</div>
-      </div>`).join('');
-  }
+  let need=0, known=0; const total=BANK.skills.length;
+  BANK.skills.forEach((s,i)=>{ if(state[i]==='need')need++; else if(state[i]==='know')known++; });
 
-  // page-fill gauge
-  const n=need.length, pct=Math.min(100, Math.round(n/CAP*100));
+  const pct=Math.min(100, Math.round(need/CAP*100));
   const fill=document.getElementById('cs-gauge-fill');
   fill.style.width=pct+'%';
-  fill.style.background = n<=CAP*0.8 ? '#15803d' : n<=CAP ? '#d97706' : '#dc2626';
-  const pages = n===0?0 : (n<=CAP?'≤ 2':'> 2');
+  fill.style.background = need<=CAP*0.8 ? '#15803d' : need<=CAP ? '#d97706' : '#dc2626';
   document.getElementById('cs-gauge-txt').innerHTML =
-    `<b style="color:${n>CAP?'#dc2626':'var(--text2)'}">${n}</b> on sheet · ≈ ${pages} pages`+
-    (n>CAP?` · <span style="color:#dc2626">trim ${n-CAP} to fit one double-sided A4</span>`:` <span style="color:var(--text3)">(target ≤ ${CAP})</span>`);
-
-  const known=BANK.skills.filter((s,i)=>state[i]==='know').length;
-  document.getElementById('cs-stat').textContent =
-    `${known} mastered · ${n} on cheat sheet · ${BANK.skills.length-known-n} unmarked · ${BANK.skills.length} total`;
-  if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([quiz,body]);
+    `<b style="color:${need>CAP?'#dc2626':'var(--text2)'}">${need}</b> on sheet · ≈ ${need===0?0:(need<=CAP?'≤ 2':'> 2')} pages`+
+    (need>CAP?` · <span style="color:#dc2626">trim ${need-CAP} to fit a double-sided A4</span>`:` <span style="color:var(--text3)">(≈ ${CAP} fills 2 pages)</span>`);
+  document.getElementById('cs-stat').textContent = `${known} known · ${total-known-need} unmarked · ${total} total`;
+  if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([quiz]);
 }
 
 document.getElementById('cs-quiz').addEventListener('click',e=>{
