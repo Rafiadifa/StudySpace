@@ -939,6 +939,22 @@
   const REVIEW_KEY='studyhub_review';
   const getReview=()=>{ try{return JSON.parse(localStorage.getItem(REVIEW_KEY)||'{}');}catch{return{};} };
   const setReview=r=>localStorage.setItem(REVIEW_KEY, JSON.stringify(r));
+
+  /* ── Time-on-task tracking ──
+     When you open a practice card we stamp the time; when you come back to this
+     hub the elapsed time is added to that card's running total. Surfaced in the
+     review modal (editable) so the study log shows where you spent the most time. */
+  const TIMING_KEY='studyhub_timing', PEND_KEY='studyhub_timing_pending';
+  const getTiming=()=>{ try{return JSON.parse(localStorage.getItem(TIMING_KEY)||'{}');}catch{return{};} };
+  const setTiming=t=>localStorage.setItem(TIMING_KEY, JSON.stringify(t));
+  function reconcileTiming(){
+    let p=null; try{ p=JSON.parse(localStorage.getItem(PEND_KEY)||'null'); }catch{}
+    if(p && p.id && p.t0){
+      const dt=Date.now()-p.t0;
+      if(dt>3000 && dt<3*3600*1000){ const t=getTiming(); t[p.id]=(t[p.id]||0)+dt; setTiming(t); } // ignore <3s, cap 3h
+      localStorage.removeItem(PEND_KEY);
+    }
+  }
   const RV_BANDS=[
     {lo:9,hi:10,txt:'Mastered — no cheat sheet needed'},
     {lo:7,hi:8, txt:'Mastered — but I’d keep a cheat sheet / formula handy'},
@@ -987,6 +1003,8 @@
     document.getElementById('rv-wrong').value = (rv&&rv.wrong)||'';
     document.getElementById('rv-notes').value = (rv&&rv.notes)||'';
     document.getElementById('rv-done-chk').checked = getDone().has(id);
+    const tmin = (rv && rv.timeMin!=null) ? rv.timeMin : Math.round((getTiming()[id]||0)/60000);
+    document.getElementById('rv-time').value = tmin || '';
     paintScore(); paintDiff();
     document.getElementById('rv-overlay').classList.add('show');
   }
@@ -996,12 +1014,16 @@
     const r=getReview();
     const first=!r[RV.id];
     const s=RV.score;                         // score is optional now
+    const tm=parseInt(document.getElementById('rv-time').value,10);
     const rec={ score:s, difficulty:RV.diff,
       wrong:document.getElementById('rv-wrong').value.trim(),
       notes:document.getElementById('rv-notes').value.trim(),
+      timeMin: isNaN(tm)?null:Math.max(0,tm),
       date:Date.now() };
     if(s!=null) rec.due=Date.now()+rvDueDays(s)*DAY_MS;
     r[RV.id]=rec; setReview(r);
+    // keep the running timer in sync with the (possibly edited) value
+    if(rec.timeMin!=null){ const t=getTiming(); t[RV.id]=rec.timeMin*60000; setTiming(t); }
     // 'done' is controlled by the checkbox inside the modal
     const done=getDone(), wantDone=document.getElementById('rv-done-chk').checked;
     if(wantDone) done.add(RV.id); else done.delete(RV.id); saveDone(done);
@@ -1014,6 +1036,7 @@
       const grade = s==null?null : (s>=9?3:s>=7?2:s>=5?1:0);
       const parts=[]; if(s!=null) parts.push('Understanding '+s+'/10');
       if(RV.diff) parts.push('Difficulty: '+RV_DIFF[RV.diff-1]);
+      if(rec.timeMin) parts.push('⏱ '+rec.timeMin+' min');
       if(rec.wrong) parts.push('Wrong: '+rec.wrong);
       let note=parts.join(' · '); if(rec.notes) note+=(note?'\n':'')+rec.notes;
       if(note || s!=null) logSession(RV.id, RV.card?cardTitle(RV.card):RV.id, grade, s!=null?(rvDueDays(s)===1?'1 day':rvDueDays(s)+' days'):'', note);
@@ -1235,6 +1258,17 @@
     c.removeAttribute('href');
   });
 
+  // fold any time spent on a practice page (since the last card click) into its total
+  reconcileTiming();
+  window.addEventListener('pageshow', reconcileTiming);
+  // stamp the start time when a practice card is opened (buttons stopPropagation, so they're excluded)
+  document.querySelector('.main').addEventListener('click', e => {
+    const a = e.target.closest('a.card[data-id]');
+    if(!a || a.dataset.nocheck || !a.getAttribute('href')) return;
+    if(e.target.closest('.card-check,.card-review')) return;
+    localStorage.setItem(PEND_KEY, JSON.stringify({ id:a.dataset.id, t0:Date.now() }));
+  });
+
   initCalendar();
   // modal markup sits after this script, so wire it once the DOM is fully parsed
   if(document.getElementById('rv-overlay')) setupReviewModal();
@@ -1272,6 +1306,11 @@
       <div class="rv-field">
         <label>Questions I got wrong <span style="color:var(--text3);text-transform:none;letter-spacing:0;">(optional)</span></label>
         <input class="rv-wrong" id="rv-wrong" type="text" placeholder="e.g. Q2, Q5, part (c)…" autocomplete="off">
+      </div>
+
+      <div class="rv-field">
+        <label>⏱ Time on task <span style="color:var(--text3);text-transform:none;letter-spacing:0;">(minutes · auto-tracked, edit if off)</span></label>
+        <input class="rv-wrong" id="rv-time" type="number" min="0" step="1" placeholder="0" autocomplete="off" style="max-width:120px;">
       </div>
 
       <div class="rv-field">
