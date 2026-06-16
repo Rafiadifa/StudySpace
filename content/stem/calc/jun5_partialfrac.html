@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calc A2 · Partial Fractions + Improper · 5 Jun</title>
+  <title>Calc A2 · Change of Variables &amp; the Jacobian · 5 Jun</title>
   <link rel="stylesheet" href="../../../style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 <style>.conn-problem{background:color-mix(in oklab,var(--accent) 4%,transparent);border-radius:14px;padding:4px 20px;margin-bottom:8px;}.conn-chain{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-top:8px;}@supports not (background:color-mix(in oklab,red 50%,blue)){.conn-problem{background:var(--bg2);}}</style>
@@ -15,16 +15,16 @@
 
   <div class="topbar">
     <span class="topbar-title">Rafi's Study Hub</span>
-    <span class="topbar-sub">/ calc-a2 / partial fractions</span>
+    <span class="topbar-sub">/ calc-a2 / change of variables</span>
     <span class="topbar-date">FRI · 5 JUN 2026</span>
   </div>
 
   <div class="hero">
-    <h1>Partial Fractions <em>+ Improper</em></h1>
-    <p class="hero-meta">P2 · Decompose rational integrands, then push several to improper limits. Decompose first, integrate term by term, then take the limit carefully.</p>
+    <h1>Change of Variables <em>&amp; the Jacobian</em></h1>
+    <p class="hero-meta">P2 · Turn an awkward region or integrand into an easy one. Pick \(u,v\), find the Jacobian, redraw the limits, integrate. (Directly models the final's Problem 2.)</p>
     <div class="exam-pills">
       <span class="pill pill-calc">∫ Calc A2</span>
-      <span class="pill pill-calc">Partial Fractions</span>
+      <span class="pill pill-calc">Change of Variables</span>
       <span class="pill pill-calc">Final · 23 June 2026</span>
     </div>
   </div>
@@ -36,62 +36,34 @@
         <div class="subject-dot dot-calc"></div>
         <div>
           <div class="subject-label">Daily Practice · 50 min</div>
-          <div class="subject-title" style="color:var(--calc)">Partial Fractions + Improper Integrals</div>
+          <div class="subject-title" style="color:var(--calc)">Change of Variables &amp; the Jacobian</div>
         </div>
         <div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div>
       </div>
 
       <div class="formula-ref">
-        <strong>Quick reference.</strong> For a proper rational \(\frac{P(x)}{Q(x)}\): factor \(Q\), then write one term per factor — \(\frac{A}{x-a}\) for distinct linear, \(\frac{A}{x-a}+\frac{B}{(x-a)^2}\) for repeated, \(\frac{Bx+C}{x^2+bx+c}\) for irreducible quadratics. Solve for constants by plugging roots or matching coefficients. If \(\deg P\ge\deg Q\), do polynomial division first.
+        <strong>Quick reference.</strong> For \((x,y)=T(u,v)\): \(\displaystyle\iint_R f\,dA_{xy}=\iint_S f\big(T(u,v)\big)\,\big|J\big|\,du\,dv\), where \(J=\dfrac{\partial(x,y)}{\partial(u,v)}=\det\begin{pmatrix}x_u&x_v\\y_u&y_v\end{pmatrix}\). Shortcut: \(\dfrac{\partial(x,y)}{\partial(u,v)}=\Big(\dfrac{\partial(u,v)}{\partial(x,y)}\Big)^{-1}\) — compute whichever is easier and invert. Choose \(u,v\) so the <em>region</em> becomes a rectangle (or the integrand simplifies).
       </div>
 
+      <!-- ══ Connected Problem ══ -->
+      <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">Bend a curved region into a square (final P2 style)</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Let \(R\) be the first-quadrant region bounded by \(xy=1,\ xy=2,\ y=x,\ y=2x\). Use \(u=xy,\ v=\dfrac{y}{x}\).<div class="conn-chain">chains: choose \(u,v\) · map the region · Jacobian (invert) · evaluate</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">What is the image of \(R\) in the \((u,v)\)-plane?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(xy\in[1,2]\Rightarrow u\in[1,2]\); \(y/x\in[1,2]\Rightarrow v\in[1,2]\). The curvy region becomes the square \([1,2]\times[1,2]\). <div class="key-result">unit-ish square \([1,2]^2\).</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Compute the Jacobian \(\dfrac{\partial(x,y)}{\partial(u,v)}\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>Easier to do \(\dfrac{\partial(u,v)}{\partial(x,y)}=\det\begin{pmatrix}y&x\\-y/x^2&1/x\end{pmatrix}=\dfrac{y}{x}+\dfrac{y}{x}=\dfrac{2y}{x}=2v\). Invert: \(\dfrac{\partial(x,y)}{\partial(u,v)}=\dfrac1{2v}\). <div class="key-result">\(|J|=\dfrac1{2v}\).</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Set up \(\displaystyle\iint_R dA\) (the area) in \((u,v)\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\displaystyle\iint_R dA=\int_1^2\!\!\int_1^2\frac1{2v}\,du\,dv\). <div class="key-result">as shown.</div></div></div></div></div></li><li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Evaluate it.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\displaystyle\int_1^2 du\cdot\int_1^2\frac{dv}{2v}=1\cdot\tfrac12\ln v\big|_1^2=\tfrac12\ln2\). <div class="key-result">Area \(=\tfrac12\ln2\).</div></div></div></div></div></li></ol></div></div>
+
       <!-- ══ Problem 1 ══ -->
-      <div class="problem conn-problem"><div class="problem-header"><span class="problem-num">★ Connected Problem</span><span class="problem-topic">Decompose, integrate, take the limit</span><span class="problem-pts">exam-style</span></div><div class="problem-body"><div class="context-box">Consider \(\displaystyle I=\int_1^{\infty}\frac{1}{x^2+x}\,dx\).<div class="conn-chain">chains: partial fractions · antiderivative · improper limit · convergence</div></div><ol class="parts"><li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Decompose the integrand.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\dfrac{1}{x(x+1)}=\dfrac1x-\dfrac1{x+1}\). <div class="key-result">as shown.</div></div></div></div></div></li><li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Find the antiderivative.</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\ln|x|-\ln|x+1|=\ln\left|\dfrac{x}{x+1}\right|\). <div class="key-result">as shown.</div></div></div></div></div></li><li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Evaluate from \(1\) to \(t\).</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\ln\dfrac{t}{t+1}-\ln\dfrac12\). <div class="key-result">as shown.</div></div></div></div></div></li><li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Take \(t\to\infty\): does it converge?</div><div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>\(\dfrac{t}{t+1}\to1\Rightarrow\ln\to0\); limit \(=0-\ln\tfrac12=\ln2\). <div class="key-result">Converges to \(\ln2\).</div></div></div></div></div></li></ol></div></div>
       <div class="problem">
         <div class="problem-header">
           <span class="problem-num">Problem 1</span>
-          <span class="problem-topic">Decompose &amp; integrate</span>
-          <span class="problem-pts">10 pts</span>
+          <span class="problem-topic">Just the Jacobian</span>
+          <span class="problem-pts">8 pts</span>
         </div>
         <div class="problem-body">
-          <ol class="parts">
-            <li>
-              <span class="part-label">(a)</span>
-              <div class="part-content">
-                <div class="part-question">\(\displaystyle\int\frac{1}{x^2-1}\,dx\). <span class="pts">3 pts</span></div>
-                <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
-                  <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
-                    \(\frac{1}{(x-1)(x+1)}=\frac{1/2}{x-1}-\frac{1/2}{x+1}\). Integrate: \(\tfrac12\ln|x-1|-\tfrac12\ln|x+1|+C=\tfrac12\ln\left|\frac{x-1}{x+1}\right|+C\).
-                    <div class="key-result">\(\tfrac12\ln\left|\dfrac{x-1}{x+1}\right|+C\).</div>
-                  </div></div>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="part-label">(b)</span>
-              <div class="part-content">
-                <div class="part-question">\(\displaystyle\int\frac{3x+1}{x^2+x}\,dx\). <span class="pts">3 pts</span></div>
-                <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
-                  <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
-                    \(\frac{3x+1}{x(x+1)}=\frac{A}{x}+\frac{B}{x+1}\). \(x=0:1=A\). \(x=-1:-2=-B\Rightarrow B=2\). Integrate: \(\ln|x|+2\ln|x+1|+C\).
-                    <div class="key-result">\(\ln|x|+2\ln|x+1|+C\).</div>
-                  </div></div>
-                </div>
-              </div>
-            </li>
-            <li>
-              <span class="part-label">(c)</span>
-              <div class="part-content">
-                <div class="part-question">\(\displaystyle\int\frac{x}{(x-2)^2}\,dx\) (repeated factor). <span class="pts">4 pts</span></div>
-                <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
-                  <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
-                    \(\frac{x}{(x-2)^2}=\frac{A}{x-2}+\frac{B}{(x-2)^2}\). \(x=A(x-2)+B\Rightarrow A=1,\;B=2\). Integrate: \(\ln|x-2|-\frac{2}{x-2}+C\).
-                    <div class="key-result">\(\ln|x-2|-\dfrac{2}{x-2}+C\).</div>
-                  </div></div>
-                </div>
-              </div>
-            </li>
-          </ol>
+          <div class="context-box">For the map \(x=u^2-v^2,\ y=2uv\), compute the Jacobian \(\dfrac{\partial(x,y)}{\partial(u,v)}\).</div>
+          <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+            <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
+              \(\dfrac{\partial(x,y)}{\partial(u,v)}=\det\begin{pmatrix}2u&-2v\\2v&2u\end{pmatrix}=4u^2+4v^2=4(u^2+v^2)\).
+              <div class="key-result">\(4(u^2+v^2)\).</div>
+              <div class="ans-note">This is the complex-squaring map \(z\mapsto z^2\); its area-scaling \(4|z|^2\) is exactly \(|2z|^2\).</div>
+            </div></div>
+          </div>
         </div>
       </div>
 
@@ -99,17 +71,17 @@
       <div class="problem">
         <div class="problem-header">
           <span class="problem-num">Problem 2</span>
-          <span class="problem-topic">Irreducible quadratic</span>
-          <span class="problem-pts">10 pts</span>
+          <span class="problem-topic">Linear substitution simplifies the integrand</span>
+          <span class="problem-pts">12 pts</span>
         </div>
         <div class="problem-body">
-          <div class="context-box">\(\displaystyle\int\frac{2x+3}{x(x^2+1)}\,dx\). Decompose with a linear numerator over the quadratic.</div>
+          <div class="context-box">Evaluate \(\displaystyle\iint_T e^{(x-y)/(x+y)}\,dA\), where \(T\) is the triangle with vertices \((0,0),(1,0),(0,1)\). Use \(u=x-y,\ v=x+y\).</div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
             <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
-              \(\frac{2x+3}{x(x^2+1)}=\frac{A}{x}+\frac{Bx+C}{x^2+1}\). Clearing: \(2x+3=A(x^2+1)+(Bx+C)x\). \(x=0:A=3\). Coeff \(x^2:A+B=0\Rightarrow B=-3\). Coeff \(x:C=2\).
-              So \(\int\frac{3}{x}+\frac{-3x+2}{x^2+1}\,dx=3\ln|x|-\tfrac32\ln(x^2+1)+2\arctan x+C\).
-              <div class="key-result">\(3\ln|x|-\tfrac32\ln(x^2+1)+2\arctan x+C\).</div>
-              <div class="ans-note">Split \(\frac{-3x+2}{x^2+1}\) into \(\frac{-3x}{x^2+1}\) (gives the log) and \(\frac{2}{x^2+1}\) (gives the arctan).</div>
+              Invert: \(x=\tfrac{u+v}{2},\ y=\tfrac{v-u}{2}\Rightarrow\dfrac{\partial(x,y)}{\partial(u,v)}=\det\begin{pmatrix}1/2&1/2\\-1/2&1/2\end{pmatrix}=\tfrac12\). The triangle \(x,y\ge0,\ x+y\le1\) becomes \(v\in[0,1],\ -v\le u\le v\).
+              \(\displaystyle\iint_T e^{(x-y)/(x+y)}dA=\tfrac12\int_0^1\!\!\int_{-v}^{v} e^{u/v}\,du\,dv=\tfrac12\int_0^1 v\big(e-e^{-1}\big)\,dv=\tfrac{e-e^{-1}}{4}\).
+              <div class="key-result">\(\dfrac{e-e^{-1}}{4}=\dfrac{e^2-1}{4e}\).</div>
+              <div class="ans-note">The exponent \(\tfrac{x-y}{x+y}=\tfrac uv\) is hopeless in \(x,y\) but trivial once you switch variables — the whole point of a substitution.</div>
             </div></div>
           </div>
         </div>
@@ -119,17 +91,17 @@
       <div class="problem">
         <div class="problem-header">
           <span class="problem-num">Problem 3</span>
-          <span class="problem-topic">Improper via partial fractions</span>
+          <span class="problem-topic">Polar IS a change of variables</span>
           <span class="problem-pts">10 pts</span>
         </div>
         <div class="problem-body">
-          <div class="context-box">Evaluate \(\displaystyle\int_2^{\infty}\frac{1}{x^2-1}\,dx\), or show it diverges.</div>
+          <div class="context-box">Show that \(x=r\cos\theta,\ y=r\sin\theta\) has Jacobian \(r\), then use it to evaluate \(\displaystyle\iint_{D} (x^2+y^2)\,dA\) over the unit disk \(D\).</div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
             <div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span>
-              From Problem 1(a), antiderivative \(\tfrac12\ln\left|\frac{x-1}{x+1}\right|\). Evaluate \(2\to b\):
-              \(\tfrac12\ln\frac{b-1}{b+1}-\tfrac12\ln\frac13\). As \(b\to\infty\), \(\frac{b-1}{b+1}\to1\) so \(\ln\to0\). Limit \(=0-\tfrac12\ln\tfrac13=\tfrac12\ln3\).
-              <div class="key-result">Converges to \(\tfrac12\ln 3\).</div>
-              <div class="ans-note">Partial fractions turns a scary improper integral into a clean log difference whose limit is easy to read off.</div>
+              \(\dfrac{\partial(x,y)}{\partial(r,\theta)}=\det\begin{pmatrix}\cos\theta&-r\sin\theta\\\sin\theta&r\cos\theta\end{pmatrix}=r\cos^2\theta+r\sin^2\theta=r\). So \(dA=r\,dr\,d\theta\) and
+              \(\displaystyle\iint_D(x^2+y^2)\,dA=\int_0^{2\pi}\!\!\int_0^1 r^2\cdot r\,dr\,d\theta=2\pi\cdot\tfrac14=\tfrac{\pi}{2}\).
+              <div class="key-result">\(\dfrac{\pi}{2}\).</div>
+              <div class="ans-note">Polar/cylindrical/spherical are just the change-of-variables formula with a known Jacobian — \(r\), \(r\), and \(\rho^2\sin\phi\) respectively.</div>
             </div></div>
           </div>
         </div>
@@ -138,7 +110,7 @@
     </div><!-- end subject-block -->
 
     <div class="footer-note">
-      Calc A2 · Partial Fractions + Improper · Friday 5 June 2026 · Good luck Rafi ✦
+      Calc A2 · Change of Variables &amp; the Jacobian · Friday 5 June 2026 · Good luck Rafi ✦
     </div>
   </div>
 
