@@ -43,7 +43,9 @@
       "Bash(awk 'BEGIN{RS=\"\\\\f\"} tolower\\($0\\) ~ /prevent social loafing/ {t=$0; gsub\\(/\\\\n+/,\" \",t\\); printf \"p%d: %s\\\\n\", NR, substr\\(t,1,90\\)}')",
       "Bash(pdftotext -layout -f 44 -l 46 \"Session 3 Personality_posted.pdf\" -)",
       "Bash(pdftotext \"Session 3 Personality_posted.pdf\" -)",
-      "Bash(awk 'BEGIN{RS=\"\\\\f\"} END{print NR}')"
+      "Bash(awk 'BEGIN{RS=\"\\\\f\"} END{print NR}')",
+      "Bash(grep -n 'footer-note' jun13_divergence.html jun18_svd.html)",
+      "Read(//Users/rafiadifamaulana/Documents/la/**)"
     ]
   }
 }
