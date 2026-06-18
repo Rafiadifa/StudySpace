@@ -46,7 +46,8 @@
       "Bash(awk 'BEGIN{RS=\"\\\\f\"} END{print NR}')",
       "Bash(grep -n 'footer-note' jun13_divergence.html jun18_svd.html)",
       "Read(//Users/rafiadifamaulana/Documents/la/**)",
-      "Bash(awk 'NR>=797 && NR<=835' content/stem/la/computation.html)"
+      "Bash(awk 'NR>=797 && NR<=835' content/stem/la/computation.html)",
+      "Bash(python3)"
     ]
   }
 }
