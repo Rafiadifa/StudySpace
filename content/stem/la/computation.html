@@ -643,7 +643,7 @@
 
   <div class="method-section">
     <div class="method-label">Procedure</div>
-    <ol class="proc"><li>\(l_{11}=\sqrt{G_{11}}\).</li><li>First column: \(l_{i1}=G_{i1}/l_{11}\) for \(i>1\).</li><li>Diagonal: \(l_{jj}=\sqrt{G_{jj}-\sum_{k<j}l_{jk}^2}\).</li><li>Below diagonal: \(l_{ij}=\bigl(G_{ij}-\sum_{k<j}l_{ik}l_{jk}\bigr)/l_{jj}\) for \(i>j\).</li><li>If any \(l_{jj}^2\le0\), \(G\) is not positive definite — Cholesky has detected it.</li></ol>
+    <ol class="proc"><li>\(l_{11}=\sqrt{G_{11}}\).</li><li>First column: \(l_{i1}=G_{i1}/l_{11}\) for \(i>1\).</li><li>Diagonal: \(l_{jj}=\sqrt{G_{jj}-\sum_{k&lt;j}l_{jk}^2}\).</li><li>Below diagonal: \(l_{ij}=\bigl(G_{ij}-\sum_{k&lt;j}l_{ik}l_{jk}\bigr)/l_{jj}\) for \(i>j\).</li><li>If any \(l_{jj}^2\le0\), \(G\) is not positive definite — Cholesky has detected it.</li></ol>
   </div>
 
   <div class="method-section">
@@ -808,10 +808,15 @@
   </div>
 
   <div class="method-section">
-    <div class="method-label">Worked example <span class="hint-inline">— step through it</span></div>
-    
+    <div class="method-label">Worked examples <span class="hint-inline">— step through it</span></div>
+    <div class="ex-tabbar"><button class="ex-tab active" onclick="switchEx(this,0)">Sparse column (3×3)</button><button class="ex-tab" onclick="switchEx(this,1)">Full expansion (3×3)</button><button class="ex-tab" onclick="switchEx(this,2)">Recurse to 3×3 (4×4)</button></div>
     <div class="worked-example" data-ex="0" style="display:block"><div class="ex-title">Example — expand along a sparse column</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\det\begin{pmatrix}2&0&1\\3&0&4\\1&5&2\end{pmatrix}\): column 2 has a single non-zero entry \(5\) (position (3,2)).</div></div>
-<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\det=(-1)^{3+2}\cdot5\cdot\det\left(\begin{smallmatrix}2&1\\3&4\end{smallmatrix}\right)=-5(8-3)=-25\).</div></div></div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\det=(-1)^{3+2}\cdot5\cdot\det\left(\begin{smallmatrix}2&1\\3&4\end{smallmatrix}\right)=-5(8-3)=-25\).</div></div></div></div><div class="worked-example" data-ex="1" style="display:none"><div class="ex-title">Example — full expansion along the top row</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\det\begin{pmatrix}2&1&3\\4&5&6\\7&8&10\end{pmatrix}\): no zeros to exploit, so expand along row 1 with the checkerboard signs \(+,-,+\).</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">Minors: \(M_{11}=\det\left(\begin{smallmatrix}5&6\\8&10\end{smallmatrix}\right)=50-48=2\); \(M_{12}=\det\left(\begin{smallmatrix}4&6\\7&10\end{smallmatrix}\right)=40-42=-2\); \(M_{13}=\det\left(\begin{smallmatrix}4&5\\7&8\end{smallmatrix}\right)=32-35=-3\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">\(\det=+2(2)-1(-2)+3(-3)=4+2-9=-3\).</div></div></div><div class="ex-note">Cross-check with Sarrus: \(100+42+96-105-40-96=-3\). \(\checkmark\) Note how the \(-\) sign on \(a_{12}\) flips the \(M_{12}\) cofactor before you add.</div></div><div class="worked-example" data-ex="2" style="display:none"><div class="ex-title">Example — 4×4 collapsed to one 3×3</div><div class="step-controls"><button class="step-btn" onclick="revealStep(this)">▸ Show next step</button><button class="step-btn ghost" onclick="revealAll(this)">Reveal all</button><button class="step-btn ghost" onclick="resetSteps(this)">Reset</button></div><div class="steps"><div class="step hidden"><span class="step-n">1</span><div class="step-body">\(\det\begin{pmatrix}2&0&1&3\\1&0&2&1\\3&4&1&2\\1&0&0&2\end{pmatrix}\): column 2 is all zeros except \(a_{32}=4\). Expand down column 2 — a single term.</div></div>
+<div class="step hidden"><span class="step-n">2</span><div class="step-body">\(\det=(-1)^{3+2}\cdot4\cdot\det M_{32}\), where \(M_{32}\) deletes row 3 and column 2: \(M_{32}=\begin{pmatrix}2&1&3\\1&2&1\\1&0&2\end{pmatrix}\).</div></div>
+<div class="step hidden"><span class="step-n">3</span><div class="step-body">Expand \(M_{32}\) along its sparse bottom row \((1,0,2)\) — both surviving signs are \(+\): \(\det M_{32}=1\det\left(\begin{smallmatrix}1&3\\2&1\end{smallmatrix}\right)+2\det\left(\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right)=1(1-6)+2(4-1)=-5+6=1\).</div></div>
+<div class="step hidden"><span class="step-n">4</span><div class="step-body">\(\det=(-1)^{5}\cdot4\cdot1=-4\).</div></div></div><div class="ex-note">The lone non-zero in column 2 collapses the 4×4 to a single 3×3 in one step — always scan for the sparsest row or column before expanding, or the work multiplies fourfold.</div></div>
   </div>
 
   <div class="method-section limits">
