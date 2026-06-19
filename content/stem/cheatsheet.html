@@ -145,14 +145,14 @@ const BANKS = {
       ['Symmetric, spectral & definiteness','classify definiteness','Pos-def \\(\\iff\\) all \\(\\lambda>0\\iff\\) all leading principal minors \\(>0\\) (Sylvester). Indefinite \\(\\iff\\) mixed-sign eigenvalues.'],
       ['Symmetric, spectral & definiteness','quadratic forms & surfaces','\\(q(x)=x^{\\mathsf T}Ax\\) (\\(A\\) symmetric). Diagonalize \\(A=Q\\Lambda Q^{\\mathsf T}\\); in \\(y=Q^{\\mathsf T}x\\) coords \\(q=\\sum\\lambda_i y_i^2\\) → surface type from signs of \\(\\lambda_i\\).'],
       /* ── Orthogonality, Gram–Schmidt, QR ── */
-      ['Orthogonality, Gram–Schmidt, QR','Gram–Schmidt orthonormalization','\\(u_k=v_k-\\sum_{j<k}\\langle v_k,e_j\\rangle e_j,\\quad e_k=\\dfrac{u_k}{\\lVert u_k\\rVert}\\). (Subtract projections onto the ones you already have, then normalize.)'],
+      ['Orthogonality, Gram–Schmidt, QR','Gram–Schmidt orthonormalization','\\(u_k=v_k-\\sum_{j&lt;k}\\langle v_k,e_j\\rangle e_j,\\quad e_k=\\dfrac{u_k}{\\lVert u_k\\rVert}\\). (Subtract projections onto the ones you already have, then normalize.)'],
       ['Orthogonality, Gram–Schmidt, QR','QR decomposition','\\(A=QR\\): \\(Q\\)= Gram–Schmidt orthonormal columns, \\(R=Q^{\\mathsf T}A\\) (upper-triangular). Make \\(R\\)\'s diagonal \\(>0\\) by sign choice.'],
       ['Orthogonality, Gram–Schmidt, QR','orthogonal complement & decomposition','\\(W^\\perp=\\ker(\\text{rows}=W\\text{ basis})\\); any \\(v=\\operatorname{proj}_W v+\\operatorname{proj}_{W^\\perp}v\\).'],
       /* ── SVD ── */
       ['SVD','singular values & SVD','\\(A=U\\Sigma V^{\\mathsf T}\\): \\(\\sigma_i=\\sqrt{\\lambda_i(A^{\\mathsf T}A)}\\); \\(V\\)= orthonormal eigenvectors of \\(A^{\\mathsf T}A\\); \\(u_i=\\tfrac1{\\sigma_i}Av_i\\).'],
       ['SVD','SVD as geometry (ellipse image)','\\(A(\\text{unit sphere})\\) is an ellipsoid with semi-axis lengths \\(\\sigma_i\\) pointing along the \\(u_i\\). Largest stretch \\(=\\sigma_{\\max}\\).'],
       /* ── Cholesky & factorizations ── */
-      ['Cholesky & factorizations','Cholesky \\(A=LL^{\\mathsf T}\\) (the trick)','SPD only. Column by column: \\(l_{jj}=\\sqrt{a_{jj}-\\sum_{k<j}l_{jk}^2}\\), \\(l_{ij}=\\dfrac{a_{ij}-\\sum_{k<j}l_{ik}l_{jk}}{l_{jj}}\\ (i>j)\\). Exists \\(\\iff A\\) symmetric pos-def.'],
+      ['Cholesky & factorizations','Cholesky \\(A=LL^{\\mathsf T}\\) (the trick)','SPD only. Column by column: \\(l_{jj}=\\sqrt{a_{jj}-\\sum_{k&lt;j}l_{jk}^2}\\), \\(l_{ij}=\\dfrac{a_{ij}-\\sum_{k&lt;j}l_{ik}l_{jk}}{l_{jj}}\\ (i>j)\\). Exists \\(\\iff A\\) symmetric pos-def.'],
       ['Cholesky & factorizations','\\(LDL^{\\mathsf T}\\) variant','Symmetric \\(A=LDL^{\\mathsf T}\\) (unit-lower \\(L\\), diagonal \\(D\\)) — Cholesky with \\(\\sqrt D\\) pulled out; avoids square roots.'],
       /* ── Abstract spaces & change of basis ── */
       ['Abstract spaces & change of basis','matrix of a map on a function/poly space','Basis \\(B=(f_1,\\dots)\\); apply \\(T\\) (e.g. \\(D=d/dx\\)) to each \\(f_i\\), write the result in \\(B\\)-coords → those columns form \\([T]_B\\).'],
