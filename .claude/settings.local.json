@@ -47,7 +47,8 @@
       "Bash(grep -n 'footer-note' jun13_divergence.html jun18_svd.html)",
       "Read(//Users/rafiadifamaulana/Documents/la/**)",
       "Bash(awk 'NR>=797 && NR<=835' content/stem/la/computation.html)",
-      "Bash(python3)"
+      "Bash(python3)",
+      "Bash(python3 -c \"s=open\\('jun15_derivreview.html'\\).read\\(\\); i=s.find\\('f_y=x^2+g'\\); print\\(repr\\(s[i:i+40]\\)\\)\")"
     ]
   }
 }
