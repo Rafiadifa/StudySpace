@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc A2 · Grade Calculator</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    .gc-wrap { max-width: 720px; }
+    .formula-ref code { font-family:'DM Mono',monospace; }
+    .gc-card { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
+    .gc-card h3 { color:var(--calc); font-size:0.72rem; font-family:'DM Mono',monospace; letter-spacing:0.08em; text-transform:uppercase; margin:0 0 12px; }
+    .gc-inputs { display:flex; flex-wrap:wrap; gap:14px; }
+    .gc-field { flex:1; min-width:120px; }
+    .gc-field label { display:block; font-size:0.78rem; color:var(--text2); margin-bottom:4px; }
+    .gc-field input { width:100%; box-sizing:border-box; font-size:1.1rem; padding:9px 11px; border:1px solid var(--border); border-radius:9px; background:var(--bg); color:var(--text); font-family:'DM Mono',monospace; }
+    .gc-field input:focus { outline:2px solid var(--calc); border-color:var(--calc); }
+    .gc-out { font-size:1rem; line-height:1.6; }
+    .gc-big { font-size:2.4rem; font-weight:800; font-family:'DM Mono',monospace; color:var(--calc); line-height:1.1; }
+    .big { font-size:1.4rem; font-family:'DM Mono',monospace; }
+    .badge { display:inline-block; padding:3px 12px; border-radius:999px; font-weight:700; font-size:0.95rem; }
+    .gA{background:#dcfce7;color:#166534;} .gB{background:#dbeafe;color:#1e40af;} .gC{background:#fef9c3;color:#854d0e;} .gD{background:#ffedd5;color:#9a3412;} .gF{background:#fee2e2;color:#991b1b;}
+    .muted { color:var(--text3); font-size:0.85rem; }
+    .preset { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+    .preset button { font-family:'DM Mono',monospace; font-size:0.82rem; padding:7px 13px; border:1px solid var(--calc); color:var(--calc); background:transparent; border-radius:999px; cursor:pointer; }
+    .preset button:hover { background:var(--calc); color:#fff; }
+    table.gc-tbl { width:100%; border-collapse:collapse; margin-top:4px; }
+    table.gc-tbl td { padding:8px 10px; border-bottom:1px solid var(--border); font-size:0.95rem; }
+    table.gc-tbl td:last-child { text-align:right; font-family:'DM Mono',monospace; }
+    .note-box { background:rgba(29,78,216,0.06); border:1px solid rgba(29,78,216,0.25); border-radius:10px; padding:12px 16px; font-size:0.85rem; color:var(--text2); line-height:1.55; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-calc">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar"><span class="topbar-title">Rafi's Study Hub</span><span class="topbar-sub">/ calc-a2 / grade calculator</span><span class="topbar-date">SUN · 21 JUN 2026</span></div>
+  <div class="hero">
+    <h1>Grade <em>Calculator</em></h1>
+    <p class="hero-meta">Based on Prof. Yang's Syllabus 2026S · all scores are percentages (0–100)</p>
+    <div class="exam-pills"><span class="pill pill-calc">∫ Calc A2</span><span class="pill pill-calc">Final · 23 June 2026</span></div>
+  </div>
+  <div class="main"><div class="subject-block gc-wrap">
+    <div class="subject-header"><div class="subject-dot dot-calc"></div><div><div class="subject-label">Tool · official grading formula</div><div class="subject-title" style="color:var(--calc)">Grade Calculator</div></div><div class="subject-exam-date"><strong>Calc A2 Final</strong>23 June 2026</div></div>
+
+    <div class="formula-ref"><strong>The formula (Syllabus §4).</strong>
+      <code>Total = 30%·HW + max( 30%·Midterm + 40%·Final , 70%·Final )</code>.
+      Bands: <strong>≥70 → A</strong> · ≥55 → B · ≥45 → C · ≥37 → D (pass) · &lt;37 → F.
+      The <code>max(…)</code> means: if your final is strong, the <strong>70%·Final</strong> branch can win and your midterm is dropped.</div>
+
+    <!-- INPUTS -->
+    <div class="gc-card">
+      <h3>1 · Enter your scores (out of 100)</h3>
+      <div class="gc-inputs">
+        <div class="gc-field"><label>Homework %</label><input id="hw" type="number" min="0" max="100" value="85" oninput="compute()"></div>
+        <div class="gc-field"><label>Midterm %</label><input id="mid" type="number" min="0" max="100" value="55" oninput="compute()"></div>
+        <div class="gc-field"><label>Final %</label><input id="fin" type="number" min="0" max="100" value="60" oninput="compute()"></div>
+      </div>
+      <p class="muted" style="margin:10px 0 0">The 2025 final was scored out of 50 (= 100%). If your final is out of 50, <b>double it</b> before entering (e.g. 15.5/50 → 31).</p>
+    </div>
+
+    <!-- CURRENT STANDING -->
+    <div class="gc-card" id="fwd">
+      <h3>2 · Your total &amp; grade</h3>
+      <div class="gc-out">
+        <span class="gc-big" id="curTotal">—</span>
+        &nbsp;→&nbsp; <span class="badge" id="curLetter">—</span>
+        <div class="muted" id="curBreak" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <!-- TARGET -->
+    <div class="gc-card">
+      <h3>3 · What final do I need?</h3>
+      <p class="muted" style="margin:0 0 8px">Uses the HW &amp; Midterm above. Pick a target total, or type your own:</p>
+      <div class="preset">
+        <button onclick="setTarget(70)">A / “4.0” (70)</button>
+        <button onclick="setTarget(55)">B (55)</button>
+        <button onclick="setTarget(45)">C (45)</button>
+        <button onclick="setTarget(37)">Pass / D (37)</button>
+      </div>
+      <div class="gc-field" style="max-width:200px"><label>Target total</label><input id="tg" type="number" min="0" max="100" value="70" oninput="computeTarget()"></div>
+      <div class="gc-out" id="tgOut" style="margin-top:12px"></div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="gc-card">
+      <h3>4 · Final needed for each grade <span class="muted">(given your HW &amp; Midterm)</span></h3>
+      <table class="gc-tbl"><tbody id="tblBody"></tbody></table>
+    </div>
+
+    <div class="note-box">
+      <strong>Notes.</strong>
+      (1) The syllabus defines only the <em>letter bands</em> (70/55/45/37); it does not list the internal A+/A/A− splits or exact GPA. On Tsinghua's 4-point scale, A range (≥70) corresponds to roughly <b>4.0/3.7</b> — that's the "4.0" target here, but treat the sub-grades as approximate.
+      (2) Your <b>lowest HW score is dropped</b> (more if you got called on in class), so your HW % is usually higher than a raw average.
+      (3) "Final needed" is the <em>minimum</em> — it automatically uses whichever branch (keep-midterm vs drop-midterm) is easier for you.
+    </div>
+
+  </div>
+  <div class="footer-note">Calc A2 · Grade Calculator · Built from Syllabus 2026S · Good luck Rafi ✦</div></div>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    function num(id){const v=parseFloat($(id).value);return isNaN(v)?null:v;}
+    function letterOf(t){
+      if(t>=70)return{r:'A range',s:'A+, A, or A−',cls:'gA'};
+      if(t>=55)return{r:'B range',s:'B+, B, or B−',cls:'gB'};
+      if(t>=45)return{r:'C range',s:'C+, C, or C−',cls:'gC'};
+      if(t>=37)return{r:'D (pass)',s:'D+ or D',cls:'gD'};
+      return{r:'F (fail)',s:'F',cls:'gF'};
+    }
+    function examPart(mid,fin){const a=0.30*mid+0.40*fin,b=0.70*fin;return{a,b,exam:Math.max(a,b),usedMid:a>=b};}
+    function neededFinal(hw,mid,target){
+      const R=target-0.30*hw;               // required exam part
+      if(R<=0)return{already:true};
+      const fA=(R-0.30*mid)/0.40;           // final needed via 30/40 branch
+      const fB=R/0.70;                       // final needed via 70% branch
+      let f=Math.min(fA,fB); if(f<0)f=0;
+      return{f,path:(fA<=fB?'mid':'drop'),reachable:f<=100};
+    }
+    function compute(){
+      const hw=num('hw'),mid=num('mid'),fin=num('fin');
+      if(hw!==null&&mid!==null&&fin!==null){
+        const e=examPart(mid,fin), tot=0.30*hw+e.exam, L=letterOf(tot);
+        $('curTotal').textContent=tot.toFixed(1);
+        $('curLetter').textContent=L.r+' ('+L.s+')';
+        $('curLetter').className='badge '+L.cls;
+        $('curBreak').innerHTML='Exam part = max('+e.a.toFixed(1)+' , '+e.b.toFixed(1)+') = '+e.exam.toFixed(1)+
+          '. &nbsp;'+(e.usedMid?'Midterm counts (30%+40% branch).':'<b>Midterm dropped</b> — 70%·Final wins.');
+        $('fwd').style.display='block';
+      } else { $('curTotal').textContent='—'; $('curLetter').textContent='enter all three'; $('curLetter').className='badge'; $('curBreak').textContent=''; }
+      computeTarget(); buildTable();
+    }
+    function computeTarget(){
+      const hw=num('hw'),mid=num('mid'),tg=num('tg');
+      if(hw===null||mid===null||tg===null){$('tgOut').innerHTML='<span class="muted">Fill in HW, Midterm, and a target.</span>';return;}
+      const r=neededFinal(hw,mid,tg);
+      if(r.already){$('tgOut').innerHTML='✅ You already reach a total of <b>'+tg+'</b> even with <b>0</b> on the final.';return;}
+      if(!r.reachable){
+        const maxT=0.30*hw+examPart(mid,100).exam;
+        $('tgOut').innerHTML='⚠️ <b>Not reachable.</b> Even with <b>100</b> on the final, your max total is <b>'+maxT.toFixed(1)+'</b> (target '+tg+').';
+        return;
+      }
+      const fc=(Math.ceil(r.f*10)/10).toFixed(1);
+      $('tgOut').innerHTML='You need at least <b class="big">'+fc+'</b> on the final to reach a total of <b>'+tg+'</b>.<br>'+
+        '<span class="muted">'+(r.path==='drop'?'(70%·Final branch — your midterm gets dropped.)':'(30%·Midterm + 40%·Final branch.)')+'</span>';
+    }
+    function setTarget(v){$('tg').value=v;computeTarget();}
+    function buildTable(){
+      const hw=num('hw'),mid=num('mid');
+      const rows=[['A range / “4.0”',70],['B range',55],['C range',45],['Pass (D)',37]];
+      let html='';
+      for(const row of rows){
+        let cell='—';
+        if(hw!==null&&mid!==null){
+          const r=neededFinal(hw,mid,row[1]);
+          cell=r.already?'0 (already there)':(!r.reachable?'impossible':(Math.ceil(r.f*10)/10).toFixed(1));
+        }
+        html+='<tr><td>'+row[0]+' (≥'+row[1]+')</td><td><b>'+cell+'</b></td></tr>';
+      }
+      $('tblBody').innerHTML=html;
+    }
+    window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;document.getElementById('pbar').style.width=pct+'%';});
+    compute();
+  </script>
+</body>
+</html>
