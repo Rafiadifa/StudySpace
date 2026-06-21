@@ -1,0 +1,308 @@
+\documentclass[10pt]{extarticle}
+\usepackage[a4paper,portrait,margin=7mm]{geometry}
+\usepackage{multicol}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{bm}
+
+% ---- chapter colors ----
+\definecolor{c13}{HTML}{1B5E9C} % blue  - operators / IFT
+\definecolor{c14}{HTML}{1B7A3D} % green - scalar integrals
+\definecolor{c15}{HTML}{B5341B} % red   - vector field integrals
+\definecolor{c16}{HTML}{6A1B9A} % purple- number series
+\definecolor{c17}{HTML}{00838F} % teal  - power series
+\definecolor{c18}{HTML}{8D5A00} % brown - fourier
+\definecolor{c0}{HTML}{444444}  % gray  - toolbox
+\definecolor{hl}{HTML}{FFF3B0}
+
+\setlength{\parindent}{0pt}
+\setlength{\columnsep}{5pt}
+\setlength{\columnseprule}{0pt}
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+\linespread{1.0}
+
+% topic box: \topic{color}{Title}
+\newtcolorbox{tbox}[2]{colback=#1!6,colframe=#1,coltitle=white,
+  fonttitle=\bfseries\small,title={#2},boxrule=0.5pt,
+  left=2pt,right=2pt,top=1pt,bottom=1pt,boxsep=1pt,
+  before skip=2.5pt,after skip=2.5pt,unbreakable,enhanced,
+  before upper={\footnotesize}}
+
+\newcommand{\h}[1]{{\bfseries #1}\ }
+\newcommand{\key}[1]{\colorbox{hl}{$#1$}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dd}{\,d}
+\newcommand{\grad}{\nabla}
+\renewcommand{\div}{\operatorname{div}}
+\newcommand{\curl}{\operatorname{curl}}
+\newcommand{\F}{\mathbf{F}}
+\newcommand{\n}{\mathbf{n}}
+\newcommand{\rr}{\mathbf{r}}
+\pagestyle{empty}
+
+\begin{document}
+\begin{center}\vspace{-3mm}
+{\large\bfseries Calculus A2 --- Final Cheat Sheet}\quad
+{\scriptsize \textit{Yilong Yang, §13.5--18.3 \;|\; focus Ch14--15.5 \;|\; notation $\Phi,\ D_u\Phi,\ dA,\ dx\wedge dy$ as in class}}
+\end{center}
+\vspace{-1mm}
+
+\begin{multicols}{2}
+
+%================= CH13 =================
+\begin{tbox}{c13}{§13.5--13.7 \ Operators, Jacobian, IFT/ImFT}
+\h{Gradient} $\grad f=\big(f_{x},f_{y},f_{z}\big)$ — points to steepest ascent, $\perp$ level sets.\par
+\h{Divergence} $\div\F=\grad\!\cdot\!\F=P_x+Q_y+R_z$ (scalar; net outflow).\par
+\h{Curl (3D)} $\curl\F=\grad\times\F=\det\!\begin{psmallmatrix}\mathbf i&\mathbf j&\mathbf k\\ \partial_x&\partial_y&\partial_z\\ P&Q&R\end{psmallmatrix}$\par
+$=\big(R_y-Q_z,\;P_z-R_x,\;Q_x-P_y\big)$.\par
+\h{Curl (2D)} scalar $=Q_x-P_y$.\quad \h{Laplacian} $\Delta f=\div\grad f=f_{xx}+f_{yy}+f_{zz}$.\par
+\h{Identities} $\curl\grad f=\mathbf 0$,\;\; $\div\curl\F=0$.\par
+\h{Total deriv (Jacobian)} for $\Phi:\R^n\!\to\!\R^m$, $D\Phi=\big[\partial\Phi_i/\partial x_j\big]$ ($m\times n$).\par
+\h{Chain rule} $D(\Phi\circ\Psi)=D\Phi\,D\Psi$ (matrix product).\par
+\h{Inverse Fn Thm} near $\mathbf a$, $\Phi$ is locally invertible $\iff \det D\Phi(\mathbf a)\neq 0$; then $D(\Phi^{-1})=\big(D\Phi\big)^{-1}$.\par
+\h{Implicit Fn Thm} $G(\mathbf x,\mathbf y)=\mathbf0$ solves $\mathbf y=\mathbf y(\mathbf x)$ locally if $\det\!\big(\partial G/\partial\mathbf y\big)\neq0$; then $\dfrac{\partial \mathbf y}{\partial \mathbf x}=-\big(G_{\mathbf y}\big)^{-1}G_{\mathbf x}$.\par
+1-eqn: $\dfrac{dy}{dx}=-\dfrac{G_x}{G_y}$.
+\end{tbox}
+
+%================= CH14 =================
+\begin{tbox}{c14}{§14.2--14.4 \ Double / Triple Integrals \& Fubini}
+\h{Riemann} $\displaystyle\iint_D f\,dA=\lim\sum f\,\Delta A$.\par
+\h{Fubini (rect)} $\displaystyle\iint_{[a,b]\times[c,d]}\! f=\int_a^b\!\!\int_c^d f\,dy\,dx=\int_c^d\!\!\int_a^b f\,dx\,dy$.\par
+\h{Type I} $a\le x\le b,\ g_1(x)\le y\le g_2(x)$: $\displaystyle\int_a^b\!\!\int_{g_1}^{g_2}\! f\,dy\,dx$.\par
+\h{Type II} $c\le y\le d,\ h_1(y)\le x\le h_2(y)$: $\displaystyle\int_c^d\!\!\int_{h_1}^{h_2}\! f\,dx\,dy$.\par
+\h{Swap order} sketch region $\Rightarrow$ re-read bounds the other way (a horizontal vs vertical strip). Often needed when inner antideriv is hard (e.g. $e^{x^2}$).\par
+\h{Triple} $\displaystyle\iiint_E f\,dV$; project to a plane, fill the third var first.\par
+\h{Volume} $=\iint_D 1\,dA$ or $\iiint_E 1\,dV$.
+\end{tbox}
+
+\begin{tbox}{c14}{§14.6 \ Change of Variables (Jacobian)}
+\h{2D} $x=x(u,v),\,y=y(u,v)$:\quad $dA_{x,y}=\Big|\dfrac{\partial(x,y)}{\partial(u,v)}\Big|\,dA_{u,v}$,\par
+$\dfrac{\partial(x,y)}{\partial(u,v)}=\det\!\begin{psmallmatrix} x_u&x_v\\ y_u&y_v\end{psmallmatrix}$.\quad
+Shortcut: $\dfrac{\partial(x,y)}{\partial(u,v)}=\Big(\dfrac{\partial(u,v)}{\partial(x,y)}\Big)^{\!-1}$.\par
+\h{Polar} $x=r\cos\theta,\ y=r\sin\theta$:\;\; $dA=r\,dr\,d\theta$.\par
+\h{Cylindrical} $dV=r\,dr\,d\theta\,dz$.\par
+\h{Spherical} $x=\rho\sin\phi\cos\theta,\;y=\rho\sin\phi\sin\theta,\;z=\rho\cos\phi$\par
+($\phi$ from $+z$-axis, $0\!\le\!\phi\!\le\!\pi$): \quad\key{dV=\rho^{2}\sin\phi\,d\rho\,d\phi\,d\theta}.\par
+\h{Recipe} sub $f$, multiply by $|J|$, convert all bounds to new vars.
+\end{tbox}
+
+\begin{tbox}{c14}{§14.8--14.9 \ Surface Integral (scalar) \& Mass}
+\h{Parametrized $S=\Phi(u,v)$} $dS=\big|D_u\Phi\times D_v\Phi\big|\,du\,dv$.\par
+$\displaystyle\iint_S f\,dS=\iint_{D} f(\Phi)\,\big|D_u\Phi\times D_v\Phi\big|\,du\,dv$.\par
+\h{Graph $z=g(x,y)$} $dS=\sqrt{1+g_x^{2}+g_y^{2}}\,dA$.\par
+\h{Surface area} $=\iint_S 1\,dS$.\par
+\h{Mass} $m=\int_\Omega\rho$ (over area $dA$ / volume $dV$ / surface $dS$).\par
+\h{Moments} $M_{yz}{=}\int x\rho$, $M_{xz}{=}\int y\rho$, $M_{xy}{=}\int z\rho$.\par
+\h{Center of mass} $\bar{\mathbf r}=\dfrac1m\!\int_\Omega\mathbf r\,\rho$, i.e. $\bar x=M_{yz}/m$, \dots\par
+\h{Centroid} $=$ COM with $\rho\equiv1$: $\bar{\mathbf r}=\dfrac1{|\Omega|}\!\int_\Omega\mathbf r$.\par
+\h{Average value} $\bar f=\dfrac1{|\Omega|}\!\int_\Omega f$.\quad \h{Inertia} $I=\int(\text{dist to axis})^2\rho$, $I_z=\int(x^2+y^2)\rho$.\par
+\h{Symmetry} centroid lies on any axis/plane of symmetry.
+\end{tbox}
+
+\begin{tbox}{c14}{Common Solid Regions (bounds)}
+\h{Disk $R$ (polar)} $0\!\le\!r\!\le\!R,\ 0\!\le\!\theta\!\le\!2\pi$.\par
+\h{Ball $R$ (sph.)} $0\!\le\!\rho\!\le\!R,\ 0\!\le\!\phi\!\le\!\pi,\ 0\!\le\!\theta\!\le\!2\pi$.\par
+\h{Cylinder $R,h$} $0\!\le\!r\!\le\!R,\ 0\!\le\!\theta\!\le\!2\pi,\ 0\!\le\!z\!\le\!h$.\par
+\h{Cone $z^2{=}x^2{+}y^2$, $z\!\ge\!0$} is $\phi=\tfrac\pi4$; solid inside $0\!\le\!\phi\!\le\!\tfrac\pi4$.\par
+\h{``Ice-cream'' (cone$\cap$sphere $\rho{=}1$)} $0\!\le\!\rho\!\le\!1,\ 0\!\le\!\phi\!\le\!\tfrac\pi4,\ 0\!\le\!\theta\!\le\!2\pi$.\par
+\h{Tip} match coords to symmetry; $z^2{=}x^2{+}y^2\Rightarrow\tan\phi{=}1$.
+\end{tbox}
+
+
+%================= CH15 =================
+\begin{tbox}{c15}{§15.2 \ Work / Line Integral \& Gradient Thm}
+\h{Work} $\displaystyle\int_C \F\cdot d\rr=\int_a^b \F(\rr(t))\cdot \rr'(t)\,dt$.\;\; scalar form $\int P\,dx+Q\,dy+R\,dz$.\par
+\h{Scalar line int} $\int_C f\,ds=\int_a^b f(\rr(t))\,|\rr'(t)|\,dt$.\par
+\h{Gradient Thm (FTC for lines)} if $\F=\grad f$ then\par
+\key{\textstyle\int_C \grad f\cdot d\rr=f(\text{end})-f(\text{start})} (path-independent).\par
+\h{Conservative tests} (simply-conn.\ domain): $\F=\grad f\iff\curl\F=\grad\times\F=\mathbf0$ (curl $=$ the \textbf{cross-product} determinant, see Ch13) $\iff$ path-indep $\iff\oint=0$. \emph{3D componentwise:} $P_y{=}Q_x,\ P_z{=}R_x,\ Q_z{=}R_y$. (2D: just $P_y{=}Q_x$.)\par
+\h{Find potential $f$ (3 components)} check $\curl\F=\mathbf0$ first, then:\par
+(1) $f=\displaystyle\int P\,dx+g(y,z)$;\;\; (2) set $f_y=Q\Rightarrow$ get $g_y$, integrate in $y$: $g=\int(\dots)\,dy+h(z)$;\;\; (3) set $f_z=R\Rightarrow$ get $h'(z)$, integrate for $h$. Now $\F=\grad f$.\par
+\h{Exact form} $P\,dx+Q\,dy$ exact $\iff P_y=Q_x$.
+\end{tbox}
+
+\begin{tbox}{c15}{§15.5 \ Green's Theorem (plane, CCW $\partial D$)}
+\h{Circulation/curl form} $\displaystyle\oint_{\partial D}\!P\,dx+Q\,dy=\iint_D\!\big(Q_x-P_y\big)\,dA$.\par
+\h{Flux/divergence form} $\displaystyle\oint_{\partial D}\!\F\cdot\n\,ds=\iint_D\!\big(P_x+Q_y\big)\,dA=\iint_D\!\div\F\,dA$.\par
+\h{Area} $A=\dfrac12\oint_{\partial D}\!\big(x\,dy-y\,dx\big)=\oint x\,dy=-\oint y\,dx$.\par
+Orientation: region on the \emph{left}; outward normal $\n=\mathbf T\times\mathbf k$ for flux.
+\end{tbox}
+
+\begin{tbox}{c15}{§15.3--15.5 \ Flux, Divergence \& Curl (Stokes)}
+\h{Flux of $\F$ thru $S=\Phi(u,v)$}\par
+$\displaystyle\iint_S \F\cdot d\mathbf S=\iint_S \F\cdot\n\,dS=\iint_D \F(\Phi)\cdot\big(D_u\Phi\times D_v\Phi\big)\,du\,dv$.\par
+(check orientation of $D_u\Phi\times D_v\Phi$; flip sign if needed.)\par
+\h{Graph $z=g(x,y)$, upward} $\n\,dS=(-g_x,-g_y,1)\,dA$, so \key{\textstyle\iint_S\F\cdot d\mathbf S=\iint_D(-Pg_x-Qg_y+R)\,dA}.\par
+\h{Divergence (Gauss) Thm} closed $S=\partial U$ outward:\par
+\key{\textstyle\iint_{\partial U}\F\cdot d\mathbf S=\iiint_U \div\F\,dV}.\par
+\h{Curl (Stokes) Thm} $\partial S$ oriented by RH rule with $\n$:\par
+\key{\textstyle\oint_{\partial S}\F\cdot d\rr=\iint_S(\curl\F)\cdot d\mathbf S}.\par
+\h{Tricks} hard $\oint$ $\Rightarrow$ pick easy capping $S$ (Stokes); hard closed flux $\Rightarrow$ use $\div$. If $\curl\F=\mathbf0$ on $S$, Stokes flux $=0$.
+\end{tbox}
+
+\begin{tbox}{c15}{§15.7--15.8 \ Decomposition \& Differential Forms}
+\h{Helmholtz / Hodge split} write $\F=\grad\phi+\F_0$ with $\div\F_0=0$: choose $\phi$ with $\Delta\phi=\div\F$ so $\grad\phi$ is curl-free, $\F-\grad\phi$ is divergence-free.\par
+\h{1-forms} $\omega=P\,dx+Q\,dy+R\,dz$; $\int_C\omega=$ work.\par
+\h{Wedge (antisym.)} $dx\wedge dy=-\,dy\wedge dx$,\; $dx\wedge dx=0$.\par
+So $\int z^2\,dy\wedge dx=-\!\int z^2\,dx\wedge dy$ (a flux/area 2-form).\par
+\h{$d$ of forms} $d(P\,dx+Q\,dy)=(Q_x-P_y)\,dx\wedge dy$ (Green).
+\end{tbox}
+
+\begin{tbox}{c15}{Worked: potential \& Green}
+\h{Conservative} $\F=(2xy,\,x^2)$: $P_y{=}2x{=}Q_x$ $\checkmark$. $f{=}\!\int\!2xy\,dx{=}x^2y{+}g(y)$; $f_y{=}x^2{+}g'{=}x^2\Rightarrow g$ const. So $\int_{A}^{B}\F\cdot d\rr=\big[x^2y\big]_A^B$.\par
+\h{Green area} $\oint_{\partial D}(-y\,dx+x\,dy)=2\,\mathrm{Area}(D)$.\par
+\h{Stokes shortcut} replace messy $\F$ by simpler $\mathbf G$ with same $\curl$ on $S$ — both give equal $\oint$.
+\end{tbox}
+
+
+%================= CH16 =================
+\begin{tbox}{c16}{§16.2--16.3 \ Series Convergence Tests}
+\h{$n$th-term} if $a_n\!\not\to\!0\Rightarrow$ diverges (necessary, not suff.).\par
+\h{Geometric} $\sum ar^{n}=\dfrac{a}{1-r}$ if $|r|<1$, else div.\par
+\h{$p$-series} $\sum 1/n^{p}$ conv $\iff p>1$.\par
+\h{Integral} $a_n=f(n){\ge}0\!\downarrow$: $\sum a_n$ \& $\int_1^\infty f$ together.\par
+\h{Comparison} $0\le a_n\le b_n$: $\sum b$ conv $\Rightarrow\sum a$ conv.\par
+\h{Limit comp.} $\lim a_n/b_n=L\in(0,\infty)\Rightarrow$ same behavior.\par
+\h{Ratio} $L=\lim\big|\tfrac{a_{n+1}}{a_n}\big|$: \key{L<1} conv (abs), $L>1$ div, $L{=}1$ ?\par
+\h{Root} $L=\lim|a_n|^{1/n}$: same rule as ratio.\par
+\h{Alternating (Leibniz)} $\sum(-1)^n b_n$, $b_n\!\downarrow 0\Rightarrow$ conv; error $\le b_{N+1}$.\par
+\h{Abs vs cond} $\sum|a_n|$ conv $\Rightarrow$ \emph{absolutely}; if $\sum a_n$ conv but $\sum|a_n|$ div $\Rightarrow$ \emph{conditionally} (rearrangeable to any sum, Riemann).\par
+\h{Dirichlet} $b_n\!\downarrow0$, partial sums of $\sum c_n$ bounded $\Rightarrow\sum b_nc_n$ conv.\par
+\h{Pick a test} factorial / $n^n\to$ ratio or root; rational in $n\to$ limit-compare to $p$-series (leading powers); alternating $\to$ Leibniz, then check $\sum|a_n|$.
+\end{tbox}
+
+%================= CH17 =================
+\begin{tbox}{c17}{§17.3--17.4 \ Power Series \& Taylor}
+\h{$\sum a_n(x-c)^n$} radius $R$: $\dfrac1R=\lim\big|\tfrac{a_{n+1}}{a_n}\big|=\lim|a_n|^{1/n}$.\par
+Converges $|x-c|<R$, diverges $>R$; \h{test endpoints separately}.\par
+\h{Interval} $=(c-R,c+R)$ $\pm$ endpoints (use other tests there).\par
+\h{Term-by-term} differentiate/integrate inside $R$ (same $R$).\par
+\h{Taylor} $f(x)=\sum \dfrac{f^{(n)}(c)}{n!}(x-c)^n$.\par
+\h{Maclaurin} $e^x{=}\sum\tfrac{x^n}{n!}$, $\sin x{=}\sum\tfrac{(-1)^nx^{2n+1}}{(2n+1)!}$, $\cos x{=}\sum\tfrac{(-1)^nx^{2n}}{(2n)!}$, $\tfrac1{1-x}{=}\sum x^n$, $\ln(1{+}x){=}\sum\tfrac{(-1)^{n-1}x^n}{n}$.\par
+\h{More} binomial $(1{+}x)^k{=}\sum\binom{k}{n}x^n$ ($|x|{<}1$);\;\; $\tfrac1{(1-x)^2}{=}\sum n\,x^{n-1}$.\par
+\h{Integrate/diff term-by-term} plug into a known series, then $\int$ or $\tfrac{d}{dx}$ (same $R$). \emph{Ex} $\tfrac1{1+x^2}{=}\sum(-1)^nx^{2n}\Rightarrow\arctan x{=}\!\int{=}\sum\tfrac{(-1)^nx^{2n+1}}{2n+1}$; \;$\int e^{x^2}dx{=}\sum\tfrac{x^{2n+1}}{n!(2n+1)}{+}C$.
+\end{tbox}
+
+%================= CH18 =================
+\begin{tbox}{c18}{§18.1--18.3 \ Fourier Series}
+\h{$2\pi$-periodic} $f\sim a_0+\sum_{n\ge1}\!\big(a_n\cos nx+b_n\sin nx\big)$:\par
+$a_0=\dfrac1{2\pi}\!\displaystyle\int_{0}^{2\pi}\!\! f\,dx$ (the mean),\par
+$a_n=\dfrac1{\pi}\!\displaystyle\int_{0}^{2\pi}\!\! f\cos nx\,dx,\quad b_n=\dfrac1{\pi}\!\displaystyle\int_{0}^{2\pi}\!\! f\sin nx\,dx$.\par
+\h{Period $2L$} replace $nx\to\frac{n\pi x}{L}$, $\frac1\pi\to\frac1L$, $\frac1{2\pi}\to\frac1{2L}$.\par
+\h{Symmetry} $f$ even $\Rightarrow b_n{=}0$ (cosine series); $f$ odd $\Rightarrow a_n{=}0$ (sine series).\par
+\h{Convergence (Dirichlet)} at a jump the series $\to\dfrac{f(x^+)+f(x^-)}{2}$ (midpoint); to $f$ where continuous.\par
+\h{Complex form} $f=\sum_{n\in\mathbb Z} c_n e^{inx}$, $c_n=\frac1{2\pi}\!\int_0^{2\pi}\! f e^{-inx}dx$.\par
+\h{Parseval} $\frac1{2\pi}\!\int_0^{2\pi}\!|f|^2=\sum|c_n|^2$;\; real form $\frac1\pi\!\int_0^{2\pi}\! f^2=2a_0^2+\sum(a_n^2+b_n^2)$.\par
+\h{Half-range $[0,L]$} even ext.$\to$cosine $a_n{=}\frac2L\!\int_0^L\! f\cos\frac{n\pi x}{L}$; odd ext.$\to$sine $b_n{=}\frac2L\!\int_0^L\! f\sin\frac{n\pi x}{L}$.\par
+\h{Parseval trick} sawtooth $b_n{=}\frac2n$: $\sum\frac4{n^2}{=}\frac1\pi\!\int_0^{2\pi}\!(\pi{-}x)^2{=}\frac{2\pi^2}3\Rightarrow\sum\frac1{n^2}{=}\frac{\pi^2}6$.
+\end{tbox}
+
+\begin{tbox}{c14}{Common Parametrizations \& Normals}
+\h{Circle $R$} $\rr(t)=(R\cos t,R\sin t)$, $|\rr'|=R$.\par
+\h{Sphere $R$} $\Phi=(R\sin\phi\cos\theta,R\sin\phi\sin\theta,R\cos\phi)$; $D_\phi\Phi\times D_\theta\Phi$ outward, $|{\cdot}|=R^{2}\sin\phi$; outward $\n=\frac1R(x,y,z)$.\par
+\h{Cylinder $R$} $\Phi=(R\cos\theta,R\sin\theta,z)$; normal $(\cos\theta,\sin\theta,0)$, $|{\cdot}|=R$.\par
+\h{Graph $z=g(x,y)$} $\Phi=(x,y,g)$; $D_x\Phi\times D_y\Phi=(-g_x,-g_y,1)$ (upward).\par
+\h{Plane} thru $\rr_0$ spanned by $\mathbf a,\mathbf b$: $\n=\mathbf a\times\mathbf b$.
+\end{tbox}
+
+\begin{tbox}{c13}{Vector Identities (product rules)}
+$\grad(fg)=f\grad g+g\grad f$.\par
+$\div(f\F)=f\,\div\F+\grad f\!\cdot\!\F$.\par
+$\curl(f\F)=f\,\curl\F+\grad f\times\F$.\par
+$\div(\F\times\mathbf G)=\mathbf G\!\cdot\!\curl\F-\F\!\cdot\!\curl\mathbf G$.\par
+$\curl(\curl\F)=\grad(\div\F)-\Delta\F$.
+\end{tbox}
+
+\begin{tbox}{c0}{Integration Toolbox}
+\h{Half-angle} $\sin^2x=\frac{1-\cos2x}{2}$,\; $\cos^2x=\frac{1+\cos2x}{2}$.\par
+\h{Orthogonality on $[0,2\pi]$} ($m,n\ge1$):\par
+$\int_0^{2\pi}\!\cos mx\cos nx=\int_0^{2\pi}\!\sin mx\sin nx=\pi\,\delta_{mn}$;\par
+$\int_0^{2\pi}\!\sin mx\cos nx=0$;\;\; $\int_0^{2\pi}\!\sin^2=\int_0^{2\pi}\!\cos^2=\pi$.\par
+\h{By parts} $\int x\sin nx\,dx=\frac{\sin nx}{n^2}-\frac{x\cos nx}{n}$;\par
+$\int x\cos nx\,dx=\frac{\cos nx}{n^2}+\frac{x\sin nx}{n}$.\par
+\h{Gaussian} $\int_{-\infty}^{\infty}e^{-x^2}dx=\sqrt\pi$ (via $\iint e^{-r^2}r\,dr\,d\theta$).
+\end{tbox}
+
+\begin{tbox}{c16}{Notable Sums (endpoint sanity checks)}
+$\displaystyle\sum_{n\ge1}\frac1{n^2}=\frac{\pi^2}6,\quad \sum_{n\ge1}\frac1{n^4}=\frac{\pi^4}{90}$.\par
+$\displaystyle\sum_{n\ge1}\frac{(-1)^{n-1}}{n}=\ln 2,\quad \sum_{n\ge0}\frac{(-1)^n}{2n+1}=\frac\pi4$.\par
+Harmonic $\sum 1/n$ diverges; alternating harmonic conv. (conditionally).
+\end{tbox}
+
+\begin{tbox}{c18}{Worked Fourier: sawtooth $f(x)=\pi-x$ on $[0,2\pi)$}
+Odd about its mean $\Rightarrow a_0=0,\ a_n=0$.\par
+$b_n=\dfrac1\pi\!\displaystyle\int_0^{2\pi}\!(\pi-x)\sin nx\,dx=\dfrac2n$.\quad
+$S(x)=\displaystyle\sum_{n\ge1}\frac2n\sin nx$.\par
+At $x=0$ (jump $\pi\!\to\!-\pi$): $S(0)=\dfrac{f(0^+)+f(0^-)}2=\dfrac{\pi+(-\pi)}2=0$.
+\end{tbox}
+
+\begin{tbox}{c15}{Which theorem? (decision guide)}
+\footnotesize
+$\oint_C\F\cdot d\rr$, $C$ in plane $\to$ \textbf{Green}.\;
+$\oint_C\F\cdot d\rr$, $C$ in space $\to$ \textbf{Stokes} (cap $S$).\;
+$\iint_{\partial U}\F\cdot d\mathbf S$ closed $\to$ \textbf{Divergence}.\;
+$\F=\grad f$ / curl$=0\to$ \textbf{Gradient Thm} (endpoints).\;
+Open surface flux $\to$ parametrize $\Phi$, use $\F\cdot(D_u\Phi\times D_v\Phi)$.
+\end{tbox}
+
+\begin{tbox}{c13}{§13.4 \ Newton's Method (root-finding)}
+\h{Core (solve $\F(\mathbf x)=\mathbf 0$)} \key{\mathbf x_{n+1}=\mathbf x_n-[D\F(\mathbf x_n)]^{-1}\F(\mathbf x_n)}.\par
+\h{1D} $x_{n+1}=x_n-\dfrac{f(x_n)}{f'(x_n)}$ (tangent's $x$-axis hit; quadratic conv.).\par
+\h{$2{\times}2$ inverse} $\begin{psmallmatrix}a&b\\c&d\end{psmallmatrix}^{-1}=\dfrac1{ad-bc}\begin{psmallmatrix}d&-b\\-c&a\end{psmallmatrix}$.\par
+\h{Linear approx} $\F(\mathbf x_0{+}\mathbf h)\approx\F(\mathbf x_0)+[D\F(\mathbf x_0)]\mathbf h$ (differentiable if all partials continuous).\par
+\h{To solve $\F(\mathbf x)=\mathbf b$} apply to $\F-\mathbf b$: $\mathbf x_{n+1}=\mathbf x_n-[D\F]^{-1}(\F(\mathbf x_n)-\mathbf b)$.\par
+\h{Ex $\sqrt2$} $f=x^2-2\Rightarrow x_{n+1}=\tfrac12(x_n+\tfrac2{x_n})$: $1\!\to\!1.5\!\to\!1.41\overline{6}\!\to\!1.41422$.
+\end{tbox}
+
+\begin{tbox}{c0}{Shortcuts that save time}
+\h{Symmetry $\Rightarrow0$} $\int$ of an \emph{odd} integrand over a symmetric domain $=0$ (apply componentwise to flux/work/centroid).\par
+\h{Constant div} $\div\F=c\Rightarrow$ flux through closed $S=c\cdot\mathrm{Vol}(U)$. Const.\ field $\F=\mathbf c$: $\div=0$.\par
+\h{Curl is source-free} $\iint_{\partial U}(\curl\F)\cdot d\mathbf S=0$ (closed surface, always).\par
+\h{Conservative} $\curl\F=\mathbf0\Rightarrow\oint_C\F\cdot d\rr=0$ on any closed $C$ (simply-conn.).\par
+\h{Useful constants} sphere $R$: area $4\pi R^2$, vol $\tfrac43\pi R^3$; $\int_0^{2\pi}\!d\theta{=}2\pi$, $\int_0^\pi\!\sin\phi\,d\phi{=}2$.\par
+\h{Area as line int} $A=\tfrac12\oint(x\,dy-y\,dx)$.
+\end{tbox}
+
+\begin{tbox}{c14}{Tangent Plane \& Surface Normal}
+\h{Level surface $F(x,y,z)=c$} normal $=\grad F$; tangent plane $\grad F(\mathbf p)\cdot(\mathbf r-\mathbf p)=0$.\par
+\h{Graph $z=f(x,y)$} plane $z=f(a,b)+f_x(x{-}a)+f_y(y{-}b)$; normal $(-f_x,-f_y,1)$.\par
+\h{Linear approx} $f(\mathbf p+\mathbf h)\approx f(\mathbf p)+\grad f(\mathbf p)\cdot\mathbf h$.
+\end{tbox}
+
+\begin{tbox}{c15}{Orientation conventions}
+\h{Green (2D)} $\partial D$ counterclockwise, region on your left.\par
+\h{Stokes} orient $\partial S$ by RH rule with $\n$: thumb $=\n$, fingers curl along $\partial S$ (surface on left).\par
+\h{Divergence} $\n$ points \textbf{outward} from the solid $U$.\par
+\h{Split boundary} $\partial S=\gamma+\eta\Rightarrow\oint_{\partial S}=\oint_\gamma+\oint_\eta$; reversing a curve flips its sign.
+\end{tbox}
+
+\begin{tbox}{c14}{Quadric Surfaces (recognize fast)}
+\h{Paraboloid} $z=x^2+y^2$ (bowl). \h{Cone} $z^2=x^2+y^2$.\par
+\h{Sphere} $x^2{+}y^2{+}z^2{=}R^2$. \h{Cylinder} $x^2{+}y^2{=}R^2$.\par
+\h{Ellipsoid} $\tfrac{x^2}{a^2}{+}\tfrac{y^2}{b^2}{+}\tfrac{z^2}{c^2}{=}1$.\par
+\h{Hyperboloid} $x^2{+}y^2{-}z^2{=}1$ (1 sheet), $z^2{-}x^2{-}y^2{=}1$ (2 sheets).
+\end{tbox}
+
+\begin{tbox}{c15}{The four theorems $=$ one family}
+\key{\textstyle\int_{\partial\Omega}\omega=\int_\Omega d\omega} — boundary integral $=$ integral of a derivative over the region:\par
+FTC $\int_a^b f'=f|_a^b$;\; Gradient $\int_C\grad f\cdot d\rr=f|_{\text{ends}}$;\; Green/Stokes $\oint_{\partial S}\F\cdot d\rr=\iint_S\curl\F\cdot d\mathbf S$;\; Divergence $\iint_{\partial U}\F\cdot d\mathbf S=\iiint_U\div\F\,dV$.
+\end{tbox}
+
+\begin{tbox}{c15}{Exam playbook (from 2025 final)}
+\footnotesize
+1.\,Iterated int $\to$ sketch region, swap order, Fubini.\;
+2.\,Green: change-of-var Jacobian, work + flux, split curl/div-free.\;
+3.\,Stokes: $\curl\F$, cap with disk, get $\oint$.\;
+4.\,Gauss + spherical on ``ice-cream'' cone$\cap$sphere; forms $dy\wedge dx$.\;
+5.\,Torus $\Phi$: normal dir, centroid of $S^+$, flux, $\iiint|z|$.\;
+6.\,Series: cond/abs, rearrangement $S\neq s$, radius $R$, Fourier $a_n,b_n$.
+\end{tbox}
+
+\end{multicols}
+\end{document}

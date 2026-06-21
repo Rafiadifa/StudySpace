@@ -1,0 +1,246 @@
+\documentclass[10pt]{extarticle}
+\usepackage[a4paper,portrait,margin=7mm]{geometry}
+\usepackage{multicol}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{bm}
+
+% ---- topic colors ----
+\definecolor{c13}{HTML}{1B5E9C} % blue  - foundations
+\definecolor{c14}{HTML}{1B7A3D} % green - determinants
+\definecolor{c15}{HTML}{B5341B} % red   - eigenvalues (FOCUS)
+\definecolor{c16}{HTML}{6A1B9A} % purple- orthogonality / QR / projection
+\definecolor{c17}{HTML}{00838F} % teal  - symmetric / definiteness / Rayleigh
+\definecolor{c18}{HTML}{8D5A00} % brown - SVD
+\definecolor{c0}{HTML}{444444}  % gray  - toolbox
+\definecolor{hl}{HTML}{FFF3B0}
+
+\setlength{\parindent}{0pt}
+\setlength{\columnsep}{5pt}
+\setlength{\columnseprule}{0pt}
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+\linespread{1.18}
+
+\newtcolorbox{tbox}[2]{colback=#1!6,colframe=#1,coltitle=white,
+  fonttitle=\bfseries\small,title={#2},boxrule=0.5pt,
+  left=2pt,right=2pt,top=1pt,bottom=1pt,boxsep=1pt,
+  before skip=4.5pt,after skip=4.5pt,unbreakable,enhanced,
+  before upper={\footnotesize}}
+
+\newcommand{\h}[1]{{\bfseries #1}\ }
+\newcommand{\key}[1]{\colorbox{hl}{$#1$}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{^{\mathsf T}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Col}{\operatorname{Col}}
+\newcommand{\Row}{\operatorname{Row}}
+\newcommand{\Nul}{\operatorname{N}}
+\newcommand{\dimm}{\operatorname{dim}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bu}{\mathbf{u}}
+\pagestyle{empty}
+
+\begin{document}
+\begin{center}\vspace{-3mm}
+{\large\bfseries Linear Algebra --- Final Cheat Sheet}\quad
+{\scriptsize \textit{Strang 5e \;|\; foundations $\to$ Rayleigh quotient \;|\; focus: determinants, \textbf{eigenvalues}, QR, projections, definiteness, SVD}}
+\end{center}
+\vspace{-1mm}
+
+\begin{multicols}{2}
+
+%================= FOUNDATIONS =================
+\begin{tbox}{c13}{Foundations (pre-midterm, still needed)}
+\h{RREF} row-reduce (Gaussian elim.); leading 1's $=$ \emph{pivots}. $\rank A=\#$pivots $=r$.\par
+\h{Solve $A\bx=\bb$} solvable $\iff \bb\in\Col(A)\iff\rank[A\,|\,\bb]=\rank A$. General sol $=$ particular $+$ nullspace.\par
+\h{Basis of $\Nul(A)$} set free vars $=1$ one at a time, solve pivots $\Rightarrow$ special solutions.\par
+\h{Lin. indep.} only $c_1\bv_1{+}\dots{=}\mathbf0$ is trivial; square: $\iff\det\neq0\iff$ full rank.\par
+\h{Four subspaces} $\Col(A)\subset\R^m$ ($\dimm r$), $\Nul(A)\subset\R^n$ ($n{-}r$), $\Row(A){=}\Col(A\T)$ ($r$), $\Nul(A\T)$ ($m{-}r$).\par
+\h{Rank--nullity} $\rank A+\dimm\Nul(A)=n$ (\#cols).\par
+\h{Orthogonality} $\Row(A)\perp\Nul(A)$; $\Col(A)\perp\Nul(A\T)$.\par
+\h{Invertible} ($n{\times}n$): $\det\neq0\iff\rank n\iff\Nul{=}\{\mathbf0\}\iff$ cols indep $\iff0$ not an eigenvalue.
+\end{tbox}
+
+\begin{tbox}{c13}{Invertible Matrix Theorem (square $A$, TFAE)}
+$A^{-1}$ exists $\iff\det A\neq0\iff\rank A=n\iff$ $n$ pivots $\iff$ columns (rows) independent $\iff$ columns span $\R^n\iff A\bx=\mathbf0$ only at $\bx=\mathbf0\iff A\bx=\bb$ has a unique solution $\iff0$ is not an eigenvalue $\iff A\T A$ invertible.
+\end{tbox}
+
+%================= DETERMINANTS =================
+\begin{tbox}{c14}{Determinants}
+\h{$2{\times}2$} $\det\!\begin{psmallmatrix}a&b\\c&d\end{psmallmatrix}=ad-bc$. \h{$3{\times}3$} Sarrus / cofactor.\par
+\h{Cofactor expand} $\det A=\sum_j a_{ij}C_{ij}$, $C_{ij}=(-1)^{i+j}M_{ij}$ (any row/col; pick one with zeros).\par
+\h{Triangular} $\det=\prod(\text{diagonal})$.\par
+\h{Row ops} swap $\Rightarrow\times(-1)$; scale row by $k\Rightarrow\times k$; add multiple of a row $\Rightarrow$ unchanged.\par
+\h{Rules} $\det(AB){=}\det A\det B$; $\det A\T{=}\det A$; $\det(A^{-1}){=}1/\det A$; \key{\det(cA)=c^{n}\det A}.\par
+\h{Singular} $\det A=0\iff A$ not invertible $\iff$ dependent columns.\par
+\h{Inverse} $A^{-1}=\dfrac1{\det A}\,\mathrm{adj}(A)$, $\mathrm{adj}=[C_{ij}]\T$.\par
+\h{Link to eig.} $\det A=\prod\lambda_i$. \emph{Ex} $\det B{=}4$ ($3{\times}3$): $\det(2B^{-1}){=}2^3{\cdot}\tfrac14{=}2$.
+\end{tbox}
+
+\begin{tbox}{c0}{Trace \& Determinant identities}
+$\tr(A+B)=\tr A+\tr B$;\quad \key{\tr(AB)=\tr(BA)} (cyclic).\par
+$\tr A=\sum\lambda_i$;\quad $\det A=\prod\lambda_i=\pm\prod(\text{pivots})$.\par
+$\det(AB)=\det A\,\det B$;\quad $|\det A|=$ volume scaling factor of $A$.
+\end{tbox}
+
+%================= EIGENVALUES (FOCUS) =================
+\begin{tbox}{c15}{Eigenvalues \& Eigenvectors \ \textnormal{(MAIN FOCUS)}}
+\h{Definition} $A\bv=\lambda\bv$, $\bv\neq\mathbf0$.\par
+\h{Find $\lambda$} solve \key{\det(A-\lambda I)=0} (characteristic polynomial, degree $n$).\par
+\h{Find $\bv$} \key{E_\lambda=\Nul(A-\lambda I)} = the eigenspace; row-reduce $A-\lambda I$, take special solutions for a basis.\par
+\h{Trace \& det} $\sum\lambda_i=\tr A$, \quad $\prod\lambda_i=\det A$.\par
+\h{Multiplicities} geom mult $=\dimm E_\lambda=n-\rank(A-\lambda I)$; always $1\le$ geom $\le$ alg.\par
+\h{Triangular} eigenvalues $=$ diagonal entries.\par
+\h{Shifts/powers} $A^k\!:\lambda^k$; $A^{-1}\!:1/\lambda$; $A{+}cI:\lambda{+}c$; eigvecs unchanged. $\tr(A^2){=}\sum\lambda_i^2$.\par
+\h{Diagonalize} $A=S\Lambda S^{-1}$, $S=[\bv_1\cdots\bv_n]$, $\Lambda=\mathrm{diag}(\lambda_i)$.\par
+\key{A\text{ diagonalizable}\iff n\text{ indep. eigvecs}\iff\text{geom}=\text{alg }\forall\lambda}.\par
+Then $A^k=S\Lambda^kS^{-1}$. Distinct $\lambda\Rightarrow$ auto-diagonalizable.\par
+\h{Similar} $B=M^{-1}AM\Rightarrow$ same char.\ poly, $\lambda$'s, $\tr$, $\det$.\par
+\h{Real matrix} complex $\lambda$ come in conjugate pairs $a\pm bi$.\par
+\h{Cayley--Hamilton} $A$ satisfies its own char.\ poly: $p(A)=0$. \emph{$2{\times}2$:} $A^2-(\tr A)A+(\det A)I=0\Rightarrow A^{-1}=\dfrac{(\tr A)I-A}{\det A}$.
+\end{tbox}
+
+\begin{tbox}{c15}{Worked eigen $\to$ diagonalize}
+\footnotesize $A=\begin{psmallmatrix}2&1\\1&2\end{psmallmatrix}$: $\det(A-\lambda I)=(2-\lambda)^2-1=(\lambda-1)(\lambda-3)$.\par
+$\lambda{=}1$: $A-I=\begin{psmallmatrix}1&1\\1&1\end{psmallmatrix}\!\Rightarrow\bv=(1,-1)$.\quad $\lambda{=}3$: $\bv=(1,1)$.\par
+$S=\begin{psmallmatrix}1&1\\-1&1\end{psmallmatrix},\ \Lambda=\begin{psmallmatrix}1&0\\0&3\end{psmallmatrix}$. Symmetric $\Rightarrow$ orthonormalize: $A=Q\Lambda Q\T$, $Q=\tfrac1{\sqrt2}\begin{psmallmatrix}1&1\\-1&1\end{psmallmatrix}$.
+\end{tbox}
+
+\begin{tbox}{c15}{Special matrices' eigenvalues}
+\h{Projection} $\lambda\in\{0,1\}$. \h{Reflection} $\lambda=\pm1$.\par
+\h{Orthogonal $Q$} $|\lambda|=1$. \h{Rotation} $e^{\pm i\theta}=\cos\theta\pm i\sin\theta$.\par
+\h{Nilpotent} ($A^k{=}0$) all $\lambda=0$. \h{Idempotent} ($A^2{=}A$) $\lambda\in\{0,1\}$.\par
+\h{Markov} (cols sum $1$) has $\lambda=1$. \h{Singular} has $\lambda=0$.\par
+\h{Rotation ex} $\begin{psmallmatrix}0&-1\\1&0\end{psmallmatrix}$: $\lambda=\pm i$, eigvecs $(1,\mp i)$.
+\end{tbox}
+
+\begin{tbox}{c15}{Defective (NOT diagonalizable) example}
+\footnotesize $A=\begin{psmallmatrix}3&1\\0&3\end{psmallmatrix}$: $\lambda=3$ with alg mult $2$. $A-3I=\begin{psmallmatrix}0&1\\0&0\end{psmallmatrix}$ has rank $1\Rightarrow$ geom mult $=2-1=1<2$. Too few eigenvectors $\Rightarrow$ \textbf{not} diagonalizable.
+\end{tbox}
+
+%================= ORTHOGONALITY / QR =================
+\begin{tbox}{c16}{Orthogonal Projection \& Least Squares}
+\h{Onto a line $\ba$} $\bx_{\!\parallel}=\dfrac{\ba\T\bb}{\ba\T\ba}\ba$; matrix $P=\dfrac{\ba\ba\T}{\ba\T\ba}$.\par
+\h{Onto $\Col(A)$} (indep cols): \key{P=A(A\T A)^{-1}A\T},\; projection $\hat\bb=P\bb$.\par
+\h{$P$ facts} $P^2{=}P$, $P\T{=}P$, eigenvalues $0/1$; $I{-}P$ projects onto $\Nul(A\T)$.\par
+\h{Least squares} solve \key{A\T A\,\hat\bx=A\T\bb} $\Rightarrow\hat\bx=(A\T A)^{-1}A\T\bb$ minimizes $\|A\bx-\bb\|^2$; error $\bb-A\hat\bx\perp\Col(A)$.
+\end{tbox}
+
+\begin{tbox}{c16}{Worked least squares (line fit)}
+\footnotesize Fit $b=C+Dt$ to $(0,6),(1,0),(2,0)$: $A=\begin{psmallmatrix}1&0\\1&1\\1&2\end{psmallmatrix},\ \bb=\begin{psmallmatrix}6\\0\\0\end{psmallmatrix}$.\par
+$A\T A=\begin{psmallmatrix}3&3\\3&5\end{psmallmatrix},\ A\T\bb=\begin{psmallmatrix}6\\0\end{psmallmatrix}\Rightarrow\hat\bx=\begin{psmallmatrix}5\\-3\end{psmallmatrix}$: best line $b=5-3t$, projection $A\hat\bx=(5,2,-1)$.
+\end{tbox}
+
+%================= GRAM-SCHMIDT / QR =================
+\begin{tbox}{c16}{Gram--Schmidt \& QR Decomposition}
+\h{Orthonormalize} $\bv_k=\ba_k-\sum_{j<k}(\bq_j\T\ba_k)\bq_j$, then $\bq_k=\bv_k/\|\bv_k\|$.\par
+\h{QR} \key{A=QR}: $Q$ has orthonormal columns ($Q\T Q=I$), $R$ upper-triangular,\par
+$R_{kk}=\|\bv_k\|$, $R_{jk}=\bq_j\T\ba_k$ ($j<k$). (Keep $R_{kk}>0$.)\par
+\h{Orthogonal matrix} $Q\T Q=I\Rightarrow Q^{-1}=Q\T$, preserves length \& angle, $\det Q=\pm1$.\par
+\h{Use} QR makes least squares easy: $R\hat\bx=Q\T\bb$.
+\end{tbox}
+
+\begin{tbox}{c16}{Worked Gram--Schmidt / QR}
+\footnotesize $\ba_1{=}(1,1,0),\ \ba_2{=}(1,0,1)$: $\bq_1{=}\tfrac1{\sqrt2}(1,1,0)$.\par
+$\bv_2{=}\ba_2-(\bq_1\T\ba_2)\bq_1=(\tfrac12,-\tfrac12,1)\Rightarrow\bq_2{=}\tfrac1{\sqrt6}(1,-1,2)$.\par
+$R=\begin{psmallmatrix}\sqrt2&1/\sqrt2\\[1pt]0&\sqrt{3/2}\end{psmallmatrix}$, $Q=[\bq_1\ \bq_2]$.
+\end{tbox}
+
+%================= SYMMETRIC / DEFINITENESS =================
+\begin{tbox}{c17}{Symmetric Matrices \& Spectral Theorem}
+\h{$A=A\T$} $\Rightarrow$ real $\lambda$, eigenvectors of distinct $\lambda$ are orthogonal.\par
+\h{Spectral / orthogonal diag.} \key{A=Q\Lambda Q\T}, $Q$ orthogonal ($Q\T Q{=}I$), columns $=$ orthonormal eigenvectors. ($=\sum\lambda_i\bq_i\bq_i\T$.)\par
+\h{Recipe} per $\lambda$: basis of $E_\lambda$, then Gram--Schmidt within it; normalize all.
+\end{tbox}
+
+\begin{tbox}{c17}{Definiteness \& Rayleigh Quotient}
+For symmetric $A$ (let $\lambda$ be its eigenvalues):\par
+\h{Pos.\ definite} $\bx\T A\bx>0\ \forall\bx\neq\mathbf0\iff$ all $\lambda>0\iff$ all pivots $>0\iff$ all leading principal minors $>0\iff A=R\T R$ ($R$ full rank).\par
+\h{Pos.\ semidef.} $\lambda\ge0$;\; \h{neg.\ def.} $\lambda<0$;\; \h{indefinite} mixed-sign $\lambda$.\par
+\h{$2{\times}2$} $\begin{psmallmatrix}a&b\\b&c\end{psmallmatrix}$ PD $\iff a>0$ \& $ac-b^2>0$.\par
+\h{Rayleigh} $R(\bx)=\dfrac{\bx\T A\bx}{\bx\T\bx}\in[\lambda_{\min},\lambda_{\max}]$; \key{\max=\lambda_{\max},\ \min=\lambda_{\min}} attained at the corresponding eigenvector.\par
+\h{Worked} $A=\begin{psmallmatrix}2&-1\\-1&2\end{psmallmatrix}$: minors $2>0,\ \det 3>0\Rightarrow$ PD; check $\lambda=1,3>0$. $R(\bx)\in[1,3]$.
+\end{tbox}
+
+\begin{tbox}{c0}{Pivots vs Eigenvalues vs Singular values}
+\h{Pivots} from elimination; signs $\to\det$ \& definiteness (symmetric).\par
+\h{Eigenvalues} $A\bx{=}\lambda\bx$; can be complex/negative.\par
+\h{Singular values} $\sigma_i{=}\sqrt{\lambda_i(A\T A)}\ge0$ always real.\par
+Symmetric PD $\Rightarrow$ all three positive (but generally unequal); symmetric $\Rightarrow\sigma_i=|\lambda_i|$.
+\end{tbox}
+
+%================= SVD =================
+\begin{tbox}{c18}{Singular Value Decomposition (SVD)}
+\h{Form} \key{A=U\Sigma V\T} ($m{\times}n$): $U$ ($m{\times}m$), $V$ ($n{\times}n$) orthogonal; $\Sigma$ diagonal $\sigma_1\ge\dots\ge0$.\par
+\h{Compute} $V=$ orthonormal eigvecs of $A\T A$; \key{\sigma_i=\sqrt{\lambda_i(A\T A)}}; $U=$ eigvecs of $AA\T$, or $\bu_i=A\bv_i/\sigma_i$.\par
+\h{Facts} $\#\{\sigma_i>0\}=\rank A$; $\sigma_{\max}=\|A\|_2$; $A\bv_i=\sigma_i\bu_i$.\par
+\h{Pseudoinverse} $A^{+}=V\Sigma^{+}U\T$ (least-squares / min-norm).\par
+\h{Geometry} $A$ maps the unit sphere to an ellipsoid with semi-axis \emph{lengths} $\sigma_i$ along directions $\bu_i$.\par
+\h{Norms} $\|A\|_2=\sigma_{\max}$; $\|A\|_F=\sqrt{\sum a_{ij}^2}=\sqrt{\sum\sigma_i^2}$. \h{Condition} $\kappa_2=\sigma_{\max}/\sigma_{\min}$.
+\end{tbox}
+
+\begin{tbox}{c18}{Worked SVD: ellipse axes}
+\footnotesize $B=\begin{psmallmatrix}2&2\\1&0\\0&1\end{psmallmatrix}$: $B\T B=\begin{psmallmatrix}5&4\\4&5\end{psmallmatrix}$, $\lambda=9,1\Rightarrow\sigma=3,1$.\par
+$\bv_1=\tfrac1{\sqrt2}(1,1)\!\to\!\bu_1=\tfrac{B\bv_1}{3}=\tfrac1{3\sqrt2}(4,1,1)$ (long axis, len $3$);\par
+$\bv_2=\tfrac1{\sqrt2}(1,-1)\!\to\!\bu_2=\tfrac1{\sqrt2}(0,1,-1)$ (short axis, len $1$).
+\end{tbox}
+
+\begin{tbox}{c13}{Linear Maps, Matrix Rep.\ \& Change of Basis}
+\h{Matrix of $L$} in basis $\mathcal B$: column $j$ of $[L]_{\mathcal B}=$ coords of $L(\mathbf b_j)$ in $\mathcal B$.\par
+\h{Coords} $[\bv]_{\mathcal B}=P_{\mathcal B\leftarrow\mathcal C}[\bv]_{\mathcal C}$, where $P_{\mathcal B\leftarrow\mathcal C}$ has columns $=\mathcal C$-vectors written in $\mathcal B$.\par
+\h{Similarity} \key{[L]_{\mathcal C}=P^{-1}[L]_{\mathcal B}\,P}, $P=P_{\mathcal B\leftarrow\mathcal C}$.\par
+\h{Eigen of $L$} alg/geom mult as for matrices; $L$ diagonalizable $\iff$ eigenvectors form a basis.
+\end{tbox}
+
+\begin{tbox}{c14}{Block Matrices}
+\h{Block-triangular} $\det\begin{psmallmatrix}A&B\\0&D\end{psmallmatrix}=\det A\,\det D$.\par
+\h{Schur complement} ($A$ invertible): $\det\begin{psmallmatrix}A&B\\C&D\end{psmallmatrix}=\det A\,\det(D-CA^{-1}B)$ (block Gaussian elim).\par
+\h{Use} simplify big $\det$/inverse by eliminating a block; eigenvectors often $\begin{psmallmatrix}\bv\\ \alpha\bv\end{psmallmatrix}$.
+\end{tbox}
+
+\begin{tbox}{c13}{Vector Spaces \& Subspaces}
+\h{Subspace test} contains $\mathbf0$, closed under $+$ and scalar mult.\par
+\h{Basis} independent $+$ spanning; \h{dim} $=\#$basis vectors.\par
+\h{Common dims} $\mathbb P_n$ (deg $\le n$): $n{+}1$; $M_{m\times n}$: $mn$; symmetric $n{\times}n$: $\tfrac{n(n+1)}2$; trace-zero $2{\times}2$: $3$.\par
+\h{Coordinates} pick basis $\Rightarrow$ work with coordinate vectors.
+\end{tbox}
+
+\begin{tbox}{c16}{Inner Product, Norm, Orthogonality}
+$\langle\bx,\mathbf y\rangle=\bx\T\mathbf y$, $\|\bx\|=\sqrt{\bx\T\bx}$, $\cos\theta=\dfrac{\bx\T\mathbf y}{\|\bx\|\|\mathbf y\|}$.\par
+\h{Cauchy--Schwarz} $|\bx\T\mathbf y|\le\|\bx\|\,\|\mathbf y\|$.\par
+\h{Orthonormal} $\bq_i\T\bq_j=\delta_{ij}$. \h{$\perp$ complement} $(\Col A)^{\perp}=\Nul(A\T)$.
+\end{tbox}
+
+\begin{tbox}{c0}{Quick Reference}
+\footnotesize
+$0$ is eigenvalue $\iff\det A{=}0\iff$ singular.\;
+$P$ projection $\Rightarrow\lambda\in\{0,1\}$.\;
+Orthogonal $Q\Rightarrow|\lambda|{=}1$, $\det{=}{\pm}1$.\;
+Symmetric $\Rightarrow\lambda\in\R$, $Q\Lambda Q\T$.\;
+$\sigma_i{=}\sqrt{\lambda_i(A\T A)}\ge0$ always real.\;
+Diagonalizable $\neq$ invertible (independent).
+\end{tbox}
+
+\begin{tbox}{c15}{Exam playbook (from 2025 final)}
+\footnotesize
+1.\,Basics: $\det{=}\prod\lambda$, $\tr{=}\sum\lambda$, dependence $\iff\det{=}0$.\;
+2.\,Char.\ poly via cofactor; singular $\iff\det{=}0$; complex eigvecs.\;
+3.\,Spectral $Q\Lambda Q\T$; indefinite test; $\{p(A)\}$ basis (Cayley--Hamilton).\;
+4.\,$\sigma$ of $A$; QR of $[A\,\bb]$; projection $P$; least squares $\hat\bx$; ellipse via SVD.\;
+5.\,Block $\det$/inverse; eigvecs; positive-definite condition.\;
+6.\,Map of $L$ in a basis; alg/geom mult; diagonalizable?; change of basis.
+\end{tbox}
+
+\end{multicols}
+\end{document}
