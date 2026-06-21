@@ -20,12 +20,12 @@
 <section class="hero">
   <h1>Full Mock <em>Exam · 3 Hours</em></h1>
   <p class="hero-meta">P1 · Final simulation at past-paper difficulty. Six connected multi-part problems (Ch. 5–8), each chaining concepts the way the real final does — parametrized matrices, Cayley–Hamilton, spectral + polynomial algebra, SVD geometry, block matrices, and abstract linear maps. One A4 cheat sheet allowed. Countdown turns amber at 15 min left.</p>
-  <div class="exam-pills"><span class="pill pill-la">Lin Alg</span><span class="pill pill-la">180 min</span><span class="pill pill-la">6 problems · 62 pts</span><span class="pill pill-la">Final · 25 June 2026</span></div>
+  <div class="exam-pills"><span class="pill pill-la">Lin Alg</span><span class="pill pill-la">180 min</span><span class="pill pill-la">6 problems · 58 pts</span><span class="pill pill-la">Final · 25 June 2026</span></div>
 </section>
 <main class="main"><div class="subject-block">
   <div class="subject-header"><span class="subject-dot dot-la"></span><div><div class="subject-label">Mock Exam · 180 min · 6 connected problems</div><h2 class="subject-title" style="color:var(--la)">Cumulative Final Simulation</h2></div><div class="subject-exam-date"><strong>Lin Alg Final</strong>25 June 2026</div></div>
 
-  <div class="exam-rules"><strong>Exam conditions.</strong> 3 hours, 62 points. <strong>Always explain your answer.</strong> Partial credit given. Bring your A4 cheat sheet (build it first!). Work each chain fully before revealing — later parts lean on earlier ones.</div>
+  <div class="exam-rules"><strong>Exam conditions.</strong> 3 hours · 58 points available, scored out of 55 (anything above 55 is capped). <strong>Always explain your answer.</strong> Partial credit given. Bring your A4 cheat sheet (build it first!). Work each chain fully before revealing — later parts lean on earlier ones.</div>
 
   <!-- P1 -->
   <div class="problem">
@@ -45,13 +45,13 @@
 
   <!-- P2 -->
   <div class="problem">
-    <div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">The variable-parameter matrix</span><span class="problem-pts">10 pts</span></div>
+    <div class="problem-header"><span class="problem-num">Problem 2</span><span class="problem-topic">The variable-parameter matrix</span><span class="problem-pts">9 pts</span></div>
     <div class="problem-body">
       <div class="context-box">Let \(C_x=\begin{pmatrix}1&1&0&1\\0&2&0&0\\0&1&1&x\\1&1&-x&1\end{pmatrix}\) depend on a real \(x\).<div class="pchain">chains: determinant structure · characteristic polynomial · complex eigenvector · Cayley–Hamilton</div></div>
       <ol class="parts">
         <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Without full expansion, find the coefficient of \(x^2\) in \(\det(C_x)\). <span class="part-pts">2 pts</span></div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> The only \(x\)'s sit in positions \((3,4)=x\) and \((4,3)=-x\). A term reaching \(x^2\) must use both; the complementary \(2\times2\) minor from rows \(1,2\)/cols \(1,2\) is \(\det\begin{pmatrix}1&1\\0&2\end{pmatrix}=2\), and the two entries contribute \((x)(-x)\) with the appropriate sign giving \(+2x^2\). <div class="key-result">Coefficient of \(x^2\) is \(2\).</div></div></div></div></div></li>
-        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Show the characteristic polynomial is \(p(\lambda)=(\lambda-2)(\lambda-1)(\lambda^2-2\lambda+x^2)\). For which \(x\) is \(C_x\) singular? <span class="part-pts">3 pts</span></div>
+        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Show the characteristic polynomial is \(p(\lambda)=(\lambda-2)(\lambda-1)(\lambda^2-2\lambda+x^2)\). For which \(x\) is \(C_x\) singular? <span class="part-pts">2 pts</span></div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Cofactor-expand \(\det(\lambda I-C_x)\); the second row/column structure peels off factors \((\lambda-2)\) and \((\lambda-1)\), leaving the \(2\times2\) block on the \((1,4)\) coordinates giving \(\lambda^2-2\lambda+x^2\). Singular ⇔ \(0\) is an eigenvalue ⇔ \(p(0)=(-2)(-1)(x^2)=2x^2=0\Rightarrow x=0\). <div class="key-result">\(C_x\) singular iff \(x=0\).</div></div></div></div></div></li>
         <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">For \(x=2\), find all four eigenvalues and a complex eigenvector for the one with positive imaginary part. <span class="part-pts">3 pts</span></div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Eigenvalues \(2,1\) and roots of \(\lambda^2-2\lambda+4=0\Rightarrow\lambda=1\pm i\sqrt3\). For \(\lambda=1+i\sqrt3\), solve \((C_2-\lambda I)\mathbf v=0\); a valid eigenvector is \(\mathbf v=(1,\,0,\,i\sqrt3,\,1)^{\!T}\) type — explicitly any nonzero solution of the reduced system (e.g. \(\mathbf v=( -1,\,0,\,1,\,\tfrac{1-i\sqrt3}{2})^T\) after row-reduction). <div class="key-result">\(\lambda\in\{2,1,1\pm i\sqrt3\}\).</div><div class="ans-note">Full credit: any nonzero \(\mathbf v\) with \((C_2-(1+i\sqrt3)I)\mathbf v=0\), shown by back-substitution.</div></div></div></div></div></li>
@@ -63,11 +63,11 @@
 
   <!-- P3 -->
   <div class="problem">
-    <div class="problem-header"><span class="problem-num">Problem 3</span><span class="problem-topic">Symmetric structure &amp; polynomials of A</span><span class="problem-pts">11 pts</span></div>
+    <div class="problem-header"><span class="problem-num">Problem 3</span><span class="problem-topic">Symmetric structure &amp; polynomials of A</span><span class="problem-pts">10 pts</span></div>
     <div class="problem-body">
       <div class="context-box">Let \(A=\begin{pmatrix}2&0&1\\0&c&0\\1&0&2\end{pmatrix}\) with real parameter \(c\).<div class="pchain">chains: spectral decomposition · definiteness · the algebra \(\{p(A)\}\) · inverse as a polynomial</div></div>
       <ol class="parts">
-        <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">For generic \(c\), find \(Q\) orthogonal and \(\Lambda\) diagonal with \(A=Q\Lambda Q^T\). <span class="part-pts">4 pts</span></div>
+        <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">For generic \(c\), find \(Q\) orthogonal and \(\Lambda\) diagonal with \(A=Q\Lambda Q^T\). <span class="part-pts">3 pts</span></div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> The \((1,3)\) block \(\begin{pmatrix}2&1\\1&2\end{pmatrix}\) gives \(3\) with \((1,0,1)\) and \(1\) with \((1,0,-1)\); the middle gives \(c\) with \((0,1,0)\). Normalise: \[Q=\begin{pmatrix}\tfrac1{\sqrt2}&0&\tfrac1{\sqrt2}\\0&1&0\\\tfrac1{\sqrt2}&0&-\tfrac1{\sqrt2}\end{pmatrix},\ \Lambda=\operatorname{diag}(3,c,1).\] <div class="key-result">\(A=Q\Lambda Q^T\) as above.</div></div></div></div></div></li>
         <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">For which \(c\) is \(A\) indefinite? <span class="part-pts">2 pts</span></div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Eigenvalues \(3,1,c\). Two are positive, so \(A\) is indefinite iff the third is negative: \(c<0\). <div class="key-result">Indefinite iff \(c<0\).</div></div></div></div></div></li>
@@ -81,7 +81,7 @@
 
   <!-- P4 -->
   <div class="problem">
-    <div class="problem-header"><span class="problem-num">Problem 4</span><span class="problem-topic">Signal recovery: SVD, QR, least squares</span><span class="problem-pts">14 pts</span></div>
+    <div class="problem-header"><span class="problem-num">Problem 4</span><span class="problem-topic">Signal recovery: SVD, QR, least squares</span><span class="problem-pts">13 pts</span></div>
     <div class="problem-body">
       <div class="context-box">Recover \(\mathbf x\in\mathbb R^2\) from \(\mathbf b\in\mathbb R^3\) via \(A\mathbf x=\mathbf b\), \(A=\begin{pmatrix}1&1\\1&0\\1&-1\end{pmatrix},\ \mathbf b=\begin{pmatrix}3\\2\\t\end{pmatrix}.\) The columns of \(A\) happen to be orthogonal.<div class="pchain">chains: singular values · range/QR · projection · least squares · SVD ellipse geometry</div></div>
       <ol class="parts">
@@ -93,7 +93,7 @@
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(P=QQ^T=\tfrac13(1,1,1)^T(1,1,1)+\tfrac12(1,0,-1)^T(1,0,-1)=\begin{pmatrix}5/6&1/3&-1/6\\1/3&1/3&1/3\\-1/6&1/3&5/6\end{pmatrix}\). <div class="key-result">\(P=QQ^T\) (above). \(I-P\) projects onto the noise direction \((-1,2,-1)\).</div></div></div></div></div></li>
         <li><span class="part-label">(d)</span><div class="part-content"><div class="part-question">Find the least-squares solution \(\hat{\mathbf x}\) minimising \(\lVert A\mathbf x-\mathbf b\rVert^2\). <span class="part-pts">2 pts</span></div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Normal equations \(A^TA\hat{\mathbf x}=A^T\mathbf b\): \(A^T\mathbf b=(3+2+t,\ 3-t)=(5+t,\ 3-t)\). With \(A^TA=\operatorname{diag}(3,2)\): \(\hat{\mathbf x}=\big(\tfrac{5+t}{3},\ \tfrac{3-t}{2}\big)\). <div class="key-result">\(\hat{\mathbf x}=\big(\tfrac{5+t}{3},\tfrac{3-t}{2}\big)\).</div></div></div></div></div></li>
-        <li><span class="part-label">(e)</span><div class="part-content"><div class="part-question">(Hard) \(B=\begin{pmatrix}2&2\\1&0\\0&1\end{pmatrix}\). The image \(B(S)\) of the unit circle \(S\subset\mathbb R^2\) is an ellipse in \(\mathbb R^3\). Find the half-axis lengths and their direction vectors. <span class="part-pts">3 pts</span></div>
+        <li><span class="part-label">(e)</span><div class="part-content"><div class="part-question">(Hard) \(B=\begin{pmatrix}2&2\\1&0\\0&1\end{pmatrix}\). The image \(B(S)\) of the unit circle \(S\subset\mathbb R^2\) is an ellipse in \(\mathbb R^3\). Find the half-axis lengths and their direction vectors. <span class="part-pts">2 pts</span></div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Axis lengths = singular values of \(B\). \(B^TB=\begin{pmatrix}5&4\\4&5\end{pmatrix}\), eigenvalues \(9,1\Rightarrow\sigma=3,1\). Right singular vectors \(v_1=\tfrac1{\sqrt2}(1,1),\ v_2=\tfrac1{\sqrt2}(1,-1)\); directions in \(\mathbb R^3\) are \(u_i=\tfrac1{\sigma_i}Bv_i\): \(u_1=\tfrac{1}{3\sqrt2}(4,1,1)\), \(u_2=\tfrac1{\sqrt2}(0,1,-1)\). <div class="key-result">Long axis \(3\) along \((4,1,1)\); short axis \(1\) along \((0,1,-1)\).</div></div></div></div></div></li>
       </ol>
     </div>
@@ -101,13 +101,13 @@
 
   <!-- P5 -->
   <div class="problem">
-    <div class="problem-header"><span class="problem-num">Problem 5</span><span class="problem-topic">A block matrix from polynomials of A</span><span class="problem-pts">12 pts</span></div>
+    <div class="problem-header"><span class="problem-num">Problem 5</span><span class="problem-topic">A block matrix from polynomials of A</span><span class="problem-pts">11 pts</span></div>
     <div class="problem-body">
       <div class="context-box">Let \(A\) be \(2\times2\) and \(K=\begin{pmatrix}A&A+I\\A+I&A+2I\end{pmatrix}\) (a \(4\times4\) block matrix).<div class="pchain">chains: block elimination (det) · block inverse · eigenvector structure · eigenvalues · definiteness</div></div>
       <ol class="parts">
         <li><span class="part-label">(a)</span><div class="part-content"><div class="part-question">Compute \(\det K\) by block Gaussian elimination. <span class="part-pts">2 pts</span></div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Block \(R_2\to R_2-R_1\): \(\begin{pmatrix}A&A+I\\I&I\end{pmatrix}\). Block \(C_1\to C_1-C_2\): \(\begin{pmatrix}-I&A+I\\0&I\end{pmatrix}\), block upper-triangular. \(\det K=\det(-I)\det(I)=(-1)^2\cdot1=1\). <div class="key-result">\(\det K=1\) (for every \(A\)).</div></div></div></div></div></li>
-        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Find \(K^{-1}\) in block form in terms of \(A,I\). <span class="part-pts">3 pts</span></div>
+        <li><span class="part-label">(b)</span><div class="part-content"><div class="part-question">Find \(K^{-1}\) in block form in terms of \(A,I\). <span class="part-pts">2 pts</span></div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> Solve \(K\binom{x}{y}=\binom{e}{f}\). Row\(_2-\)Row\(_1\): \(x+y=f-e\). Row\(_1\): \(A(x+y)+y=e\Rightarrow y=e-A(f-e)=(I+A)e-Af\), then \(x=(f-e)-y=-(2I+A)e+(I+A)f\). Hence \[K^{-1}=\begin{pmatrix}-(A+2I)&A+I\\A+I&-A\end{pmatrix}.\] <div class="key-result">\(K^{-1}=\begin{pmatrix}-(A+2I)&A+I\\A+I&-A\end{pmatrix}\).</div></div></div></div></div></li>
         <li><span class="part-label">(c)</span><div class="part-content"><div class="part-question">Let \(A\mathbf v=\lambda\mathbf v\) (\(\lambda\neq-1\)). Find all \(\alpha\) so that \(\mathbf w=\binom{\mathbf v}{\alpha\mathbf v}\) is an eigenvector of \(K\). <span class="part-pts">3 pts</span></div>
           <div class="ans-toggle"><button class="ans-btn" onclick="toggleAns(this)">Show Answer</button><div class="answer"><div class="ans-part"><span class="ans-part-label">Solution</span> \(K\mathbf w=\binom{(\lambda+\alpha(\lambda+1))\mathbf v}{((\lambda+1)+\alpha(\lambda+2))\mathbf v}\). Eigenvector ⇒ second block \(=\alpha\cdot\)first: \((\lambda+1)+\alpha(\lambda+2)=\alpha(\lambda+\alpha(\lambda+1))\), giving \((\lambda+1)(1-\alpha^2)+2\alpha=0\), i.e. \((\lambda+1)\alpha^2-2\alpha-(\lambda+1)=0\). \[\alpha=\frac{1\pm\sqrt{1+(\lambda+1)^2}}{\lambda+1}.\] <div class="key-result">Two values \(\alpha=\dfrac{1\pm\sqrt{1+(\lambda+1)^2}}{\lambda+1}\); note \(\alpha_1\alpha_2=-1\).</div></div></div></div></div></li>

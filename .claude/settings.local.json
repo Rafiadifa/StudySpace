@@ -52,7 +52,8 @@
       "mcp__42ce4504-7203-42e1-9aa7-13c0e3a33784__list_calendars",
       "mcp__42ce4504-7203-42e1-9aa7-13c0e3a33784__list_events",
       "mcp__42ce4504-7203-42e1-9aa7-13c0e3a33784__create_event",
-      "Bash(which pdflatex *)"
+      "Bash(which pdflatex *)",
+      "Bash(awk '{print $5, $NF}')"
     ]
   }
 }
