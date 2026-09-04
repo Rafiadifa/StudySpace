@@ -16,6 +16,54 @@ window.BOYA_AUDIO = {
   byLesson: {}   // optional exact links: { 1:"https://youtu.be/xxxx", ... }
 };
 
+/* Book page map — for jumping to a lesson in your own PDF (nothing copied; these
+   are just the page numbers from the book's 目录/contents).
+   `pages` = the PRINTED page each lesson starts on. The PDF file's page index is
+   printed + pdfOffset (front matter). `titles` = the book's official chapter titles,
+   used for the chapter menu so it matches your PDF and the audio.
+   The "open at page" button only works when the site is opened locally (file://),
+   since the PDF is kept off the public site. */
+window.BOYA_BOOK = {
+  pdf: "../../../Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf",
+  pdfOffset: 16,     // PDF page = printed page + 16
+  lastEnd: 198,      // last body page of Lesson 30 (课文译文 starts p.199)
+  pages: { 1:11, 2:18, 3:22, 4:28, 5:35, 6:41, 7:47, 8:54, 9:61, 10:67,
+           11:73, 12:80, 13:87, 14:94, 15:100, 16:106, 17:112, 18:119, 19:126, 20:133,
+           21:139, 22:144, 23:150, 24:156, 25:162, 26:169, 27:175, 28:181, 29:187, 30:193 },
+  titles: {
+    1:["你好","Hello"],
+    2:["你是哪国人","What's your nationality?"],
+    3:["那是你的书吗","Is that your book?"],
+    4:["图书馆在哪儿","Where's the library?"],
+    5:["在北京大学的东边","East of Peking University"],
+    6:["现在几点","What time is it now?"],
+    7:["明天你有课吗","Do you have class tomorrow?"],
+    8:["你的电话号码是多少","What's your phone number?"],
+    9:["多少钱一瓶","How much for a bottle?"],
+    10:["你家有几口人","How many are in your family?"],
+    11:["北京的冬天比较冷","Beijing winters are rather cold"],
+    12:["你在干什么呢","What are you doing?"],
+    13:["我去图书馆借书","I'm off to borrow books"],
+    14:["我喜欢浅颜色的","I like the light-colored one"],
+    15:["明天是我朋友的生日","Tomorrow is my friend's birthday"],
+    16:["周末你干什么","What do you do on weekends?"],
+    17:["做客（一）","Being a guest (1)"],
+    18:["做客（二）","Being a guest (2)"],
+    19:["现在习惯了","I'm used to it now"],
+    20:["看病人","Visiting a patient"],
+    21:["我喝了半斤白酒","I drank half a jin of baijiu"],
+    22:["他感冒了","He's caught a cold"],
+    23:["你学了多长时间汉语","How long have you studied Chinese?"],
+    24:["你吃了早饭来找我","Come find me after breakfast"],
+    25:["你得多锻炼锻炼了","You should exercise more"],
+    26:["快考试了","Exams are almost here"],
+    27:["爸爸妈妈让我回家","My parents want me to come home"],
+    28:["考得怎么样","How did the exam go?"],
+    29:["我们已经买好票了","We've already bought the tickets"],
+    30:["我要参加联欢会","I'm going to the party"]
+  }
+};
+
 /* Each lesson: cn (Chinese topic), en (English), topic (short gloss),
    grammar:[{t,p,note,eg:[[hz,py,en],...]}], dialog:{note,lines:[{sp,hz,py,en}]} */
 window.BOYA_LESSONS = {

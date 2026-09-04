@@ -70,6 +70,12 @@
       border-radius:6px; padding:2px 7px; color:var(--accent); }
     .video-embed{ position:relative; width:100%; padding-top:56.25%; border-radius:12px; overflow:hidden; background:#000; margin-bottom:14px; }
     .video-embed iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+    .book-ref{ font-size:.82rem; color:var(--text2); background:var(--bg2); border:1px solid var(--border);
+      border-left:3px solid var(--accent); border-radius:0 10px 10px 0; padding:10px 14px; margin-bottom:12px; line-height:1.5; }
+    .book-ref b{ color:var(--text); }
+    .book-open{ display:inline-block; margin-left:6px; font-weight:600; color:var(--accent); text-decoration:none;
+      border-bottom:1px solid var(--accent-25); }
+    .book-open:hover{ border-bottom-color:var(--accent); }
 
     .tools-strip{ margin:34px 0 10px; }
     .tools-strip h3{ font-family:'DM Serif Display',serif; font-size:1.1rem; margin-bottom:4px; }
@@ -172,12 +178,17 @@
 
     const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
     const meta = n => LES[n] || { cn:"Lesson "+n, en:"", topic:"" };
+    const BOOK = window.BOYA_BOOK || null;
+    // Prefer the book's official chapter title (from the 目录) for navigation.
+    const titleOf = n => (BOOK && BOOK.titles && BOOK.titles[n])
+      ? { cn:BOOK.titles[n][0], en:BOOK.titles[n][1] }
+      : { cn:meta(n).cn, en:meta(n).en };
 
     // ---- chapter select + TOC ----
     const chapSel = document.getElementById("chapSel");
     const tocGrid = document.getElementById("tocGrid");
     for (let n=1;n<=NLESS;n++){
-      const m = meta(n);
+      const m = titleOf(n);
       const o = document.createElement("option");
       o.value = n; o.textContent = `第${n}课 · ${m.cn}` + (m.en?` — ${m.en}`:"");
       chapSel.appendChild(o);
@@ -187,6 +198,20 @@
       cell.innerHTML = `<span class="tc-n">${n}</span><span><span class="tc-cn">${esc(m.cn)}</span><br><span class="tc-en">${esc(m.en||"")}</span></span>`;
       cell.onclick = () => { setLesson(n); toggleToc(false); };
       tocGrid.appendChild(cell);
+    }
+
+    // Book page reference (+ local open-at-page button) for the Text tab.
+    function bookRef(n){
+      if (!BOOK || !BOOK.pages || !BOOK.pages[n]) return "";
+      const startP = BOOK.pages[n];
+      const endP = (n < NLESS && BOOK.pages[n+1]) ? BOOK.pages[n+1]-1 : (BOOK.lastEnd || startP);
+      const range = endP > startP ? `pp. ${startP}–${endP}` : `p. ${startP}`;
+      let btn = "";
+      if (location.protocol === "file:" && BOOK.pdf){
+        const href = encodeURI(BOOK.pdf) + "#page=" + (startP + (BOOK.pdfOffset||0));
+        btn = ` <a class="book-open" href="${href}" target="_blank" rel="noopener">Open the book here ↗</a>`;
+      }
+      return `<div class="book-ref">📖 <b>Book · Lesson ${n}</b> — ${range} in your Boya PDF.${btn}</div>`;
     }
 
     const tocPanel = document.getElementById("tocPanel");
@@ -245,11 +270,12 @@
           <label><input type="checkbox" id="tgPy" ${state.py?"checked":""}> 拼音 pinyin</label>
           <label><input type="checkbox" id="tgEn" ${state.en?"checked":""}> English</label>
         </div>`;
+      const ref = bookRef(n);
       if (!d || !d.lines || !d.lines.length){
-        return tools + `<div class="empty-note"><strong>Practice text for this lesson is coming.</strong><br>
+        return tools + ref + `<div class="empty-note"><strong>Practice text for this lesson is coming.</strong><br>
           For the book's own dialogue, open your Boya PDF; the vocabulary &amp; audio for this lesson are ready in the other tabs.</div>`;
       }
-      const note = `<div class="src-note">📖 This is an <b>original practice dialogue</b> built from this lesson's words &amp; grammar — not the textbook's own text (that stays in your PDF). Use the <b>音频 Audio</b> tab for the book recordings.</div>`;
+      const note = `<div class="src-note">📖 This is an <b>original practice dialogue</b> built from this lesson's words &amp; grammar — not the textbook's own text. For the book's exact dialogue, open it at the pages above or listen on the <b>音频 Audio</b> tab.</div>`;
       const lines = d.lines.map(l => `
         <div class="dline">
           <span class="sp">${esc(l.sp)}</span>
@@ -259,7 +285,7 @@
             <div class="den" ${state.en?"":'hidden'}>${esc(l.en)}</div>
           </div>
         </div>`).join("");
-      return tools + note + `<div>${lines}</div>`;
+      return tools + ref + note + `<div>${lines}</div>`;
     }
 
     function renderAudio(n){
@@ -302,7 +328,7 @@
     }
 
     function render(){
-      const n = state.lesson, m = meta(n);
+      const n = state.lesson, m = titleOf(n), tp = meta(n).topic;
       chapSel.value = n;
       document.getElementById("prev").disabled = (n<=1);
       document.getElementById("next").disabled = (n>=NLESS);
@@ -312,7 +338,7 @@
         `<div class="lh-n">第 ${n} 课 · Lesson ${n}</div>
          <div class="lh-cn">${esc(m.cn)}</div>
          <div class="lh-en">${esc(m.en||"")}</div>
-         ${m.topic?`<div class="lh-topic">${esc(m.topic)}</div>`:""}`;
+         ${tp?`<div class="lh-topic">${esc(tp)}</div>`:""}`;
 
       [...document.querySelectorAll(".tab")].forEach(t => t.classList.toggle("active", t.dataset.tab===state.tab));
 

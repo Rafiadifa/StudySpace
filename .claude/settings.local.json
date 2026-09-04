@@ -60,7 +60,14 @@
       "Bash(cat)",
       "Bash(python3 ../scratchpad_dump.py)",
       "Bash(pkill -f \"http.server 8791\")",
-      "Bash(rm -f ../scratchpad_parse.py ../scratchpad_parse2.py ../scratchpad_gen.py ../scratchpad_dump.py ../scratchpad_check.js /tmp/boya_inline.js)"
+      "Bash(rm -f ../scratchpad_parse.py ../scratchpad_parse2.py ../scratchpad_gen.py ../scratchpad_dump.py ../scratchpad_check.js /tmp/boya_inline.js)",
+      "Bash(mkdir -p __TRACKED_VAR__/pg)",
+      "Bash(pdftoppm -png -r 90 -f 1 -l 14 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/p)",
+      "Bash(pdftoppm -png -r 90 -f 15 -l 15 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/p)",
+      "Bash(pdftoppm -png -r 80 -f 24 -l 28 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/probe)",
+      "Bash(pdftoppm -png -r 80 -f 27 -l 27 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/v1)",
+      "Bash(pdftoppm -png -r 80 -f 149 -l 149 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/v20)",
+      "Bash(pdftoppm -png -r 80 -f 209 -l 209 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/v30)"
     ]
   }
 }
