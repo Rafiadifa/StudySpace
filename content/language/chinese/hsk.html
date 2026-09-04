@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HSK · Study Hub</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <style>
+    .level-row{ display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 22px; }
+    .lvl{ font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--text2); background:var(--bg2);
+      border:1.5px solid var(--border); border-radius:12px; padding:14px 20px; cursor:pointer; transition:.13s; }
+    .lvl:hover{ border-color:var(--accent); color:var(--text); }
+    .lvl.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
+    .info{ background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--accent);
+      border-radius:12px; padding:20px 22px; line-height:1.65; font-size:.9rem; color:var(--text2); max-width:640px; }
+    .info b{ color:var(--text); }
+    .info code{ font-family:'DM Mono',monospace; font-size:.82rem; background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:2px 7px; color:var(--accent); }
+  </style>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span> HSK
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">HSK</span>
+    <span class="topbar-sub">/ 标准化考试 standardized</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="hero">
+    <h1>HSK <em>prep</em></h1>
+    <p class="hero-meta">Pick the level you're aiming for. This track is ready to be filled once you drop in a word list.</p>
+  </div>
+
+  <div class="main" style="padding-top:30px;">
+    <div class="level-row" id="levels"></div>
+    <div class="info">
+      <p>This HSK track has the same reader as <a href="boya.html" style="color:var(--accent)">Boya</a> — chapters with <b>vocab / grammar / text</b> — it just needs a source.</p>
+      <p style="margin-top:12px;">To turn it on, give me an <b>HSK vocabulary list</b> for your level (a spreadsheet or PDF like the Boya one works great) and I'll build it into <code>js/hsk_vocab.js</code>, grouped by level. Your chosen level is remembered here in the meantime.</p>
+    </div>
+  </div>
+
+  <div class="footer-note">HSK · 汉语水平考试</div>
+
+  <script src="js/store.js"></script>
+  <script>
+    if (typeof setTopbarDate === "function") setTopbarDate();
+    const KEY = "hsk_level";
+    const wrap = document.getElementById("levels");
+    let cur = 1; try { cur = +(localStorage.getItem(KEY)||1); } catch(e){}
+    for (let i=1;i<=6;i++){
+      const b = document.createElement("button");
+      b.className = "lvl" + (i===cur?" active":"");
+      b.textContent = "HSK " + i;
+      b.onclick = () => { cur=i; try{localStorage.setItem(KEY,i);}catch(e){}
+        [...wrap.children].forEach((c,j)=>c.classList.toggle("active", j+1===i)); };
+      wrap.appendChild(b);
+    }
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

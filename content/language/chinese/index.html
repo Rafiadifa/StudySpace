@@ -3,10 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chinese · Study Hub</title>
+  <title>Chinese · Choose track · Study Hub</title>
   <link rel="stylesheet" href="../../../style.css" />
   <link rel="stylesheet" href="css/chinese.css" />
   <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <style>
+    .track-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; margin-top:10px; }
+    .track-card{ display:block; text-decoration:none; position:relative; background:var(--bg2); border:1px solid var(--border);
+      border-left:4px solid var(--accent); border-radius:16px; padding:30px 28px 26px; transition:.18s; }
+    .track-card:hover{ background:var(--bg3); transform:translateY(-4px); box-shadow:0 12px 30px rgba(35,33,28,.10); }
+    .track-card.soon{ border-left-color:var(--text3); opacity:.92; }
+    .track-hz{ font-family:'Noto Serif SC',serif; font-size:2.8rem; font-weight:700; color:var(--accent); line-height:1; }
+    .track-card.soon .track-hz{ color:var(--text2); }
+    .track-en{ font-family:'DM Serif Display',serif; font-size:1.5rem; color:var(--text); margin-top:10px; }
+    .track-sub{ font-size:.9rem; color:var(--text3); margin-top:8px; line-height:1.6; }
+    .track-meta{ display:flex; gap:7px; flex-wrap:wrap; margin-top:16px; }
+    .track-meta .pill{ font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.03em; color:var(--lang);
+      background:var(--accent-08); border:1px solid var(--accent-25); border-radius:99px; padding:4px 10px; }
+    .track-card.soon .track-meta .pill{ color:var(--text3); background:var(--bg3); border-color:var(--border); }
+    .soon-badge{ position:absolute; top:18px; right:18px; font-family:'DM Mono',monospace; font-size:.62rem;
+      background:var(--bg3); color:var(--text3); border:1px solid var(--border); border-radius:99px; padding:3px 10px; letter-spacing:.05em; }
+    .go{ display:inline-block; margin-top:18px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:.9rem; color:var(--accent); }
+    .track-card.soon .go{ color:var(--text3); }
+  </style>
 </head>
 <body class="subject-lang">
 
@@ -17,88 +36,53 @@
 
   <div class="topbar">
     <span class="topbar-title">中文 Chinese</span>
-    <span class="topbar-sub">/ Zijing 2026 Spring</span>
+    <span class="topbar-sub">/ 选择教材 choose a track</span>
     <span class="topbar-date" id="topbar-date"></span>
   </div>
 
   <div class="hero">
-    <h1>Chinese <em>library</em></h1>
-    <p class="hero-meta">Pre-intermediate · Lessons 11–16. Pick what to study below. Your review queue updates as you go.</p>
-    <div class="exam-pills lang-pills">
-      <span class="pill pill-lang" id="vocab-count-pill">144 words</span>
-      <span class="pill pill-lang">19 grammar points</span>
-      <span class="pill pill-lang" id="due-pill">— due to review</span>
+    <h1>你在学哪套教材？<em>Which track?</em></h1>
+    <p class="hero-meta">选择你要学习的教材 · Pick the course you want to study. You can switch back here anytime.</p>
+  </div>
+
+  <div class="main" style="padding-top:36px;">
+    <div class="track-grid">
+
+      <a class="track-card" href="boya.html">
+        <div class="track-hz">博雅</div>
+        <div class="track-en">Boya Chinese</div>
+        <div class="track-sub">Your Zijing course textbook. Read any of the 30 Elementary&nbsp;1 lessons chapter by chapter — text, vocabulary and grammar — plus the mock exam, flashcards and spaced-repetition review.</div>
+        <div class="track-meta">
+          <span class="pill" id="boya-wc">— words</span>
+          <span class="pill">30 lessons</span>
+          <span class="pill">text · vocab · grammar</span>
+        </div>
+        <span class="go">进入 Boya →</span>
+      </a>
+
+      <a class="track-card soon" href="hsk.html">
+        <span class="soon-badge">准备中 · setup</span>
+        <div class="track-hz">HSK</div>
+        <div class="track-en">HSK Prep</div>
+        <div class="track-sub">Standardized HSK practice — vocabulary and grammar organized by level. Not populated yet; open it to set the level you're aiming for.</div>
+        <div class="track-meta">
+          <span class="pill">levels 1–6</span>
+          <span class="pill">needs a word list</span>
+        </div>
+        <span class="go">设置 HSK →</span>
+      </a>
+
     </div>
   </div>
 
-  <div class="main" style="padding-top:40px;">
+  <div class="footer-note">学而时习之，不亦说乎 · CHINESE</div>
 
-    <div class="stat-row" style="margin-bottom:24px;">
-      <div class="stat"><div class="n" id="s-new">0</div><div class="l">New</div></div>
-      <div class="stat"><div class="n" id="s-learning">0</div><div class="l">Learning</div></div>
-      <div class="stat"><div class="n" id="s-learned">0</div><div class="l">Learned (7d+)</div></div>
-    </div>
-
-    <div class="menu-grid">
-      <a href="mock.html" class="menu-card feature">
-        <span class="due-badge" style="background:#c0392b">EXAM PREP</span>
-        <div class="mc-ic">考</div>
-        <div class="mc-title">Mock Exam</div>
-        <div class="mc-sub">A full timed paper in your teacher's format — pinyin (with tones), fill-in, 改错, reorder, and translation. Auto-graded.</div>
-      </a>
-      <a href="review.html" class="menu-card feature">
-        <span class="due-badge zero" id="due-badge">0 due</span>
-        <div class="mc-ic">复</div>
-        <div class="mc-title">Review</div>
-        <div class="mc-sub">Spaced repetition. Study the cards that are due today and lock them into memory.</div>
-      </a>
-      <a href="vocab.html" class="menu-card">
-        <div class="mc-ic">词</div>
-        <div class="mc-title">Vocabulary</div>
-        <div class="mc-sub">Every word, filterable by lesson, word type, or source. Includes extra class vocab &amp; measure words.</div>
-      </a>
-      <a href="flashcards.html" class="menu-card">
-        <div class="mc-ic">卡</div>
-        <div class="mc-title">Flashcards</div>
-        <div class="mc-sub">Free study. Build a deck from any lessons, choose the card direction, flip and shuffle.</div>
-      </a>
-      <a href="grammar.html" class="menu-card">
-        <div class="mc-ic">法</div>
-        <div class="mc-title">Grammar</div>
-        <div class="mc-sub">Every structure from the course, with the pattern and example sentences.</div>
-      </a>
-      <a href="exercises.html" class="menu-card">
-        <div class="mc-ic">练</div>
-        <div class="mc-title">Exercises</div>
-        <div class="mc-sub">Pinyin, fill-in-the-blank, reordering, error correction, and translation.</div>
-      </a>
-      <a href="writing.html" class="menu-card">
-        <div class="mc-ic">笔</div>
-        <div class="mc-title">Stroke Order</div>
-        <div class="mc-sub">Watch how each character is written, then practice drawing it stroke by stroke with live checking.</div>
-      </a>
-    </div>
-  </div>
-
-  <div class="footer-note">学而时习之，不亦说乎 · CHINESE LIBRARY</div>
-
-  <script src="js/data.js"></script>
+  <script src="js/boya_vocab.js"></script>
   <script src="js/store.js"></script>
   <script>
-    setTopbarDate();
-    const vp = document.getElementById("vocab-count-pill");
-    if(vp) vp.textContent = `${VOCAB.length} words`;
-    const c = srsCounts("all");
-    const totalDue = c.due + c.fresh;
-    const badge = document.getElementById("due-badge");
-    badge.textContent = totalDue + " due";
-    badge.classList.toggle("zero", totalDue===0);
-    document.getElementById("due-pill").textContent =
-      totalDue>0 ? `${totalDue} due to review` : "all caught up";
-    const st = srsStats("all");
-    document.getElementById("s-new").textContent = st.fresh;
-    document.getElementById("s-learning").textContent = st.learning;
-    document.getElementById("s-learned").textContent = st.learned;
+    if (typeof setTopbarDate === "function") setTopbarDate();
+    const bw = document.getElementById("boya-wc");
+    if (bw && window.BOYA_VOCAB) bw.textContent = window.BOYA_VOCAB.length + " words";
   </script>
   <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
 </body>

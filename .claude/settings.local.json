@@ -53,7 +53,14 @@
       "mcp__42ce4504-7203-42e1-9aa7-13c0e3a33784__list_events",
       "mcp__42ce4504-7203-42e1-9aa7-13c0e3a33784__create_event",
       "Bash(which pdflatex *)",
-      "Bash(awk '{print $5, $NF}')"
+      "Bash(awk '{print $5, $NF}')",
+      "Bash(pdftotext -layout \"Chinese_Material/Boya_Chinese_Elementary_1_Vocabulary.xlsx - All Vocabulary.pdf\" -)",
+      "Bash(pdfinfo \"Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf\")",
+      "Bash(pdftotext -layout -f 1 -l 8 \"Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf\" -)",
+      "Bash(cat)",
+      "Bash(python3 ../scratchpad_dump.py)",
+      "Bash(pkill -f \"http.server 8791\")",
+      "Bash(rm -f ../scratchpad_parse.py ../scratchpad_parse2.py ../scratchpad_gen.py ../scratchpad_dump.py ../scratchpad_check.js /tmp/boya_inline.js)"
     ]
   }
 }

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boya Elementary 1 · Study Hub</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <style>
+    /* ---- Boya reader ---- */
+    .boya-nav{ position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:10px 14px; margin:22px 0 8px;
+      box-shadow:0 4px 16px rgba(35,33,28,.06); backdrop-filter:blur(8px); }
+    .boya-nav .nav-btn{ font-family:'DM Sans',sans-serif; font-weight:700; font-size:1rem; line-height:1; color:var(--text2);
+      background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:9px 13px; cursor:pointer; transition:.13s; }
+    .boya-nav .nav-btn:hover:not(:disabled){ border-color:var(--accent); color:var(--accent); }
+    .boya-nav .nav-btn:disabled{ opacity:.35; cursor:default; }
+    select.chap-sel{ flex:1; min-width:180px; font-family:'Noto Serif SC',serif; font-size:1rem; color:var(--text);
+      background:var(--bg); border:1.5px solid var(--accent-25); border-radius:8px; padding:9px 12px; cursor:pointer; }
+    select.chap-sel:focus{ outline:none; border-color:var(--accent); }
+    .toc-btn{ font-family:'DM Mono',monospace; font-size:.74rem; letter-spacing:.05em; color:var(--text2);
+      background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:9px 12px; cursor:pointer; }
+    .toc-btn:hover{ border-color:var(--accent); color:var(--accent); }
+    .toc-panel{ margin:4px 0 8px; padding:14px; background:var(--bg2); border:1px solid var(--border); border-radius:12px; }
+    .toc-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
+    .toc-cell{ display:flex; gap:9px; align-items:baseline; text-align:left; cursor:pointer; background:var(--bg);
+      border:1px solid var(--border); border-radius:9px; padding:9px 11px; transition:.13s; }
+    .toc-cell:hover{ border-color:var(--accent); }
+    .toc-cell.active{ border-color:var(--accent); background:var(--accent-08); }
+    .toc-cell .tc-n{ font-family:'DM Mono',monospace; font-size:.7rem; color:var(--accent); min-width:20px; }
+    .toc-cell .tc-cn{ font-family:'Noto Serif SC',serif; font-size:.94rem; color:var(--text); }
+    .toc-cell .tc-en{ font-size:.68rem; color:var(--text3); }
+
+    .lesson-head{ margin:16px 0 6px; }
+    .lesson-head .lh-n{ font-family:'DM Mono',monospace; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+    .lesson-head .lh-cn{ font-family:'Noto Serif SC',serif; font-size:2rem; font-weight:700; color:var(--text); line-height:1.15; margin-top:2px; }
+    .lesson-head .lh-en{ font-family:'DM Serif Display',serif; font-size:1.05rem; color:var(--text2); }
+    .lesson-head .lh-topic{ font-size:.82rem; color:var(--text3); margin-top:4px; }
+
+    .tabrow{ display:flex; gap:4px; flex-wrap:wrap; border-bottom:2px solid var(--border); margin:18px 0 20px; }
+    .tab{ font-family:'DM Sans',sans-serif; font-weight:600; font-size:.9rem; color:var(--text3); background:transparent;
+      border:none; border-bottom:2px solid transparent; margin-bottom:-2px; padding:10px 16px; cursor:pointer; transition:.13s; }
+    .tab .tzh{ font-family:'Noto Serif SC',serif; margin-right:5px; }
+    .tab:hover{ color:var(--text); }
+    .tab.active{ color:var(--accent); border-bottom-color:var(--accent); }
+
+    /* Text / dialogue */
+    .read-tools{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
+    .read-tools label{ display:inline-flex; align-items:center; gap:6px; font-family:'DM Mono',monospace; font-size:.72rem;
+      letter-spacing:.04em; color:var(--text2); cursor:pointer; }
+    .src-note{ font-size:.78rem; color:var(--text3); background:var(--accent-08); border:1px dashed var(--accent-25);
+      border-radius:9px; padding:10px 13px; margin-bottom:16px; line-height:1.55; }
+    .dline{ display:flex; gap:12px; padding:12px 0; border-bottom:1px dashed var(--border); }
+    .dline .sp{ font-family:'DM Mono',monospace; font-size:.72rem; color:var(--accent); min-width:52px; padding-top:5px;
+      font-weight:600; flex-shrink:0; }
+    .dline .dtext .dhz{ font-family:'Noto Serif SC',serif; font-size:1.3rem; color:var(--text); line-height:1.7; }
+    .dline .dtext .dpy{ color:var(--accent); font-size:.84rem; margin-top:2px; }
+    .dline .dtext .den{ color:var(--text3); font-size:.86rem; margin-top:2px; }
+
+    .empty-note{ padding:34px 20px; text-align:center; font-size:.86rem; color:var(--text3); line-height:1.6;
+      background:var(--bg2); border:1px dashed var(--border); border-radius:12px; }
+    .empty-note strong{ color:var(--text2); }
+
+    .audio-wrap{ background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:20px 22px; }
+    .audio-wrap a.audio-link{ display:inline-block; font-family:'DM Sans',sans-serif; font-weight:600; color:#fff;
+      background:var(--accent); border-radius:8px; padding:11px 20px; text-decoration:none; margin-top:6px; }
+    .audio-wrap a.audio-link:hover{ filter:brightness(.93); }
+    .audio-wrap code{ font-family:'DM Mono',monospace; font-size:.8rem; background:var(--bg); border:1px solid var(--border);
+      border-radius:6px; padding:2px 7px; color:var(--accent); }
+    .video-embed{ position:relative; width:100%; padding-top:56.25%; border-radius:12px; overflow:hidden; background:#000; margin-bottom:14px; }
+    .video-embed iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+    .tools-strip{ margin:34px 0 10px; }
+    .tools-strip h3{ font-family:'DM Serif Display',serif; font-size:1.1rem; margin-bottom:4px; }
+    .tools-strip p{ font-size:.8rem; color:var(--text3); margin-bottom:14px; }
+    .tools-row{ display:flex; gap:8px; flex-wrap:wrap; }
+    .tool-pill{ display:inline-flex; align-items:center; gap:7px; text-decoration:none; font-size:.84rem; color:var(--text2);
+      background:var(--bg2); border:1px solid var(--border); border-radius:99px; padding:8px 15px; transition:.13s; }
+    .tool-pill:hover{ border-color:var(--accent); color:var(--text); }
+    .tool-pill .tp-ic{ font-family:'Noto Serif SC',serif; color:var(--accent); font-weight:600; }
+  </style>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span> Boya
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">博雅 Boya</span>
+    <span class="topbar-sub">/ Elementary 1</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="hero">
+    <h1>博雅初级 <em>1</em></h1>
+    <p class="hero-meta">Boya Chinese Elementary 1 · 30 lessons. Jump to any chapter, then read the text, drill the vocabulary, or review the grammar.</p>
+    <div class="exam-pills lang-pills">
+      <span class="pill pill-lang" id="wc-pill">— words</span>
+      <span class="pill pill-lang">30 lessons</span>
+    </div>
+  </div>
+
+  <div class="main" style="padding-top:20px;">
+
+    <!-- chapter navigator -->
+    <div class="boya-nav">
+      <button class="nav-btn" id="prev" aria-label="Previous lesson">◀</button>
+      <select class="chap-sel" id="chapSel" aria-label="Choose lesson"></select>
+      <button class="nav-btn" id="next" aria-label="Next lesson">▶</button>
+      <button class="toc-btn" id="tocBtn">目录 · All chapters ▾</button>
+    </div>
+    <div class="toc-panel" id="tocPanel" hidden><div class="toc-grid" id="tocGrid"></div></div>
+
+    <div class="lesson-head" id="lessonHead"></div>
+
+    <div class="tabrow" id="tabRow">
+      <button class="tab" data-tab="text"><span class="tzh">课文</span>Text</button>
+      <button class="tab" data-tab="vocab"><span class="tzh">生词</span>Vocab</button>
+      <button class="tab" data-tab="grammar"><span class="tzh">语法</span>Grammar</button>
+      <button class="tab" data-tab="audio"><span class="tzh">音频</span>Audio</button>
+    </div>
+
+    <div id="content"></div>
+
+    <!-- links to the rest of the Boya study tools -->
+    <div class="tools-strip">
+      <h3>More Boya study tools</h3>
+      <p>Spaced-repetition review, flashcards and the full mock exam (built on your pre-intermediate course, Lessons 11–16).</p>
+      <div class="tools-row">
+        <a class="tool-pill" href="mock.html"><span class="tp-ic">考</span>Mock exam</a>
+        <a class="tool-pill" href="review.html"><span class="tp-ic">复</span>Review (SRS)</a>
+        <a class="tool-pill" href="flashcards.html"><span class="tp-ic">卡</span>Flashcards</a>
+        <a class="tool-pill" href="vocab.html"><span class="tp-ic">词</span>Course vocab</a>
+        <a class="tool-pill" href="grammar.html"><span class="tp-ic">法</span>Course grammar</a>
+        <a class="tool-pill" href="exercises.html"><span class="tp-ic">练</span>Exercises</a>
+        <a class="tool-pill" href="writing.html"><span class="tp-ic">笔</span>Stroke order</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-note">博雅汉语 · 初级起点 1 · BOYA ELEMENTARY 1</div>
+
+  <script src="js/boya_vocab.js"></script>
+  <script src="js/boya_lessons.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    const V   = window.BOYA_VOCAB || [];
+    const LES = window.BOYA_LESSONS || {};
+    const AUD = window.BOYA_AUDIO || {playlist:"", byLesson:{}};
+    const NLESS = 30;
+    const LKEY = "boya_last";
+
+    // total word count pill
+    document.getElementById("wc-pill").textContent = V.length + " words";
+    if (typeof setTopbarDate === "function") setTopbarDate();
+
+    // ---- state ----
+    let state = { lesson:1, tab:"text", py:true, en:true };
+    try {
+      const s = JSON.parse(localStorage.getItem(LKEY) || "{}");
+      if (s.lesson>=1 && s.lesson<=NLESS) state.lesson = s.lesson;
+      if (["text","vocab","grammar","audio"].includes(s.tab)) state.tab = s.tab;
+      if (typeof s.py === "boolean") state.py = s.py;
+      if (typeof s.en === "boolean") state.en = s.en;
+    } catch(e){}
+    const save = () => { try { localStorage.setItem(LKEY, JSON.stringify(state)); } catch(e){} };
+
+    const esc = s => (s==null?"":String(s)).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+    const meta = n => LES[n] || { cn:"Lesson "+n, en:"", topic:"" };
+
+    // ---- chapter select + TOC ----
+    const chapSel = document.getElementById("chapSel");
+    const tocGrid = document.getElementById("tocGrid");
+    for (let n=1;n<=NLESS;n++){
+      const m = meta(n);
+      const o = document.createElement("option");
+      o.value = n; o.textContent = `第${n}课 · ${m.cn}` + (m.en?` — ${m.en}`:"");
+      chapSel.appendChild(o);
+
+      const cell = document.createElement("button");
+      cell.className = "toc-cell"; cell.dataset.n = n;
+      cell.innerHTML = `<span class="tc-n">${n}</span><span><span class="tc-cn">${esc(m.cn)}</span><br><span class="tc-en">${esc(m.en||"")}</span></span>`;
+      cell.onclick = () => { setLesson(n); toggleToc(false); };
+      tocGrid.appendChild(cell);
+    }
+
+    const tocPanel = document.getElementById("tocPanel");
+    function toggleToc(force){
+      const show = (force===undefined) ? tocPanel.hidden : force;
+      tocPanel.hidden = !show;
+      document.getElementById("tocBtn").textContent = "目录 · All chapters " + (show?"▴":"▾");
+    }
+    document.getElementById("tocBtn").onclick = () => toggleToc();
+
+    // ---- navigation ----
+    function setLesson(n){
+      n = Math.min(NLESS, Math.max(1, n));
+      state.lesson = n; save(); render();
+    }
+    function setTab(t){ state.tab = t; save(); render(); }
+    chapSel.onchange = () => setLesson(+chapSel.value);
+    document.getElementById("prev").onclick = () => setLesson(state.lesson-1);
+    document.getElementById("next").onclick = () => setLesson(state.lesson+1);
+    document.getElementById("tabRow").addEventListener("click", e => {
+      const b = e.target.closest(".tab"); if (b) setTab(b.dataset.tab);
+    });
+
+    // ---- renderers ----
+    function renderVocab(n){
+      const rows = V.filter(w => w.l===n);
+      if (!rows.length) return `<div class="empty-note">No vocabulary listed for this lesson.</div>`;
+      const cards = rows.map(w => `
+        <div class="word-card${w.pr?" is-extra":""}">
+          <span class="lesson-tag">${w.pr?'<span class="xt">名 proper</span>':('L'+w.l)}</span>
+          <div class="hz">${esc(w.hz)}</div>
+          <div class="py">${esc(w.py)}</div>
+          ${w.pos?`<span class="pos-tag">${esc(w.pos)}</span>`:""}
+          <div class="en">${esc(w.en)}</div>
+        </div>`).join("");
+      return `<div class="count">${rows.length} words</div><div class="vocab-grid">${cards}</div>`;
+    }
+
+    function renderGrammar(n){
+      const g = (meta(n).grammar) || [];
+      if (!g.length) return `<div class="empty-note"><strong>Grammar notes for this lesson are on the way.</strong><br>The vocabulary for this chapter is already complete — open the <b>生词 Vocab</b> tab.</div>`;
+      return g.map((p,i) => `
+        <div class="grammar-card">
+          <div class="g-title"><span class="g-zh">${esc(p.t)}</span><span class="g-num">${i+1}/${g.length}</span></div>
+          ${p.p?`<div class="g-pattern">${esc(p.p)}</div>`:""}
+          ${p.note?`<div class="g-note">${esc(p.note)}</div>`:""}
+          <div class="g-examples">${(p.eg||[]).map(e => `
+            <div class="g-ex"><div class="ezh">${esc(e[0])}</div><div class="epy">${esc(e[1])}</div><div class="een">${esc(e[2])}</div></div>`).join("")}</div>
+        </div>`).join("");
+    }
+
+    function renderText(n){
+      const d = meta(n).dialog;
+      const tools = `
+        <div class="read-tools">
+          <label><input type="checkbox" id="tgPy" ${state.py?"checked":""}> 拼音 pinyin</label>
+          <label><input type="checkbox" id="tgEn" ${state.en?"checked":""}> English</label>
+        </div>`;
+      if (!d || !d.lines || !d.lines.length){
+        return tools + `<div class="empty-note"><strong>Practice text for this lesson is coming.</strong><br>
+          For the book's own dialogue, open your Boya PDF; the vocabulary &amp; audio for this lesson are ready in the other tabs.</div>`;
+      }
+      const note = `<div class="src-note">📖 This is an <b>original practice dialogue</b> built from this lesson's words &amp; grammar — not the textbook's own text (that stays in your PDF). Use the <b>音频 Audio</b> tab for the book recordings.</div>`;
+      const lines = d.lines.map(l => `
+        <div class="dline">
+          <span class="sp">${esc(l.sp)}</span>
+          <div class="dtext">
+            <div class="dhz">${esc(l.hz)}</div>
+            <div class="dpy" ${state.py?"":'hidden'}>${esc(l.py)}</div>
+            <div class="den" ${state.en?"":'hidden'}>${esc(l.en)}</div>
+          </div>
+        </div>`).join("");
+      return tools + note + `<div>${lines}</div>`;
+    }
+
+    function renderAudio(n){
+      const per  = AUD.byLesson && AUD.byLesson[n];
+      const link = per || AUD.playlist || "";
+      if (!link){
+        return `<div class="audio-wrap">
+          <p style="color:var(--text2);font-size:.9rem;line-height:1.6;">
+            No audio link set yet. Paste your playlist URL into <code>BOYA_AUDIO.playlist</code>
+            in <code>js/boya_lessons.js</code> (or a per-lesson link in <code>byLesson</code>), and a player
+            will appear here for every chapter.</p>
+        </div>`;
+      }
+      // YouTube playlist? embed a player that opens near this lesson.
+      const pl = link.match(/[?&]list=([\w-]+)/);
+      const vid = link.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/);
+      if (pl || vid){
+        let src, cap;
+        if (pl){
+          src = `https://www.youtube.com/embed/videoseries?list=${pl[1]}&index=${n}`;
+          cap = `Book audio — the playlist that covers all 30 lessons. It should open near <b>Lesson ${n}</b>; if the order differs, just pick it from the list.`;
+        } else {
+          src = `https://www.youtube.com/embed/${vid[1]}`;
+          cap = `Book audio for <b>Lesson ${n}</b>.`;
+        }
+        return `<div class="audio-wrap">
+          <p style="margin-bottom:12px;color:var(--text2);font-size:.9rem;line-height:1.55;">🎧 ${cap}</p>
+          <div class="video-embed"><iframe src="${esc(src)}" title="Boya audio · Lesson ${n}"
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+          <a class="audio-link" href="${esc(link)}" target="_blank" rel="noopener">▶ Open the full playlist on YouTube</a>
+        </div>`;
+      }
+      // any other link → button
+      return `<div class="audio-wrap">
+        <p style="margin-bottom:8px;color:var(--text2);font-size:.9rem;">
+          ${per ? `Recording for <b>Lesson ${n}</b>.` : `Your Boya audio. Find <b>Lesson ${n}</b> in the list.`}</p>
+        <a class="audio-link" href="${esc(link)}" target="_blank" rel="noopener">▶ Open audio${per?` · Lesson ${n}`:""}</a>
+      </div>`;
+    }
+
+    function render(){
+      const n = state.lesson, m = meta(n);
+      chapSel.value = n;
+      document.getElementById("prev").disabled = (n<=1);
+      document.getElementById("next").disabled = (n>=NLESS);
+      [...tocGrid.children].forEach(c => c.classList.toggle("active", +c.dataset.n===n));
+
+      document.getElementById("lessonHead").innerHTML =
+        `<div class="lh-n">第 ${n} 课 · Lesson ${n}</div>
+         <div class="lh-cn">${esc(m.cn)}</div>
+         <div class="lh-en">${esc(m.en||"")}</div>
+         ${m.topic?`<div class="lh-topic">${esc(m.topic)}</div>`:""}`;
+
+      [...document.querySelectorAll(".tab")].forEach(t => t.classList.toggle("active", t.dataset.tab===state.tab));
+
+      const c = document.getElementById("content");
+      if (state.tab==="vocab")        c.innerHTML = renderVocab(n);
+      else if (state.tab==="grammar") c.innerHTML = renderGrammar(n);
+      else if (state.tab==="audio")   c.innerHTML = renderAudio(n);
+      else                            c.innerHTML = renderText(n);
+
+      // wire the reading toggles (Text tab)
+      const tgPy = document.getElementById("tgPy"), tgEn = document.getElementById("tgEn");
+      if (tgPy) tgPy.onchange = () => { state.py = tgPy.checked; save(); render(); };
+      if (tgEn) tgEn.onchange = () => { state.en = tgEn.checked; save(); render(); };
+    }
+
+    render();
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>
