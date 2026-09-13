@@ -72,7 +72,11 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code} boya.html\\\\n\" \"http://localhost:8792/content/language/chinese/boya.html\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code} boya_dialogs.js\\\\n\" \"http://localhost:8792/content/language/chinese/js/boya_dialogs.js\")",
       "Bash(kill %1)",
-      "Bash(pkill -f \"http.server 8792\")"
+      "Bash(pkill -f \"http.server 8792\")",
+      "Bash(python3 -m http.server 8793)",
+      "Bash(perl -0pi -e 's/lessonName\\\\\\(/bLessonName\\(/g; s/\\\\bDECK_KEY\\\\b/BDECK_KEY/g; s/\\\\bgetDecks\\\\b/bGetDecks/g; s/\\\\bsetDecks\\\\b/bSetDecks/g' boya_flashcards.html)",
+      "Bash(perl -0pi -e 's/\\\\blessonName\\\\b/bLessonName/g' boya_exercises.html)",
+      "Bash(pkill -f \"http.server 8793\")"
     ]
   }
 }

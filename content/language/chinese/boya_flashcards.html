@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boya Flashcards · Chinese</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span>
+    <a href="boya.html">Boya</a><span>/</span> Flashcards
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">博雅 · 闪卡 Flashcards</span>
+    <span class="topbar-sub">/ Elementary 1</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="main" style="padding-top:24px;">
+
+    <div class="panel">
+      <h3>Build a deck</h3>
+      <div class="field-row">
+        <div class="field"><label>Lessons</label><select id="d-lesson" class="flt"></select></div>
+        <div class="field"><label>Word type</label><select id="d-pos" class="flt"></select></div>
+        <div class="field"><label>Front shows</label>
+          <select id="d-mode" class="flt">
+            <option value="hz">Character → meaning</option>
+            <option value="en">Meaning → character</option>
+            <option value="py">Character → pinyin only</option>
+          </select>
+        </div>
+        <div class="field"><label>&nbsp;</label><button class="btn btn-primary" id="d-start">Start studying</button></div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text3);margin-top:12px;">
+        Free study. Star cards you've mastered to hide them next time.
+        <a href="boya_exercises.html" style="color:var(--accent)">Exercises</a> and
+        <a href="boya_writing.html" style="color:var(--accent)">Stroke order</a> are next door.
+      </p>
+    </div>
+
+    <div class="fc-stage" id="stage" style="display:none;">
+      <div class="fc-progress" id="progress"></div>
+      <div class="flashcard" id="card">
+        <div class="fc-inner">
+          <div class="fc-face front" id="front"></div>
+          <div class="fc-face back"  id="back"></div>
+        </div>
+        <span class="fc-hint">click to flip</span>
+      </div>
+      <div class="fc-controls">
+        <button class="btn btn-ghost btn-sm" id="prev">‹ Prev</button>
+        <button class="btn btn-ghost btn-sm" id="known">☆ Mastered</button>
+        <button class="btn btn-ghost btn-sm" id="shuffle">⤮ Shuffle</button>
+        <button class="btn btn-ghost btn-sm" id="save">★ Save deck</button>
+        <button class="btn btn-ghost btn-sm" id="next">Next ›</button>
+      </div>
+      <label style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text3);display:inline-flex;gap:6px;align-items:center;cursor:pointer;">
+        <input type="checkbox" id="hide-known"> hide mastered cards
+      </label>
+    </div>
+
+    <div class="saved-decks" id="saved" style="display:none;">
+      <h3>Saved decks</h3>
+      <div id="deck-list"></div>
+    </div>
+
+  </div>
+
+  <div class="footer-note">博雅初级 1 · FLASHCARDS</div>
+
+  <script src="js/boya_vocab.js"></script>
+  <script src="js/boya_lessons.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    setTopbarDate();
+    const V = window.BOYA_VOCAB || [];
+    const BOOK = window.BOYA_BOOK || {titles:{}};
+    const POS = {"n.":"noun","v.":"verb","adj.":"adjective","adv.":"adverb","pron.":"pronoun",
+      "part.":"particle","num.":"number","mw.":"measure word","q.":"quantifier","suff.":"suffix",
+      "prep.":"preposition","conj.":"conjunction","int.":"interjection","aux.":"auxiliary",
+      "v./n.":"verb / noun","n./v.":"noun / verb","pref.":"prefix","onom.":"onomatopoeia",""  :"proper noun"};
+    const posLabel = p => POS[p] || p;
+    const bLessonName = n => { const t=BOOK.titles[n]; return t ? `L${n} · ${t[0]}` : `Lesson ${n}`; };
+
+    // ---- mastered set (localStorage) ----
+    const KNOWN_KEY="boya_fc_known";
+    const getKnown=()=>{ try{return new Set(JSON.parse(localStorage.getItem(KNOWN_KEY)||"[]"));}catch{return new Set();} };
+    const setKnown=s=>{ try{localStorage.setItem(KNOWN_KEY,JSON.stringify([...s]));}catch{} };
+    const cardId = w => w.l+"-"+w.i+"-"+w.hz;
+
+    // ---- decks ----
+    const BDECK_KEY="boya_decks";
+    const bGetDecks=()=>{ try{return JSON.parse(localStorage.getItem(BDECK_KEY)||"[]");}catch{return[];} };
+    const bSetDecks=d=>{ try{localStorage.setItem(BDECK_KEY,JSON.stringify(d));}catch{} };
+
+    // ---- populate selects ----
+    const dL=$("#d-lesson"), dP=$("#d-pos"), dM=$("#d-mode");
+    dL.innerHTML = `<option value="all">All words (1–30)</option>` +
+      Array.from({length:30},(_,i)=>i+1).map(n=>`<option value="${n}">${bLessonName(n)}</option>`).join("");
+    const usedPos=[...new Set(V.map(w=>w.pos))].sort();
+    dP.innerHTML = `<option value="all">All word types</option>` +
+      usedPos.map(p=>`<option value="${p}">${posLabel(p)}</option>`).join("");
+
+    let deck=[], idx=0, mode="hz";
+    const stage=$("#stage"), card=$("#card");
+
+    function build(){
+      const lf=dL.value, pf=dP.value, hide=$("#hide-known").checked, known=getKnown();
+      let list=V.filter(w=>(lf==="all"||w.l===+lf)&&(pf==="all"||w.pos===pf));
+      if(hide) list=list.filter(w=>!known.has(cardId(w)));
+      return shuffle(list);
+    }
+    function render(){
+      const w=deck[idx]; if(!w) return;
+      if(card.classList.contains("flipped")){
+        const inner=card.querySelector(".fc-inner");
+        inner.style.transition="none"; card.classList.remove("flipped");
+        void inner.offsetWidth; inner.style.transition="";
+      }
+      const known=getKnown().has(cardId(w));
+      $("#known").textContent = known ? "★ Mastered" : "☆ Mastered";
+      $("#progress").textContent=`Card ${idx+1} of ${deck.length} — ${bLessonName(w.l)}`;
+      const posTag = w.pos ? posLabel(w.pos) : "proper noun";
+      if(mode==="hz"){
+        $("#front").innerHTML=`<div class="big-hz hz">${w.hz}</div>`;
+        $("#back").innerHTML=`<div class="mid-py">${w.py}</div><div class="mid-en">${w.en}</div><div class="sub">${posTag}</div>`;
+      } else if(mode==="en"){
+        $("#front").innerHTML=`<div class="mid-en">${w.en}</div><div class="sub">${posTag}</div>`;
+        $("#back").innerHTML=`<div class="big-hz hz">${w.hz}</div><div class="mid-py">${w.py}</div>`;
+      } else {
+        $("#front").innerHTML=`<div class="big-hz hz">${w.hz}</div>`;
+        $("#back").innerHTML=`<div class="mid-py">${w.py}</div>`;
+      }
+    }
+    function start(){
+      deck=build(); idx=0; mode=dM.value;
+      if(!deck.length){ alert("No cards match that filter."); return; }
+      stage.style.display="flex"; render(); stage.scrollIntoView({behavior:"smooth",block:"center"});
+    }
+    $("#d-start").addEventListener("click",start);
+    $("#hide-known").addEventListener("change",()=>{ if(stage.style.display!=="none") start(); });
+    card.addEventListener("click",()=>card.classList.toggle("flipped"));
+    $("#next").addEventListener("click",e=>{e.stopPropagation(); idx=(idx+1)%deck.length; render();});
+    $("#prev").addEventListener("click",e=>{e.stopPropagation(); idx=(idx-1+deck.length)%deck.length; render();});
+    $("#shuffle").addEventListener("click",e=>{e.stopPropagation(); deck=shuffle(deck); idx=0; render();});
+    $("#known").addEventListener("click",e=>{ e.stopPropagation();
+      const w=deck[idx]; const s=getKnown(); const id=cardId(w);
+      if(s.has(id)) s.delete(id); else s.add(id); setKnown(s); render();
+    });
+    $("#save").addEventListener("click",e=>{ e.stopPropagation();
+      const name=prompt("Name this deck:"); if(!name) return;
+      const d=bGetDecks(); d.push({name,lesson:dL.value,pos:dP.value,mode:dM.value}); bSetDecks(d); renderDecks();
+    });
+
+    function renderDecks(){
+      const decks=bGetDecks(), wrap=$("#saved"), list=$("#deck-list");
+      if(!decks.length){ wrap.style.display="none"; return; }
+      wrap.style.display="block"; list.innerHTML="";
+      decks.forEach((d,i)=>{
+        const pill=el("span","deck-pill");
+        const lbl=(d.lesson==="all"?"All":"L"+d.lesson)+" · "+(d.pos==="all"?"all types":posLabel(d.pos));
+        pill.innerHTML=`<span>${d.name} <small style="color:var(--text3)">(${lbl})</small></span><button class="load">▶</button><button class="del">✕</button>`;
+        pill.querySelector(".load").addEventListener("click",()=>{ dL.value=d.lesson; dP.value=d.pos; dM.value=d.mode||"hz"; start(); });
+        pill.querySelector(".del").addEventListener("click",()=>{ const dd=bGetDecks(); dd.splice(i,1); bSetDecks(dd); renderDecks(); });
+        list.appendChild(pill);
+      });
+    }
+    renderDecks();
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

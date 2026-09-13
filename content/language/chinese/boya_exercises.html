@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boya Exercises · Chinese</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <style>
+    .cfg-types{ display:flex; gap:14px; flex-wrap:wrap; }
+    .cfg-types label{ display:inline-flex; align-items:center; gap:6px; font-size:.85rem; color:var(--text2); cursor:pointer; }
+    .q-py-answer{ font-family:'Noto Serif SC',serif; font-size:1.05rem; color:#15803d; }
+    .sent-reveal{ margin-top:12px; }
+    .sent-reveal .shz{ font-family:'Noto Serif SC',serif; font-size:1.2rem; color:var(--text); line-height:1.7; }
+    .sent-reveal .spy{ color:var(--accent); font-size:.85rem; margin-top:2px; }
+    .self-btns{ display:flex; gap:8px; margin-top:10px; }
+  </style>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span>
+    <a href="boya.html">Boya</a><span>/</span> Exercises
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">博雅 · 练习 Exercises</span>
+    <span class="topbar-sub">/ auto-graded</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="main" style="padding-top:24px;">
+
+    <div class="panel">
+      <h3>Set up a practice set</h3>
+      <div class="field-row">
+        <div class="field"><label>Lessons</label><select id="c-lesson" class="flt"></select></div>
+        <div class="field"><label>Questions</label>
+          <select id="c-num" class="flt"><option>10</option><option selected>15</option><option>25</option><option>40</option></select>
+        </div>
+        <div class="field"><label>&nbsp;</label><button class="btn btn-primary" id="c-start">Start</button></div>
+      </div>
+      <div class="field" style="margin-top:14px;">
+        <label>Question types</label>
+        <div class="cfg-types">
+          <label><input type="checkbox" class="c-type" value="py" checked> 拼音 · type the pinyin</label>
+          <label><input type="checkbox" class="c-type" value="mean" checked> 意思 · choose the meaning</label>
+          <label><input type="checkbox" class="c-type" value="char" checked> 汉字 · choose the character</label>
+          <label><input type="checkbox" class="c-type" value="sent"> 句子 · translate a sentence (self-check)</label>
+        </div>
+      </div>
+    </div>
+
+    <div id="quiz"></div>
+
+    <div class="scoreboard" id="board" style="display:none;">
+      <span>Score</span>
+      <span><span class="num" id="sc-correct">0</span> / <span id="sc-total">0</span> answered · <span id="sc-acc">—</span></span>
+      <button class="btn btn-ghost btn-sm" id="restart" style="border-color:rgba(255,255,255,.3);color:#fff;">↻ New set</button>
+    </div>
+
+  </div>
+
+  <div class="footer-note">博雅初级 1 · EXERCISES</div>
+
+  <script src="js/boya_vocab.js"></script>
+  <script src="js/boya_lessons.js"></script>
+  <script src="js/boya_dialogs.js"></script>
+  <script src="js/store.js"></script>
+  <script>
+    setTopbarDate();
+    const V = window.BOYA_VOCAB || [];
+    const D = window.BOYA_DIALOGS || {};
+    const BOOK = window.BOYA_BOOK || {titles:{}};
+    const bLessonName = n => { const t=BOOK.titles[n]; return t ? `L${n} · ${t[0]}` : `Lesson ${n}`; };
+
+    // ---- lesson select ----
+    const cL=$("#c-lesson");
+    cL.innerHTML = `<option value="all">All words (1–30)</option>` +
+      Array.from({length:30},(_,i)=>i+1).map(n=>`<option value="${n}">${bLessonName(n)}</option>`).join("");
+
+    // ---- pinyin grading: toneless match = correct; tones always shown ----
+    const toneless = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[\s'·\-]/g,"").toLowerCase();
+    // words that actually have a hanzi (skip nothing — all do), and single meaning
+    const scopeWords = lf => V.filter(w=>lf==="all"||w.l===+lf);
+    const allWords = V.slice();
+
+    let score={correct:0,total:0};
+    const board=$("#board");
+    function bump(ok){ score.total++; if(ok) score.correct++; $("#sc-correct").textContent=score.correct;
+      $("#sc-total").textContent=score.total; $("#sc-acc").textContent=Math.round(score.correct/score.total*100)+"%"; }
+
+    function pick(arr,n,exclude){ const p=shuffle(arr.filter(x=>x!==exclude)); return p.slice(0,n); }
+
+    function makeVocabQ(w, type, pool){
+      const q=el("div","ex-q"); const num=el("span","q-num"); q.appendChild(num);
+      if(type==="py"){
+        q.insertAdjacentHTML("beforeend",
+          `<div class="qtype">拼音 · type the pinyin</div>
+           <div class="qtext hz">${w.hz}</div>
+           <div class="tf-row"><input class="ex-input" placeholder="pinyin (tones optional)"><button class="btn btn-primary btn-sm chk">Check</button></div>
+           <div class="feedback"></div>`);
+        const inp=q.querySelector(".ex-input"), fb=q.querySelector(".feedback"), btn=q.querySelector(".chk");
+        let done=false;
+        const grade=()=>{ if(done) return; done=true;
+          const ok = toneless(inp.value)===toneless(w.py) && inp.value.trim()!=="";
+          fb.classList.add("show", ok?"ok":"no");
+          fb.innerHTML = ok
+            ? `✓ <span class="q-py-answer">${w.py}</span> — ${w.en}`
+            : `✗ Answer: <span class="q-py-answer">${w.py}</span> — ${w.en}`;
+          inp.disabled=true; btn.disabled=true; bump(ok);
+        };
+        btn.addEventListener("click",grade);
+        inp.addEventListener("keydown",e=>{ if(e.key==="Enter") grade(); });
+      } else if(type==="mean"){
+        const opts=shuffle([w, ...pick(pool,3,w)]);
+        q.insertAdjacentHTML("beforeend",
+          `<div class="qtype">意思 · choose the meaning</div>
+           <div class="qtext hz">${w.hz}<span style="font-size:.8rem;color:var(--text3);margin-left:10px;">${w.py}</span></div>
+           <div class="opt-row"></div><div class="feedback"></div>`);
+        const row=q.querySelector(".opt-row"), fb=q.querySelector(".feedback"); let done=false;
+        opts.forEach(o=>{ const b=el("button","opt",o.en);
+          b.addEventListener("click",()=>{ if(done) return; done=true;
+            const ok=o===w; b.classList.add(ok?"correct":"wrong");
+            if(!ok) [...row.children].forEach(c=>{ if(c.textContent===w.en) c.classList.add("correct"); });
+            fb.classList.add("show", ok?"ok":"no"); fb.innerHTML = ok?`✓ ${w.hz} = ${w.en}`:`✗ ${w.hz} = ${w.en}`;
+            bump(ok);
+          }); row.appendChild(b); });
+      } else { // char
+        const opts=shuffle([w, ...pick(pool,3,w)]);
+        q.insertAdjacentHTML("beforeend",
+          `<div class="qtype">汉字 · choose the character</div>
+           <div class="qtext latin">${w.en} <span style="color:var(--text3)">(${w.py})</span></div>
+           <div class="opt-row"></div><div class="feedback"></div>`);
+        const row=q.querySelector(".opt-row"), fb=q.querySelector(".feedback"); let done=false;
+        opts.forEach(o=>{ const b=el("button","opt hz",o.hz);
+          b.addEventListener("click",()=>{ if(done) return; done=true;
+            const ok=o===w; b.classList.add(ok?"correct":"wrong");
+            if(!ok) [...row.children].forEach(c=>{ if(c.textContent===w.hz) c.classList.add("correct"); });
+            fb.classList.add("show", ok?"ok":"no"); fb.innerHTML = ok?`✓ ${w.en} = ${w.hz}`:`✗ ${w.en} = ${w.hz}`;
+            bump(ok);
+          }); row.appendChild(b); });
+      }
+      return q;
+    }
+
+    function makeSentenceQ(line){
+      const q=el("div","ex-q"); const num=el("span","q-num"); q.appendChild(num);
+      q.insertAdjacentHTML("beforeend",
+        `<div class="qtype">句子 · say it in Chinese, then check</div>
+         <div class="qtext latin">${line.en}</div>
+         <button class="btn btn-ghost btn-sm reveal">Show answer</button>
+         <div class="sent-reveal" hidden>
+           <div class="shz hz">${line.hz}</div><div class="spy">${line.py}</div>
+           <div class="self-btns">
+             <button class="btn btn-primary btn-sm got">✓ I got it</button>
+             <button class="btn btn-ghost btn-sm miss">✗ Missed it</button>
+           </div>
+         </div>`);
+      const rev=q.querySelector(".reveal"), box=q.querySelector(".sent-reveal");
+      const got=q.querySelector(".got"), miss=q.querySelector(".miss");
+      rev.addEventListener("click",()=>{ box.hidden=false; rev.style.display="none"; });
+      let done=false;
+      const mark=ok=>{ if(done) return; done=true; got.disabled=true; miss.disabled=true;
+        (ok?got:miss).style.outline="2px solid "+(ok?"#15803d":"#c0392b"); bump(ok); };
+      got.addEventListener("click",()=>mark(true));
+      miss.addEventListener("click",()=>mark(false));
+      return q;
+    }
+
+    function start(){
+      const lf=cL.value, n=+$("#c-num").value;
+      const types=$$(".c-type").filter(c=>c.checked).map(c=>c.value);
+      if(!types.length){ alert("Pick at least one question type."); return; }
+      const words=scopeWords(lf);
+      if(words.length<4){ alert("Not enough words in that lesson for multiple choice — pick more lessons."); return; }
+      const pool = words.length>=8 ? words : allWords; // distractor pool
+      score={correct:0,total:0}; $("#sc-correct").textContent=0; $("#sc-total").textContent=0; $("#sc-acc").textContent="—";
+      const quiz=$("#quiz"); quiz.innerHTML="";
+      // sentence lines available for selected scope
+      const sentLines=[];
+      const lessons = lf==="all" ? Array.from({length:30},(_,i)=>i+1) : [ +lf ];
+      lessons.forEach(L=>{ (D[L]?.lines||[]).forEach(li=>{ if(li.hz.length>=4) sentLines.push(li); }); });
+
+      const vTypes=types.filter(t=>t!=="sent");
+      const chosen=shuffle(words).slice(0, Math.min(n, words.length));
+      let ti=0, made=0, qn=0;
+      const nodes=[];
+      chosen.forEach(w=>{
+        if(!vTypes.length) return;
+        const type=vTypes[ti%vTypes.length]; ti++;
+        nodes.push(makeVocabQ(w, type, pool)); made++;
+      });
+      // add sentence questions if selected (up to ~1/4 of set)
+      if(types.includes("sent") && sentLines.length){
+        const k=Math.max(2, Math.round(n/4));
+        shuffle(sentLines).slice(0,k).forEach(li=>nodes.push(makeSentenceQ(li)));
+      }
+      shuffle(nodes).forEach(node=>{ qn++; node.querySelector(".q-num").textContent=qn; quiz.appendChild(node); });
+      board.style.display="flex"; board.scrollIntoView({behavior:"smooth",block:"end"});
+    }
+    $("#c-start").addEventListener("click",start);
+    $("#restart").addEventListener("click",()=>{ window.scrollTo({top:0,behavior:"smooth"}); $("#quiz").innerHTML=""; board.style.display="none"; });
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>
