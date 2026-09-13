@@ -67,7 +67,12 @@
       "Bash(pdftoppm -png -r 80 -f 24 -l 28 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/probe)",
       "Bash(pdftoppm -png -r 80 -f 27 -l 27 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/v1)",
       "Bash(pdftoppm -png -r 80 -f 149 -l 149 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/v20)",
-      "Bash(pdftoppm -png -r 80 -f 209 -l 209 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/v30)"
+      "Bash(pdftoppm -png -r 80 -f 209 -l 209 'Chinese_Material/Boya Chinese Elementary 1 - Second Edition .pdf' __TRACKED_VAR__/pg/v30)",
+      "Bash(python3 -m http.server 8792)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} boya.html\\\\n\" \"http://localhost:8792/content/language/chinese/boya.html\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} boya_dialogs.js\\\\n\" \"http://localhost:8792/content/language/chinese/js/boya_dialogs.js\")",
+      "Bash(kill %1)",
+      "Bash(pkill -f \"http.server 8792\")"
     ]
   }
 }

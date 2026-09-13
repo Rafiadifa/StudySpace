@@ -153,6 +153,7 @@
 
   <script src="js/boya_vocab.js"></script>
   <script src="js/boya_lessons.js"></script>
+  <script src="js/boya_dialogs.js"></script>
   <script src="js/store.js"></script>
   <script>
     const V   = window.BOYA_VOCAB || [];
@@ -264,7 +265,7 @@
     }
 
     function renderText(n){
-      const d = meta(n).dialog;
+      const d = (window.BOYA_DIALOGS && window.BOYA_DIALOGS[n]) || meta(n).dialog;
       const tools = `
         <div class="read-tools">
           <label><input type="checkbox" id="tgPy" ${state.py?"checked":""}> 拼音 pinyin</label>
