@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boya Review · Chinese</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link rel="stylesheet" href="css/chinese.css" />
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <style>
+    .scope-head{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:6px 0 8px; }
+    .scope-head .mini{ font-family:'DM Mono',monospace; font-size:.7rem; color:var(--text3); }
+    .scope-head button{ font-family:'DM Mono',monospace; font-size:.68rem; color:var(--text2); background:var(--bg);
+      border:1px solid var(--border); border-radius:99px; padding:4px 11px; cursor:pointer; }
+    .scope-head button:hover{ border-color:var(--accent); color:var(--accent); }
+    .deck-overview{ display:flex; gap:10px; flex-wrap:wrap; margin:8px 0 4px; }
+    .ov{ background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:12px 16px; min-width:96px; }
+    .ov .n{ font-family:'DM Serif Display',serif; font-size:1.5rem; line-height:1; }
+    .ov .l{ font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text3); margin-top:4px; }
+    .ov.due .n{ color:#c0392b; } .ov.new .n{ color:#1d4ed8; } .ov.learn .n{ color:#d97706; }
+    /* writing */
+    .rw-prompt{ text-align:center; margin-bottom:6px; }
+    .rw-prompt .rp-en{ font-family:'DM Serif Display',serif; font-size:1.5rem; color:var(--text); }
+    .rw-prompt .rp-py{ color:var(--accent); font-size:1.05rem; margin-top:2px; }
+    .rw-prompt .rp-hint{ font-family:'DM Mono',monospace; font-size:.7rem; color:var(--text3); margin-top:6px; }
+    .rw-box{ display:flex; justify-content:center; margin:8px 0; }
+    .rw-box .hw-box{ background:var(--bg); border:1px solid var(--border); border-radius:14px; }
+    .rw-controls{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:6px; }
+    .rw-msg{ font-family:'DM Mono',monospace; font-size:.72rem; color:var(--text3); text-align:center; margin-top:8px; min-height:1em; }
+    .rw-answer{ text-align:center; }
+    .rw-answer .ra-hz{ font-family:'Noto Serif SC',serif; font-size:2.6rem; color:var(--text); }
+    .rw-answer .ra-py{ color:var(--accent); font-size:1.05rem; } .rw-answer .ra-en{ color:var(--text2); }
+    .mc-stage{ text-align:center; }
+    .mc-q{ font-family:'Noto Serif SC',serif; font-size:2.6rem; color:var(--text); margin:6px 0 4px; }
+    .mc-q.small{ font-family:'DM Serif Display',serif; font-size:1.6rem; }
+    .mc-sub{ color:var(--accent); font-size:1rem; margin-bottom:16px; }
+    .mc-opts{ display:flex; flex-direction:column; gap:10px; max-width:460px; margin:0 auto; }
+    .mc-opts .opt{ width:100%; text-align:center; }
+  </style>
+</head>
+<body class="subject-lang">
+
+  <div class="crumbs">
+    <a href="../../../index.html">Domains</a><span>/</span>
+    <a href="../../../hub/language.html">Language</a><span>/</span>
+    <a href="index.html">Chinese</a><span>/</span>
+    <a href="boya.html">Boya</a><span>/</span> Review
+  </div>
+
+  <div class="topbar">
+    <span class="topbar-title">博雅 · 复习 Review</span>
+    <span class="topbar-sub">/ spaced repetition</span>
+    <span class="topbar-date" id="topbar-date"></span>
+  </div>
+
+  <div class="main" style="padding-top:24px;">
+
+    <!-- SETUP -->
+    <div class="panel" id="setup">
+      <h3>Start a review session</h3>
+      <p style="font-size:0.86rem;color:var(--text2);margin-bottom:14px;line-height:1.6;">
+        Like Anki: cards you've never seen are <strong>new</strong>, cards whose time has come are <strong>due</strong>.
+        Grade each honestly — easy cards get pushed far out, hard ones come back soon. Pick any lessons below.
+      </p>
+
+      <div class="scope-head">
+        <span class="mini">Lessons</span>
+        <button id="sel-all">All</button>
+        <button id="sel-none">None</button>
+        <span class="mini" id="sel-count"></span>
+      </div>
+      <div class="ch-chiprow" id="chips"></div>
+
+      <div class="deck-overview" id="overview"></div>
+
+      <div class="field-row" style="margin-top:16px;">
+        <div class="field">
+          <label>New cards this session</label>
+          <select id="r-new" class="flt">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="40">40</option>
+            <option value="9999">All new</option>
+            <option value="0">0 (review only)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Answer mode</label>
+          <select id="r-mode" class="flt">
+            <option value="recall">Recall · flip &amp; self-grade</option>
+            <option value="mc-mean">Multiple choice · pick the meaning</option>
+            <option value="mc-char">Multiple choice · pick the character</option>
+            <option value="write">Write the character ✍</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" id="r-start">Start review</button>
+        </div>
+      </div>
+
+      <h3 style="margin-top:24px;font-size:1rem;">Next 14 days</h3>
+      <div class="forecast" id="forecast"></div>
+      <div style="margin-top:34px;">
+        <button class="btn btn-ghost btn-sm" id="r-reset">Reset all Boya review progress</button>
+      </div>
+    </div>
+
+    <!-- STUDY -->
+    <div id="study" style="display:none;">
+      <div class="fc-stage">
+        <div class="fc-progress" id="r-progress"></div>
+
+        <!-- recall card -->
+        <div class="flashcard" id="card" style="display:none;">
+          <div class="fc-inner">
+            <div class="fc-face front" id="front"></div>
+            <div class="fc-face back"  id="back"></div>
+          </div>
+          <span class="fc-hint">click to flip</span>
+        </div>
+
+        <!-- multiple choice -->
+        <div class="mc-stage" id="mc" style="display:none;">
+          <div id="mc-question"></div>
+          <div class="mc-opts" id="mc-opts"></div>
+        </div>
+
+        <!-- writing -->
+        <div id="writing" style="display:none;width:100%;max-width:460px;">
+          <div class="rw-prompt" id="rw-prompt"></div>
+          <div class="rw-box"><div class="hw-box" id="rw-hwbox"></div></div>
+          <div class="rw-controls">
+            <button class="btn btn-ghost btn-sm" id="rw-outline">◌ Show outline</button>
+            <button class="btn btn-ghost btn-sm" id="rw-hint">✎ Show this stroke</button>
+            <button class="btn btn-ghost btn-sm" id="rw-reveal">I can't — reveal</button>
+          </div>
+          <div class="rw-msg" id="rw-msg"></div>
+        </div>
+
+        <div id="answer-box" style="margin-top:14px;"></div>
+
+        <div id="flip-hint">
+          <button class="btn btn-primary" id="show-btn" style="display:none;">Show answer</button>
+        </div>
+
+        <div class="grade-row" id="grades" style="display:none;">
+          <button class="grade again" data-g="0">Again<small id="lab0"></small></button>
+          <button class="grade hard"  data-g="1">Hard<small id="lab1"></small></button>
+          <button class="grade good"  data-g="2">Good<small id="lab2"></small></button>
+          <button class="grade easy"  data-g="3">Easy<small id="lab3"></small></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div id="done" class="panel done-card" style="display:none;">
+      <div class="big">Session complete 🎉</div>
+      <p style="color:var(--text2);margin-top:8px;" id="done-msg"></p>
+      <div style="margin-top:20px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="again-btn">Back to setup</button>
+        <a class="btn btn-ghost" href="boya.html">Boya home</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+  <script src="js/boya_vocab.js"></script>
+  <script src="js/boya_lessons.js"></script>
+  <script>
+    // ---- tiny helpers (self-contained; no store.js) ----
+    const $ = (s,r=document)=>r.querySelector(s);
+    const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+    const el=(t,c,h)=>{const n=document.createElement(t); if(c)n.className=c; if(h!=null)n.innerHTML=h; return n;};
+    const shuffle=a=>{const r=[...a]; for(let i=r.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[r[i],r[j]]=[r[j],r[i]];} return r;};
+    const isHanzi=ch=>/[一-鿿]/.test(ch);
+    (function(){const M=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'],
+      Dn=['SUN','MON','TUE','WED','THU','FRI','SAT'],d=new Date(),n=$("#topbar-date");
+      if(n)n.textContent=`${Dn[d.getDay()]} · ${d.getDate()} ${M[d.getMonth()]} ${d.getFullYear()}`;})();
+
+    const V = window.BOYA_VOCAB || [];
+    const BOOK = window.BOYA_BOOK || {titles:{}};
+    const POS = {"n.":"noun","v.":"verb","adj.":"adjective","adv.":"adverb","pron.":"pronoun","part.":"particle",
+      "num.":"number","mw.":"measure word","q.":"quantifier","suff.":"suffix","prep.":"preposition","conj.":"conjunction",
+      "int.":"interjection","aux.":"auxiliary","v./n.":"verb / noun","n./v.":"noun / verb","pref.":"prefix","onom.":"onomatopoeia"};
+    const posLabel=p=>POS[p]||(p||"proper noun");
+    const lname=n=>{const t=BOOK.titles[n]; return t?`L${n} · ${t[0]}`:`Lesson ${n}`;};
+    const DAY=86400000;
+    const cardId=w=>w.l+"-"+w.i+"-"+w.hz;
+    const byId={}; V.forEach(w=>byId[cardId(w)]=w);
+
+    // ---- SRS (SM-2 lite) ----
+    const SRS_KEY="boya_srs";
+    const getSRS=()=>{ try{return JSON.parse(localStorage.getItem(SRS_KEY)||"{}");}catch{return {};} };
+    const setSRS=s=>{ try{localStorage.setItem(SRS_KEY,JSON.stringify(s));}catch{} };
+    function schedule(r,grade){
+      r={reps:0,ease:2.5,interval:0,due:Date.now(),lapses:0,...r};
+      if(grade===0){ r.reps=0; r.lapses++; r.ease=Math.max(1.3,r.ease-0.2); r.interval=0; r.due=Date.now()+10*60000; }
+      else{
+        if(grade===1) r.ease=Math.max(1.3,r.ease-0.15);
+        if(grade===3) r.ease=r.ease+0.15;
+        if(r.reps===0) r.interval = grade===1?1:grade===3?2:1;
+        else if(r.reps===1) r.interval = grade===1?3:grade===3?6:3;
+        else { const m=grade===1?1.2:grade===3?r.ease*1.3:r.ease; r.interval=Math.max(1,Math.round(r.interval*m)); }
+        r.reps++; r.due=Date.now()+r.interval*DAY;
+      }
+      return r;
+    }
+    function gradeCard(id,grade){ const s=getSRS(); s[id]=schedule(s[id],grade); setSRS(s); }
+    function nextLabel(id,grade){
+      const r=schedule(getSRS()[id],grade);
+      if(grade===0) return "10 min";
+      return r.interval<=1?"1 day":r.interval+" days";
+    }
+
+    // ---- lesson scope (multi-select, persisted) ----
+    const SCOPE_KEY="boya_review_lessons";
+    let selected = new Set();
+    try{ const a=JSON.parse(localStorage.getItem(SCOPE_KEY)||"null"); if(Array.isArray(a)&&a.length) selected=new Set(a.map(Number)); }catch{}
+    if(!selected.size) for(let n=1;n<=30;n++) selected.add(n);
+    const saveScope=()=>{ try{localStorage.setItem(SCOPE_KEY,JSON.stringify([...selected]));}catch{} };
+
+    const chipRow=$("#chips");
+    for(let n=1;n<=30;n++){
+      const t=BOOK.titles[n];
+      const c=el("button","ch-chip"+(selected.has(n)?" active":""),`L${n}${t?` · <span class="hz">${t[0]}</span>`:""}`);
+      c.dataset.n=n;
+      c.addEventListener("click",()=>{ const k=+c.dataset.n;
+        if(selected.has(k)){selected.delete(k); c.classList.remove("active");} else {selected.add(k); c.classList.add("active");}
+        saveScope(); refresh();
+      });
+      chipRow.appendChild(c);
+    }
+    $("#sel-all").addEventListener("click",()=>{ selected=new Set(Array.from({length:30},(_,i)=>i+1));
+      $$(".ch-chip",chipRow).forEach(c=>c.classList.add("active")); saveScope(); refresh(); });
+    $("#sel-none").addEventListener("click",()=>{ selected=new Set();
+      $$(".ch-chip",chipRow).forEach(c=>c.classList.remove("active")); saveScope(); refresh(); });
+
+    const scopeWords=()=>V.filter(w=>selected.has(w.l));
+    function buckets(){
+      const srs=getSRS(), now=Date.now(), due=[], fresh=[], learning=[];
+      scopeWords().forEach(w=>{ const r=srs[cardId(w)];
+        if(!r) fresh.push(w);
+        else if(r.due<=now) due.push(w);
+        if(r && r.interval>0 && r.interval<7) learning.push(w);
+      });
+      return {due,fresh,learning};
+    }
+
+    function refresh(){
+      const {due,fresh,learning}=buckets();
+      $("#sel-count").textContent = `${selected.size} chapter${selected.size!==1?"s":""} · ${scopeWords().length} words`;
+      $("#overview").innerHTML =
+        `<div class="ov due"><div class="n">${due.length}</div><div class="l">Due now</div></div>
+         <div class="ov new"><div class="n">${fresh.length}</div><div class="l">New</div></div>
+         <div class="ov learn"><div class="n">${learning.length}</div><div class="l">Learning</div></div>`;
+      drawForecast();
+    }
+    function drawForecast(){
+      const srs=getSRS(), now=Date.now(), ids=new Set(scopeWords().map(cardId));
+      const days=Array(14).fill(0);
+      Object.entries(srs).forEach(([id,r])=>{ if(!ids.has(id)) return;
+        const diff=Math.floor((r.due-now)/DAY);
+        if(diff<0) days[0]++; else if(diff<14) days[diff]++;
+      });
+      const max=Math.max(1,...days); const fc=$("#forecast"); fc.innerHTML="";
+      days.forEach((n,i)=>{ const b=el("div","bar"); b.style.height=(n/max*100)+"%"; b.title=`${n} card${n!==1?"s":""}`;
+        if(i===0||i===7) b.appendChild(el("span",null,i===0?"today":"+7d")); fc.appendChild(b); });
+    }
+    $("#r-new").addEventListener("change",refresh);
+
+    // ---- session ----
+    let queue=[], cur=null, mode="recall", graded=0, correctCt=0;
+    function buildQueue(){
+      const {due,fresh}=buckets(); const cap=+$("#r-new").value||0;
+      return shuffle([...shuffle(due), ...shuffle(fresh).slice(0,cap)]);
+    }
+    $("#r-start").addEventListener("click",()=>{
+      if(!selected.size){ alert("Pick at least one lesson."); return; }
+      queue=buildQueue(); mode=$("#r-mode").value; graded=0; correctCt=0;
+      if(!queue.length){ alert("Nothing to review in these lessons right now. Add new cards, pick more chapters, or come back when cards are due."); return; }
+      $("#setup").style.display="none"; $("#done").style.display="none"; $("#study").style.display="block";
+      next();
+    });
+
+    function hideAllStages(){ $("#card").style.display="none"; $("#mc").style.display="none"; $("#writing").style.display="none";
+      $("#answer-box").innerHTML=""; $("#grades").style.display="none"; $("#show-btn").style.display="none"; }
+    function showGrades(){ for(let g=0;g<4;g++) $("#lab"+g).textContent=nextLabel(cardId(cur),g); $("#grades").style.display="flex"; }
+
+    function next(){
+      if(!queue.length){ finish(); return; }
+      cur=queue.shift();
+      $("#r-progress").textContent=`${graded} done · ${queue.length} left — ${lname(cur.l)}`;
+      hideAllStages();
+      if(mode==="recall") renderRecall(cur);
+      else if(mode==="write") renderWrite(cur);
+      else renderMC(cur, mode==="mc-char");
+    }
+
+    // recall
+    function renderRecall(w){
+      $("#card").style.display="block"; $("#card").classList.remove("flipped");
+      $("#front").innerHTML=`<div class="big-hz hz">${w.hz}</div>`;
+      $("#back").innerHTML=`<div class="mid-py">${w.py}</div><div class="mid-en">${w.en}</div><div class="sub">${posLabel(w.pos)}</div>`;
+      $("#show-btn").style.display="inline-block";
+    }
+    function revealRecall(){ if($("#card").classList.contains("flipped"))return; $("#card").classList.add("flipped"); $("#show-btn").style.display="none"; showGrades(); }
+    $("#show-btn").addEventListener("click",()=>{ if(mode==="recall") revealRecall(); });
+    $("#card").addEventListener("click",()=>{ if(mode==="recall") revealRecall(); });
+
+    // multiple choice
+    function pickDistractors(w,n){
+      let pool=scopeWords(); if(pool.length<n+1) pool=V;
+      return shuffle(pool.filter(x=>x!==w && x.hz!==w.hz && x.en!==w.en)).slice(0,n);
+    }
+    function renderMC(w, pickChar){
+      $("#mc").style.display="block";
+      const opts=shuffle([w,...pickDistractors(w,3)]);
+      if(pickChar){
+        $("#mc-question").innerHTML=`<div class="mc-q small">${w.en}</div><div class="mc-sub">${w.py} · ${posLabel(w.pos)}</div>`;
+      } else {
+        $("#mc-question").innerHTML=`<div class="mc-q hz">${w.hz}</div><div class="mc-sub">${w.py}</div>`;
+      }
+      const box=$("#mc-opts"); box.innerHTML="";
+      let answered=false;
+      opts.forEach(o=>{
+        const b=el("button","opt"+(pickChar?" hz":""), pickChar?o.hz:o.en);
+        b.addEventListener("click",()=>{ if(answered)return; answered=true;
+          const ok=(o===w); b.classList.add(ok?"correct":"wrong");
+          if(!ok) $$(".opt",box).forEach(x=>{ if((pickChar?x.textContent===w.hz:x.textContent===w.en)) x.classList.add("correct"); });
+          if(ok) correctCt++;
+          $("#answer-box").innerHTML=`<div style="text-align:center;color:var(--text2);font-size:.9rem;">
+            <span class="hz" style="font-size:1.3rem;color:var(--text);">${w.hz}</span> · ${w.py} · ${w.en}</div>`;
+          // suggest a default grade but let the user choose
+          showGrades();
+        });
+        box.appendChild(b);
+      });
+    }
+
+    // writing (draw the character, checked by Hanzi Writer)
+    let rw={writer:null, chars:[], ci:0, mistakes:0, outline:false};
+    function renderWrite(w){
+      $("#writing").style.display="block";
+      rw={writer:null, chars:[...w.hz].filter(isHanzi), ci:0, mistakes:0, outline:false};
+      $("#rw-outline").textContent="◌ Show outline";
+      $("#rw-msg").textContent="";
+      $("#rw-prompt").innerHTML=`<div class="rp-en">${w.en}</div><div class="rp-py">${w.py} · ${posLabel(w.pos)}</div>
+        <div class="rp-hint" id="rw-hintline"></div>`;
+      quizChar();
+    }
+    function quizChar(){
+      const box=$("#rw-hwbox"); box.innerHTML="";
+      const ch=rw.chars[rw.ci];
+      $("#rw-hintline").textContent = rw.chars.length>1 ? `Write character ${rw.ci+1} of ${rw.chars.length}` : "Write the character from memory";
+      if(typeof HanziWriter==="undefined"){ $("#rw-msg").textContent="Couldn't load Hanzi Writer — check your connection. Grade yourself."; revealWrite(); return; }
+      rw.writer=HanziWriter.create(box, ch, {
+        width:220,height:220,padding:10, showCharacter:false, showOutline:rw.outline, showHintAfterMisses:3,
+        strokeColor:"#c0392b", outlineColor:"#d9d2cb", radicalColor:"#8a8a8a", drawingColor:"#15803d", drawingWidth:32,
+        onLoadCharDataError:()=>{ $("#rw-msg").textContent="No stroke data for “"+ch+"”. Grade yourself."; revealWrite(); }
+      });
+      rw.writer.quiz({
+        onMistake:()=>{ rw.mistakes++; },
+        onComplete:(s)=>{ if(s&&typeof s.totalMistakes==="number"){}
+          rw.ci++;
+          if(rw.ci<rw.chars.length){ $("#rw-msg").textContent="✓ next character…"; setTimeout(quizChar,350); }
+          else revealWrite();
+        }
+      });
+    }
+    function revealWrite(){
+      const w=cur;
+      $("#rw-msg").textContent = rw.mistakes===0 ? "✓ Written perfectly!" : `Done — ${rw.mistakes} stroke slip${rw.mistakes!==1?"s":""}. Grade yourself.`;
+      $("#answer-box").innerHTML=`<div class="rw-answer"><div class="ra-hz hz">${w.hz}</div><div class="ra-py">${w.py}</div><div class="ra-en">${w.en}</div></div>`;
+      if(rw.mistakes===0) correctCt++;
+      showGrades();
+    }
+    $("#rw-outline").addEventListener("click",()=>{ rw.outline=!rw.outline;
+      if(rw.writer){ rw.outline?rw.writer.showOutline():rw.writer.hideOutline(); }
+      $("#rw-outline").textContent = rw.outline?"◌ Hide outline":"◌ Show outline"; });
+    $("#rw-hint").addEventListener("click",()=>{ if(rw.writer&&rw.writer.highlightStroke) { /* Hanzi Writer auto-hints after misses */ }
+      $("#rw-msg").textContent="Tip: keep drawing — a hint appears automatically after a few misses."; });
+    $("#rw-reveal").addEventListener("click",()=>{ if(rw.writer){ try{rw.writer.cancelQuiz&&rw.writer.cancelQuiz();}catch(e){} rw.writer.showCharacter(); } revealWrite(); });
+
+    // grading
+    $("#grades").addEventListener("click",e=>{
+      const b=e.target.closest(".grade"); if(!b) return;
+      const g=+b.dataset.g;
+      gradeCard(cardId(cur),g); graded++;
+      if(g===0) queue.splice(Math.min(queue.length,4),0,cur); // bring "again" back soon
+      next();
+    });
+
+    function finish(){
+      $("#study").style.display="none"; $("#done").style.display="block";
+      $("#done-msg").textContent=`You graded ${graded} card${graded!==1?"s":""}${(mode!=="recall")?` · ${correctCt} right`:""}. Come back when more are due.`;
+    }
+    $("#again-btn").addEventListener("click",()=>{ $("#done").style.display="none"; $("#setup").style.display="block"; refresh(); });
+    $("#r-reset").addEventListener("click",()=>{ if(confirm("Reset ALL Boya review progress? This can't be undone.")){ localStorage.removeItem(SRS_KEY); refresh(); } });
+
+    refresh();
+  </script>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

@@ -76,7 +76,10 @@
       "Bash(python3 -m http.server 8793)",
       "Bash(perl -0pi -e 's/lessonName\\\\\\(/bLessonName\\(/g; s/\\\\bDECK_KEY\\\\b/BDECK_KEY/g; s/\\\\bgetDecks\\\\b/bGetDecks/g; s/\\\\bsetDecks\\\\b/bSetDecks/g' boya_flashcards.html)",
       "Bash(perl -0pi -e 's/\\\\blessonName\\\\b/bLessonName/g' boya_exercises.html)",
-      "Bash(pkill -f \"http.server 8793\")"
+      "Bash(pkill -f \"http.server 8793\")",
+      "Bash(python3 -m http.server 8794)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} boya_review.html\\\\n\" \"http://localhost:8794/content/language/chinese/boya_review.html\")",
+      "Bash(pkill -f \"http.server 8794\")"
     ]
   }
 }
