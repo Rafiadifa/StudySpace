@@ -79,7 +79,8 @@
       "Bash(pkill -f \"http.server 8793\")",
       "Bash(python3 -m http.server 8794)",
       "Bash(curl -s -o /dev/null -w \"%{http_code} boya_review.html\\\\n\" \"http://localhost:8794/content/language/chinese/boya_review.html\")",
-      "Bash(pkill -f \"http.server 8794\")"
+      "Bash(pkill -f \"http.server 8794\")",
+      "Bash(pkill -f \"http.server 8795\")"
     ]
   }
 }

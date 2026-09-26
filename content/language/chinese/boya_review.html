@@ -299,15 +299,31 @@
     }
 
     // recall
+    let revealed=false;
     function renderRecall(w){
-      $("#card").style.display="block"; $("#card").classList.remove("flipped");
+      const card=$("#card"); card.style.display="block";
+      // If the previous card was flipped, snap this one back to the FRONT without
+      // animating — otherwise the new card's answer visibly rotates in first.
+      if(card.classList.contains("flipped")){
+        const inner=card.querySelector(".fc-inner");
+        inner.style.transition="none"; card.classList.remove("flipped");
+        void inner.offsetWidth;            // force reflow so the reset is instant
+        inner.style.transition="";
+      }
+      revealed=false;
       $("#front").innerHTML=`<div class="big-hz hz">${w.hz}</div>`;
       $("#back").innerHTML=`<div class="mid-py">${w.py}</div><div class="mid-en">${w.en}</div><div class="sub">${posLabel(w.pos)}</div>`;
       $("#show-btn").style.display="inline-block";
     }
-    function revealRecall(){ if($("#card").classList.contains("flipped"))return; $("#card").classList.add("flipped"); $("#show-btn").style.display="none"; showGrades(); }
-    $("#show-btn").addEventListener("click",()=>{ if(mode==="recall") revealRecall(); });
-    $("#card").addEventListener("click",()=>{ if(mode==="recall") revealRecall(); });
+    // Flip freely between question and answer; the first reveal shows the grade buttons.
+    function flipRecall(){
+      const card=$("#card"); card.classList.toggle("flipped");
+      if(!revealed && card.classList.contains("flipped")){
+        revealed=true; $("#show-btn").style.display="none"; showGrades();
+      }
+    }
+    $("#show-btn").addEventListener("click",()=>{ if(mode==="recall") flipRecall(); });
+    $("#card").addEventListener("click",()=>{ if(mode==="recall") flipRecall(); });
 
     // multiple choice
     function pickDistractors(w,n){
