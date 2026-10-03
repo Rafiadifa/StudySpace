@@ -80,7 +80,12 @@
       "Bash(python3 -m http.server 8794)",
       "Bash(curl -s -o /dev/null -w \"%{http_code} boya_review.html\\\\n\" \"http://localhost:8794/content/language/chinese/boya_review.html\")",
       "Bash(pkill -f \"http.server 8794\")",
-      "Bash(pkill -f \"http.server 8795\")"
+      "Bash(pkill -f \"http.server 8795\")",
+      "Bash(python3 -m http.server 8796)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://localhost:8796/content/language/chinese/boya_review.html\")",
+      "Bash(grep -rhoE '<div class=\"exam-pills\">.{0,80}' . --include=\"*.html\")",
+      "Bash(python3 -m http.server 8801)",
+      "Bash(pkill -f \"http.server 8801\")"
     ]
   }
 }

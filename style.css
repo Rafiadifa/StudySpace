@@ -95,7 +95,10 @@ body {
 }
 .topbar-title { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--text); letter-spacing: -0.01em; }
 .topbar-sub   { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--text3); letter-spacing: 0.05em; }
-.topbar-date  { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--text3); }
+/* Date system hidden from the live site (the live clock & exam-date countdowns were
+   personal-tracking chrome; the site reads as a practice/notes library without them). */
+.topbar-date  { display: none !important; }
+.subject-exam-date { display: none !important; }
 
 /* ── Hero ── */
 .hero {
