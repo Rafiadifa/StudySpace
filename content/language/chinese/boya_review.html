@@ -44,6 +44,21 @@
     .usage-hint .uh-hz b{ color:var(--accent); font-weight:700; }
     .usage-hint .uh-py{ color:var(--accent); font-size:.8rem; margin-top:2px; }
     .usage-hint .uh-en{ color:var(--text3); font-size:.8rem; margin-top:1px; }
+    /* pre-reveal hint: pick ONE of used / pinyin / meaning */
+    .hint-bar{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:center; margin-top:16px; }
+    .hint-bar .hb-label{ font-family:'DM Mono',monospace; font-size:.68rem; color:var(--text3); }
+    .hint-btn{ font-family:'DM Sans',sans-serif; font-weight:600; font-size:.8rem; color:var(--text2); background:var(--bg2);
+      border:1px solid var(--border); border-radius:99px; padding:6px 13px; cursor:pointer; transition:.13s; }
+    .hint-btn:hover:not(:disabled){ border-color:var(--accent); color:var(--accent); }
+    .hint-btn:disabled{ opacity:.35; cursor:default; }
+    .hint-btn.chosen{ background:var(--accent-08); border-color:var(--accent); color:var(--accent); opacity:1; }
+    .hint-out{ max-width:460px; margin:10px auto 0; text-align:center; background:var(--bg2);
+      border:1px dashed var(--accent-25); border-radius:10px; padding:11px 14px; }
+    .hint-out .ho-hz{ font-family:'Noto Serif SC',serif; font-size:1.15rem; color:var(--text); line-height:1.6; }
+    .hint-out .ho-hz b{ color:var(--accent); font-weight:700; }
+    .hint-out .ho-py{ color:var(--accent); font-size:1rem; margin-top:2px; }
+    .hint-out .ho-en{ color:var(--text); font-size:1rem; }
+    .hint-out .ho-sub{ font-family:'DM Mono',monospace; font-size:.58rem; text-transform:uppercase; letter-spacing:.09em; color:var(--text3); margin-top:5px; }
     /* Recall card: reliable show/hide instead of a 3D flip (the 3D rotate rendered
        edge-on and leaked the backface). Front shows by default; .flipped shows back. */
     #card .fc-inner{ transform:none !important; transition:none !important; }
@@ -152,6 +167,14 @@
           </div>
           <div class="rw-msg" id="rw-msg"></div>
         </div>
+
+        <div class="hint-bar" id="hint-bar" hidden>
+          <span class="hb-label">Stuck? pick one hint:</span>
+          <button class="hint-btn" data-h="use">例 How it's used</button>
+          <button class="hint-btn" data-h="py">拼 Pinyin</button>
+          <button class="hint-btn" data-h="mean">义 Meaning</button>
+        </div>
+        <div class="hint-out" id="hint-out" hidden></div>
 
         <div id="answer-box" style="margin-top:14px;"></div>
         <div class="usage-hint" id="usage-hint" hidden></div>
@@ -302,7 +325,7 @@
     });
 
     function hideAllStages(){ $("#card").style.display="none"; $("#mc").style.display="none"; $("#writing").style.display="none";
-      $("#answer-box").innerHTML=""; $("#grades").style.display="none"; $("#show-btn").style.display="none"; clearHint(); }
+      $("#answer-box").innerHTML=""; $("#grades").style.display="none"; $("#show-btn").style.display="none"; clearHint(); hideHints(); }
 
     // ---- usage hint: an example sentence using the word, from the lesson dialogues ----
     const D = window.BOYA_DIALOGS || {};
@@ -321,6 +344,37 @@
         <div class="uh-hz">${hz}</div><div class="uh-py">${l.py}</div><div class="uh-en">${l.en}</div>`;
       b.hidden=false;
     }
+
+    // ---- pre-reveal hint: offer hints, allow only ONE per card ----
+    let hintUsed=false;
+    // which hints add information in the current mode (others are already shown or would give the answer)
+    function availHints(){ return mode==="recall" ? ["use","py","mean"] : ["use"]; }
+    function setupHints(){
+      hintUsed=false;
+      const bar=$("#hint-bar"), out=$("#hint-out"); const av=availHints();
+      out.hidden=true; out.innerHTML="";
+      $$(".hint-btn",bar).forEach(b=>{ b.hidden=!av.includes(b.dataset.h); b.disabled=false; b.classList.remove("chosen"); });
+      bar.hidden=false;
+    }
+    function hideHints(){ $("#hint-bar").hidden=true; $("#hint-out").hidden=true; $("#hint-out").innerHTML=""; }
+    function useHint(type){
+      if(hintUsed) return; hintUsed=true;
+      const w=cur, out=$("#hint-out");
+      $$(".hint-btn",$("#hint-bar")).forEach(b=>{ b.disabled=true; if(b.dataset.h===type) b.classList.add("chosen"); });
+      if(type==="py"){ out.innerHTML=`<div class="ho-py">${w.py}</div><div class="ho-sub">pinyin hint</div>`; }
+      else if(type==="mean"){ out.innerHTML=`<div class="ho-en">${w.en}</div><div class="ho-sub">meaning hint</div>`; }
+      else { // usage — show the word in a sentence; blank the word itself when it IS the answer
+        const l=findUsage(w);
+        if(!l){ out.innerHTML=`<div class="ho-sub">no example available</div>`; }
+        else if(mode==="mc-char" || mode==="write"){
+          out.innerHTML=`<div class="ho-hz">${l.hz.replace(w.hz,"▢".repeat([...w.hz].length))}</div><div class="ho-sub">how it's used</div>`;
+        } else {
+          out.innerHTML=`<div class="ho-hz">${l.hz.replace(w.hz,`<b>${w.hz}</b>`)}</div><div class="ho-py">${l.py}</div><div class="ho-sub">how it's used</div>`;
+        }
+      }
+      out.hidden=false;
+    }
+    $("#hint-bar").addEventListener("click",e=>{ const b=e.target.closest(".hint-btn"); if(b && !b.disabled) useHint(b.dataset.h); });
     function showGrades(){ for(let g=0;g<4;g++) $("#lab"+g).textContent=nextLabel(cardId(cur),g); $("#grades").style.display="flex"; }
 
     function next(){
@@ -331,6 +385,7 @@
       if(mode==="recall") renderRecall(cur);
       else if(mode==="write") renderWrite(cur);
       else renderMC(cur, mode==="mc-char");
+      setupHints();
     }
 
     // recall — deterministic show/hide (no 3D flip)
@@ -349,7 +404,7 @@
       $("#card").classList.toggle("flipped", ans);
       $("#show-btn").style.display = ans ? "none" : "inline-block";
       if(ans && !revealed){ revealed=true; $("#show-btn").style.display="none"; showGrades(); }
-      if(ans) renderHint(cur); else clearHint();
+      if(ans){ renderHint(cur); hideHints(); } else clearHint();
     }
     $("#show-btn").addEventListener("click",()=>{ if(mode==="recall") setFace(true); });
     $("#card").addEventListener("click",()=>{ if(mode==="recall") setFace(!showingAnswer); });
@@ -378,7 +433,7 @@
           $("#answer-box").innerHTML=`<div style="text-align:center;color:var(--text2);font-size:.9rem;">
             <span class="hz" style="font-size:1.3rem;color:var(--text);">${w.hz}</span> · ${w.py} · ${w.en}</div>`;
           // suggest a default grade but let the user choose
-          showGrades(); renderHint(w);
+          showGrades(); renderHint(w); hideHints();
         });
         box.appendChild(b);
       });
@@ -419,7 +474,7 @@
       $("#rw-msg").textContent = rw.mistakes===0 ? "✓ Written perfectly!" : `Done — ${rw.mistakes} stroke slip${rw.mistakes!==1?"s":""}. Grade yourself.`;
       $("#answer-box").innerHTML=`<div class="rw-answer"><div class="ra-hz hz">${w.hz}</div><div class="ra-py">${w.py}</div><div class="ra-en">${w.en}</div></div>`;
       if(rw.mistakes===0) correctCt++;
-      showGrades(); renderHint(w);
+      showGrades(); renderHint(w); hideHints();
     }
     $("#rw-outline").addEventListener("click",()=>{ rw.outline=!rw.outline;
       if(rw.writer){ rw.outline?rw.writer.showOutline():rw.writer.hideOutline(); }

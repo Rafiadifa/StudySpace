@@ -85,7 +85,8 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://localhost:8796/content/language/chinese/boya_review.html\")",
       "Bash(grep -rhoE '<div class=\"exam-pills\">.{0,80}' . --include=\"*.html\")",
       "Bash(python3 -m http.server 8801)",
-      "Bash(pkill -f \"http.server 8801\")"
+      "Bash(pkill -f \"http.server 8801\")",
+      "Bash(pkill -f \"http.server 8802\")"
     ]
   }
 }
