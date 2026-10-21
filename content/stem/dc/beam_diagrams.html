@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<title>Beam Diagrams Drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: one reading column on a drafting grid — visual summary first, then picture-choice questions. */
+:root{
+  --paper:#EDF1F4; --sheet:#FBFCFD; --sheet-2:#F3F6F8;
+  --ink:#16202A; --muted:#566573; --line:#CBD5DD; --grid:#E2E8ED;
+  --force:#C9442A; --force-soft:#FBE9E4;
+  --react:#1D66A8; --react-soft:#E3EEF8;
+  --good:#2B7A4B; --good-soft:#E3F2E8; --bad:#B02A20; --bad-soft:#F8E5E3;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#11171D; --sheet:#182029; --sheet-2:#1E2731; --ink:#DCE4EB; --muted:#93A2B0; --line:#2F3C48; --grid:#25303B;
+  --force:#FF7D5C; --force-soft:#3A221D; --react:#6CB0F2; --react-soft:#1B2C3D;
+  --good:#62C88D; --good-soft:#18301F; --bad:#F28B80; --bad-soft:#3A1E1C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11171D; --sheet:#182029; --sheet-2:#1E2731; --ink:#DCE4EB; --muted:#93A2B0; --line:#2F3C48; --grid:#25303B;
+  --force:#FF7D5C; --force-soft:#3A221D; --react:#6CB0F2; --react-soft:#1B2C3D;
+  --good:#62C88D; --good-soft:#18301F; --bad:#F28B80; --bad-soft:#3A1E1C; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+.wrap{max-width:880px;margin:0 auto;padding-inline:18px;padding-block:26px 70px;display:grid;gap:22px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.15;text-wrap:balance}
+p{margin:0}
+.course{font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(34px,6vw,52px);font-weight:700;margin-top:4px}
+.lede{color:var(--muted);max-width:64ch;margin-top:8px}
+header{border-bottom:2px solid var(--ink);padding-bottom:16px}
+.sec{background:var(--sheet);border:1px solid var(--line);padding:20px clamp(14px,3vw,28px);display:grid;gap:14px;min-width:0}
+.sec > h2{font-size:26px;font-weight:700}
+.tag{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--force)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{border:1px solid var(--line);background:var(--sheet-2);padding:12px;display:grid;gap:8px;min-width:0}
+.card h3{font-size:18px;font-weight:600}
+.card p{font-size:14.5px;color:var(--muted)}
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.rules{width:100%;border-collapse:collapse;font-size:14.5px}
+.rules th,.rules td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:middle}
+.rules th{font-family:var(--mono);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--sheet-2)}
+.rules td svg{width:130px;max-width:100%;display:block}
+.tw{overflow-x:auto}
+.key{font-size:14.5px;border-left:3px solid var(--force);background:var(--force-soft);padding:8px 12px}
+svg.fig{width:100%;height:auto;display:block}
+.fig .s-ink{stroke:var(--ink);fill:none}.fig .s-muted{stroke:var(--muted);fill:none}.fig .s-force{stroke:var(--force);fill:none}.fig .s-react{stroke:var(--react);fill:none}
+.fig .f-ink{fill:var(--ink)}.fig .f-force{fill:var(--force)}.fig .f-react{fill:var(--react)}.fig .f-muted{fill:var(--muted)}.fig .f-sheet{fill:var(--sheet)}.fig .f-soft{fill:var(--sheet-2)}
+.fig .member{stroke:var(--ink);stroke-width:4.5;stroke-linecap:round;fill:none}
+.fig .dg{fill:var(--react-soft);stroke:var(--react);stroke-width:1.8}
+.fig .base{stroke:var(--ink);stroke-width:1.2}
+.fig text{font-family:var(--body);font-size:14px;fill:var(--ink)}
+.fig text.it{font-style:italic}.fig text.sm{font-size:12px;fill:var(--muted)}.fig text.fl{fill:var(--force);font-weight:600}.fig text.rl{fill:var(--react);font-weight:600}
+.fig text.mono{font-family:var(--mono);font-size:12px}
+.fig .dash{stroke-dasharray:4 3}
+
+.score{position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:2;justify-self:end;background:var(--ink);color:var(--sheet);font-family:var(--mono);font-size:13px;padding:5px 12px;display:flex;gap:12px;align-items:center}
+.score button{background:none;border:0;color:inherit;font:inherit;text-decoration:underline;cursor:pointer;padding:0}
+.q{background:var(--sheet);border:1px solid var(--line);padding:18px clamp(14px,3vw,26px);display:grid;gap:12px}
+.q .n{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.q h3{font-size:21px;font-weight:600}
+.q .stem{max-width:68ch}
+.q .figbox{background:var(--sheet-2);border:1px solid var(--line);padding:8px;display:flex;justify-content:center}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opt{border:1.5px solid var(--line);background:var(--sheet);padding:8px 8px 6px;cursor:pointer;display:grid;gap:2px;text-align:left;color:inherit;font:inherit}
+.opt:hover:not([disabled]){border-color:var(--ink)}
+.opt .lbl{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)}
+.opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.opt .txt{font-size:15px;font-weight:500;padding:4px 2px}
+.fb{display:none;border-left:3px solid;padding:9px 12px;font-size:15px;max-width:72ch}
+.fb.show{display:block}.fb.ok{border-color:var(--good);background:var(--good-soft)}.fb.no{border-color:var(--bad);background:var(--bad-soft)}
+:focus-visible{outline:2px solid var(--react);outline-offset:2px}
+@media (max-width:520px){.opts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="sh-back" style="font:500 12px/1 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.04em;padding:12px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+  <a href="../../../hub/stem.html" style="color:inherit;opacity:.72;text-decoration:none;border-bottom:1px solid currentColor">← Study Hub</a>
+  <span style="opacity:.5">Digital Construction</span>
+  <button type="button" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()" style="margin-left:auto;font:inherit;color:inherit;background:none;border:1px solid currentColor;opacity:.6;border-radius:99px;padding:5px 12px;cursor:pointer">◐ theme</button>
+</nav>
+<div class="wrap">
+  <header>
+    <div class="course">空间结构与数字化建造 · Ch. 3 梁的弯曲内力</div>
+    <h1>Beam Diagrams Drill</h1>
+    <p class="lede">Shear force and bending moment in pictures: the sign rules, how each kind of load shapes the diagrams, three standard beams, then eight questions where you pick the right drawing.</p>
+  </header>
+
+  <section class="sec">
+    <span class="tag">1 · Sign rules</span>
+    <h2>What "positive" looks like</h2>
+    <div class="two">
+      <div class="card"><h3>+F<sub>s</sub>: turns the piece clockwise</h3><div data-fig="signFs"></div><p>Up on the left face, down on the right face. 顺正逆负.</p></div>
+      <div class="card"><h3>+M: bottom in tension (sags)</h3><div data-fig="signM"></div><p>The beam smiles. A cantilever frowns, so its M is negative. 下拉为正.</p></div>
+    </div>
+    <p class="key"><b>Drawing rule:</b> the F<sub>s</sub> diagram puts + above the baseline. The M diagram is drawn on the <b>tension side</b>, so <b>+M goes below the baseline</b>.</p>
+  </section>
+
+  <section class="sec">
+    <span class="tag">2 · Load → shape</span>
+    <h2>What each load does to the diagrams</h2>
+    <div class="tw"><table class="rules">
+      <tr><th>Load</th><th>F<sub>s</sub> diagram</th><th>M diagram</th></tr>
+      <tr><td>No load on the segment</td><td data-mini="none-fs"></td><td data-mini="none-m"></td></tr>
+      <tr><td>Point load P</td><td data-mini="p-fs"></td><td data-mini="p-m"></td></tr>
+      <tr><td>Couple m</td><td data-mini="c-fs"></td><td data-mini="c-m"></td></tr>
+      <tr><td>Uniform load q</td><td data-mini="q-fs"></td><td data-mini="q-m"></td></tr>
+    </table></div>
+    <p style="font-size:14.5px;color:var(--muted)">Point load: F<sub>s</sub> jumps by P, M gets a sharp corner (尖角). Couple: F<sub>s</sub> is unchanged, M jumps by m. Uniform load: F<sub>s</sub> is a sloped line, M is a parabola.</p>
+  </section>
+
+  <section class="sec">
+    <span class="tag">3 · Three beams to know by heart</span>
+    <h2>Standard cases</h2>
+    <div class="cases">
+      <div class="card"><h3>Point load at midspan</h3><div data-fig="case1"></div><p>M<sub>max</sub> = Pl/4. For P at distances a and b from the supports: Pab/l.</p></div>
+      <div class="card"><h3>Uniform load</h3><div data-fig="case2"></div><p>M<sub>max</sub> = ql²/8 at midspan, where F<sub>s</sub> = 0.</p></div>
+      <div class="card"><h3>Cantilever, end load</h3><div data-fig="case3"></div><p>M = −P·x, largest at the fixed end. Top in tension, so it's drawn above.</p></div>
+    </div>
+  </section>
+
+  <div class="score" id="score">Score 0 / 8 <button type="button" id="reset">Reset</button></div>
+  <div id="quiz" style="display:grid;gap:18px"></div>
+</div>
+
+<script>
+const R=Math.PI/180, f=n=>+n.toFixed(1);
+const S=(w,h,b,l)=>`<svg class="fig" viewBox="0 0 ${w} ${h}" style="max-width:${w}px" role="img" aria-label="${l}">${b}</svg>`;
+const ln=(a,b,c,d,k='ink',w=1.5,cl='')=>`<line x1="${f(a)}" y1="${f(b)}" x2="${f(c)}" y2="${f(d)}" class="s-${k} ${cl}" stroke-width="${w}"/>`;
+function arrow(x1,y1,x2,y2,k='force',hl=9,sw=2){const a=Math.atan2(y2-y1,x2-x1),bx=x2-hl*Math.cos(a),by=y2-hl*Math.sin(a),px=Math.sin(a)*hl*.42,py=-Math.cos(a)*hl*.42;
+ return ln(x1,y1,bx,by,k,sw)+`<polygon points="${f(x2)},${f(y2)} ${f(bx+px)},${f(by+py)} ${f(bx-px)},${f(by-py)}" class="f-${k}"/>`}
+function head(x,y,a,k,hl=8){const bx=x-hl*Math.cos(a),by=y-hl*Math.sin(a),px=Math.sin(a)*hl*.42,py=-Math.cos(a)*hl*.42;return `<polygon points="${f(x)},${f(y)} ${f(bx+px)},${f(by+py)} ${f(bx-px)},${f(by-py)}" class="f-${k}"/>`}
+const tx=(x,y,s,c='',a='middle')=>`<text x="${f(x)}" y="${f(y)}" text-anchor="${a}" class="${c}">${s}</text>`;
+const mem=(a,b,c,d)=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" class="member"/>`;
+const hinge=(x,y)=>`<circle cx="${x}" cy="${y}" r="4" class="f-sheet s-ink" stroke-width="1.5"/>`;
+function hatchB(x1,x2,y){let s=ln(x1,y,x2,y);for(let x=x1+3;x<=x2;x+=7)s+=ln(x,y,x-6,y+7,'ink',1);return s}
+function hatchWall(x,y1,y2,side){let s=ln(x,y1,x,y2);const d=side==='right'?7:-7;for(let y=y1+3;y<=y2;y+=7)s+=ln(x,y,x+d,y+6,'ink',1);return s}
+const pin=(x,y)=>`<polygon points="${x},${y} ${x-10},${y+16} ${x+10},${y+16}" class="f-soft s-ink" stroke-width="1.5"/>`+hatchB(x-15,x+15,y+16)+hinge(x,y);
+const roll=(x,y)=>`<polygon points="${x},${y} ${x-9},${y+13} ${x+9},${y+13}" class="f-soft s-ink" stroke-width="1.5"/><circle cx="${x-5}" cy="${y+17}" r="3" class="f-sheet s-ink"/><circle cx="${x+5}" cy="${y+17}" r="3" class="f-sheet s-ink"/>`+hatchB(x-15,x+15,y+21)+hinge(x,y);
+function pt(cx,cy,r,d){return[cx+r*Math.cos(d*R),cy-r*Math.sin(d*R)]}
+function arcArrow(cx,cy,r,a1,a2,k='force'){const [x1,y1]=pt(cx,cy,r,a1),e=a2+(a2>a1?-8:8),[xe,ye]=pt(cx,cy,r,e),[x2,y2]=pt(cx,cy,r,a2);const ccw=a2>a1;
+ const t=ccw?[-Math.sin(a2*R),-Math.cos(a2*R)]:[Math.sin(a2*R),Math.cos(a2*R)];
+ return `<path d="M${f(x1)} ${f(y1)} A${r} ${r} 0 ${Math.abs(a2-a1)>180?1:0} ${ccw?0:1} ${f(xe)} ${f(ye)}" class="s-${k}" stroke-width="2"/>`+head(x2,y2,Math.atan2(t[1],t[0]),k)}
+
+/* beam on a 360-wide canvas: x from 40 to 320 */
+const X0=40,X1=320,BY=62, X=t=>X0+(X1-X0)*t;
+function beam(kind,loads,dims){
+  let s='';
+  if(kind==='ss') s+=mem(X0,BY,X1,BY)+pin(X0,BY)+roll(X1,BY);
+  if(kind==='cantR') s+=mem(X0,BY,X1,BY)+hatchWall(X1,BY-24,BY+24,'right');
+  if(kind==='cantL') s+=mem(X0,BY,X1,BY)+hatchWall(X0,BY-24,BY+24,'left');
+  loads.forEach(L=>{
+    if(L.t==='P'){const x=X(L.x);s+=arrow(x,BY-44,x,BY-3)+tx(x+7,BY-34,L.l||'P','fl it','start')}
+    if(L.t==='q'){const a=X(L.a),b=X(L.b);s+=ln(a,BY-24,b,BY-24,'force',1.6);for(let x=a;x<=b+0.1;x+=(b-a)/10)s+=arrow(x,BY-24,x,BY-3,'force',6,1.2);s+=tx((a+b)/2,BY-30,L.l||'q','fl it')}
+    if(L.t==='m'){const x=X(L.x);s+=arcArrow(x,BY,17,L.cw?150:30,L.cw?30:150)+tx(x,BY-24,L.l||'m','fl it')+`<circle cx="${x}" cy="${BY}" r="2.5" class="f-force"/>`}
+  });
+  (dims||[]).forEach(d=>{const a=X(d[0]),b=X(d[1]),y=BY+38;s+=ln(a,y-5,a,y+5,'muted',1)+ln(b,y-5,b,y+5,'muted',1)+ln(a,y,b,y,'muted',1)+tx((a+b)/2,y-4,d[2],'it sm')});
+  (kind==='ss')&&(s+=tx(X0-10,BY+4,'A','it','end')+tx(X1+10,BY+4,'B','it','start'));
+  return s;
+}
+function beamFig(kind,loads,dims,h=110){return S(360,h,beam(kind,loads,dims),'beam')}
+/* diagram: pts [[t,v]] v in -1..1, flip=true draws + below (M diagram) */
+function diag(pts,o={}){
+  const W=o.w||360,H=o.h||98,x0=o.x0??X0,x1=o.x1??X1,base=H/2,k=o.k||28,sg=o.flip?1:-1,xm=t=>x0+(x1-x0)*t;
+  let d=`M${f(xm(pts[0][0]))} ${base}`;pts.forEach(p=>d+=` L${f(xm(p[0]))} ${f(base+sg*k*p[1])}`);d+=` L${f(xm(pts[pts.length-1][0]))} ${base} Z`;
+  let s=`<path d="${d}" class="dg"/>`+`<line x1="${x0-6}" y1="${base}" x2="${x1+6}" y2="${base}" class="base s-ink"/>`;
+  (o.labels||[]).forEach(L=>s+=tx(xm(L[0])+(L[3]||0),base+sg*k*L[1]+(sg*L[1]>0?15:-6),L[2],'mono rl'));
+  if(o.name) s+=tx(o.nameX??4,base+4,o.name,'it sm','start');
+  return o.raw?s:S(W,H,s,'diagram');
+}
+const para=(n=24,amp=1)=>Array.from({length:n+1},(_,i)=>{const t=i/n;return[t,amp*4*t*(1-t)]});
+function stack(beamSvgBody,dgs){ // beam + diagrams vertically in one svg
+  let h=110,s=beamSvgBody;dgs.forEach(g=>{s+=`<g transform="translate(0,${h})">${diag(g.pts,Object.assign({raw:true},g))}</g>`;h+=98});
+  return S(360,h,s,'beam with diagrams');
+}
+
+/* ---------- sign figures ---------- */
+function element(o){ // o: fs:[leftUp,rightUp] or m:[leftCW,rightCW]
+  let s=`<rect x="110" y="34" width="100" height="44" class="f-soft s-ink" stroke-width="1.5"/>`;
+  if(o.fs){const [l,r]=o.fs;s+=l?arrow(110,82,110,30,'react'):arrow(110,30,110,82,'react');s+=r?arrow(210,82,210,30,'react'):arrow(210,30,210,82,'react');s+=tx(96,60,'F<tspan font-size="9" baseline-shift="sub">s</tspan>','rl it','end')+tx(224,60,'F<tspan font-size="9" baseline-shift="sub">s</tspan>','rl it','start')}
+  return S(320,110,s,'element');
+}
+function arcFor(cx,cy,cw,right){ // a C-shaped arc on the outside of the face
+  const r=24; if(!right) return cw?arcArrow(cx,cy,r,240,120,'react'):arcArrow(cx,cy,r,120,240,'react');
+  return cw?arcArrow(cx,cy,r,60,-60,'react'):arcArrow(cx,cy,r,-60,60,'react');
+}
+function elementM(lcw,rcw){let s=`<rect x="110" y="34" width="100" height="44" class="f-soft s-ink" stroke-width="1.5"/>`+arcFor(110,56,lcw)+arcFor(210,56,rcw,true)+tx(76,30,'M','rl it')+tx(244,30,'M','rl it');return S(320,110,s,'element with moments')}
+const FIG={
+  signFs:()=>element({fs:[true,false]}),
+  signM:()=>{const top=`<path d="M30 30 Q140 74 250 30" class="s-react" stroke-width="2.5" fill="none"/>`+tx(140,84,'bottom in tension','sm')+tx(140,24,'top in compression','sm')+arcArrow(30,30,18,240,120,'react')+arcArrow(250,30,18,-60,60,'react');return S(290,96,top,'positive moment')},
+  case1:()=>stack(beam('ss',[{t:'P',x:.5}],[[0,.5,'l/2'],[.5,1,'l/2']]),[{pts:[[0,.6],[.5,.6],[.5,-.6],[1,-.6]],name:'Fs',labels:[[.25,.6,'+P/2'],[.75,-.6,'−P/2']]},{pts:[[0,0],[.5,1],[1,0]],flip:true,name:'M',labels:[[.5,1,'Pl/4']]}]),
+  case2:()=>stack(beam('ss',[{t:'q',a:0,b:1}],[[0,1,'l']]),[{pts:[[0,.8],[1,-.8]],name:'Fs',labels:[[.08,.8,'ql/2',12],[.92,-.8,'−ql/2',-12]]},{pts:para(),flip:true,name:'M',labels:[[.5,1,'ql²/8']]}]),
+  case3:()=>stack(beam('cantR',[{t:'P',x:0}],[[0,1,'l']]),[{pts:[[0,-.6],[1,-.6]],name:'Fs',labels:[[.5,-.6,'−P']]},{pts:[[0,0],[1,-1]],flip:true,name:'M',labels:[[.86,-1,'−Pl']]}]),
+};
+const MINI={
+ 'none-fs':[[0,.6],[1,.6]], 'none-m':[[0,.2],[1,1]],
+ 'p-fs':[[0,.6],[.5,.6],[.5,-.5],[1,-.5]], 'p-m':[[0,0],[.5,1],[1,0]],
+ 'c-fs':[[0,-.5],[1,-.5]], 'c-m':[[0,0],[.5,-.6],[.5,.5],[1,0]],
+ 'q-fs':[[0,.8],[1,-.8]], 'q-m':null
+};
+function mini(key){const pts=key==='q-m'?para(16):MINI[key];const isM=key.endsWith('-m');return diag(pts,{w:140,h:62,x0:12,x1:128,k:22,flip:isM})}
+
+/* ---------- questions ---------- */
+const BEAM_PMID=beamFig('ss',[{t:'P',x:.5}],[[0,.5,'l/2'],[.5,1,'l/2']]);
+const Q=[
+ {title:'Which element shows positive shear force?',stem:'Each picture shows a small piece cut out of a beam, with the shear forces on its two faces.',
+  opts:[element({fs:[true,false]}),element({fs:[false,true]}),element({fs:[true,true]}),element({fs:[false,false]})],ans:0,
+  why:'Up on the left face and down on the right face make the piece turn clockwise, which is +F<sub>s</sub> (顺正). B turns it counterclockwise (−F<sub>s</sub>). C and D can\'t balance: both forces point the same way.'},
+ {title:'Which element shows positive bending moment?',stem:'Same piece, now with the bending moments on its faces.',
+  opts:[elementM(true,false),elementM(false,true),elementM(true,true),elementM(false,false)],ans:0,
+  why:'Clockwise on the left face and counterclockwise on the right face bend the piece into a smile, stretching the bottom: +M. B is the hogging (frown) case, −M. C and D would just spin the piece.'},
+ {title:'Point load at midspan: pick the M diagram',fig:BEAM_PMID,stem:'Simply supported beam, span l, load P at the middle.',
+  opts:[diag([[0,0],[.5,1],[1,0]],{flip:true,labels:[[.5,1,'Pl/4']]}),diag([[0,0],[.5,1],[1,0]],{labels:[[.5,1,'Pl/4']]}),diag(para(),{flip:true,labels:[[.5,1,'Pl/4']]}),diag([[0,1],[1,1]],{flip:true,labels:[[.5,1,'Pl/4']]})],ans:0,
+  why:'M is zero at both pins, rises in straight lines (no load between), and peaks with a sharp corner under P at Pl/4. The beam sags, so +M is drawn below, on the tension side. B is drawn on the wrong side. C is the uniform-load shape. D isn\'t zero at the pins.'},
+ {title:'Same beam: pick the F<sub>s</sub> diagram',fig:BEAM_PMID,stem:'Same beam, same midspan load.',
+  opts:[diag([[0,.6],[.5,.6],[.5,-.6],[1,-.6]],{labels:[[.25,.6,'+P/2'],[.75,-.6,'−P/2']]}),diag([[0,-.6],[.5,-.6],[.5,.6],[1,.6]],{labels:[[.25,-.6,'−P/2'],[.75,.6,'+P/2']]}),diag([[0,0],[.5,.8],[1,0]],{labels:[[.5,.8,'P/2']]}),diag([[0,.6],[1,-.6]],{labels:[[.1,.6,'+P/2',10],[.9,-.6,'−P/2',-10]]})],ans:0,
+  why:'Left of the load, only R<sub>A</sub> = P/2 (up) is on the left side, so F<sub>s</sub> = +P/2. Right of the load, 1/2P − P = −P/2. Between loads F<sub>s</sub> is flat, and at P it jumps down by exactly P. D (a sloped line) only happens under a distributed load.'},
+ {title:'Cantilever fixed on the left: pick the M diagram',fig:beamFig('cantL',[{t:'P',x:1}],[[0,1,'l']]),stem:'Load P at the free end on the right.',
+  opts:[diag([[0,-1],[1,0]],{flip:true,labels:[[.14,-1,'Pl']]}),diag([[0,0],[1,-1]],{flip:true,labels:[[.86,-1,'Pl']]}),diag([[0,1],[1,0]],{flip:true,labels:[[.14,1,'Pl']]}),diag([[0,0],[1,1]],{flip:true,labels:[[.86,1,'Pl']]})],ans:0,
+  why:'The cantilever hogs, so the top is in tension and the diagram is drawn above the line (−M). M is zero at the free end, where nothing is beyond the cut, and largest, Pl, at the fixed end. B puts the peak at the free end; C and D are on the wrong side.'},
+ {title:'Uniform load: pick the matching pair',fig:beamFig('ss',[{t:'q',a:0,b:1}],[[0,1,'l']]),stem:'Each option shows F<sub>s</sub> (top) and M (bottom).',
+  opts:[pair([[0,.8],[1,-.8]],para()),pair([[0,.6],[.5,.6],[.5,-.6],[1,-.6]],[[0,0],[.5,1],[1,0]]),pair([[0,.8],[1,-.8]],[[0,0],[.5,1],[1,0]]),pair(para(),[[0,.8],[1,-.8]],true)],ans:0,
+  why:'Constant q makes F<sub>s</sub> a straight sloped line, from +ql/2 down to −ql/2, and M a parabola peaking at ql²/8 exactly where F<sub>s</sub> crosses zero. B is the point-load answer. C mixes a uniform-load F<sub>s</sub> with a point-load M.'},
+ {title:'Couple on a simple beam: pick the M diagram',fig:beamFig('ss',[{t:'m',x:.4,cw:true}],[[0,.4,'a'],[.4,1,'b']]),stem:'A clockwise couple m acts at C. Reactions: R<sub>A</sub> = m/l downward, R<sub>B</sub> = m/l upward.',
+  opts:[diag([[0,0],[.4,-.55],[.4,.75],[1,0]],{flip:true,labels:[[.4,-.55,'ma/l',-16],[.4,.75,'mb/l',18]]}),diag([[0,0],[.4,.9],[1,0]],{flip:true,labels:[[.4,.9,'m']]}),diag([[0,0],[.4,.55],[.4,.9],[1,0]],{flip:true}),diag([[0,-.5],[1,-.5]],{flip:true,labels:[[.5,-.5,'m/l']]})],ans:0,
+  why:'From the left: R<sub>A</sub> pulls down, so M = −(m/l)·x, hogging and drawn above, reaching −ma/l at C. Crossing the couple, M jumps by m to +mb/l (sagging, drawn below), then falls back to 0 at B. A couple always makes M jump, by exactly m, while F<sub>s</sub> stays at −m/l the whole way.'},
+ {title:'Read off a value',fig:beamFig('ss',[{t:'P',x:1/3,l:'P = 12 kN'}],[[0,1/3,'2 m'],[1/3,1,'4 m']]),stem:'Simply supported, span 6 m, P = 12 kN at 2 m from A. What is the bending moment under the load?',
+  opts:['16 kN·m','24 kN·m','18 kN·m','8 kN·m'].map(t=>`<div class="txt">${t}</div>`),ans:0,
+  why:'R<sub>A</sub> = 12 × 4/6 = 8 kN, R<sub>B</sub> = 4 kN. From the left: M = 8 × 2 = 16 kN·m. From the right: 4 × 4 = 16 ✓. Or Pab/l = 12 × 2 × 4/6 = 16. 18 would be Pl/4, which only applies at midspan.'},
+];
+function pair(fs,m,fsCurve){let s=`<g>${diag(fs,{raw:true,h:76,k:24,name:'Fs'})}</g><g transform="translate(0,76)">${diag(m,{raw:true,h:76,k:24,flip:true,name:'M'})}</g>`;return S(360,152,s,'Fs and M pair')}
+
+/* ---------- quiz engine ---------- */
+let answered={}; try{answered=JSON.parse(localStorage.getItem('beamdrill-v1')||'{}')}catch(e){}
+const save=()=>{try{localStorage.setItem('beamdrill-v1',JSON.stringify(answered))}catch(e){}};
+// shuffle option order deterministically per question
+function order(i,n){const o=[...Array(n).keys()];let s=(i+1)*9301;for(let k=n-1;k>0;k--){s=(s*9301+49297)%233280;const j=Math.floor(s/233280*(k+1));[o[k],o[j]]=[o[j],o[k]]}return o}
+function render(){
+  const box=document.getElementById('quiz');box.innerHTML='';
+  Q.forEach((q,i)=>{
+    const el=document.createElement('article');el.className='q';el.id='q'+(i+1);
+    const ord=order(i,q.opts.length);
+    el.innerHTML=`<span class="n">Question ${i+1} of ${Q.length}</span><h3>${q.title}</h3>${q.fig?`<div class="figbox">${q.fig}</div>`:''}<p class="stem">${q.stem}</p>
+      <div class="opts">${ord.map((k,pos)=>`<button class="opt" type="button" data-k="${k}"><span class="lbl">${'ABCD'[pos]}</span>${q.opts[k]}</button>`).join('')}</div><div class="fb" role="status" aria-live="polite"></div>`;
+    el.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{ if(i in answered) return; answered[i]=+b.dataset.k; save(); mark(el,q,i); score(); }));
+    if(i in answered) mark(el,q,i);
+    box.appendChild(el);
+  });
+  score();
+}
+function mark(el,q,i){
+  const pick=answered[i];
+  el.querySelectorAll('.opt').forEach(b=>{b.disabled=true;const k=+b.dataset.k;if(k===q.ans)b.classList.add('ok');else if(k===pick)b.classList.add('no')});
+  const fb=el.querySelector('.fb');fb.className='fb show '+(pick===q.ans?'ok':'no');
+  fb.innerHTML=(pick===q.ans?'<b>Correct.</b> ':'<b>Not quite.</b> The green one is right. ')+q.why;
+}
+function score(){const n=Object.entries(answered).filter(([i,k])=>Q[i]&&Q[i].ans===k).length;document.getElementById('score').firstChild.textContent=`Score ${n} / ${Q.length} `}
+document.getElementById('reset').addEventListener('click',()=>{answered={};save();render()});
+
+document.querySelectorAll('[data-fig]').forEach(d=>d.innerHTML=FIG[d.dataset.fig]());
+document.querySelectorAll('[data-mini]').forEach(d=>d.innerHTML=mini(d.dataset.mini));
+render();
+</script>
+
+</body></html>

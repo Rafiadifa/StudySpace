@@ -25,6 +25,7 @@
     .subj-tab[data-subj="cpp"].active  { background: var(--cpp);  color: #fff; border-color: var(--cpp); }
     .subj-tab[data-subj="calc"].active { background: var(--calc); color: #fff; border-color: var(--calc); }
     .subj-tab[data-subj="la"].active   { background: var(--la);   color: #fff; border-color: var(--la); }
+    .subj-tab[data-subj="dc"].active   { background: var(--dc);   color: #fff; border-color: var(--dc); }
     .subj-tab[data-subj="other"].active{ background: var(--text3);color: #fff; border-color: var(--text3); }
     .tab-due-badge {
       font-size: 0.58rem; background: var(--dt); color: #fff;
@@ -57,6 +58,7 @@
     .blk-cpp  { --subj-color: var(--cpp); }
     .blk-calc { --subj-color: var(--calc); }
     .blk-la   { --subj-color: var(--la); }
+    .blk-dc   { --subj-color: var(--dc); }
 
     /* ── Unavailable (placeholder) cards ── */
     .card-soon { opacity: .4; pointer-events: none; cursor: default; }
@@ -284,6 +286,10 @@
     <button class="subj-tab" data-subj="la"   onclick="selectSubject('la')">
       Linear Algebra
       <span class="tab-due-badge" id="due-la">0</span>
+    </button>
+    <button class="subj-tab" data-subj="dc"   onclick="selectSubject('dc')">
+      Digital Construction
+      <span class="tab-due-badge" id="due-dc">0</span>
     </button>
     <button class="subj-tab" data-subj="other" onclick="selectSubject('other')">Other</button>
   </nav>
@@ -540,6 +546,45 @@
       </div>
     </div>
 
+    <!-- ═══ DIGITAL CONSTRUCTION ═══ -->
+    <div class="subj-panel blk-dc" data-subj="dc">
+      <div class="panel-header">
+        <div class="panel-dot dot-dc"></div>
+        <div>
+          <div class="panel-label">Subject 04 · Semester 3</div>
+          <div class="panel-title" style="color:var(--dc)">Spatial Structure &amp; Digital Construction</div>
+        </div>
+        <div class="panel-exam"><strong>空间结构与数字化建造</strong>Fall 2026</div>
+      </div>
+
+      <div class="subsection-wrap" data-section="review" data-pinned="true">
+        <div class="subsection-label">Review Notes</div>
+      <div class="filter-bar">
+        <button class="fpill active" data-filter="all">All</button>
+        <button class="fpill" data-filter="daily">Daily Practice</button>
+        <button class="fpill" data-filter="exams">Exams &amp; Mocks</button>
+        <button class="fpill fpill-due" data-filter="due">⭐ Due for Review</button>
+      </div>
+        <div class="card-grid">
+          <a href="../content/stem/dc/shear_beam_check.html" class="card acc-dc card-wide" data-id="dc-shearbeam">Shear &amp; Beam Forces — Summary + Check <span class="card-sub">Oct 15 Thu · 剪切 + Ch. 3.1–3.3 · 13 questions</span></a>
+        </div>
+      </div>
+
+      <div class="subsection-wrap" data-section="daily">
+        <div class="subsection-label">Daily Practice</div>
+        <div class="card-grid">
+          <a href="../content/stem/dc/moments_stress.html" class="card acc-dc" data-id="dc-moments">Moments &amp; Stress Workbook <span class="card-sub">Oct 7 Wed · HW2 moments + axial stress · easy → hard</span></a>
+          <a href="../content/stem/dc/beam_diagrams.html" class="card acc-dc" data-id="dc-beamdrill">Beam Diagrams Drill <span class="card-sub">Oct 15 Thu · pick the right Fs / M diagram · visual</span></a>
+        </div>
+      </div>
+
+      <div class="subsection-wrap" data-section="exams">
+        <div class="subsection-label">Exams &amp; Mocks</div>
+        <div class="card-grid">
+        </div>
+      </div>
+    </div>
+
     <!-- ═══ OTHER ═══ -->
     <div class="subj-panel" data-subj="other">
       <div class="panel-header">
@@ -596,8 +641,8 @@
   /* ═══════════════════════════════════════
      SUBJECT TABS
   ═══════════════════════════════════════ */
-  const SUBJ_NAMES  = { cpp:'C++ PROGRAMMING', calc:'CALCULUS A2', la:'LINEAR ALGEBRA', other:'OTHER' };
-  const SUBJ_COLORS = { cpp:'var(--cpp)', calc:'var(--calc)', la:'var(--la)', other:'var(--text3)' };
+  const SUBJ_NAMES  = { cpp:'C++ PROGRAMMING', calc:'CALCULUS A2', la:'LINEAR ALGEBRA', dc:'DIGITAL CONSTRUCTION', other:'OTHER' };
+  const SUBJ_COLORS = { cpp:'var(--cpp)', calc:'var(--calc)', la:'var(--la)', dc:'var(--dc)', other:'var(--text3)' };
 
   function selectSubject(subj) {
     document.querySelectorAll('.subj-tab').forEach(t => t.classList.toggle('active', t.dataset.subj === subj));
@@ -675,7 +720,7 @@
     document.querySelectorAll('.card[data-id]').forEach(updateSRBadge);
     // Update tab due counters
     const sr = getSR(); const now = Date.now();
-    ['cpp','calc','la'].forEach(subj => {
+    ['cpp','calc','la','dc'].forEach(subj => {
       const count = document.querySelectorAll(`.subj-panel[data-subj="${subj}"] [data-id]`);
       let n = 0;
       count.forEach(c => { const r=sr[c.dataset.id]; if(r&&r.due<=now) n++; });
@@ -691,6 +736,7 @@
     if (id.startsWith('cpp'))  return 'cpp';
     if (id.startsWith('calc')) return 'calc';
     if (id.startsWith('la'))   return 'la';
+    if (id.startsWith('dc'))   return 'dc';
     return 'other';
   }
 
@@ -721,7 +767,7 @@
       groups[key].push(e);
     });
 
-    const SUBJ_COL = { cpp:'var(--cpp)', calc:'var(--calc)', la:'var(--la)', other:'var(--text3)' };
+    const SUBJ_COL = { cpp:'var(--cpp)', calc:'var(--calc)', la:'var(--la)', dc:'var(--dc)', other:'var(--text3)' };
     el.innerHTML = Object.entries(groups).map(([day,entries]) => `
       <div class="log-day-group">
         <div class="log-day-label">${day}</div>
@@ -1108,6 +1154,8 @@
      TODAY BANNER
   ═══════════════════════════════════════ */
   const TODAY_SESSIONS = {
+    'Oct 7': ['dc-moments'],
+    'Oct 15':['dc-shearbeam','dc-beamdrill'],
     'May 25':['la-basis5'],
     'May 26':['cpp-may26','cpp-ch1','cpp-ch2','calc-pd','calc-ift'],
     'May 27':['cpp-pointers','cpp-may27class','cpp-may27oop','calc-may27'],
@@ -1144,8 +1192,8 @@
   const DAYS  =['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
   /* ── Week-strip calendar ── */
-  const CAL_SUBJ_COL={cpp:'var(--cpp)',calc:'var(--calc)',la:'var(--la)',other:'var(--text3)'};
-  const calSubjOf=id=>id.startsWith('cpp')?'cpp':id.startsWith('calc')?'calc':id.startsWith('la')?'la':'other';
+  const CAL_SUBJ_COL={cpp:'var(--cpp)',calc:'var(--calc)',la:'var(--la)',dc:'var(--dc)',other:'var(--text3)'};
+  const calSubjOf=id=>id.startsWith('cpp')?'cpp':id.startsWith('calc')?'calc':id.startsWith('la')?'la':id.startsWith('dc')?'dc':'other';
   const calKey=d=>MONTHS[d.getMonth()]+' '+d.getDate();
   const calSame=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
   function calMonday(d){ const x=new Date(d); x.setHours(0,0,0,0); x.setDate(x.getDate()-((x.getDay()+6)%7)); return x; }

@@ -13,6 +13,7 @@ Owner: Rafi Adifa Maulana. Upcoming finals: **Calculus A2 — 23 Jun 2026**, **L
 - `index.html` (domains) · `style.css` (shared, defines `--accent`, `subject-{calc,la,cpp,mgmt,lang}` themes).
 - `hub/` → `stem.html` (main STEM hub), `humanities.html`, `language.html`.
 - `content/stem/{calc,la,cpp,other}/*.html` — daily practice pages.
+- `content/stem/dc/*.html` — **Spatial Structure & Digital Construction** (空间结构与数字化建造, Semester 3, Fall 2026). Hub tab `dc` in `hub/stem.html` (card ids `dc-…`, colour `--dc` teal). Pages: `moments_stress.html` + `beam_diagrams.html` (self-contained workbooks migrated from claude.ai artifacts — own styling, StudyHub back-bar + theme toggle added) and `shear_beam_check.html` (StudyHub template, MCQ with shuffled options, hints, per-question reveal).
 - `content/stem/cheatsheet.html` — shared cheat-sheet builder (`?subj=la` / `?subj=calc`).
 - `content/language/chinese/` — index, vocab, flashcards, grammar, exercises, **mock.html** (3 timed papers), **writing.html** (Hanzi Writer stroke order), `js/data.js` (VOCAB/GRAMMAR/EXERCISES), `js/store.js`.
 - `content/humanities/management/` — `concepts.html` (concept library), `mock.html` (2-hr, identify-the-framework), `notes.html` (slides via local path, Google-Drive fallback in a `DRIVE` config).
@@ -32,6 +33,11 @@ Owner: Rafi Adifa Maulana. Upcoming finals: **Calculus A2 — 23 Jun 2026**, **L
 - **JS syntax check** via macOS JavaScriptCore: extract the page's main `<script>`, then `jsc` with `new Function(code)` (catches syntax errors like a duplicate `const`/`function` that once blanked `stem.html`). Path: `/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc`.
 - **Serve + curl** for HTTP 200: `python3 -m http.server <port>` then `curl`. `python3` is available but **numpy is not** — verify math with plain `math`.
 - Always hand-derive AND numerically check the math in any problem you add.
+
+## Digital Construction (Semester 3)
+- Course material is **outside the repo**: `~/Documents/Tsinghua/Academic/Semester 3/Spatial Structure and Digital Construction/` (slide deck `Spatial Structure Digital Construction.pdf`; homework in `HW/`). Use `pdftotext -f N -l M -layout` for slide ranges (shear ≈ p.142–146, beam internal forces ≈ p.146–169).
+- User prefers **visual** questions (SVG diagrams, pick-the-diagram), difficulty easy → hard, hints one at a time, worked solutions. Follow the course's Chinese sign conventions (Fs 顺正逆负, M 下拉为正, M diagram drawn on the tension side).
+- Adding a page = new file in `content/stem/dc/` + one `<a class="card acc-dc" data-id="dc-…">` in the dc panel (+ optional `TODAY_SESSIONS` date). Edit `hub/stem.html` with targeted replacements, not a full rewrite.
 
 ## Open / possible follow-ups
 - Some practice pages may still use one "reveal-all" button instead of per-question reveals (user wants per-question) — convert on request.

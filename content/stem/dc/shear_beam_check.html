@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Construction · Shear &amp; Beam Forces Check</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    .sec-title { font-family:'DM Serif Display',serif; font-size:1.7rem; letter-spacing:-.02em; color:var(--text); margin:52px 0 6px; }
+    .sec-eyebrow { font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+    .formula-ref ul { margin:8px 0 0 18px; padding:0; }
+    .formula-ref li { margin:4px 0; }
+    .shape-table { width:100%; border-collapse:collapse; margin:14px 0 4px; font-size:.84rem; }
+    .shape-table th, .shape-table td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); }
+    .shape-table th { font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text3); font-weight:500; }
+    .table-wrap { overflow-x:auto; }
+
+    .score-chip { position:sticky; top:64px; z-index:9; display:flex; gap:12px; align-items:center; background:var(--bg); border-bottom:1px solid var(--border); padding:10px 0; font-family:'DM Mono',monospace; font-size:.72rem; color:var(--text2); }
+    .score-chip strong { color:var(--accent); font-weight:500; }
+    .score-chip button { margin-left:auto; background:none; border:1px solid var(--border); color:var(--text3); font:inherit; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:5px; cursor:pointer; }
+
+    .mcq-prompt { font-size:.95rem; color:var(--text); line-height:1.6; margin-bottom:14px; }
+    .mcq-opts { display:grid; gap:8px; }
+    .mcq-opt { text-align:left; font:inherit; font-size:.88rem; color:var(--text2); background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:11px 14px; cursor:pointer; transition:border-color .15s, background .15s; display:flex; gap:10px; }
+    .mcq-opt:hover:not(:disabled) { border-color:var(--accent); color:var(--text); }
+    .mcq-opt:disabled { cursor:default; }
+    .mcq-letter { font-family:'DM Mono',monospace; color:var(--text3); }
+    .mcq-opt.right { border-color:#16a34a; background:rgba(22,163,74,.08); color:var(--text); }
+    .mcq-opt.wrong { border-color:#dc2626; background:rgba(220,38,38,.07); color:var(--text); }
+    .mcq-tools { margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
+    .mcq-hint { display:none; margin-top:10px; font-size:.84rem; color:var(--text2); border-left:2px solid var(--accent); padding:4px 12px; }
+    .mcq-hint.open { display:block; }
+    .mcq-fb { display:none; margin-top:14px; font-size:.86rem; line-height:1.6; color:var(--text2); background:var(--bg3); border-radius:10px; padding:12px 14px; }
+    .mcq-fb.open { display:block; }
+    .mcq-fb strong { color:var(--text); }
+    .tag-ext { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.06em; color:var(--text3); border:1px solid var(--border); border-radius:4px; padding:1px 6px; margin-left:6px; }
+    @media (max-width:640px){ .main{padding:0 16px;} }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-dc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title"><a href="../../../hub/stem.html" style="color:inherit;text-decoration:none">Rafi's Study Hub</a></span>
+    <span class="topbar-sub">/ digital construction / shear &amp; beam forces</span>
+    <span class="topbar-date">15 OCT 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Shear &amp; <em>Beam Forces</em></h1>
+    <p class="hero-meta">Quick concept check for the shear chapter (剪切) and Chapter 3.1–3.3 (梁的弯曲内力). A short summary of each, then multiple-choice questions with one-at-a-time hints and an explanation for every answer.</p>
+    <div class="exam-pills">
+      <span class="pill pill-dc">Spatial Structure &amp; Digital Construction</span>
+      <span class="pill pill-dc">13 questions</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="score-chip"><span>Score <strong id="score">0 / 0</strong> answered</span><span id="score-total">of 13</span><button onclick="resetAll()">Reset</button></div>
+
+    <!-- ═══ Part 1 · Shear ═══ -->
+    <div class="sec-eyebrow">Part 1</div>
+    <div class="sec-title">Shear (剪切)</div>
+    <div class="formula-ref">
+      <strong>Summary.</strong>
+      <ul>
+        <li><strong>Shear deformation (剪切变形):</strong> two equal, opposite forces act close together across a member, like scissors. The material either side of the plane between them slides, so a small rectangle abcd becomes a parallelogram.</li>
+        <li><strong>Shear force (剪力):</strong> cut at the plane that slides. For a single shear plane, <strong>F<sub>s</sub> = F</strong>. The force lies <em>in</em> the cut face.</li>
+        <li><strong>Nominal shear stress (名义剪应力):</strong> <strong>τ = F<sub>s</sub> / A</strong>, with A the area of the sliding plane. "Nominal" because it assumes τ is spread evenly. σ is perpendicular to the face, τ is parallel to it.</li>
+        <li><strong>Strength condition (剪切强度条件):</strong> <strong>τ = F<sub>s</sub>/A ≤ [τ]</strong>. Same three jobs as the axial version: check, size a section, find the allowable load.</li>
+        <li><strong>Punching example:</strong> F = 100 kN, t = d = 10 mm, τ<sub>b</sub> = 300 MPa. Sheared area is the side surface <strong>A = πdt = 314 mm²</strong> (not πd²/4). Resistance τ<sub>b</sub>A = 94.2 kN &lt; 100 kN, so the hole is cut. In punching you <em>want</em> τ to reach τ<sub>b</sub>.</li>
+      </ul>
+    </div>
+    <div id="part-shear"></div>
+
+    <!-- ═══ Part 2 · Beam internal forces ═══ -->
+    <div class="sec-eyebrow" style="margin-top:56px">Part 2</div>
+    <div class="sec-title">Beam internal forces (梁的弯曲内力) · 3.1–3.3</div>
+    <div class="formula-ref">
+      <strong>Summary.</strong>
+      <ul>
+        <li><strong>Beam (梁):</strong> a member that mainly bends. <strong>Plane bending (平面弯曲):</strong> loads in the plane of symmetry, so the axis curves within that plane. Loads: concentrated force P, concentrated couple m, distributed load q (resultant = area of the load diagram, at its centroid).</li>
+        <li><strong>Internal forces at a cut:</strong> F<sub>s</sub> (剪力) across the cut and M (弯矩) turning the face. Find reactions → cut → keep one side → ΣY = 0, ΣM = 0 about the cut.</li>
+        <li><strong>Sign rules:</strong> F<sub>s</sub> + when it turns the kept piece <strong>clockwise</strong> (顺正逆负). M + when the <strong>bottom is in tension</strong>, beam sags (下拉为正). Cantilevers are negative.</li>
+        <li><strong>Shortcut (简便求法):</strong> F<sub>s</sub> = sum of vertical forces on one side (clockwise-turning = +). M = sum of moments of one side's forces about the cut (bottom-stretching = +).</li>
+        <li><strong>Drawing:</strong> F<sub>s</sub> diagram positive <em>above</em> the baseline. M diagram drawn on the tension side, so positive <em>below</em> the baseline.</li>
+      </ul>
+      <div class="table-wrap">
+      <table class="shape-table">
+        <tr><th>Load</th><th>F<sub>s</sub> diagram</th><th>M diagram</th></tr>
+        <tr><td>Unloaded segment</td><td>horizontal line</td><td>straight sloped line</td></tr>
+        <tr><td>Concentrated force P</td><td>jumps by P</td><td>sharp corner (尖角)</td></tr>
+        <tr><td>Concentrated couple m</td><td>no change</td><td>jumps by m</td></tr>
+        <tr><td>Uniform load q</td><td>sloped straight line</td><td>parabola</td></tr>
+      </table>
+      </div>
+      <strong>Memorize:</strong> simply supported, point load at a, b → M<sub>max</sub> = Pab/l (Pl/4 at midspan) · uniform q → ql²/8 at midspan · end-loaded cantilever → M = −Px, largest at the fixed end.
+    </div>
+    <div id="part-beam"></div>
+
+    <p style="font-size:.8rem;color:var(--text3);margin:48px 0 80px">Questions first written in the Digital Construction chat (15 Oct). For visual pick-the-diagram practice, open <a href="beam_diagrams.html" style="color:var(--accent)">Beam Diagrams Drill</a>.</p>
+  </div>
+
+  <div class="footer-note">RAFI ADIFA MAULANA · STUDY HUB · 2026</div>
+
+  <script>
+  const QUIZ = {
+    shear: [
+      { p:'How does shear stress τ act on the cut face, compared with normal stress σ?',
+        o:['τ is parallel to the face; σ is perpendicular to it','τ is perpendicular to the face; σ is parallel to it','Both are perpendicular; τ is just smaller','Both are parallel to the face'],
+        h:'Think about which way the layers move in shear.', ok:'Exactly.', no:'Flip it around.',
+        e:'Normal stress pulls or pushes straight out of the section (axial tension/compression). Shear stress acts along the section, making the two sides slide past each other, like the rectangle abcd turning into a parallelogram on the slide.' },
+      { p:'A single bolt (d = 20 mm) joins two overlapping plates pulled apart by F = 20 kN. There is one shear plane. What is the nominal shear stress in the bolt?',
+        o:['≈ 63.7 MPa','≈ 31.8 MPa','1000 MPa','≈ 15.9 MPa'],
+        h:'The area that slides is the circle where the two plates meet.', ok:'Right, 63.7 MPa.', no:'Check the area.',
+        e:'F<sub>s</sub> = F = 20 000 N. The shear plane is the bolt\'s circular cross-section: A = π·20²/4 = 314.2 mm². τ = F<sub>s</sub>/A = 20 000/314.2 ≈ 63.7 MPa.' },
+      { p:'In the slide example, a punch cuts a round hole (diameter d) out of a plate of thickness t. Which area resists the shear?',
+        o:['π·d·t, the side surface of the cylinder being pushed out','π·d²/4, the area of the hole','d·t','π·d²/4 × t'],
+        h:'Picture the little disc being pushed out. Along which surface does it slide?', ok:'Yes, the side surface.', no:'That surface isn\'t the one that slides.',
+        e:'The slug of material slides out along its curved side surface, so the sheared area is circumference × thickness, πdt. The face area πd²/4 is perpendicular to the force, so it doesn\'t shear.' },
+      { p:'Same punching setup, but d = 20 mm, t = 8 mm and τ<sub>b</sub> = 300 MPa. What punch force is needed to cut the hole?',
+        o:['≈ 150.8 kN','≈ 94.2 kN','≈ 37.7 kN','48 kN'],
+        h:'Shear area first, then multiply by the shear strength limit.', ok:'Correct, about 151 kN.', no:'Recompute A = πdt.',
+        e:'A = π·d·t = π × 20 × 8 = 502.7 mm². To cut, τ must reach τ<sub>b</sub>: F ≥ τ<sub>b</sub>·A = 300 × 502.7 ≈ 150 800 N ≈ 150.8 kN. (94.2 kN is the slide\'s answer for d = t = 10 mm.)' },
+      { p:'Why is τ = F<sub>s</sub>/A called the <em>nominal</em> (名义) shear stress?',
+        o:['It assumes τ is spread evenly over the shear plane, which isn\'t exactly true','It ignores the shear force','It only works for brittle materials','It is measured, not calculated'],
+        h:'', ok:'Right, it\'s an average.', no:'Think about what the formula assumes.',
+        e:'The real shear stress in a bolt or pin is not uniform. The formula averages it over the area. That average is calibrated by tests, so it\'s good enough for design checks with [τ].' },
+      { p:'A pin passes through a fork, so it is cut on two planes (double shear). F = 40 kN, pin d = 16 mm. What is τ?', ext:true,
+        o:['≈ 99.5 MPa','≈ 199 MPa','≈ 49.7 MPa','250 MPa'],
+        h:'Count how many planes would have to slide for the pin to fail.', ok:'Yes, the load splits between two planes.', no:'How many shear planes are there?',
+        e:'Two shear planes share the load, so each carries F<sub>s</sub> = F/2 = 20 kN. A = π·16²/4 = 201.1 mm². τ = 20 000/201.1 ≈ 99.5 MPa. Using the full F gives 199 MPa, double the real value.' }
+    ],
+    beam: [
+      { p:'Under the course convention, when is a bending moment M positive?',
+        o:['When it puts the bottom fibres in tension (beam sags, smile shape)','When it puts the top fibres in tension','When it turns the segment counterclockwise','Whenever the load points down'],
+        h:'', ok:'Yes, bottom in tension.', no:'Think about which edge is stretched.',
+        e:'弯矩使下边受拉为正. Positive M = sagging, bottom in tension. Negative M = hogging, top in tension. It\'s defined by what the beam does, not by clockwise or counterclockwise, so you get the same sign from the left or right segment.' },
+      { p:'A cantilever carries a downward load P at its free end. What is the sign of the bending moment along the beam?',
+        o:['Negative everywhere (top fibres in tension)','Positive everywhere','Positive near the support, negative near the tip','Zero everywhere'],
+        h:'Picture a diving board with someone standing on the end.', ok:'Right, hogging the whole way.', no:'Which surface gets stretched?',
+        e:'A cantilever bends down like a diving board, so the top is stretched: M is negative. That matches the slides: M = −P·x for the end-loaded cantilever, and M = −18 kN·m in the 1-1 example. The magnitude is largest at the fixed end and zero at the tip.' },
+      { p:'Simply supported beam, span 5 m. P = 10 kN acts 2 m from A. What is the shear force just to the right of the load?',
+        o:['−4 kN','+6 kN','+4 kN','−10 kN'],
+        h:'Find R<sub>A</sub> and R<sub>B</sub> first, then use whichever side of the section is simpler.', ok:'Correct, −4 kN.', no:'Check the sign rule (clockwise +) and the reactions.',
+        e:'R<sub>A</sub> = 10×3/5 = 6 kN, R<sub>B</sub> = 10×2/5 = 4 kN. Simple method, right side: the only vertical force to the right is R<sub>B</sub> = 4 kN upward. On a right segment, an upward force turns it counterclockwise, so F<sub>s</sub> = −4 kN. Check from the left: 6 − 10 = −4 ✓. The F<sub>s</sub> diagram jumps from +6 to −4 at the load, a jump of exactly P = 10.' },
+      { p:'Same beam (span 5 m, P = 10 kN at 2 m from A). What is the bending moment under the load?',
+        o:['12 kN·m','20 kN·m','8 kN·m','50 kN·m'],
+        h:'Moment of all forces on one side about the section.', ok:'Yes, Pab/l = 12.', no:'Use R<sub>A</sub> × 2, or R<sub>B</sub> × 3.',
+        e:'From the left: M = R<sub>A</sub> × 2 = 6 × 2 = 12 kN·m. From the right: R<sub>B</sub> × 3 = 4 × 3 = 12 ✓. It also matches the slide formula Pab/l = 10×2×3/5 = 12. Positive, because the beam sags. This is the sharp corner (尖角) in the M diagram.' },
+      { p:'Simply supported beam, span 4 m, uniform load q = 5 kN/m over the whole span. What is the maximum bending moment?',
+        o:['10 kN·m, at midspan','20 kN·m, at midspan','40 kN·m, at the supports','10 kN·m, at the supports'],
+        h:'Replace the distributed load on one side with its resultant (area of the load diagram) at its centroid.', ok:'Right, ql²/8.', no:'Replace q with its resultant on one side of the cut.',
+        e:'R<sub>A</sub> = R<sub>B</sub> = ql/2 = 10 kN. At midspan, from the left: M = 10×2 − (5×2)×1 = 20 − 10 = 10 kN·m, which is ql²/8. The resultant of the distributed load on the left half is 5×2 = 10 kN at its centre, 1 m from the cut. At pinned supports M = 0.' },
+      { p:'Under a uniformly distributed load, what shapes do the diagrams take?',
+        o:['F<sub>s</sub>: sloped straight line. M: parabola','F<sub>s</sub>: horizontal line. M: sloped straight line','F<sub>s</sub>: parabola. M: sloped straight line','Both are parabolas'],
+        h:'', ok:'Exactly.', no:'One power of x higher each time: q → F<sub>s</sub> → M.',
+        e:'With q constant, F<sub>s</sub> changes linearly with x (a sloped line) and M is quadratic in x (a parabola). With no load between two points, F<sub>s</sub> is flat and M is a sloped line. Section 3.4\'s differential relations (dF<sub>s</sub>/dx = q, dM/dx = F<sub>s</sub>) explain why.' },
+      { p:'At a point where a concentrated couple m acts on the beam, what happens to the diagrams?',
+        o:['M jumps by m; the F<sub>s</sub> diagram has no jump','F<sub>s</sub> jumps by m; M has a sharp corner','Both jump by m','Nothing changes'],
+        h:'Remember: a couple turns but never pushes.', ok:'Right, a jump in M only.', no:'Does a couple add any vertical force?',
+        e:'A couple adds no vertical force, so F<sub>s</sub> is continuous there. It adds a pure moment, so M jumps by exactly m. Compare a concentrated force P: F<sub>s</sub> jumps by P, and M only gets a sharp corner.' }
+    ]
+  };
+
+  // In every question the first option is the correct one; shuffle the display order.
+  function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+  let answered=0, right=0;
+  function updScore(){ document.getElementById('score').textContent=right+' / '+answered; }
+
+  function build(part, list, startNum){
+    const host=document.getElementById('part-'+part); host.innerHTML='';
+    list.forEach((q,qi)=>{
+      const n=startNum+qi;
+      const order=shuffle(q.o.map((t,i)=>({t,ok:i===0})));
+      const div=document.createElement('div'); div.className='problem';
+      div.innerHTML=`<div class="problem-header"><span class="problem-num">Question ${n}</span>${q.ext?'<span class="tag-ext">common extension · not on slides</span>':''}</div>
+        <div class="problem-body">
+          <div class="mcq-prompt">${q.p}</div>
+          <div class="mcq-opts">${order.map((o,i)=>`<button class="mcq-opt" data-ok="${o.ok}"><span class="mcq-letter">${'ABCD'[i]}</span><span>${o.t}</span></button>`).join('')}</div>
+          <div class="mcq-tools">${q.h?'<button class="ans-btn hint-btn">Show Hint</button>':''}<button class="ans-btn reveal-btn">Show Answer</button></div>
+          ${q.h?`<div class="mcq-hint">${q.h}</div>`:''}
+          <div class="mcq-fb"></div>
+        </div>`;
+      const fb=div.querySelector('.mcq-fb');
+      const finish=(picked)=>{
+        if(div.dataset.done) return; div.dataset.done='1';
+        div.querySelectorAll('.mcq-opt').forEach(b=>{ b.disabled=true; if(b.dataset.ok==='true') b.classList.add('right'); });
+        let verdict='';
+        if(picked){ answered++; const good=picked.dataset.ok==='true'; if(good) right++; else picked.classList.add('wrong'); verdict=good?q.ok:q.no; updScore(); }
+        fb.innerHTML=(verdict?`<strong>${verdict}</strong> `:'')+q.e; fb.classList.add('open');
+        div.querySelector('.reveal-btn').remove();
+      };
+      div.querySelectorAll('.mcq-opt').forEach(b=>b.onclick=()=>finish(b));
+      div.querySelector('.reveal-btn').onclick=()=>finish(null);
+      const hb=div.querySelector('.hint-btn');
+      if(hb) hb.onclick=()=>{ const h=div.querySelector('.mcq-hint'); h.classList.toggle('open'); hb.textContent=h.classList.contains('open')?'Hide Hint':'Show Hint'; };
+      host.appendChild(div);
+    });
+  }
+  function resetAll(){ answered=0; right=0; updScore(); build('shear',QUIZ.shear,1); build('beam',QUIZ.beam,QUIZ.shear.length+1); }
+  resetAll();
+
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    document.getElementById('pbar').style.width = pct + '%';
+  });
+  </script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>
