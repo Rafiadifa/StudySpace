@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Construction · Week 6 Hard Set</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    :root { --force:#c2410c; --react:var(--dc); --pos:rgba(15,118,110,.18); --neg:rgba(194,65,12,.16); }
+    html[data-theme="dark"] { --force:#fb923c; --pos:rgba(45,212,191,.2); --neg:rgba(251,146,60,.18); }
+    .sec-title { font-family:'DM Serif Display',serif; font-size:1.8rem; letter-spacing:-.02em; color:var(--text); margin:56px 0 6px; }
+    .sec-eyebrow { font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+    .sec-lede { color:var(--text2); font-size:.9rem; line-height:1.6; max-width:760px; margin:6px 0 18px; }
+
+    .primer { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:18px; }
+    .pcard { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:18px 20px; font-size:.86rem; line-height:1.6; color:var(--text2); }
+    .pcard h4 { margin:0 0 8px; font-family:'DM Sans',sans-serif; font-size:.95rem; color:var(--text); }
+    .pcard ol, .pcard ul { margin:6px 0 0 18px; padding:0; }
+    .pcard b { color:var(--text); font-weight:600; }
+    .rtable { width:100%; border-collapse:collapse; font-size:.82rem; margin-top:6px; }
+    .rtable th, .rtable td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .rtable th { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text3); font-weight:500; }
+
+    .score-chip { position:sticky; top:64px; z-index:9; display:flex; gap:12px; align-items:center; background:var(--bg); border-bottom:1px solid var(--border); padding:10px 0; font-family:'DM Mono',monospace; font-size:.72rem; color:var(--text2); }
+    .score-chip .bar { flex:1; height:4px; background:var(--bg3); border-radius:99px; overflow:hidden; max-width:260px; }
+    .score-chip .bar i { display:block; height:4px; background:var(--accent); width:0; transition:width .3s; }
+    .score-chip button { margin-left:auto; background:none; border:1px solid var(--border); color:var(--text3); font:inherit; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:5px; cursor:pointer; }
+
+    .lvl { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; padding:2px 8px; border-radius:99px; border:1px solid var(--border); color:var(--text3); }
+    .lvl.hard { color:var(--force); border-color:var(--force); }
+    .lvl.vhard { color:#fff; background:var(--force); border-color:var(--force); }
+    .pstate { margin-left:auto; font-family:'DM Mono',monospace; font-size:.66rem; color:var(--text3); }
+    .pstate.done { color:#16a34a; }
+    .ptext { font-size:.93rem; color:var(--text); line-height:1.65; max-width:820px; }
+    .ptext .note { color:var(--text2); font-size:.84rem; }
+    .fig { display:block; width:100%; height:auto; margin:14px 0; }
+    .figwrap { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:6px 12px; margin:14px 0; overflow-x:auto; }
+    .figwrap svg { min-width:320px; }
+    svg text { font-family:'DM Sans',sans-serif; font-size:13px; fill:var(--text); }
+    svg .lbl-s { font-size:11px; fill:var(--text2); }
+    svg .ax { font-family:'DM Mono',monospace; font-size:10px; fill:var(--text3); letter-spacing:.06em; }
+    svg .val { font-family:'DM Mono',monospace; font-size:11px; fill:var(--text); }
+
+    .parts-list { display:grid; gap:10px; margin:16px 0 6px; }
+    .prow { display:flex; flex-wrap:wrap; gap:10px; align-items:center; font-size:.88rem; color:var(--text2); }
+    .prow .plab { font-family:'DM Mono',monospace; color:var(--accent); min-width:26px; }
+    .prow .pq { flex:1 1 300px; }
+    .prow input { width:110px; font:inherit; font-family:'DM Mono',monospace; font-size:.85rem; padding:7px 10px; border-radius:8px; border:1px solid var(--border); background:var(--bg2); color:var(--text); }
+    .prow input.ok { border-color:#16a34a; background:rgba(22,163,74,.08); }
+    .prow input.bad { border-color:#dc2626; background:rgba(220,38,38,.06); }
+    .prow .unit { font-family:'DM Mono',monospace; font-size:.75rem; color:var(--text3); min-width:46px; }
+    .prow .mark { font-family:'DM Mono',monospace; font-size:.8rem; min-width:18px; }
+    .tools { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+    .hint { display:none; margin-top:10px; font-size:.86rem; color:var(--text2); border-left:2px solid var(--accent); padding:4px 12px; line-height:1.55; }
+    .hint.open { display:block; }
+    details.sol { margin-top:14px; border:1px solid var(--border); border-radius:10px; background:var(--bg3); }
+    details.sol summary { cursor:pointer; padding:10px 14px; font-family:'DM Mono',monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text2); }
+    details.sol .solbody { padding:4px 16px 16px; font-size:.87rem; line-height:1.7; color:var(--text2); }
+    details.sol .solbody b { color:var(--text); }
+    details.sol .solbody .eq { font-family:'DM Mono',monospace; font-size:.82rem; color:var(--text); background:var(--bg2); border-radius:6px; padding:2px 6px; }
+    .key { display:inline-block; margin-top:6px; padding:4px 10px; border-radius:6px; background:color-mix(in oklab,var(--accent) 12%,transparent); color:var(--text); font-weight:500; }
+    .mcq-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:10px; margin-top:12px; }
+    .mcq-opt { text-align:left; font:inherit; color:var(--text2); background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:8px 10px 6px; cursor:pointer; }
+    .mcq-opt:hover:not(:disabled){ border-color:var(--accent); }
+    .mcq-opt:disabled { cursor:default; }
+    .mcq-opt.right { border-color:#16a34a; box-shadow:0 0 0 2px rgba(22,163,74,.25); }
+    .mcq-opt.wrong { border-color:#dc2626; box-shadow:0 0 0 2px rgba(220,38,38,.2); }
+    .mcq-opt svg text { font-size:19px; }
+    .mcq-opt svg .ax { font-size:15px; }
+    .mcq-opt .ol { font-family:'DM Mono',monospace; font-size:.72rem; color:var(--text3); }
+    @media (max-width:640px){ .main{padding:0 16px;} .prow input{width:96px;} }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-dc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title"><a href="../../../hub/stem.html" style="color:inherit;text-decoration:none">Rafi's Study Hub</a></span>
+    <span class="topbar-sub">/ digital construction / week 6 hard set</span>
+    <span class="topbar-date">21 OCT 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Week 6 · <em>Hard Set</em></h1>
+    <p class="hero-meta">Beam internal forces, slides p.156–191 (3.2 sign rules → 3.4 differential relations), pushed to exam difficulty. Then a mixed review of reactions, axial force and shear. Type a number and press Enter to check it. Hints open one at a time.</p>
+    <div class="exam-pills">
+      <span class="pill pill-dc">空间结构与数字化建造</span>
+      <span class="pill pill-dc">18 problems</span>
+      <span class="pill pill-dc">hard → very hard</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="score-chip"><span id="score">0 / 0 checks</span><span class="bar"><i id="scorebar"></i></span><button onclick="resetAll()">Reset</button></div>
+
+    <!-- ═══ Primer ═══ -->
+    <div class="sec-eyebrow" style="margin-top:36px">Before you start</div>
+    <div class="sec-title">The rules you'll need (p.156–191)</div>
+    <div class="primer">
+      <div class="pcard">
+        <h4>Sign rules (p.156)</h4>
+        <table class="rtable">
+          <tr><th>Force</th><th>Positive when…</th></tr>
+          <tr><td>F<sub>N</sub> axial</td><td>tension (pulls away from the cut)</td></tr>
+          <tr><td>F<sub>s</sub> shear</td><td>turns the kept piece <b>clockwise</b> (顺正逆负)</td></tr>
+          <tr><td>M moment</td><td><b>bottom in tension</b>, beam sags (下拉为正)</td></tr>
+        </table>
+        <div style="margin-top:8px">They follow the deformation, so the left and right pieces always give the same sign.</div>
+      </div>
+      <div class="pcard">
+        <h4>Shortcut, no free-body diagram (p.160)</h4>
+        <ul>
+          <li><b>F<sub>s</sub></b> = Σ vertical forces on one side. Left side: up = +. Right side: down = +.</li>
+          <li><b>M</b> = Σ moments of one side about the cut. Anything that makes the bottom stretch = +.</li>
+          <li>Couples: on the <b>left</b> piece, clockwise = +. On the <b>right</b> piece, counterclockwise = +.</li>
+        </ul>
+      </div>
+      <div class="pcard">
+        <h4>Differential relations (p.170–179)</h4>
+        <table class="rtable">
+          <tr><th>Rule</th><th>Reads as</th></tr>
+          <tr><td>dF<sub>s</sub>/dx = q</td><td>slope of F<sub>s</sub> = load intensity (down load → F<sub>s</sub> falls)</td></tr>
+          <tr><td>dM/dx = F<sub>s</sub></td><td>slope of M = F<sub>s</sub>; ΔM = area under F<sub>s</sub></td></tr>
+          <tr><td>F<sub>s</sub> = 0</td><td>M has an extreme value there</td></tr>
+          <tr><td>d²M/dx² = q</td><td>q tells you which way the parabola bulges</td></tr>
+        </table>
+      </div>
+      <div class="pcard">
+        <h4>What each load does</h4>
+        <table class="rtable">
+          <tr><th>Load</th><th>F<sub>s</sub></th><th>M</th></tr>
+          <tr><td>none</td><td>flat</td><td>straight line</td></tr>
+          <tr><td>force P</td><td>jumps by P</td><td>sharp corner</td></tr>
+          <tr><td>couple m</td><td>no change</td><td>jumps by m</td></tr>
+          <tr><td>uniform q</td><td>sloped line</td><td>parabola</td></tr>
+          <tr><td>linear q</td><td>parabola</td><td>cubic</td></tr>
+        </table>
+      </div>
+      <div class="pcard">
+        <h4>Procedure (p.180 / p.191)</h4>
+        <ol>
+          <li>Reactions (check with ΣY).</li>
+          <li>Split at loads, load ends, couples and supports. Find F<sub>s</sub> and M at each control section.</li>
+          <li>Shape of each segment from the differential relations.</li>
+          <li>Extremes where F<sub>s</sub> = 0.</li>
+        </ol>
+        <div style="margin-top:6px">Draw F<sub>s</sub> with + <b>above</b> the baseline. Draw M on the tension side, so + goes <b>below</b>.</div>
+      </div>
+      <div class="pcard">
+        <h4>Traps from the error-spotting slides (p.188–190)</h4>
+        <ul>
+          <li>A middle hinge (中间铰) carries no moment: <b>M = 0</b> there.</li>
+          <li>No concentrated force → no jump in F<sub>s</sub>.</li>
+          <li>A support reaction is a concentrated force, so F<sub>s</sub> jumps there.</li>
+          <li>Symmetric beam and loads → F<sub>s</sub> antisymmetric, M symmetric (p.186).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══ Part A ═══ -->
+    <div class="sec-eyebrow" style="margin-top:64px">Part A · this week</div>
+    <div class="sec-title">Beam internal forces</div>
+    <p class="sec-lede">Signs matter here. Enter F<sub>s</sub> and M with the course signs (clockwise F<sub>s</sub> +, sagging M +). Units are kN, m and kN·m unless stated.</p>
+    <div id="partA"></div>
+
+    <!-- ═══ Part B ═══ -->
+    <div class="sec-eyebrow" style="margin-top:64px">Part B · mixed review</div>
+    <div class="sec-title">Reactions, axial force, shear</div>
+    <p class="sec-lede">These earlier topics are what tomorrow's material builds on, so it's worth getting them solid. Enter magnitudes unless the question asks for a sign. Axial force: tension +, compression −.</p>
+    <div id="partB"></div>
+
+    <p style="font-size:.8rem;color:var(--text3);margin:48px 0 80px">Every answer was computed independently in code. Your checks are saved in this browser.</p>
+  </div>
+
+  <div class="footer-note">RAFI ADIFA MAULANA · STUDY HUB · 2026</div>
+
+<script>
+/* ═════════════ helpers ═════════════ */
+const f1=n=>+(+n).toFixed(1);
+const fmt=v=>{const r=Math.round(v*100)/100; return (r<0?'−':'')+Math.abs(r).toString();};
+function arrowSVG(x1,y1,x2,y2,cls='force',hl=9,sw=2){
+  const a=Math.atan2(y2-y1,x2-x1), bx=x2-hl*Math.cos(a), by=y2-hl*Math.sin(a), px=Math.sin(a)*hl*.42, py=-Math.cos(a)*hl*.42;
+  const col=cls==='force'?'var(--force)':cls==='react'?'var(--react)':'var(--text3)';
+  return `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(bx)}" y2="${f1(by)}" stroke="${col}" stroke-width="${sw}"/><polygon points="${f1(x2)},${f1(y2)} ${f1(bx+px)},${f1(by+py)} ${f1(bx-px)},${f1(by-py)}" fill="${col}"/>`;
+}
+const L_=(x1,y1,x2,y2,w=1.4,c='var(--text)',dash='')=>`<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke="${c}" stroke-width="${w}" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+const T_=(x,y,s,cls='',anchor='middle')=>`<text x="${f1(x)}" y="${f1(y)}" text-anchor="${anchor}" class="${cls}">${s}</text>`;
+function hatchBelow(x1,x2,y){let s=L_(x1,y,x2,y);for(let x=x1+3;x<=x2;x+=7)s+=L_(x,y,x-6,y+7,1,'var(--text3)');return s}
+function hatchWall(x,y1,y2,side){let s=L_(x,y1,x,y2,1.8);for(let y=y1+2;y<=y2;y+=7)s+=L_(x,y,x+(side<0?-7:7),y+6,1,'var(--text3)');return s}
+function pinSup(x,y){return `<polygon points="${x},${y} ${x-11},${y+18} ${x+11},${y+18}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.4"/>`+hatchBelow(x-17,x+17,y+18)+`<circle cx="${x}" cy="${y}" r="4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.4"/>`}
+function rollerSup(x,y){return `<polygon points="${x},${y} ${x-10},${y+14} ${x+10},${y+14}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.4"/><circle cx="${x-5}" cy="${y+18}" r="3.4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.2"/><circle cx="${x+5}" cy="${y+18}" r="3.4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.2"/>`+hatchBelow(x-16,x+16,y+22)+`<circle cx="${x}" cy="${y}" r="4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.4"/>`}
+function dimH(x1,x2,y,label){return L_(x1,y-6,x1,y+6,1,'var(--text3)')+L_(x2,y-6,x2,y+6,1,'var(--text3)')+arrowSVG((x1+x2)/2,y,x1,y,'dim',6,1)+arrowSVG((x1+x2)/2,y,x2,y,'dim',6,1)+T_((x1+x2)/2,y-5,label,'lbl-s')}
+function dimV(x,y1,y2,label,side=-1){return L_(x-6,y1,x+6,y1,1,'var(--text3)')+L_(x-6,y2,x+6,y2,1,'var(--text3)')+arrowSVG(x,(y1+y2)/2,x,y1,'dim',6,1)+arrowSVG(x,(y1+y2)/2,x,y2,'dim',6,1)+T_(x+side*8,(y1+y2)/2+4,label,'lbl-s',side<0?'end':'start')}
+function coupleSVG(cx,cy,dir,label){ // dir 'cw' or 'ccw' (screen)
+  const r=16, a0=dir==='cw'?200:-20, a1=dir==='cw'?-20:200, R=Math.PI/180;
+  const p=(a)=>[cx+r*Math.cos(a*R), cy-r*Math.sin(a*R)];
+  const [sx,sy]=p(a0),[ex,ey]=p(a1);
+  const sweep=dir==='cw'?1:0;
+  const tang=dir==='cw'? (a1-90)*R : (a1+90)*R;
+  const tx=ex+8*Math.cos(tang), ty=ey-8*Math.sin(tang);
+  return `<path d="M${f1(sx)},${f1(sy)} A${r},${r} 0 1 ${sweep} ${f1(ex)},${f1(ey)}" fill="none" stroke="var(--force)" stroke-width="2"/>`+arrowSVG(ex-(tx-ex)*.1,ey-(ty-ey)*.1,tx,ty,'force',8,0.1)+T_(cx,cy-r-8,label,'lbl-s');
+}
+
+/* ── beam figure ── */
+function beamFig(sp){
+  const W=600, x0=50, BW=500, Y=sp.y||104, s=BW/sp.L, X=x=>x0+x*s;
+  let g='';
+  (sp.udl||[]).forEach(u=>{const xa=X(u.a),xb=X(u.b),top=Y-40; g+=L_(xa,top,xb,top,1.4,'var(--force)'); const n=Math.max(2,Math.round((xb-xa)/22)); for(let i=0;i<=n;i++){const xx=xa+(xb-xa)*i/n; g+=arrowSVG(xx,top,xx,Y-5,'force',7,1.4);} g+=T_((xa+xb)/2,top-7,u.label,'lbl-s');});
+  (sp.lin||[]).forEach(u=>{const xa=X(u.a),xb=X(u.b),h1=u.q1*40,h2=u.q2*40; g+=L_(xa,Y-5-h1,xb,Y-5-h2,1.4,'var(--force)'); const n=Math.max(3,Math.round((xb-xa)/24)); for(let i=0;i<=n;i++){const t=i/n,xx=xa+(xb-xa)*t,h=h1+(h2-h1)*t; if(h>6) g+=arrowSVG(xx,Y-5-h,xx,Y-5,'force',6,1.3);} g+=T_(xb-10,Y-52,u.label,'lbl-s','end');});
+  g+=`<rect x="${X(0)}" y="${Y-4}" width="${BW}" height="8" rx="1.5" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.6"/>`;
+  (sp.sup||[]).forEach(su=>{const x=X(su.x); if(su.t==='pin') g+=pinSup(x,Y+4); else if(su.t==='roller') g+=rollerSup(x,Y+4); else if(su.t==='fixL') g+=hatchWall(x,Y-26,Y+26,-1); else if(su.t==='fixR') g+=hatchWall(x,Y-26,Y+26,1);});
+  (sp.hinge||[]).forEach(h=>{g+=`<circle cx="${X(h)}" cy="${Y}" r="5" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.6"/>`;});
+  (sp.pts||[]).forEach(p=>{const x=X(p.x); g+=arrowSVG(x,Y-58,x,Y-5,'force',9,2.2)+T_(x+(p.dx||0),Y-64,p.label,'lbl-s');});
+  (sp.cpl||[]).forEach(c=>{g+=coupleSVG(X(c.x),Y,c.dir,c.label);});
+  (sp.letters||[]).forEach(l=>{g+=T_(X(l.x)+(l.dx||0),Y+(l.dy||-12),l.t,'', 'middle');});
+  if(sp.dims){const d=sp.dims, yy=Y+48; for(let i=0;i<d.length-1;i++) g+=dimH(X(d[i][0]),X(d[i+1][0]),yy,d[i][1]); }
+  return `<svg class="fig" viewBox="0 0 ${W} ${Y+68}" role="img" aria-label="beam figure">${g}</svg>`;
+}
+
+/* ── internal-force evaluator (up +, couples cw + ; mirrors the verification script) ── */
+function FsM(x,f){let Fs=0,M=0;
+  (f.pts||[]).forEach(([xi,F])=>{if(xi<x){Fs+=F;M+=F*(x-xi);}});
+  (f.udl||[]).forEach(([a,b,q])=>{if(x>a){const e=Math.min(x,b),L=e-a;Fs-=q*L;M-=q*L*(x-(a+e)/2);}});
+  (f.lin||[]).forEach(([a,b,q1,q2])=>{if(x>a){const e=Math.min(x,b),n=200,h=(e-a)/n;for(let i=0;i<n;i++){const xm=a+(i+.5)*h,qq=q1+(q2-q1)*(xm-a)/(b-a);Fs-=qq*h;M-=qq*h*(x-xm);}}});
+  (f.cpl||[]).forEach(([xi,m])=>{if(xi<x)M+=m;});
+  return [Fs,M];}
+
+/* ── Fs / M diagram ── labels: [x, 'Fs'|'M', text?, side(-1 left,+1 right,0)] */
+function diag(f,L,o={}){
+  const W=o.w||600, x0=50, BW=500, s=BW/L, X=x=>x0+x*s, eps=1e-6;
+  const br=new Set([0,L]); (f.pts||[]).forEach(p=>br.add(p[0])); (f.udl||[]).forEach(u=>{br.add(u[0]);br.add(u[1]);}); (f.lin||[]).forEach(u=>{br.add(u[0]);br.add(u[1]);}); (f.cpl||[]).forEach(c=>br.add(c[0]));
+  const xs=[]; const N=240; for(let i=0;i<=N;i++) xs.push(L*i/N); br.forEach(b=>{xs.push(b-eps,b+eps);});
+  const X2=xs.filter(x=>x>=0&&x<=L).sort((a,b)=>a-b);
+  const vals=X2.map(x=>FsM(Math.min(Math.max(x,eps),L-eps),f));
+  const panels=o.only==='Fs'?['Fs']:o.only==='M'?['M']:['Fs','M'];
+  const H=o.h||92; let g='', top=14;
+  panels.forEach(pn=>{
+    const idx=pn==='Fs'?0:1; let mx=Math.max(1e-9,...vals.map(v=>Math.abs(v[idx])));
+    const flip=(pn==='M')? (o.flipM?-1:1) : -1; // Fs: + up ; M: + down (tension side)
+    const base=top+H/2, k=(H/2-10)/mx, Yv=v=>base+flip*v*k;
+    let d=`M${X(0)},${base} `; X2.forEach((x,i)=>{d+=`L${f1(X(x))},${f1(Yv(vals[i][idx]))} `;}); d+=`L${X(L)},${base} Z`;
+    g+=`<path d="${d}" fill="${pn==='Fs'?'var(--pos)':'var(--neg)'}" stroke="${pn==='Fs'?'var(--react)':'var(--force)'}" stroke-width="1.6"/>`;
+    g+=L_(X(0),base,X(L),base,1.2,'var(--text3)');
+    g+=T_(12,base+4,pn==='Fs'?'F<tspan baseline-shift="sub" font-size="9">s</tspan>':'M','ax','start');
+    if(!o.nolabels) (o.labels||[]).filter(l=>l[1]===pn).forEach(l=>{const xx=Math.min(Math.max(l[0]+(l[3]||0)*1e-4,eps),L-eps); const v=FsM(xx,f)[idx]; const yy=Yv(v); const up=(flip*v)<0; g+=T_(X(l[0])+(l[3]||0)*16,yy+(up?-6:15),l[2]!==undefined?l[2]:fmt(v),'val',(l[3]||0)<0?'end':(l[3]||0)>0?'start':'middle');});
+    top+=H+16;
+  });
+  if(o.ticks){ o.ticks.forEach(t=>{g+=L_(X(t[0]),top-8,X(t[0]),top-2,1,'var(--text3)')+T_(X(t[0]),top+9,t[1],'ax');}); top+=14; }
+  return `<svg class="fig" viewBox="0 0 ${W} ${top}" role="img" aria-label="internal force diagram">${g}</svg>`;
+}
+const fig=s=>`<div class="figwrap">${s}</div>`;
+
+/* ═════════════ Part B custom figures ═════════════ */
+function figGravityWall(){
+  const s=46, ox=230, oy=200; let g='';
+  g+=`<rect x="${ox}" y="${oy-3*s}" width="${1.2*s}" height="${3*s}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.8"/>`;
+  g+=hatchBelow(ox-140,ox+1.2*s+80,oy);
+  // soil on left
+  for(let i=0;i<6;i++) g+=L_(ox-130+i*20,oy-3*s,ox-120+i*20,oy-3*s-8,1,'var(--text3)');
+  g+=L_(ox-135,oy-3*s,ox,oy-3*s,1.2,'var(--text3)')+T_(ox-70,oy-3*s+22,'retained soil','lbl-s');
+  g+=arrowSVG(ox-80,oy-1*s,ox-2,oy-1*s,'force',10,2.4)+T_(ox-44,oy-1*s-8,'P = 30 kN','lbl-s');
+  g+=dimV(ox-100,oy,oy-1*s,'1 m');
+  g+=arrowSVG(ox+0.6*s,oy-2.2*s,ox+0.6*s,oy-1.2*s,'force',9,2)+T_(ox+0.6*s+8,oy-1.7*s,'W','lbl-s','start');
+  g+=dimV(ox+1.2*s+40,oy,oy-3*s,'3 m',1);
+  g+=dimH(ox,ox+1.2*s,oy+24,'b');
+  g+=`<circle cx="${ox+1.2*s}" cy="${oy}" r="3.5" fill="var(--text)"/>`+T_(ox+1.2*s+10,oy+14,'toe O','lbl-s','start');
+  return `<svg class="fig" viewBox="0 0 520 240">${g}</svg>`;
+}
+function figLWall(){
+  const s=100, ox=90, oy=262; const X=x=>ox+x*s, Y=y=>oy-y*s; let g='';
+  // base slab B(0)–A(3), thickness 0.25 at toe side; heel top slopes; stem near x=2.35..2.6
+  const poly=[[0,0],[3,0],[3,0.38],[2.62,0.38],[2.62,2.3],[2.5,2.3],[2.42,0.5],[0,0.28]];
+  g+=`<polygon points="${poly.map(p=>X(p[0])+','+Y(p[1])).join(' ')}" fill="var(--bg3)" stroke="var(--text)" stroke-width="2"/>`;
+  g+=L_(X(0),Y(2.3),X(2.5),Y(2.3),1.2,'var(--text3)'); for(let i=0;i<12;i++) g+=L_(X(0)+i*20,Y(2.3),X(0)+i*20+8,Y(2.3)-8,1,'var(--text3)');
+  g+=L_(X(0),Y(0.28),X(0),Y(2.3),1,'var(--text3)','4 4');
+  g+=arrowSVG(X(1),Y(2.2),X(1),Y(1.7),'force',9,2.2)+T_(X(1)+10,Y(1.9),'G₂','', 'start');
+  g+=arrowSVG(X(0.45),Y(1.6),X(1.25),Y(1.6),'force',9,2.2)+T_(X(0.7),Y(1.6)+18,'F₃','');
+  g+=arrowSVG(X(2.5),Y(1.7),X(2.5),Y(0.5),'force',9,2.2)+T_(X(2.5)-10,Y(0.62),'G₁','','end');
+  g+=dimH(X(0),X(1),Y(2.12),'1 m');
+  g+=dimH(X(2.5),X(3),Y(1.95),'0.5 m');
+  g+=dimV(X(0)-26,Y(0),Y(1.6),'1.6 m*');
+  g+=dimH(X(0),X(3),oy+26,'3 m');
+  g+=T_(X(0)-6,oy+14,'B','','end')+T_(X(3)+6,oy+14,'A','','start');
+  return `<svg class="fig" viewBox="0 0 520 300">${g}</svg>`;
+}
+function figFrame(o){ // generic three-hinged frame
+  const s=o.s, ox=o.ox, oy=o.oy, X=x=>ox+x*s, Y=y=>oy-y*s; let g='';
+  const [Ax,Bx,hc,Cx,Ch]=[0,o.span,o.col,o.cx,o.ch];
+  g+=L_(X(0),Y(0),X(0),Y(hc),2.4)+L_(X(Bx),Y(0),X(Bx),Y(hc),2.4)+L_(X(0),Y(hc),X(Cx),Y(Ch),2.4)+L_(X(Cx),Y(Ch),X(Bx),Y(hc),2.4);
+  g+=`<circle cx="${X(Cx)}" cy="${Y(Ch)}" r="5" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.6"/>`+T_(X(Cx),Y(Ch)+20,'C');
+  g+=pinSup(X(0),Y(0))+pinSup(X(Bx),Y(0))+T_(X(0)-14,Y(0)+4,'A','','end')+T_(X(Bx)+14,Y(0)+4,'B','','start');
+  g+=o.loads(X,Y);
+  g+=o.dims(X,Y);
+  return `<svg class="fig" viewBox="0 0 ${o.w} ${o.h}">${g}</svg>`;
+}
+function udlTop(X,Y,a,b,yTop,label){let g=L_(X(a),yTop,X(b),yTop,1.4,'var(--force)');const n=7;for(let i=0;i<=n;i++){const xx=X(a)+(X(b)-X(a))*i/n;g+=arrowSVG(xx,yTop,xx,yTop+26,'force',6,1.3);}return g+T_((X(a)+X(b))/2,yTop-7,label,'lbl-s');}
+function figFrameHW(){ return figFrame({s:28,ox:90,oy:300,span:12,col:5.5,cx:6,ch:8,w:540,h:350,
+  loads:(X,Y)=>udlTop(X,Y,0,6,Y(8)-40,'q = 12 kN/m')+arrowSVG(X(8),Y(8)-46,X(8),Y(8-(2/6)*(8-5.5))-3,'force',9,2.2)+T_(X(8)+8,Y(8)-36,'F = 18 kN','lbl-s','start'),
+  dims:(X,Y)=>dimH(X(0),X(6),Y(0)+40,'6 m')+dimH(X(6),X(12),Y(0)+40,'6 m')+dimH(X(8),X(12),Y(8)-56,'4 m')+dimV(X(12)+40,Y(0),Y(8),'8 m',1)});}
+function figFrameM(){ return figFrame({s:34,ox:100,oy:290,span:8,col:4,cx:4,ch:6,w:520,h:340,
+  loads:(X,Y)=>udlTop(X,Y,4,8,Y(6)-30,'q = 5 kN/m')+arrowSVG(X(0)-62,Y(4),X(0)-3,Y(4),'force',9,2.2)+T_(X(0)-40,Y(4)-8,'F = 10 kN','lbl-s'),
+  dims:(X,Y)=>dimH(X(0),X(4),Y(0)+40,'4 m')+dimH(X(4),X(8),Y(0)+40,'4 m')+dimV(X(8)+40,Y(0),Y(4),'4 m',1)+dimV(X(8)+84,Y(0),Y(6),'6 m',1)});}
+function figBarA(){ let g=''; const y=60, x0=120, w=360;
+  g+=`<rect x="${x0}" y="${y-16}" width="${w}" height="32" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.6"/>`;
+  g+=L_(x0+120,y-16,x0+120,y+16,1.2)+L_(x0+240,y-16,x0+240,y+16,1.2);
+  g+=arrowSVG(x0,y,x0-60,y,'force',9,2.2)+T_(x0-34,y-10,'4 kN','lbl-s');
+  g+=arrowSVG(x0+70,y,x0+118,y,'force',9,2.2)+T_(x0+108,y-24,'8 kN','lbl-s');
+  g+=arrowSVG(x0+300,y,x0+242,y,'force',9,2.2)+T_(x0+250,y-24,'5 kN','lbl-s');
+  g+=arrowSVG(x0+w,y,x0+w+60,y,'force',9,2.2)+T_(x0+w+34,y-10,'1 kN','lbl-s');
+  g+=T_(x0+60,y+36,'①','lbl-s')+T_(x0+180,y+36,'②','lbl-s')+T_(x0+300,y+36,'③','lbl-s');
+  g+=T_(300,y+62,'(a)','lbl-s');
+  return `<svg class="fig" viewBox="0 0 600 140">${g}</svg>`;}
+function figBarB(){ let g=''; const y=62, x0=110, w=420;
+  g+=hatchWall(x0,y-44,y+44,-1);
+  g+=`<rect x="${x0}" y="${y-18}" width="${w}" height="36" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.6"/>`;
+  g+=L_(x0+140,y-18,x0+140,y+18,1.2)+L_(x0+300,y-18,x0+300,y+18,1.2);
+  g+=T_(x0+12,y-26,'D','', 'start')+T_(x0+140,y-26,'C')+T_(x0+300,y-26,'B')+T_(x0+w,y-26,'A');
+  g+=arrowSVG(x0+220,y,x0+144,y,'force',9,2.2)+T_(x0+200,y-26,'F₃','lbl-s');
+  g+=arrowSVG(x0+380,y,x0+304,y,'force',9,2.2)+T_(x0+360,y-26,'F₂','lbl-s');
+  g+=arrowSVG(x0+w,y,x0+w+60,y,'force',9,2.2)+T_(x0+w+40,y-10,'F₁','lbl-s');
+  g+=arrowSVG(x0-70,y,x0-2,y,'react',9,2)+T_(x0-50,y-10,'F<tspan baseline-shift="sub" font-size="9">D</tspan>','lbl-s');
+  [[x0+60,'3'],[x0+220,'2'],[x0+360,'1']].forEach(([x,t])=>{g+=L_(x,y-26,x,y-18,1.4)+L_(x,y+18,x,y+26,1.4)+T_(x+8,y+36,t+'–'+t,'lbl-s');});
+  g+=T_(320,y+62,'(b)  F₁ = 16 kN, F₂ = 10 kN, F₃ = 20 kN','lbl-s');
+  return `<svg class="fig" viewBox="0 0 600 140">${g}</svg>`;}
+function figBarDist(){ let g=''; const y=60, x0=110, s=140;
+  g+=hatchWall(x0,y-40,y+40,-1);
+  g+=`<rect x="${x0}" y="${y-14}" width="${3*s}" height="28" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.6"/>`;
+  for(let i=0;i<7;i++){const xx=x0+10+i*(2*s-20)/6; g+=arrowSVG(xx,y-24,xx+26,y-24,'force',6,1.3);}
+  g+=T_(x0+s,y-34,'p = 8 kN/m (axial, along 0–2 m)','lbl-s');
+  g+=arrowSVG(x0+3*s,y,x0+3*s-60,y+0.01,'force',9,2.2)+T_(x0+3*s+8,y+4,'10 kN','lbl-s','start');
+  g+=dimH(x0,x0+2*s,y+36,'2 m')+dimH(x0+2*s,x0+3*s,y+36,'1 m');
+  return `<svg class="fig" viewBox="0 0 600 120">${g}</svg>`;}
+function figColumn(size,angle,label,dt='40'){ // plan section with 4 corner angles
+  let g=''; const ox=150, oy=30, S=150, a=angle;
+  g+=`<rect x="${ox}" y="${oy}" width="${S}" height="${S}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.4"/>`;
+  for(let i=1;i<6;i++) g+=L_(ox+8,oy+i*S/6,ox+S-8,oy+i*S/6+6,0.8,'var(--text3)');
+  const corners=[[ox,oy,1,1],[ox+S,oy,-1,1],[ox,oy+S,1,-1],[ox+S,oy+S,-1,-1]];
+  corners.forEach(([x,y,sx,sy])=>{g+=`<path d="M${x},${y} h${sx*a} v${sy*5} h${-sx*(a-5)} v${sy*(a-5)} h${-sx*5} Z" fill="var(--text)"/>`;});
+  g+=dimH(ox,ox+S,oy+S+22,size+'')+dimV(ox-22,oy+S,oy,size+'');
+  g+=T_(ox+S/2,oy+S/2+4,'timber','lbl-s');
+  // angle detail
+  const dx=380, dy=60, k=2.2;
+  g+=`<path d="M${dx},${dy} v${40*k} h${40*k} v${-4*k} h${-36*k} v${-36*k} Z" fill="var(--text)"/>`;
+  g+=dimH(dx,dx+40*k,dy+40*k+18,dt)+dimV(dx-16,dy+40*k,dy,dt);
+  g+=T_(dx+56,dy+30,label,'lbl-s','start');
+  g+=T_(ox+S/2,oy+S+52,'plan section (mm)','lbl-s');
+  return `<svg class="fig" viewBox="0 0 600 270">${g}</svg>`;}
+function figPunch(lbl){ let g=''; const cx=300, y=100;
+  g+=`<rect x="${cx-150}" y="${y}" width="300" height="20" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.6"/>`;
+  for(let x=cx-146;x<cx+150;x+=10) g+=L_(x,y+18,x+8,y+2,0.8,'var(--text3)');
+  g+=`<rect x="${cx-40}" y="${y-78}" width="80" height="78" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.6"/>`+T_(cx+50,y-50,'punch 冲头','lbl-s','start');
+  g+=arrowSVG(cx,y-120,cx,y-82,'force',9,2.4)+T_(cx+10,y-104,'F','', 'start');
+  g+=`<path d="M${cx-150},${y+20} h90 l20,40 h-110 Z M${cx+150},${y+20} h-90 l-20,40 h110 Z" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.4"/>`+T_(cx-120,y+76,'die','lbl-s');
+  g+=dimH(cx-40,cx+40,y+46,'d')+dimV(cx-170,y+20,y,'t');
+  g+=T_(cx+90,y-6,lbl,'lbl-s','start');
+  return `<svg class="fig" viewBox="0 0 600 200">${g}</svg>`;}
+
+/* ═════════════ problems ═════════════ */
+const sqrt3=Math.sqrt(3);
+const F1={pts:[[0,7],[4,27],[6,-10]],udl:[[0,4,6]]};
+const F2={pts:[[0,9],[6,18]],lin:[[0,6,0,9]]};
+const F3={pts:[[0,11],[2,-4],[8,9]],udl:[[2,6,4]]};
+const F4={pts:[[0,11],[1,-5],[6,6]],udl:[[2,6,3]],cpl:[[0,-17]]};
+const F5={pts:[[0,5],[2,-12],[6,7]],cpl:[[4,18]]};
+const F6={pts:[[0,6],[4,2]],udl:[[0,2,4]]};
+const F7={pts:[[1,12],[5,12]],udl:[[0,6,4]]};
+const F8={pts:[[0,-4]],udl:[[0,2,2]],cpl:[[3,-6]]};
+
+const PROBS=[
+/* ───── Part A ───── */
+{id:'A1',part:'A',level:'hard',title:'Overhanging beam: where is the worst moment?',
+ text:`Beam ABD has a pin at A and a roller at B, and the 2 m overhang BD is free. A uniform load q = 6 kN/m covers AB, and P = 10 kN hangs from the tip D.`,
+ fig:()=>beamFig({L:6,sup:[{x:0,t:'pin'},{x:4,t:'roller'}],udl:[{a:0,b:4,label:'q = 6 kN/m'}],pts:[{x:6,label:'P = 10 kN'}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:4,t:'B',dx:24,dy:20},{x:6,t:'D',dx:12,dy:-12}],dims:[[0,'4 m'],[4,'2 m'],[6]]}),
+ parts:[{q:'Reaction R<sub>B</sub>',a:27,u:'kN'},{q:'F<sub>s</sub> just left of B',a:-17,u:'kN'},{q:'F<sub>s</sub> just right of B',a:10,u:'kN'},{q:'M at B',a:-20,u:'kN·m'},{q:'Largest positive M',a:49/12,u:'kN·m',tol:.05},{q:'…at x = (from A)',a:7/6,u:'m',tol:.02}],
+ hints:['Moments about A: R<sub>B</sub>·4 = 24·2 + 10·6. The overhang load pushes R<sub>B</sub> above half the total load, and leaves R<sub>A</sub> small.','At B, F<sub>s</sub> jumps up by R<sub>B</sub>. For the positive peak, set F<sub>s</sub>(x) = R<sub>A</sub> − 6x = 0 inside AB.'],
+ sol:()=>`<b>Reactions.</b> ΣM<sub>A</sub>: R<sub>B</sub>·4 = 24·2 + 10·6 = 108, so <span class="key">R<sub>B</sub> = 27 kN</span> and R<sub>A</sub> = 34 − 27 = 7 kN. Check with ΣY: 7 + 27 = 24 + 10 ✓.<br>
+ <b>At B.</b> From the left: F<sub>s</sub> = 7 − 24 = <b>−17</b>. From the right, P on the right piece points down at its far end, so it turns that piece clockwise: F<sub>s</sub> = <b>+10</b>. The jump is 27 = R<sub>B</sub> ✓. From the right, M<sub>B</sub> = −10·2 = <b>−20 kN·m</b>: the overhang hogs, so the top is in tension.<br>
+ <b>Positive peak.</b> F<sub>s</sub> = 7 − 6x = 0 gives x = 7/6 = <b>1.17 m</b>. Then M = 7(7/6) − 3(7/6)² = 49/12 = <b>4.08 kN·m</b>.<br>
+ <b>Lesson.</b> The governing moment is the <b>−20 at the support</b>, not the midspan sag. Overhangs flip where a beam is critical.
+ ${diag(F1,6,{labels:[[0,'Fs',undefined,1],[4,'Fs',undefined,-1],[4,'Fs',undefined,1],[4,'M'],[7/6,'M','4.08 @1.17 m']],ticks:[[0,'A'],[4,'B'],[6,'D']]})}`},
+
+{id:'A2',part:'A',level:'vhard',title:'Triangular load: the peak is not at midspan',
+ text:`A simply supported beam AB spans l = 6 m. A linearly varying load rises from 0 at A to q<sub>0</sub> = 9 kN/m at B, like the example on p.158.`,
+ fig:()=>beamFig({L:6,sup:[{x:0,t:'pin'},{x:6,t:'roller'}],lin:[{a:0,b:6,q1:0,q2:1,label:'q₀ = 9 kN/m'}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:6,t:'B',dx:16,dy:4}],dims:[[0,'6 m'],[6]]}),
+ parts:[{q:'R<sub>A</sub>',a:9,u:'kN'},{q:'R<sub>B</sub>',a:18,u:'kN'},{q:'F<sub>s</sub> at midspan (x = 3 m)',a:2.25,u:'kN'},{q:'x where M is largest',a:6/sqrt3,u:'m',tol:.02},{q:'M<sub>max</sub>',a:9*36/(9*sqrt3),u:'kN·m',tol:.05}],
+ hints:['The resultant q<sub>0</sub>l/2 = 27 kN acts at 2l/3 = 4 m from A. The load left of a section x is a small triangle: q<sub>0</sub>x²/(2l).','F<sub>s</sub>(x) = R<sub>A</sub> − q<sub>0</sub>x²/(2l) = 0 gives x = l/√3. Then M(x) = R<sub>A</sub>x − q<sub>0</sub>x³/(6l).'],
+ sol:()=>`<b>Reactions.</b> R<sub>B</sub>·6 = 27·4, so R<sub>B</sub> = <b>18 kN</b> and R<sub>A</sub> = <b>9 kN</b> (q<sub>0</sub>l/6 and q<sub>0</sub>l/3, as on the slide).<br>
+ <b>Shear.</b> The load to the left of x is a triangle of base x and height q<sub>0</sub>x/l, so its area is q<sub>0</sub>x²/(2l) = 0.75x². Then F<sub>s</sub>(x) = 9 − 0.75x². At x = 3: F<sub>s</sub> = 9 − 6.75 = <b>2.25 kN</b>, still positive, so the peak lies past midspan.<br>
+ <b>Peak.</b> 0.75x² = 9 gives x = √12 = <b>3.46 m</b> (= l/√3). The triangle’s resultant 0.75x² acts x/3 from the cut, so M = 9x − 0.25x³ = 31.18 − 10.39 = <span class="key">20.8 kN·m</span> = q<sub>0</sub>l²/(9√3).<br>
+ <b>Shapes.</b> q is linear, so F<sub>s</sub> is a parabola and M is a cubic. M bulges toward the tension side because q points down.
+ ${diag(F2,6,{labels:[[0,'Fs',undefined,1],[6,'Fs',undefined,-1],[6/sqrt3,'Fs','0 @3.46 m'],[6/sqrt3,'M','20.8']],ticks:[[0,'A'],[3,'3 m'],[6,'B']]})}`},
+
+{id:'A3',part:'A',level:'vhard',title:'Work backwards: read the loads off the F<sub>s</sub> diagram',
+ text:`A simply supported beam AB spans 8 m and carries no concentrated couples. Only its F<sub>s</sub> diagram is given (values in kN). Recover the loads and the M diagram, like the p.187 example.`,
+ fig:()=>beamFig({L:8,sup:[{x:0,t:'pin'},{x:8,t:'roller'}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:8,t:'B',dx:16,dy:4}],y:40})+diag(F3,8,{only:'Fs',labels:[[1,'Fs','11'],[2,'Fs','7',1],[6,'Fs','−9',-1],[7,'Fs','−9']],ticks:[[0,'0'],[2,'2 m'],[6,'6 m'],[8,'8 m']],h:120}),
+ parts:[{q:'Concentrated load at x = 2 m (magnitude)',a:4,u:'kN'},{q:'Distributed load intensity on 2–6 m',a:4,u:'kN/m'},{q:'x where M is largest',a:3.75,u:'m',tol:.02},{q:'M<sub>max</sub>',a:28.125,u:'kN·m',tol:.05},{q:'M at x = 6 m',a:18,u:'kN·m'}],
+ hints:['A jump in F<sub>s</sub> means a concentrated force. A straight sloped segment means a uniform q, with q equal to the slope (dF<sub>s</sub>/dx = q).','dM/dx = F<sub>s</sub>, so M at any x is the signed area under the F<sub>s</sub> diagram from A (M<sub>A</sub> = 0). Peak M is where F<sub>s</sub> crosses zero.'],
+ sol:()=>`<b>Loads.</b> F<sub>s</sub> starts at +11, so R<sub>A</sub> = 11 kN. At x = 2 it drops 11 → 7, so there’s a <b>4 kN</b> downward force there. From 2 to 6 it falls steadily from 7 to −9, a drop of 16 over 4 m, so <b>q = 4 kN/m</b> downward. From 6 to 8 it stays at −9, so there’s no load, and the final jump of +9 at B means R<sub>B</sub> = 9 kN. Check: 11 + 9 = 4 + 16 ✓.<br>
+ <b>Peak.</b> F<sub>s</sub> = 7 − 4(x − 2) = 0 at x = <b>3.75 m</b>. The area from 0 to 2 is 22, then the triangle from 2 to 3.75 adds ½·1.75·7 = 6.125, so <span class="key">M<sub>max</sub> = 28.1 kN·m</span>.<br>
+ <b>At x = 6.</b> The negative triangle ½·2.25·9 = 10.125 brings M to 28.125 − 10.125 = <b>18 kN·m</b>. Check from the right: R<sub>B</sub>·2 = 18 ✓. From 6 to 8, F<sub>s</sub> is constant, so M falls in a straight line to 0.
+ ${beamFig({L:8,sup:[{x:0,t:'pin'},{x:8,t:'roller'}],pts:[{x:2,label:'4 kN'}],udl:[{a:2,b:6,label:'4 kN/m'}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:8,t:'B',dx:16,dy:4}],dims:[[0,'2 m'],[2,'4 m'],[6,'2 m'],[8]]})}
+ ${diag(F3,8,{labels:[[2,'M','22'],[3.75,'M','28.1'],[6,'M','18']],only:'M',ticks:[[0,'0'],[2,'2'],[3.75,'3.75'],[6,'6'],[8,'8']]})}`},
+
+{id:'A4',part:'A',level:'vhard',title:'Middle hinge (中间铰): solve the right piece first',
+ text:`A is a fixed support. There is a middle hinge at B (2 m from A) and a roller at C (6 m from A). P = 5 kN acts downward 1 m from A, and q = 3 kN/m covers BC.`,
+ fig:()=>beamFig({L:6,sup:[{x:0,t:'fixL'},{x:6,t:'roller'}],hinge:[2],pts:[{x:1,label:'P = 5 kN'}],udl:[{a:2,b:6,label:'q = 3 kN/m'}],letters:[{x:0,t:'A',dx:-30,dy:4},{x:2,t:'B',dy:24},{x:6,t:'C',dx:16,dy:4}],dims:[[0,'1 m'],[1,'1 m'],[2,'4 m'],[6]]}),
+ parts:[{q:'Shear force passed through the hinge B (magnitude)',a:6,u:'kN'},{q:'Vertical reaction at A',a:11,u:'kN'},{q:'M just right of A (fixed end), signed',a:-17,u:'kN·m'},{q:'M under P (x = 1 m)',a:-6,u:'kN·m'},{q:'Largest positive M',a:6,u:'kN·m'},{q:'…at x =',a:4,u:'m',tol:.02}],
+ hints:['A hinge carries no moment, so M<sub>B</sub> = 0. Cut at B. BC behaves like a simply supported beam (hinge + roller) under its own q, so each end takes qL/2.','AB is then a cantilever from A loaded by P and by the 6 kN that BC pushes down onto it at B. Check that M(2) comes out as 0.'],
+ sol:()=>`<b>BC first.</b> BC sits on the hinge and the roller, with 3·4 = 12 kN of load, so the hinge force is <b>6 kN</b> and R<sub>C</sub> = 6 kN.<br>
+ <b>AB as a cantilever.</b> It carries P = 5 at x = 1 and the 6 kN pushed down at x = 2. So R<sub>A</sub> = <b>11 kN</b>, and the fixed end resists 5·1 + 6·2 = 17 kN·m. The beam hogs at A, so <span class="key">M<sub>A</sub> = −17 kN·m</span>.<br>
+ <b>Control sections.</b> M(1) = −17 + 11·1 = <b>−6</b>. M(2) = −6 + 6·1 = <b>0</b> ✓, as a hinge must give.<br>
+ <b>In BC.</b> F<sub>s</sub> = 6 − 3(x − 2) = 0 at x = <b>4</b>, and M = 6·2 − 3·2²/2 = <b>6 kN·m</b> (that’s ql²/8 for span 4).<br>
+ This is the p.189 error-spotting pattern: F<sub>s</sub> is continuous through the hinge and M = 0 there.
+ ${diag(F4,6,{labels:[[0,'Fs','11',1],[1.5,'Fs','6'],[6,'Fs',undefined,-1],[0,'M','−17',1],[1,'M'],[2,'M','0'],[4,'M','6']],ticks:[[0,'A'],[1,'P'],[2,'B hinge'],[4,'4 m'],[6,'C']]})}`},
+
+{id:'A5',part:'A',level:'hard',title:'A couple makes M jump, and the jump can be the maximum',
+ text:`A simply supported beam spans 6 m. P = 12 kN acts downward 2 m from A, and a <b>clockwise</b> couple m = 18 kN·m acts 4 m from A.`,
+ fig:()=>beamFig({L:6,sup:[{x:0,t:'pin'},{x:6,t:'roller'}],pts:[{x:2,label:'P = 12 kN'}],cpl:[{x:4,dir:'cw',label:'m = 18 kN·m'}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:6,t:'B',dx:16,dy:4}],dims:[[0,'2 m'],[2,'2 m'],[4,'2 m'],[6]]}),
+ parts:[{q:'R<sub>A</sub> (upward +)',a:5,u:'kN'},{q:'M under P',a:10,u:'kN·m'},{q:'M just left of the couple',a:-4,u:'kN·m'},{q:'M just right of the couple',a:14,u:'kN·m'},{q:'Largest |M| anywhere',a:14,u:'kN·m'}],
+ hints:['ΣM<sub>A</sub>, counterclockwise +: R<sub>B</sub>·6 − 12·2 − 18 = 0. A clockwise couple adds to the same turning as P.','A clockwise couple on the left piece makes the bottom stretch, so M jumps <b>up</b> by 18. Check from the right side: R<sub>B</sub>·2.'],
+ sol:()=>`<b>Reactions.</b> R<sub>B</sub> = (24 + 18)/6 = 7 kN, so <b>R<sub>A</sub> = 5 kN</b>.<br>
+ <b>Moments.</b> M(2) = 5·2 = <b>10</b>. F<sub>s</sub> = 5 − 12 = −7 on 2–6 m, so M falls: M(4⁻) = 10 − 7·2 = <b>−4</b>. The clockwise couple then adds +18: M(4⁺) = <b>14</b>. Check from the right: R<sub>B</sub>·2 = 14 ✓. Finally M falls linearly to 0 at B.<br>
+ <b>Lesson.</b> <span class="key">|M|<sub>max</sub> = 14 kN·m, just right of the couple</span>. Under the point load it’s only 10. F<sub>s</sub> shows nothing at the couple (p.166).
+ ${diag(F5,6,{labels:[[1,'Fs','5'],[3,'Fs','−7'],[2,'M','10'],[4,'M','−4',-1],[4,'M','14',1]],ticks:[[0,'A'],[2,'P'],[4,'m'],[6,'B']]})}`},
+
+{id:'A6',part:'A',level:'hard',mcq:true,title:'Pick the right pair of diagrams',
+ text:`A simply supported beam spans 4 m, with q = 4 kN/m over the <b>left half only</b>. Which F<sub>s</sub> / M pair is correct? (M is drawn on the tension side.)`,
+ fig:()=>beamFig({L:4,sup:[{x:0,t:'pin'},{x:4,t:'roller'}],udl:[{a:0,b:2,label:'q = 4 kN/m'}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:4,t:'B',dx:16,dy:4}],dims:[[0,'2 m'],[2,'2 m'],[4]]}),
+ options:()=>[
+   {ok:true, svg:diag(F6,4,{labels:[[0,'Fs','6',1],[4,'Fs','−2',-1],[1.5,'M','4.5 @1.5'],[2,'M','4',1]],h:70})},
+   {ok:false,svg:diag(F6,4,{flipM:true,labels:[[0,'Fs','6',1],[4,'Fs','−2',-1],[1.5,'M','4.5'],[2,'M','4',1]],h:70}),why:'Right values, but M is drawn above the baseline. Sagging M goes on the tension side, which is below.'},
+   {ok:false,svg:diag({pts:[[0,6],[1,-8],[4,2]]},4,{labels:[[0.5,'Fs','6'],[3,'Fs','−2'],[1,'M','6']],h:70}),why:'This replaces q with its 8 kN resultant as a point load. You use the resultant for the reactions, not for the diagram shapes. Under q, F<sub>s</sub> slopes and M curves.'},
+   {ok:false,svg:diag({pts:[[0,2],[4,6]],udl:[[2,4,4]]},4,{labels:[[0,'Fs','2',1],[4,'Fs','−6',-1],[2.5,'M','4.5']],h:70}),why:'These are the diagrams for the load on the <i>right</i> half. Here F<sub>s</sub> would be flat over the loaded part.'}
+ ],
+ explain:`R<sub>A</sub> = 6 and R<sub>B</sub> = 2. Over the loaded part, F<sub>s</sub> slopes from +6 to −2 and crosses zero at x = 1.5 (not at the middle of the load, x = 1). There M peaks at 6·1.5 − 2·1.5² = <b>4.5</b>. Over the unloaded half, F<sub>s</sub> = −2 is flat, so M falls in a straight line from 4 to 0.`},
+
+{id:'A7',part:'A',level:'vhard',title:'Symmetric overhangs: choose the support position',
+ text:`A beam of length L = 6 m rests on two supports, each a = 1 m from its end. A uniform load q = 4 kN/m covers the whole length.`,
+ fig:()=>beamFig({L:6,sup:[{x:1,t:'pin'},{x:5,t:'roller'}],udl:[{a:0,b:6,label:'q = 4 kN/m'}],letters:[{x:1,t:'C',dx:-24,dy:20},{x:5,t:'D',dx:24,dy:20}],dims:[[0,'a = 1 m'],[1,'4 m'],[5,'a = 1 m'],[6]]}),
+ parts:[{q:'M over a support',a:-2,u:'kN·m'},{q:'M at midspan',a:6,u:'kN·m'},{q:'Zero-moment point between left support and midspan, x = (from left end)',a:3-sqrt3,u:'m',tol:.02},{q:'Overhang a that makes |M<sub>support</sub>| = M<sub>mid</sub> (L stays 6 m)',a:6*(Math.SQRT2-1)/2,u:'m',tol:.01},{q:'…and the largest |M| for that a',a:4*Math.pow(6*(Math.SQRT2-1)/2,2)/2,u:'kN·m',tol:.03}],
+ hints:['Symmetry gives R = qL/2 = 12 kN at each support. From the left end, M(x) = 12(x − a) − 2x² for x ≥ a.','M<sub>support</sub> = −qa²/2 and M<sub>mid</sub> = qL²/8 − qLa/2. Set qa²/2 = qL²/8 − qLa/2 and solve the quadratic in a.'],
+ sol:()=>`<b>a = 1.</b> M<sub>support</sub> = −4·1²/2 = <b>−2</b>. M<sub>mid</sub> = 12·2 − 4·3·1.5 = <b>6</b>.<br>
+ <b>Zero moment.</b> 12(x − 1) − 2x² = 0, so x² − 6x + 6 = 0 and x = 3 − √3 = <b>1.27 m</b>. That’s where the beam switches from hogging to sagging (反弯点).<br>
+ <b>Best a.</b> a²/2 = L²/8 − La/2 gives a² + La − L²/4 = 0, so a = L(√2 − 1)/2 = <span class="key">0.207L = 1.24 m</span>. Then |M|<sub>max</sub> = qa²/2 = <b>3.09 kN·m</b>, about half the 6 kN·m you get at a = 1, from the same beam and load.<br>
+ This is the symmetry rule from p.186: F<sub>s</sub> is antisymmetric and M is symmetric.
+ ${diag(F7,6,{labels:[[1,'Fs','−4',-1],[1,'Fs','8',1],[5,'Fs','−8',-1],[5,'Fs','4',1],[1,'M','−2'],[3,'M','6'],[5,'M','−2']],ticks:[[0,'0'],[1,'C'],[3,'mid'],[5,'D'],[6,'6']]})}`},
+
+{id:'A8',part:'A',level:'hard',title:'Cantilever from the free end: no reactions needed',
+ text:`A cantilever is fixed at its right end B (x = 4 m) and free at A (x = 0). P = 4 kN acts downward at A, q = 2 kN/m covers 0–2 m, and a <b>counterclockwise</b> couple m = 6 kN·m acts at x = 3 m.`,
+ fig:()=>beamFig({L:4,sup:[{x:4,t:'fixR'}],pts:[{x:0,label:'P = 4 kN',dx:6}],udl:[{a:0,b:2,label:'q = 2 kN/m'}],cpl:[{x:3,dir:'ccw',label:'m = 6 kN·m'}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:4,t:'B',dx:18,dy:-30}],dims:[[0,'2 m'],[2,'1 m'],[3,'1 m'],[4]]}),
+ parts:[{q:'F<sub>s</sub> at x = 1 m',a:-6,u:'kN'},{q:'M at x = 2 m',a:-12,u:'kN·m'},{q:'M just right of the couple',a:-26,u:'kN·m'},{q:'M at the fixed end B',a:-34,u:'kN·m'},{q:'F<sub>s</sub> at B',a:-8,u:'kN'}],
+ hints:['Keep the left piece every time; it has no unknowns. A downward force on the left piece turns it counterclockwise about the cut, so F<sub>s</sub> is negative.','A counterclockwise couple on the left piece stretches the top, so M jumps by −6. Everything here hogs.'],
+ sol:()=>`From the left (free) end, using the shortcut:<br>
+ F<sub>s</sub>(1) = −4 − 2·1 = <b>−6</b>. M(2) = −4·2 − (2·2)·1 = <b>−12</b>.<br>
+ From 2 to 3 m, F<sub>s</sub> = −8, so M(3⁻) = −12 − 8 = −20. The counterclockwise couple adds −6: <b>M(3⁺) = −26</b>. Then <span class="key">M<sub>B</sub> = −26 − 8 = −34 kN·m</span>, and F<sub>s</sub>(B) = <b>−8</b>.<br>
+ Check by statics: the wall must resist 4·4 + 4·3 + 6 = 34 kN·m ✓ (the counterclockwise couple adds the same way as the loads).
+ ${diag(F8,4,{labels:[[0,'Fs','−4',1],[3,'Fs','−8'],[2,'M','−12'],[3,'M','−20',-1],[3,'M','−26',1],[4,'M','−34',-1]],ticks:[[0,'A'],[2,'x = 2'],[3,'couple'],[4,'B']]})}`},
+
+/* ───── Part B ───── */
+{id:'B1',part:'B',level:'hard',title:'Gravity wall: how wide must it be?',
+ text:`A rectangular concrete gravity wall is 3 m tall and has base width b. Take a 1 m length of wall; concrete weighs 24 kN/m³. The earth pressure resultant P = 30 kN acts horizontally, 1 m above the base, pushing toward the toe O. The wall must have an overturning safety factor K = M<sub>resist</sub>/M<sub>overturn</sub> ≥ 1.5 about O.`,
+ fig:()=>fig(figGravityWall()),
+ parts:[{q:'Overturning moment about O',a:30,u:'kN·m'},{q:'Minimum base width b',a:Math.sqrt(1.25),u:'m',tol:.01},{q:'K if b = 1.5 m',a:36*2.25/30,u:'',tol:.02}],
+ hints:['The weight per metre is 24·3·b = 72b kN. It acts at the centre, b/2 from the toe.','M<sub>resist</sub> = 72b·b/2 = 36b². Solve 36b²/30 = 1.5.'],
+ sol:()=>`M<sub>overturn</sub> = 30·1 = <b>30 kN·m</b>. M<sub>resist</sub> = 72b·(b/2) = 36b².<br>
+ 36b² ≥ 1.5·30 = 45 gives b² ≥ 1.25, so <span class="key">b ≥ 1.12 m</span>. At b = 1.5: K = 36·2.25/30 = <b>2.7</b>.<br>
+ The resisting moment grows with <b>b²</b>, because a wider wall is both heavier and has a longer lever arm.`},
+
+{id:'B2',part:'B',level:'std',title:'L-shaped retaining wall: overturning about the toe',
+ text:`A thin-walled reinforced concrete retaining wall has wall weight G<sub>1</sub> = 95 kN, overburden (soil on the heel) G<sub>2</sub> = 120 kN, and horizontal earth pressure F<sub>3</sub> = 90 kN. Find the overturning moment of the earth pressure about the front toe A, M<sub>FA</sub>, and the combined moment of the wall and soil weights about A, M<sub>GA</sub>. Then find the overturning safety factor K<sub>q</sub> = M<sub>GA</sub>/M<sub>FA</sub>.<br><span class="note">*In the figure, 1.6 m is the height of F<sub>3</sub>'s line of action above the base. G<sub>2</sub> acts 1 m from B, and G<sub>1</sub> acts 0.5 m from A.</span>`,
+ fig:()=>fig(figLWall()),
+ parts:[{q:'|M<sub>FA</sub>|',a:144,u:'kN·m'},{q:'|M<sub>GA</sub>|',a:287.5,u:'kN·m'},{q:'K<sub>q</sub>',a:287.5/144,u:'',tol:.02}],
+ hints:['Only the perpendicular distance from A to each line of action matters. For the horizontal F<sub>3</sub>, that’s its height. For the vertical weights, it’s their horizontal distance to A.','G<sub>2</sub> is 3 − 1 = 2 m from A. G<sub>1</sub> is 0.5 m from A. F<sub>3</sub> tips the wall clockwise about A and the weights resist counterclockwise.'],
+ sol:()=>`<b>Overturning.</b> M<sub>FA</sub> = −F<sub>3</sub>·1.6 = −90·1.6 = <span class="key">−144 kN·m</span> (clockwise, so it tries to tip the wall over the toe).<br>
+ <b>Resisting.</b> M<sub>GA</sub> = G<sub>2</sub>·2 + G<sub>1</sub>·0.5 = 240 + 47.5 = <span class="key">+287.5 kN·m</span> (counterclockwise).<br>
+ <b>Safety factor.</b> K<sub>q</sub> = 287.5/144 = <b>2.0</b>. Notice that the soil on the heel provides most of the stability, which is why this wall shape works.`},
+
+{id:'B3',part:'B',level:'hard',title:'Three-hinged frame under gravity loads',
+ text:`A reinforced concrete three-hinged rigid frame has pins at A and B and a hinge at the ridge C, 8 m above the supports. q = 12 kN/m acts over the left half (measured horizontally), and F = 18 kN acts downward 4 m from the right side. Find the reactions at A and B and the force at hinge C.`,
+ fig:()=>fig(figFrameHW()),
+ parts:[{q:'Vertical reaction at A',a:60,u:'kN'},{q:'Vertical reaction at B',a:30,u:'kN'},{q:'Horizontal reaction at A (magnitude)',a:18,u:'kN'},{q:'Horizontal force at hinge C (magnitude)',a:18,u:'kN'},{q:'Vertical force at hinge C (magnitude)',a:12,u:'kN'}],
+ hints:['The whole frame gives three equations: ΣM<sub>A</sub> finds B<sub>y</sub>, ΣY finds A<sub>y</sub>, and ΣX gives A<sub>x</sub> = −B<sub>x</sub>. The fourth equation comes from the hinge: M<sub>C</sub> = 0 for one half.','Take the right half CB about C: B<sub>y</sub>·6 − F·2 + B<sub>x</sub>·8 = 0. The column heights don’t matter. Only the 8 m drop from C to B does.'],
+ sol:()=>`<b>Whole frame.</b> ΣM<sub>A</sub>: B<sub>y</sub>·12 = 72·3 + 18·8 = 360, so <b>B<sub>y</sub> = 30 kN</b>. ΣY: <b>A<sub>y</sub> = 90 − 30 = 60 kN</b>.<br>
+ <b>Right half about C</b> (counterclockwise +): 30·6 − 18·2 + 8·B<sub>x</sub> = 0, so B<sub>x</sub> = −18. That’s <b>18 kN pointing inward (←)</b> at B, and so 18 kN inward (→) at A.<br>
+ Check the left half about C: −60·6 + 18·8 + 72·3 = −360 + 144 + 216 = 0 ✓.<br>
+ <b>Hinge C, acting on the right half.</b> ΣX: C<sub>x</sub> = +18 (→). ΣY: C<sub>y</sub> = 18 − 30 = −12 (↓). The left half feels the opposite: 18 kN ← and 12 kN ↑.<br>
+ <span class="key">A: 60↑, 18→ · B: 30↑, 18← · C: 18 horizontal, 12 vertical</span>. The inward thrust is what lets a three-hinged frame span without bending its columns too much.`},
+
+{id:'B4',part:'B',level:'hard',title:'Three-hinged frame with a wind load',
+ text:`Pins at A and B are 8 m apart. The columns are 4 m tall, and the ridge hinge C sits at midspan, 6 m above the supports. A horizontal wind force F = 10 kN acts at the top of the left column, and q = 5 kN/m acts over the right half (measured horizontally).`,
+ fig:()=>fig(figFrameM()),
+ parts:[{q:'Vertical reaction at A',a:0,u:'kN',tol:.05},{q:'Vertical reaction at B',a:20,u:'kN'},{q:'Horizontal reaction at A (magnitude)',a:10/3,u:'kN',tol:.03},{q:'Horizontal reaction at B (magnitude)',a:20/3,u:'kN',tol:.03},{q:'Horizontal force at hinge C (magnitude)',a:20/3,u:'kN',tol:.03}],
+ hints:['ΣM<sub>A</sub> for the whole frame: F is 4 m above A, and q’s 20 kN resultant is 6 m across. You may be surprised by A<sub>y</sub>.','Use the left half about C. It holds only A<sub>x</sub>, A<sub>y</sub> and F. With C at (4, 6) and F at (0, 4): 6A<sub>x</sub> + 10·2 = 0, if A<sub>y</sub> = 0.'],
+ sol:()=>`<b>Whole frame</b> (counterclockwise +, about A): B<sub>y</sub>·8 − 20·6 − 10·4 = 0, so <b>B<sub>y</sub> = 20 kN</b>. Then ΣY gives <b>A<sub>y</sub> = 0</b>: the wind’s overturning lifts exactly as much as the left share of the gravity load.<br>
+ <b>Left half about C.</b> A sits 4 m left of and 6 m below C, and F sits 4 m left of and 2 m below C. So 6A<sub>x</sub> + 10·2 = 0 and <b>A<sub>x</sub> = −3.33 kN</b> (←). ΣX for the whole frame: B<sub>x</sub> = −10 + 3.33 = <b>−6.67 kN</b> (←). Both horizontal reactions push back against the wind.<br>
+ <b>Hinge.</b> On the left half, ΣX: −3.33 + 10 + C<sub>x</sub> = 0, so C<sub>x</sub> = −6.67 kN (←), and C<sub>y</sub> = 0.<br>
+ Check the right half about C: 20·4 − 20·2 − 6.67·6 = 80 − 40 − 40 = 0 ✓.`},
+
+{id:'B5',part:'B',level:'std',title:'Axial force diagrams',
+ text:`Find the axial force in each segment of the two bars below and draw their axial force diagrams (tension +).`,
+ fig:()=>fig(figBarA())+fig(figBarB()),
+ parts:[{q:'(a) segment ①',a:4,u:'kN'},{q:'(a) segment ②',a:-4,u:'kN'},{q:'(a) segment ③',a:1,u:'kN'},{q:'(b) section 1–1',a:16,u:'kN'},{q:'(b) section 2–2',a:6,u:'kN'},{q:'(b) section 3–3',a:-14,u:'kN'},{q:'(b) wall reaction F<sub>D</sub> (magnitude)',a:14,u:'kN'}],
+ hints:['Cut, then keep the side with no unknown. In (b), keep the free end A, so you never need F<sub>D</sub>.','Assume N is tension (pointing away from the cut) and solve ΣX. A negative answer means compression. Check (a): −4 + 8 − 5 + 1 = 0.'],
+ sol:()=>`<b>(a)</b> From the left: N<sub>1</sub> = <b>+4</b> (the 4 kN pulls the end away, so tension). N<sub>2</sub> = 4 − 8 = <b>−4</b> (compression). N<sub>3</sub> = −4 + 5 = <b>+1</b>. Check from the right: the 1 kN pulls the end away, so +1 ✓.<br>
+ <b>(b)</b> From the free end A: N<sub>1–1</sub> = F<sub>1</sub> = <b>+16</b>. N<sub>2–2</sub> = 16 − 10 = <b>+6</b>. N<sub>3–3</sub> = 16 − 10 − 20 = <b>−14</b>. Then ΣX gives F<sub>D</sub> = <b>14 kN</b> pushing →, which matches the compression in DC.<br>
+ <span class="key">(a) +4 | −4 | +1 · (b) +16 | +6 | −14</span>. Each jump in the diagram equals the force applied at that point.`},
+
+{id:'B6',part:'B',level:'hard',title:'Axial force with a distributed axial load',
+ text:`A bar is fixed to a wall at its left end and is 3 m long. A distributed axial load p = 8 kN/m acts along the first 2 m, pointing away from the wall. A 10 kN force pushes back toward the wall at the free end.`,
+ fig:()=>fig(figBarDist()),
+ parts:[{q:'N in the last 1 m',a:-10,u:'kN'},{q:'N at the wall',a:6,u:'kN'},{q:'Distance from the wall where N = 0',a:0.75,u:'m',tol:.02}],
+ hints:['Keep the right piece (no reaction). For a cut at x inside 0–2, the right piece carries 10 kN ← and p over (2 − x) →.','N(x) = −10 + 8(2 − x). The axial diagram slopes wherever there is a distributed axial load, just as F<sub>s</sub> does under q.'],
+ sol:()=>`Last metre: N = <b>−10</b> (compression). For 0 ≤ x ≤ 2: N(x) = −10 + 8(2 − x). At the wall, N = −10 + 16 = <b>+6</b> (tension), so the wall pulls with 6 kN.<br>
+ N = 0 where 8(2 − x) = 10, which gives <span class="key">x = 0.75 m</span>. The bar is in tension near the wall and in compression beyond 0.75 m, within a single member.`},
+
+{id:'B7',part:'B',level:'vhard',title:'Composite column: design for two allowable stresses',
+ text:`A 200 × 200 mm timber column is reinforced with four steel angles of total area A<sub>s</sub> = 1600 mm². Take the timber area as 40&#8239;000 mm². E<sub>s</sub> = 200 GPa and E<sub>w</sub> = 10 GPa. The allowable stresses are [σ]<sub>s</sub> = 160 MPa and [σ]<sub>w</sub> = 12 MPa. Find the largest axial load F.`,
+ fig:()=>fig(figColumn(200,30,'each angle: 400 mm²','—')),
+ parts:[{q:'Steel stress at the allowable load',a:160,u:'MPa'},{q:'Timber stress at that load',a:8,u:'MPa'},{q:'Allowable load F',a:576,u:'kN'},{q:'Share of F carried by the steel',a:44.44,u:'%',tol:.3}],
+ hints:['Both materials shorten by the same amount, so they share one strain ε and σ<sub>s</sub>/σ<sub>w</sub> = E<sub>s</sub>/E<sub>w</sub> = 20.','If the timber reached 12 MPa, the steel would be at 240 MPa, which is over its limit. So steel governs: σ<sub>s</sub> = 160, σ<sub>w</sub> = 8.'],
+ sol:()=>`Same strain, so σ<sub>s</sub> = 20σ<sub>w</sub>. Timber at 12 MPa would put the steel at 240 MPa &gt; 160, so <b>steel governs</b>: σ<sub>s</sub> = <b>160</b> and σ<sub>w</sub> = <b>8 MPa</b>.<br>
+ F = 160·1600 + 8·40&#8239;000 = 256 + 320 = <span class="key">576 kN</span>. Steel carries 256/576 = <b>44%</b> of the load with only 4% of the area.<br>
+ <b>Trap.</b> Checking each material separately against its own limit, and adding the two capacities, gives 160·1600 + 12·40&#8239;000 = 736 kN. That breaks compatibility, because the two materials can’t strain by different amounts.`},
+
+{id:'B8',part:'B',level:'hard',title:'Steel-jacketed timber column (包钢)',
+ text:`Steel jacketing (包钢) is a common way to strengthen old columns. A 250 × 250 mm timber column has an L40 × 40 × 4 steel angle at each of its four corners. E<sub>steel</sub> = 200 GPa, E<sub>timber</sub> = 1 GPa, and the axial compressive force is F = 200 kN. Find the stress in the angles.<br><span class="note">Area of one L40×4 angle from the section table: 3.086 cm². Take the timber area as 250 × 250.</span>`,
+ fig:()=>fig(figColumn(250,34,'L40 × 40 × 4 (mm)')),
+ parts:[{q:'Stress in the steel angles (magnitude)',a:129.3,u:'MPa',tol:2.5},{q:'Stress in the timber (magnitude)',a:0.646,u:'MPa',tol:.015}],
+ hints:['One equation can’t do it, because the load split is unknown (statically indeterminate). Add compatibility: both materials shorten by the same Δl, so they share one strain ε.','F = ε(E<sub>s</sub>A<sub>s</sub> + E<sub>w</sub>A<sub>w</sub>). Then σ<sub>s</sub> = E<sub>s</sub>ε. Keep N and mm, so stresses come out in MPa.'],
+ sol:()=>`A<sub>s</sub> = 4·308.6 = 1234.4 mm² and A<sub>w</sub> = 62&#8239;500 mm².<br>
+ E<sub>s</sub>A<sub>s</sub> = 200&#8239;000·1234.4 = 2.469×10⁸ N and E<sub>w</sub>A<sub>w</sub> = 1000·62&#8239;500 = 0.625×10⁸ N.<br>
+ ε = 200&#8239;000/(3.094×10⁸) = 6.46×10⁻⁴.<br>
+ <span class="key">σ<sub>s</sub> = 200&#8239;000·ε ≈ 129 MPa (compression)</span>, and σ<sub>w</sub> = 1000·ε ≈ 0.65 MPa.<br>
+ The steel takes about 80% of the load. If you use the simple area 40·4 + 36·4 = 304 mm² per angle instead, you get ≈ 131 MPa, which is also accepted here.`},
+
+{id:'B9',part:'B',level:'hard',title:'Punch: the thickest plate it can cut',
+ text:`A punch of diameter d = 20 mm is made of tool steel with allowable compressive stress [σ] = 400 MPa. The plate’s ultimate shear strength is τ<sub>b</sub> = 300 MPa. What is the thickest plate this punch can cut without overstressing itself?`,
+ fig:()=>fig(figPunch('[σ]punch = 400 MPa')),
+ parts:[{q:'Largest force the punch can carry',a:125.66,u:'kN',tol:.3},{q:'Maximum plate thickness t',a:20/3,u:'mm',tol:.03}],
+ hints:['The punch is a short compression member, so it is limited by F ≤ [σ]·πd²/4.','To cut the hole, F must reach τ<sub>b</sub>·πdt. Set the two equal: t = [σ]d/(4τ<sub>b</sub>).'],
+ sol:()=>`Punch capacity: F = 400·π·20²/4 = <b>125.7 kN</b>.<br>
+ Cutting needs F = τ<sub>b</sub>·πdt, so t = 125&#8239;664/(300·π·20) = <span class="key">6.67 mm</span>. The general result is t = [σ]d/(4τ<sub>b</sub>), so a thicker plate needs a fatter punch.<br>
+ Two different areas are at work here: the punch is <b>compressed</b> over πd²/4, while the plate <b>shears</b> over πdt.`},
+
+{id:'B10',part:'B',level:'std',title:'Minimum punching force',
+ text:`A punch press cuts a d = 20 mm hole in a plate t = 10 mm thick. The plate’s ultimate shear strength is τ<sub>b</sub> = 360 MPa. Find the minimum punching force F.`,
+ fig:()=>fig(figPunch('t = 10 mm, d = 20 mm')),
+ parts:[{q:'Sheared area',a:Math.PI*200,u:'mm²',tol:2},{q:'Minimum F',a:360*Math.PI*200/1000,u:'kN',tol:.4}],
+ hints:['The disc slides out along its curved side, so the shear area is πdt, not πd²/4.','For the hole to be cut, τ must <i>reach</i> τ<sub>b</sub>, so the inequality runs the other way from a strength check.'],
+ sol:()=>`A = πdt = π·20·10 = <b>628.3 mm²</b>.<br>
+ F<sub>min</sub> = τ<sub>b</sub>A = 360·628.3 = 226&#8239;200 N = <span class="key">226 kN</span>.`}
+];
+
+/* ═════════════ rendering + checking ═════════════ */
+const STORE='dc-week6-hard-v1';
+let solved={}; try{ solved=JSON.parse(localStorage.getItem(STORE)||'{}'); }catch(e){}
+const save=()=>{ try{ localStorage.setItem(STORE,JSON.stringify(solved)); }catch(e){} };
+const lvlTag={std:'<span class="lvl">standard</span>',hard:'<span class="lvl hard">hard</span>',vhard:'<span class="lvl vhard">very hard</span>'};
+let TOTAL=0;
+function parseNum(s){ s=(s||'').trim().replace(/−/g,'-').replace(/,/g,'.').replace(/\s/g,''); if(!s) return NaN; return Number(s); }
+function okNum(v,a,tol){ const t=tol!==undefined?tol:Math.max(Math.abs(a)*0.012,0.02); return Math.abs(v-a)<=t+1e-9; }
+
+function render(){
+  TOTAL=0;
+  ['A','B'].forEach(part=>{
+    const host=document.getElementById('part'+part); host.innerHTML='';
+    PROBS.filter(p=>p.part===part).forEach((p,i)=>{
+      const n=PROBS.indexOf(p)+1;
+      const d=document.createElement('div'); d.className='problem'; d.id='p-'+p.id;
+      let partsHTML='';
+      if(p.mcq){ TOTAL+=1;
+        const opts=p.options(); const order=opts.map((o,k)=>k).sort(()=>Math.random()-.5);
+        partsHTML=`<div class="mcq-grid">${order.map((k,j)=>`<button class="mcq-opt" data-k="${k}"><div class="ol">Option ${'ABCD'[j]}</div>${opts[k].svg}</button>`).join('')}</div><div class="hint mcq-why"></div>`;
+      } else {
+        TOTAL+=p.parts.length;
+        partsHTML=`<div class="parts-list">${p.parts.map((q,k)=>`<div class="prow"><span class="plab">(${'abcdefgh'[k]})</span><span class="pq">${q.q}</span><input inputmode="decimal" data-k="${k}" aria-label="answer ${'abcdefgh'[k]}"><span class="unit">${q.u}</span><span class="mark"></span></div>`).join('')}</div>`;
+      }
+      d.innerHTML=`<div class="problem-header"><span class="problem-num">Problem ${n}</span><span class="problem-topic">${p.title}</span>${lvlTag[p.level]}<span class="pstate"></span></div>
+        <div class="problem-body"><div class="ptext">${p.text}</div>${p.fig?(()=>{const f=p.fig(); return f.startsWith('<div class="figwrap">')?f:fig(f);})():''}${partsHTML}
+        <div class="tools">${p.hints?'<button class="ans-btn hint-btn">Hint 1</button>':''}${p.mcq?'':'<button class="ans-btn chk-btn">Check all</button>'}</div>
+        ${(p.hints||[]).map(h=>`<div class="hint">${h}</div>`).join('')}
+        <details class="sol"><summary>Worked solution</summary><div class="solbody">${p.mcq?p.explain:p.sol()}</div></details></div>`;
+      host.appendChild(d);
+      wire(p,d);
+    });
+  });
+  updScore();
+}
+function wire(p,d){
+  const hb=d.querySelector('.hint-btn'); let shown=0; const hs=d.querySelectorAll('.hint:not(.mcq-why)');
+  if(hb) hb.onclick=()=>{ if(shown<hs.length){ hs[shown].classList.add('open'); shown++; } hb.textContent=shown<hs.length?'Hint '+(shown+1):'No more hints'; if(shown>=hs.length) hb.disabled=true; };
+  if(p.mcq){
+    const opts=p.options(); const why=d.querySelector('.mcq-why');
+    const finish=(btn)=>{ d.querySelectorAll('.mcq-opt').forEach(b=>{b.disabled=true; if(opts[b.dataset.k].ok) b.classList.add('right');});
+      const o=opts[btn.dataset.k]; if(!o.ok){ btn.classList.add('wrong'); why.innerHTML='<b>Not this one.</b> '+o.why; } else { why.innerHTML='<b>Correct.</b> '+p.explain; solved[p.id+'-0']=1; save(); } why.classList.add('open'); updScore(); };
+    d.querySelectorAll('.mcq-opt').forEach(b=>b.onclick=()=>finish(b));
+    if(solved[p.id+'-0']){ const b=[...d.querySelectorAll('.mcq-opt')].find(b=>opts[b.dataset.k].ok); if(b) finish(b); }
+    return;
+  }
+  const inputs=d.querySelectorAll('input');
+  const check=(inp,silent)=>{ const k=+inp.dataset.k, q=p.parts[k], v=parseNum(inp.value), mk=inp.parentElement.querySelector('.mark');
+    if(isNaN(v)){ inp.classList.remove('ok','bad'); mk.textContent=''; return; }
+    const ok=okNum(v,q.a,q.tol); inp.classList.toggle('ok',ok); inp.classList.toggle('bad',!ok); mk.textContent=ok?'✓':'✗'; mk.style.color=ok?'#16a34a':'#dc2626';
+    if(ok){ solved[p.id+'-'+k]=inp.value; } else { delete solved[p.id+'-'+k]; } save(); updScore(); };
+  inputs.forEach(inp=>{ const k=inp.dataset.k; if(solved[p.id+'-'+k]){ inp.value=solved[p.id+'-'+k]; check(inp,true); }
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter') check(inp); }); inp.addEventListener('change',()=>check(inp)); });
+  d.querySelector('.chk-btn').onclick=()=>inputs.forEach(i=>check(i));
+}
+function updScore(){
+  const n=Object.keys(solved).length; document.getElementById('score').textContent=n+' / '+TOTAL+' checks';
+  document.getElementById('scorebar').style.width=(TOTAL?100*n/TOTAL:0)+'%';
+  PROBS.forEach(p=>{ const d=document.getElementById('p-'+p.id); if(!d) return; const need=p.mcq?1:p.parts.length; let c=0; for(let k=0;k<need;k++) if(solved[p.id+'-'+k]) c++; const st=d.querySelector('.pstate'); st.textContent=c===need?'✓ solved':(c?c+' / '+need:''); st.classList.toggle('done',c===need); });
+}
+function resetAll(){ solved={}; save(); render(); }
+render();
+window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
+</script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>
