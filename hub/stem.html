@@ -287,10 +287,6 @@
       Linear Algebra
       <span class="tab-due-badge" id="due-la">0</span>
     </button>
-    <button class="subj-tab" data-subj="dc"   onclick="selectSubject('dc')">
-      Digital Construction
-      <span class="tab-due-badge" id="due-dc">0</span>
-    </button>
     <button class="subj-tab" data-subj="other" onclick="selectSubject('other')">Other</button>
   </nav>
 
@@ -542,46 +538,6 @@
           <a href="../Linear_Algebra_Material/past%20Finals/2024F%20final%20%28inter%29.pdf" target="_blank" class="card acc-la" data-id="la-pf2024">★ Real Past Final — 2024 (inter) <span class="card-sub">timed · local PDF · answer key avail.</span></a>
           <a href="../Linear_Algebra_Material/past%20Finals/2025F%20Final.pdf" target="_blank" class="card acc-la" data-id="la-pf2025">★ Real Past Final — 2025 <span class="card-sub">timed · local PDF · answer key avail.</span></a>
           <a href="../content/stem/la/jun21_weakspots.html" class="card acc-la" data-id="la-weak">Weak Spots from Mock <span class="card-sub">Jun 21 Sun · P2</span></a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ DIGITAL CONSTRUCTION ═══ -->
-    <div class="subj-panel blk-dc" data-subj="dc">
-      <div class="panel-header">
-        <div class="panel-dot dot-dc"></div>
-        <div>
-          <div class="panel-label">Subject 04 · Semester 3</div>
-          <div class="panel-title" style="color:var(--dc)">Spatial Structure &amp; Digital Construction</div>
-        </div>
-        <div class="panel-exam"><strong>空间结构与数字化建造</strong>Fall 2026</div>
-      </div>
-
-      <div class="subsection-wrap" data-section="review" data-pinned="true">
-        <div class="subsection-label">Review Notes</div>
-      <div class="filter-bar">
-        <button class="fpill active" data-filter="all">All</button>
-        <button class="fpill" data-filter="daily">Daily Practice</button>
-        <button class="fpill" data-filter="exams">Exams &amp; Mocks</button>
-        <button class="fpill fpill-due" data-filter="due">⭐ Due for Review</button>
-      </div>
-        <div class="card-grid">
-          <a href="../content/architecture/digital-construction/shear_beam_check.html" class="card acc-dc card-wide" data-id="dc-shearbeam">Shear &amp; Beam Forces — Summary + Check <span class="card-sub">Oct 15 Thu · 剪切 + Ch. 3.1–3.3 · 13 questions</span></a>
-        </div>
-      </div>
-
-      <div class="subsection-wrap" data-section="daily">
-        <div class="subsection-label">Daily Practice</div>
-        <div class="card-grid">
-          <a href="../content/architecture/digital-construction/moments_stress.html" class="card acc-dc" data-id="dc-moments">Moments &amp; Stress Workbook <span class="card-sub">Oct 7 Wed · HW2 moments + axial stress · easy → hard</span></a>
-          <a href="../content/architecture/digital-construction/week6_hard.html" class="card acc-dc card-wide" data-id="dc-week6"><span class="card-badge badge-new">NEW</span> ★ Week 6 Hard Set — Beam Internal Forces + Review <span class="card-sub">Oct 21 Wed · p.156–191 · 18 problems · hard → very hard</span></a>
-          <a href="../content/architecture/digital-construction/beam_diagrams.html" class="card acc-dc" data-id="dc-beamdrill">Beam Diagrams Drill <span class="card-sub">Oct 15 Thu · pick the right Fs / M diagram · visual</span></a>
-        </div>
-      </div>
-
-      <div class="subsection-wrap" data-section="exams">
-        <div class="subsection-label">Exams &amp; Mocks</div>
-        <div class="card-grid">
         </div>
       </div>
     </div>
@@ -1155,9 +1111,6 @@
      TODAY BANNER
   ═══════════════════════════════════════ */
   const TODAY_SESSIONS = {
-    'Oct 7': ['dc-moments'],
-    'Oct 15':['dc-shearbeam','dc-beamdrill'],
-    'Oct 21':['dc-week6'],
     'May 25':['la-basis5'],
     'May 26':['cpp-may26','cpp-ch1','cpp-ch2','calc-pd','calc-ift'],
     'May 27':['cpp-pointers','cpp-may27class','cpp-may27oop','calc-may27'],
