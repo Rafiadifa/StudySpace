@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Construction · Structural Mechanics Practice</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    :root { --force:#c2410c; --react:var(--dc); --pos:rgba(15,118,110,.18); --neg:rgba(194,65,12,.16); }
+    html[data-theme="dark"] { --force:#fb923c; --pos:rgba(45,212,191,.2); --neg:rgba(251,146,60,.18); }
+    .sec-title { font-family:'DM Serif Display',serif; font-size:1.8rem; letter-spacing:-.02em; color:var(--text); margin:56px 0 6px; }
+    .sec-eyebrow { font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+    .sec-lede { color:var(--text2); font-size:.9rem; line-height:1.6; max-width:760px; margin:6px 0 18px; }
+
+    .primer { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:18px; }
+    .pcard { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:18px 20px; font-size:.86rem; line-height:1.6; color:var(--text2); }
+    .pcard h4 { margin:0 0 8px; font-family:'DM Sans',sans-serif; font-size:.95rem; color:var(--text); }
+    .pcard ol, .pcard ul { margin:6px 0 0 18px; padding:0; }
+    .pcard b { color:var(--text); font-weight:600; }
+    .rtable { width:100%; border-collapse:collapse; font-size:.82rem; margin-top:6px; }
+    .rtable th, .rtable td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .rtable th { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text3); font-weight:500; }
+
+    .score-chip { position:sticky; top:64px; z-index:9; display:flex; gap:12px; align-items:center; background:var(--bg); border-bottom:1px solid var(--border); padding:10px 0; font-family:'DM Mono',monospace; font-size:.72rem; color:var(--text2); }
+    .score-chip .bar { flex:1; height:4px; background:var(--bg3); border-radius:99px; overflow:hidden; max-width:260px; }
+    .score-chip .bar i { display:block; height:4px; background:var(--accent); width:0; transition:width .3s; }
+    .score-chip button { margin-left:auto; background:none; border:1px solid var(--border); color:var(--text3); font:inherit; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:5px; cursor:pointer; }
+
+    .lvl { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; padding:2px 8px; border-radius:99px; border:1px solid var(--border); color:var(--text3); }
+    .lvl.hard { color:var(--force); border-color:var(--force); }
+    .lvl.vhard { color:#fff; background:var(--force); border-color:var(--force); }
+    .pstate { margin-left:auto; font-family:'DM Mono',monospace; font-size:.66rem; color:var(--text3); }
+    .pstate.done { color:#16a34a; }
+    .ptext { font-size:.93rem; color:var(--text); line-height:1.65; max-width:820px; }
+    .ptext .note { color:var(--text2); font-size:.84rem; }
+    .fig { display:block; width:100%; height:auto; margin:14px 0; }
+    .figwrap { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:6px 12px; margin:14px 0; overflow-x:auto; }
+    .figwrap svg { min-width:320px; }
+    svg text { font-family:'DM Sans',sans-serif; font-size:13px; fill:var(--text); }
+    svg .lbl-s { font-size:11px; fill:var(--text2); }
+    svg .ax { font-family:'DM Mono',monospace; font-size:10px; fill:var(--text3); letter-spacing:.06em; }
+    svg .val { font-family:'DM Mono',monospace; font-size:11px; fill:var(--text); }
+
+    .parts-list { display:grid; gap:10px; margin:16px 0 6px; }
+    .prow { display:flex; flex-wrap:wrap; gap:10px; align-items:center; font-size:.88rem; color:var(--text2); }
+    .prow .plab { font-family:'DM Mono',monospace; color:var(--accent); min-width:26px; }
+    .prow .pq { flex:1 1 300px; }
+    .prow input { width:110px; font:inherit; font-family:'DM Mono',monospace; font-size:.85rem; padding:7px 10px; border-radius:8px; border:1px solid var(--border); background:var(--bg2); color:var(--text); }
+    .prow input.ok { border-color:#16a34a; background:rgba(22,163,74,.08); }
+    .prow input.bad { border-color:#dc2626; background:rgba(220,38,38,.06); }
+    .prow .unit { font-family:'DM Mono',monospace; font-size:.75rem; color:var(--text3); min-width:46px; }
+    .prow .mark { font-family:'DM Mono',monospace; font-size:.8rem; min-width:18px; }
+    .tools { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+    .hint { display:none; margin-top:10px; font-size:.86rem; color:var(--text2); border-left:2px solid var(--accent); padding:4px 12px; line-height:1.55; }
+    .hint.open { display:block; }
+    details.sol { margin-top:14px; border:1px solid var(--border); border-radius:10px; background:var(--bg3); }
+    details.sol summary { cursor:pointer; padding:10px 14px; font-family:'DM Mono',monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text2); }
+    details.sol .solbody { padding:4px 16px 16px; font-size:.87rem; line-height:1.7; color:var(--text2); }
+    details.sol .solbody b { color:var(--text); }
+    details.sol .solbody .eq { font-family:'DM Mono',monospace; font-size:.82rem; color:var(--text); background:var(--bg2); border-radius:6px; padding:2px 6px; }
+    .key { display:inline-block; margin-top:6px; padding:4px 10px; border-radius:6px; background:color-mix(in oklab,var(--accent) 12%,transparent); color:var(--text); font-weight:500; }
+    .mcq-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:10px; margin-top:12px; }
+    .mcq-opt { text-align:left; font:inherit; color:var(--text2); background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:8px 10px 6px; cursor:pointer; }
+    .mcq-opt:hover:not(:disabled){ border-color:var(--accent); }
+    .mcq-opt:disabled { cursor:default; }
+    .mcq-opt.right { border-color:#16a34a; box-shadow:0 0 0 2px rgba(22,163,74,.25); }
+    .mcq-opt.wrong { border-color:#dc2626; box-shadow:0 0 0 2px rgba(220,38,38,.2); }
+    .mcq-opt svg text { font-size:19px; }
+    .mcq-opt svg .ax { font-size:15px; }
+    .mcq-opt .ol { font-family:'DM Mono',monospace; font-size:.72rem; color:var(--text3); }
+    @media (max-width:640px){ .main{padding:0 16px;} .prow input{width:96px;} }
+  
+    .idea { background:color-mix(in oklab,var(--accent) 7%,transparent); border:1px solid color-mix(in oklab,var(--accent) 30%,transparent); border-radius:12px; padding:14px 18px; font-size:.88rem; line-height:1.65; color:var(--text2); margin:14px 0 6px; max-width:860px; }
+    .idea b { color:var(--text); }
+    .idea .tag { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:4px; }
+    .steps { display:grid; gap:12px; margin-top:18px; }
+    .step { border:1px solid var(--border); border-radius:12px; background:var(--bg2); padding:14px 18px; }
+    .step-h { display:flex; gap:10px; align-items:baseline; }
+    .step-n { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--accent); letter-spacing:.06em; }
+    .step-t { font-weight:600; color:var(--text); font-size:.93rem; }
+    .step-ok { margin-left:auto; font-family:'DM Mono',monospace; font-size:.66rem; color:var(--text3); }
+    .step-ok.done { color:#16a34a; }
+    .step-p { font-size:.88rem; color:var(--text2); line-height:1.6; margin-top:6px; }
+    .reveal { display:none; margin-top:12px; font-size:.87rem; line-height:1.7; color:var(--text2); background:var(--bg3); border-radius:10px; padding:12px 16px; }
+    .reveal.open { display:block; }
+    .reveal b { color:var(--text); }
+    .choice { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .choice button { font:inherit; font-size:.86rem; color:var(--text2); background:var(--bg); border:1px solid var(--border); border-radius:9px; padding:8px 14px; cursor:pointer; }
+    .choice button.right { border-color:#16a34a; background:rgba(22,163,74,.08); color:var(--text); }
+    .choice button.wrong { border-color:#dc2626; background:rgba(220,38,38,.07); }
+    .choice-why { display:none; margin-top:8px; font-size:.86rem; color:var(--text2); line-height:1.6; }
+    .choice-why.open { display:block; }
+    .subpart { font-family:'DM Serif Display',serif; font-size:1.25rem; color:var(--text); margin:30px 0 4px; }
+    .how { font-size:.86rem; color:var(--text2); line-height:1.7; max-width:820px; }
+    .how li { margin:3px 0; }
+  
+    .lvl.easy { color:#16a34a; border-color:rgba(22,163,74,.5); }
+    .lvl.med { color:var(--accent); border-color:var(--accent); }
+    .eqn { font-family:'DM Mono',monospace; font-size:.82rem; color:var(--text); background:var(--bg3); border-radius:8px; padding:8px 12px; margin:8px 0; line-height:1.7; overflow-x:auto; }
+    .roadmap { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin:14px 0 6px; }
+    .roadmap a { display:block; text-decoration:none; background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text2); font-size:.84rem; line-height:1.45; }
+    .roadmap a:hover { border-color:var(--accent); }
+    .roadmap a b { display:block; color:var(--text); font-size:.9rem; }
+    .roadmap a span { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); }
+    .pcard .figwrap { margin:10px 0 4px; }
+    .pcard .figwrap svg { min-width:0; }
+    .twofig { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
+    .twofig svg { flex:1 1 260px; max-width:360px; }
+  
+    .lesson-card { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:22px 26px; margin:18px 0; font-size:.9rem; line-height:1.75; color:var(--text2); max-width:900px; }
+    .lesson-card h3 { font-family:'DM Serif Display',serif; font-weight:400; font-size:1.35rem; color:var(--text); margin:0 0 4px; letter-spacing:-.01em; }
+    .lesson-card .kick { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+    .lesson-card h4 { font-size:.95rem; color:var(--text); margin:18px 0 4px; }
+    .lesson-card b { color:var(--text); }
+    .lesson-card p { margin:8px 0; }
+    .lesson-card ul, .lesson-card ol { margin:6px 0 6px 20px; padding:0; }
+    .lesson-card li { margin:3px 0; }
+    .ex { border-left:3px solid var(--accent); background:color-mix(in oklab,var(--accent) 6%,transparent); border-radius:0 10px 10px 0; padding:12px 16px; margin:14px 0; }
+    .ex .tag { display:block; font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
+    .warn { border-left:3px solid var(--force); background:color-mix(in oklab,var(--force) 6%,transparent); border-radius:0 10px 10px 0; padding:12px 16px; margin:14px 0; }
+    .warn .tag { display:block; font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--force); margin-bottom:4px; }
+    .lesson-card .figwrap svg { min-width:0; }
+    .figcap { font-size:.78rem; color:var(--text3); text-align:center; margin:-4px 0 8px; }
+    .reveal ol, .reveal ul { margin:6px 0 6px 20px; padding:0; }
+    .reveal p { margin:6px 0; }
+    .hint::before { content:'Hint · '; font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-dc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title"><a href="../../../hub/architecture.html" style="color:inherit;text-decoration:none">Rafi's Study Hub</a></span>
+    <span class="topbar-sub">/ digital construction / structural mechanics</span>
+    <span class="topbar-date">05 NOV 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Structural Mechanics · <em>is it a structure, and how do forces flow?</em></h1>
+    <p class="hero-meta">Practice for the new part of the course (结构力学). You'll learn to tell whether a set of bars and supports is a real structure or a mechanism, count redundant constraints, follow forces through a multi-span beam, and find when a slender column buckles. A long lesson comes first, then six levels of questions, easy to very hard.</p>
+    <div class="exam-pills">
+      <span class="pill pill-dc">几何组成分析 · composition analysis</span>
+      <span class="pill pill-dc">静定 / 超静定 · determinacy</span>
+      <span class="pill pill-dc">静定多跨梁 · multi-span beams</span>
+      <span class="pill pill-dc">压杆稳定 · buckling</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="score-chip"><span id="score">0 / 0 checks</span><span class="bar"><i id="scorebar"></i></span><button onclick="resetAll()">Reset</button></div>
+
+    <div class="sec-eyebrow" style="margin-top:36px">How to use this page</div>
+    <ol class="how">
+      <li>Read the lesson first. Each part has a <b>worked example</b>; cover the solution and try it yourself before reading on.</li>
+      <li>Use the <b>sidebar</b> (or the <b>☰ Questions</b> button on a small screen) to jump between questions. A ✓ appears when a problem is fully solved.</li>
+      <li>In each question: work on paper, type the number, press <b>Enter</b>. If you're stuck, the <b>Hint</b> points you to the right idea without giving the answer. <b>Show this step</b> gives the full worked reasoning for that step only.</li>
+      <li>Sign conventions from the course still apply: F<sub>s</sub> clockwise +, M sagging + (bottom in tension), up + for reactions.</li>
+    </ol>
+
+    <!-- ═════════════ LESSON ═════════════ -->
+    <div class="sec-eyebrow" style="margin-top:56px">Read first</div>
+    <div class="sec-title">The lesson</div>
+    <p class="sec-lede">Nine short chapters. They follow the slides (Ch. 1 Introduction, Ch. 2 Geometric composition, start of Ch. 3) but explain each idea in more depth, with examples.</p>
+
+    <div class="lesson-card" data-side="1 · Why check the geometry?">
+      <span class="kick">Part 1</span>
+      <h3>Why check the geometry at all?</h3>
+      <p>Until now every problem started with a structure that obviously works, and you only computed forces. Structural mechanics asks an earlier question: <b>will this arrangement of bars, hinges and supports keep its shape under <i>any</i> load?</b></p>
+      <div class="figwrap" data-fig="whyfig"></div>
+      <p class="figcap">Left: four bars joined by hinges fold into a parallelogram under the smallest sideways push. Right: one diagonal splits it into two triangles and it can't move.</p>
+      <p>The left frame is a <b>mechanism</b> (几何可变体系): its shape can change without any bar stretching. It can only stand if the load happens to be perfectly balanced, and the first gust of wind folds it. The right frame is <b>geometrically stable</b> (几何不变体系): the only way to change its shape is to stretch or squash a bar, which the material resists.</p>
+      <p>Checking the geometry (几何组成分析) does three jobs:</p>
+      <ol>
+        <li><b>Safety:</b> only a geometrically stable system can be used as a structure.</li>
+        <li><b>Choosing the method:</b> it tells you whether equilibrium alone is enough (statically determinate, 静定) or whether you'll also need deformations (statically indeterminate, 超静定).</li>
+        <li><b>Order of analysis:</b> the order in which a structure is "assembled" is the reverse of the order in which you calculate it (used for multi-span beams in Part 8).</li>
+      </ol>
+      <p>Throughout this chapter, the bars are treated as <b>rigid</b>: we ignore their small elastic deformations and only ask whether the arrangement can move.</p>
+    </div>
+
+    <div class="lesson-card" data-side="2 · Degrees of freedom &amp; constraints">
+      <span class="kick">Part 2</span>
+      <h3>Degrees of freedom and constraints</h3>
+      <p>The <b>degree of freedom</b> (DOF, 自由度) of a system is the number of independent ways it can move, i.e. how many numbers you need to describe its position.</p>
+      <ul>
+        <li>A <b>point</b> in the plane: 2 DOF (x and y).</li>
+        <li>A <b>rigid piece</b> (刚片), meaning any bar or rigid block, or the ground: 3 DOF (x, y and its rotation θ).</li>
+      </ul>
+      <p>A <b>constraint</b> (约束) removes DOF. The course uses four kinds:</p>
+      <table class="rtable">
+        <tr><th>Constraint</th><th>Removes</th><th>Why</th></tr>
+        <tr><td>Chain rod / link (链杆), roller support</td><td>1</td><td>stops movement along the link's own line only</td></tr>
+        <tr><td>Single hinge (单铰), pin support</td><td>2</td><td>the two pieces must share a point (x and y), but may rotate</td></tr>
+        <tr><td>Rigid joint (刚结点), fixed support</td><td>3</td><td>shared point and same rotation</td></tr>
+        <tr><td>Hinge joining n pieces (复铰)</td><td>2(n − 1)</td><td>counts as n − 1 single hinges</td></tr>
+      </table>
+      <p>A pin support is the same as <b>two links</b> to the ground that cross at the pin, which is why the slides sometimes draw it as two short bars.</p>
+      <div class="ex"><span class="tag">Worked example</span>
+        Three separate bars have 3 × 3 = 9 DOF. Join all three at one hinge (as on slide p.63): that hinge joins n = 3 pieces, so it counts as 2 single hinges and removes 2 × 2 = 4. DOF = 9 − 4 = <b>5</b>, which matches the slide's formula n + 2. If instead the three bars are welded together at that point (a rigid joint), it removes 3 × 2 = 6 and DOF = 3: the whole thing moves like one rigid piece.
+      </div>
+      <h4>Redundant constraints (多余约束)</h4>
+      <p>A constraint is <b>redundant</b> if removing it doesn't change the DOF. A point held by two non-parallel links has DOF 0. Add a third link and the DOF is still 0, so one of the three is redundant. Redundant constraints aren't useless (they add strength and safety), but they make the structure statically indeterminate.</p>
+    </div>
+
+    <div class="lesson-card" data-side="3 · The counting formula W">
+      <span class="kick">Part 3</span>
+      <h3>The counting formula W</h3>
+      <p>Before using the rules, a quick count tells you a lot. For a system of m rigid pieces (not counting the ground), joined by h single hinges and attached to the ground by r support links:</p>
+      <div class="eqn">W = 3m − (2h + r)</div>
+      <p>For a <b>truss</b> (all joints hinged, loads at joints), it's easier to count joints j, bars b and support links r:</p>
+      <div class="eqn">W = 2j − (b + r)</div>
+      <table class="rtable">
+        <tr><th>Result</th><th>What it tells you</th></tr>
+        <tr><td>W &gt; 0</td><td>Too few constraints: definitely a <b>mechanism</b>. Stop here.</td></tr>
+        <tr><td>W = 0</td><td>Exactly enough <i>if</i> they're well arranged. You still need the rules to check the geometry.</td></tr>
+        <tr><td>W &lt; 0</td><td>More constraints than needed. If the system is stable, it has <b>−W redundant constraints</b> (statically indeterminate to degree −W).</td></tr>
+      </table>
+      <div class="ex"><span class="tag">Worked example (the four beams on slide p.88)</span>
+        <ol>
+          <li>Simple beam: m = 1, h = 0, r = 2 (pin) + 1 (roller) = 3 → W = 3 − 3 = <b>0</b>.</li>
+          <li>Fixed end + middle hinge + roller: m = 2, h = 1, r = 3 + 1 = 4 → W = 6 − 2 − 4 = <b>0</b>.</li>
+          <li>Fixed at both ends with two middle hinges: m = 3, h = 2, r = 6 → W = 9 − 4 − 6 = <b>−1</b>, one redundant constraint (slide: "DOF 9, constraints 10").</li>
+        </ol>
+      </div>
+      <div class="warn"><span class="tag">The catch</span>
+        W ≤ 0 is <b>necessary but not sufficient</b>. Three parallel links give W = 0 for a beam, but the beam can still slide sideways. That's why you always follow the count with the rules.
+      </div>
+    </div>
+
+    <div class="lesson-card" data-side="4 · The three rules">
+      <span class="kick">Part 4</span>
+      <h3>The three rules, and the triangle behind them</h3>
+      <p>All three rules come from one fact you know from school geometry: <b>a triangle is fixed by its three side lengths</b> (SSS congruence). If three hinges are joined by three rigid sides, and the hinges aren't in a straight line, the triangle can't change shape. The slides call this the <b>triangle rule</b> (三角形规律).</p>
+      <div class="figwrap" data-fig="rulesfig"></div>
+      <p class="figcap">The three rules are the same triangle, with the sides replaced by links or by rigid pieces.</p>
+      <ol>
+        <li><b>Rule ①, point + rigid piece:</b> a point joined to a rigid piece by <b>two links not on one line</b> is fixed, with no redundant constraint. Two links joined at a new point are called a <b>binary body</b> (二元体). Adding or removing a binary body never changes whether a system is stable.</li>
+        <li><b>Rule ②, two rigid pieces:</b> two pieces joined by <b>one hinge and one link whose line doesn't pass through the hinge</b>, or by <b>three links that are neither concurrent nor all parallel</b>, form one bigger rigid piece with no redundant constraint.</li>
+        <li><b>Rule ③, three rigid pieces:</b> three pieces joined pairwise by <b>three hinges not on one line</b> form one bigger rigid piece with no redundant constraint.</li>
+      </ol>
+      <p>The ground counts as a rigid piece. So rule ② with the ground reads: "a body on a pin plus a roller whose line misses the pin is fixed", which is exactly why a simply supported beam works.</p>
+      <h4>Instantaneous (virtual) hinge, 瞬铰 / 虚铰</h4>
+      <p>Two links between the same two pieces act like a hinge located where their lines intersect (slide p.66). For a tiny movement, the piece rotates about that point, just as if there were a real hinge there. This lets you use rules ② and ③ even when there's no physical hinge. The point moves as the links move, which is why it's called "instantaneous". If the two links are parallel, the virtual hinge is at infinity.</p>
+      <div class="ex"><span class="tag">Worked example</span>
+        A beam rests on a pin at A and a vertical roller at B. Treat the pin as a hinge to the ground and the roller as one link. Rule ②: one hinge (A) + one link (B), and the link's vertical line through B doesn't pass through A. So beam + ground form one rigid body, with no redundant constraint: <b>stable and statically determinate</b>. If the roller at B were replaced by a horizontal link aimed straight at A, its line would pass through the hinge and the beam could rotate a little about A: unstable.
+      </div>
+    </div>
+
+    <div class="lesson-card" data-side="5 · Instantaneously unstable systems">
+      <span class="kick">Part 5</span>
+      <h3>When the rules fail: instantaneously unstable systems</h3>
+      <p>Every rule has a condition ("not on one line", "not concurrent", "not parallel"). Break it and you get an <b>improper arrangement</b> (不恰当约束, slides p.70–71):</p>
+      <ul>
+        <li><b>Three hinges collinear</b> (三铰共线).</li>
+        <li><b>Three links meeting at one point</b> (三链杆共点): the piece can rotate a little about that point.</li>
+        <li><b>Three links parallel</b> (三链杆平行): the piece can slide a little sideways (rotation about a point at infinity).</li>
+      </ul>
+      <p><b>Why does a straight line let it move?</b> Take point B held by two horizontal links of length L, one from each side. Move B down by a small δ. Each link's new length is √(L² + δ²) ≈ L + δ²/(2L). The change in length is proportional to <b>δ²</b>, a second-order small quantity, exactly like the dx² you dropped when deriving dM/dx = F<sub>s</sub> last week. To first order the links don't stretch at all, so they can't resist the first bit of movement.</p>
+      <div class="ex"><span class="tag">Worked example: why it's dangerous</span>
+        Hang P = 1 kN at the middle of two collinear links. B sags until the links make an angle θ with the horizontal. Vertical equilibrium: 2N·sin θ = P, so N = P/(2 sin θ). At θ = 1°, N = 1/(2 × 0.01745) ≈ <b>28.6 kN</b>, almost 30 times the load. As θ → 0 the force → ∞. An instantaneously unstable system (瞬变体系) develops huge forces and big deflections under a small load, so it is <b>never</b> used as a structure, even though it doesn't collapse outright like a full mechanism (常变体系).
+      </div>
+    </div>
+
+    <div class="lesson-card" data-side="6 · Strategy for a whole system">
+      <span class="kick">Part 6</span>
+      <h3>Strategy for analysing a whole system</h3>
+      <p>The rules are simple. The skill is choosing which pieces to apply them to. The slides give three approaches (p.73–80):</p>
+      <ol>
+        <li><b>Start from the ground</b> (从基础出发): take the ground as your first rigid piece and attach things to it one rule at a time, growing a bigger and bigger rigid body.</li>
+        <li><b>Remove binary bodies</b> (拆除二元体): peel off any joint held by two links. What remains is simpler, and it has the same stability as the original.</li>
+        <li><b>Start from inside</b> (从内部刚片出发): if the system sits on exactly three support links (like a pin + roller), first check the upper part on its own, then attach it to the ground with rule ②.</li>
+      </ol>
+      <p><b>Choosing pieces</b> (slide p.80): if many supports connect to the ground, make the ground plus its nearby stable bits one big piece. In complicated systems, choose pieces that are "evenly spread out", each joined to the others by hinges or pairs of links.</p>
+      <div class="ex"><span class="tag">Worked example: writing it up the way the course expects</span>
+        <p><b>System:</b> beam ABC on a pin at A and a roller at B, with a second beam CD hinged to it at C and resting on a roller at D.</p>
+        <p><b>分析 Analysis.</b> (1) ABC + ground: hinge A + link B, whose line misses A → rule ②, one rigid body, no redundant constraint. (2) CD + that body: hinge C + link D, whose line misses C → rule ② again.</p>
+        <p><b>结论 Conclusion.</b> Geometrically stable with no redundant constraints, so it is statically determinate. Count check: m = 2, h = 1, r = 2 + 1 + 1 = 4 → W = 6 − 2 − 4 = 0 ✓.</p>
+      </div>
+    </div>
+
+    <div class="lesson-card" data-side="7 · Static determinacy">
+      <span class="kick">Part 7</span>
+      <h3>Geometry decides static determinacy</h3>
+      <p>Each rigid piece gives you 3 equilibrium equations (ΣX, ΣY, ΣM). Each constraint brings one unknown force. So:</p>
+      <ul>
+        <li><b>Statically determinate</b> (静定): stable with <b>no</b> redundant constraints. Unknowns = equations, and equilibrium alone gives every reaction and internal force.</li>
+        <li><b>Statically indeterminate</b> (超静定): stable <b>with</b> redundant constraints. There are more unknowns than equations, and the <b>degree of indeterminacy</b> is the number of redundant constraints.</li>
+      </ul>
+      <div class="ex"><span class="tag">You've met this before</span>
+        Week 4 homework: a steel rod fixed at <b>both</b> ends with loads in the middle. One rigid piece (3 equations) with 6 constraints gives 3 redundant constraints. For axial loading only, one equation (ΣX) and two unknown end forces leave one equation short. That's why the hint said "use the deformation condition": the extra equation came from the total change in length being zero. Statically indeterminate always means you need deformation.
+      </div>
+      <p>Slide p.88's last example: m = 2 pieces (DOF 6) with 10 constraints, so it's 4 times statically indeterminate (if stable).</p>
+    </div>
+
+    <div class="lesson-card" data-side="8 · Multi-span beams">
+      <span class="kick">Part 8</span>
+      <h3>Statically determinate multi-span beams (静定多跨梁)</h3>
+      <p>A long bridge often uses a chain of beams joined by hinges (slide p.92, a Gerber beam). Geometric analysis shows how the chain is assembled:</p>
+      <ul>
+        <li>The <b>basic part</b> (基本部分) is stable on its own supports, for example a beam on a pin and a roller, or a cantilever.</li>
+        <li>An <b>attached part</b> (附属部分) needs the basic part to stand: it has a hinge into the basic part and only one support of its own.</li>
+      </ul>
+      <p><b>How force flows:</b> a load on an attached part travels through the hinge into the basic part. A load on the basic part does <b>not</b> reach the attached part. So you analyse in the <b>reverse</b> order of assembly (slide p.94: 装 assemble ← / 拆 take apart →): attached parts first, then pass the hinge force (equal and opposite) to the part underneath. A hinge transmits force but no moment, so <b>M = 0 at every hinge</b>, which makes a great check.</p>
+      <div class="ex"><span class="tag">Worked example</span>
+        <p>AB is a 2 m cantilever fixed at A. BC is 4 m long, hinged to it at B and resting on a roller at C. q = 5 kN/m acts over the whole 6 m.</p>
+        <ol>
+          <li><b>Assembly:</b> AB (fixed) is the basic part. BC (hinge B + roller C) is attached.</li>
+          <li><b>BC first</b> (a simple beam of span 4): R<sub>C</sub> = q·4/2 = 10 kN, and the hinge holds BC up with 10 kN.</li>
+          <li><b>AB next:</b> BC pushes <i>down</i> on the cantilever tip with 10 kN. Load on AB: 5 × 2 = 10 kN spread + 10 kN at the tip. R<sub>A</sub> = 20 kN, M<sub>A</sub> = −(10 × 2 + 5 × 2²/2) = −30 kN·m (hogging).</li>
+          <li><b>Checks:</b> R<sub>A</sub> + R<sub>C</sub> = 30 = 5 × 6 ✓. M<sub>B</sub> = 0 at the hinge ✓. The peak in BC is ql²/8 = 10 kN·m at its middle.</li>
+        </ol>
+        <div class="figwrap" data-fig="msbex"></div>
+      </div>
+    </div>
+
+    <div class="lesson-card" data-side="9 · Buckling of slender columns">
+      <span class="kick">Part 9</span>
+      <h3>Stability of a slender column (稳定 / 临界力)</h3>
+      <p>"Stability" now means something else: <b>is the equilibrium stable?</b> Think of a ball. In a bowl, push it and it rolls back (stable). On top of a dome, it rolls away (unstable). A straight column under compression is like that ball: below a certain load, a small sideways push dies away; above it, the column bends further and further. That load is the <b>critical force F<sub>cr</sub></b>.</p>
+      <h4>The spring model (slide p.26)</h4>
+      <p>A rigid bar of length l, pinned at the base, held at the top by a horizontal spring of stiffness k, carries P on top. Tip it sideways by a small Δ. The spring pulls back with kΔ, which gives a <b>restoring</b> moment kΔ·l about the base. The load, now offset by Δ, gives an <b>overturning</b> moment P·Δ. It returns if kΔl &gt; PΔ, i.e. P &lt; kl. The two balance exactly when <b>kΔl − PΔ = 0</b>, so P<sub>cr</sub> = k·l. Notice that Δ cancels: the critical load doesn't depend on how hard you push.</p>
+      <h4>Euler's formula (slide p.27)</h4>
+      <p>A real column is its own spring: bending stiffness EI resists the bending. Solving the bending equation (EI·v″ = −P·v, a sine-wave solution) gives:</p>
+      <div class="eqn">F<sub>cr</sub> = π²EI / (μl)²</div>
+      <div class="figwrap" data-fig="buckfig"></div>
+      <p class="figcap">The buckled shapes. μl is the length of one "half sine wave" in each shape: the effective length.</p>
+      <ul>
+        <li><b>E</b>: the material (steel 200 GPa vs timber about 10 GPa).</li>
+        <li><b>I</b>: the section. Use the <b>smallest</b> I, because the column buckles about its weakest axis.</li>
+        <li><b>μ</b>: the end conditions. μ = 1 (pinned–pinned), 2 (fixed–free), 0.7 (fixed–pinned), 0.5 (fixed–fixed, the top free only to move vertically).</li>
+        <li><b>(μl)²</b> is in the denominator: double the length and F<sub>cr</sub> drops to a <b>quarter</b>.</li>
+      </ul>
+      <div class="ex"><span class="tag">Worked example</span>
+        Steel (E = 200 GPa = 200 000 MPa) circular column, d = 50 mm, pinned at both ends, l = 3 m. I = πd⁴/64 = π × 50⁴/64 ≈ 306 800 mm⁴. F<sub>cr</sub> = π² × 200 000 × 306 800 / 3000² ≈ 67 300 N = <b>67.3 kN</b>. Make it a flagpole (fixed at the bottom, free at the top, μ = 2): (μl)² is 4× bigger, so F<sub>cr</sub> ≈ 16.8 kN.
+      </div>
+    </div>
+
+    <div id="probs"></div>
+    <p style="font-size:.8rem;color:var(--text3);margin:48px 0 80px">Every value here was checked in code. Your checks are saved in this browser.</p>
+  </div>
+
+  <div class="footer-note">RAFI ADIFA MAULANA · STUDY HUB · 2026</div>
+
+<script>
+/* ═════════════ helpers ═════════════ */
+const f1=n=>+(+n).toFixed(1);
+const fmt=v=>{const r=Math.round(v*100)/100; return (r<0?'−':'')+Math.abs(r).toString();};
+function arrowSVG(x1,y1,x2,y2,cls='force',hl=9,sw=2){
+  const a=Math.atan2(y2-y1,x2-x1), bx=x2-hl*Math.cos(a), by=y2-hl*Math.sin(a), px=Math.sin(a)*hl*.42, py=-Math.cos(a)*hl*.42;
+  const col=cls==='force'?'var(--force)':cls==='react'?'var(--react)':'var(--text3)';
+  return `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(bx)}" y2="${f1(by)}" stroke="${col}" stroke-width="${sw}"/><polygon points="${f1(x2)},${f1(y2)} ${f1(bx+px)},${f1(by+py)} ${f1(bx-px)},${f1(by-py)}" fill="${col}"/>`;
+}
+const L_=(x1,y1,x2,y2,w=1.4,c='var(--text)',dash='')=>`<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke="${c}" stroke-width="${w}" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+const T_=(x,y,s,cls='',anchor='middle')=>`<text x="${f1(x)}" y="${f1(y)}" text-anchor="${anchor}" class="${cls}">${s}</text>`;
+function hatchBelow(x1,x2,y){let s=L_(x1,y,x2,y);for(let x=x1+3;x<=x2;x+=7)s+=L_(x,y,x-6,y+7,1,'var(--text3)');return s}
+function hatchWall(x,y1,y2,side){let s=L_(x,y1,x,y2,1.8);for(let y=y1+2;y<=y2;y+=7)s+=L_(x,y,x+(side<0?-7:7),y+6,1,'var(--text3)');return s}
+function pinSup(x,y){return `<polygon points="${x},${y} ${x-11},${y+18} ${x+11},${y+18}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.4"/>`+hatchBelow(x-17,x+17,y+18)+`<circle cx="${x}" cy="${y}" r="4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.4"/>`}
+function rollerSup(x,y){return `<polygon points="${x},${y} ${x-10},${y+14} ${x+10},${y+14}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.4"/><circle cx="${x-5}" cy="${y+18}" r="3.4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.2"/><circle cx="${x+5}" cy="${y+18}" r="3.4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.2"/>`+hatchBelow(x-16,x+16,y+22)+`<circle cx="${x}" cy="${y}" r="4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.4"/>`}
+function dimH(x1,x2,y,label){return L_(x1,y-6,x1,y+6,1,'var(--text3)')+L_(x2,y-6,x2,y+6,1,'var(--text3)')+arrowSVG((x1+x2)/2,y,x1,y,'dim',6,1)+arrowSVG((x1+x2)/2,y,x2,y,'dim',6,1)+T_((x1+x2)/2,y-5,label,'lbl-s')}
+function dimV(x,y1,y2,label,side=-1){return L_(x-6,y1,x+6,y1,1,'var(--text3)')+L_(x-6,y2,x+6,y2,1,'var(--text3)')+arrowSVG(x,(y1+y2)/2,x,y1,'dim',6,1)+arrowSVG(x,(y1+y2)/2,x,y2,'dim',6,1)+T_(x+side*8,(y1+y2)/2+4,label,'lbl-s',side<0?'end':'start')}
+function coupleSVG(cx,cy,dir,label){ // dir 'cw' or 'ccw' (screen)
+  const r=16, a0=dir==='cw'?200:-20, a1=dir==='cw'?-20:200, R=Math.PI/180;
+  const p=(a)=>[cx+r*Math.cos(a*R), cy-r*Math.sin(a*R)];
+  const [sx,sy]=p(a0),[ex,ey]=p(a1);
+  const sweep=dir==='cw'?1:0;
+  const tang=dir==='cw'? (a1-90)*R : (a1+90)*R;
+  const tx=ex+8*Math.cos(tang), ty=ey-8*Math.sin(tang);
+  return `<path d="M${f1(sx)},${f1(sy)} A${r},${r} 0 1 ${sweep} ${f1(ex)},${f1(ey)}" fill="none" stroke="var(--force)" stroke-width="2"/>`+arrowSVG(ex-(tx-ex)*.1,ey-(ty-ey)*.1,tx,ty,'force',8,0.1)+T_(cx,cy-r-8,label,'lbl-s');
+}
+
+/* ── beam figure ── */
+function beamFig(sp){
+  const W=600, x0=50, BW=500, Y=sp.y||104, s=BW/sp.L, X=x=>x0+x*s;
+  let g='';
+  (sp.udl||[]).forEach(u=>{const xa=X(u.a),xb=X(u.b),up=!!u.up,top=up?Y+40:Y-40,tip=up?Y+5:Y-5; g+=L_(xa,top,xb,top,1.4,'var(--force)'); const n=Math.max(2,Math.round((xb-xa)/22)); for(let i=0;i<=n;i++){const xx=xa+(xb-xa)*i/n; g+=arrowSVG(xx,top,xx,tip,'force',7,1.4);} g+=T_((xa+xb)/2,up?top+14:top-7,u.label,'lbl-s');});
+  (sp.lin||[]).forEach(u=>{const xa=X(u.a),xb=X(u.b),h1=u.q1*40,h2=u.q2*40; g+=L_(xa,Y-5-h1,xb,Y-5-h2,1.4,'var(--force)'); const n=Math.max(3,Math.round((xb-xa)/24)); for(let i=0;i<=n;i++){const t=i/n,xx=xa+(xb-xa)*t,h=h1+(h2-h1)*t; if(h>6) g+=arrowSVG(xx,Y-5-h,xx,Y-5,'force',6,1.3);} g+=T_(xb-10,Y-52,u.label,'lbl-s','end');});
+  g+=`<rect x="${X(0)}" y="${Y-4}" width="${BW}" height="8" rx="1.5" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.6"/>`;
+  (sp.sup||[]).forEach(su=>{const x=X(su.x); if(su.t==='pin') g+=pinSup(x,Y+4); else if(su.t==='roller') g+=rollerSup(x,Y+4); else if(su.t==='fixL') g+=hatchWall(x,Y-26,Y+26,-1); else if(su.t==='fixR') g+=hatchWall(x,Y-26,Y+26,1);});
+  (sp.hinge||[]).forEach(h=>{g+=`<circle cx="${X(h)}" cy="${Y}" r="5" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.6"/>`;});
+  (sp.pts||[]).forEach(p=>{const x=X(p.x); g+=arrowSVG(x,Y-58,x,Y-5,'force',9,2.2)+T_(x+(p.dx||0),Y-64,p.label,'lbl-s');});
+  (sp.cpl||[]).forEach(c=>{g+=coupleSVG(X(c.x),Y,c.dir,c.label);});
+  (sp.letters||[]).forEach(l=>{g+=T_(X(l.x)+(l.dx||0),Y+(l.dy||-12),l.t,'', 'middle');});
+  if(sp.dims){const d=sp.dims, yy=Y+(sp.dimY||48); for(let i=0;i<d.length-1;i++) g+=dimH(X(d[i][0]),X(d[i+1][0]),yy,d[i][1]); }
+  return `<svg class="fig" viewBox="0 0 ${W} ${Y+(sp.dimY||48)+20}" role="img" aria-label="beam figure">${g}</svg>`;
+}
+
+/* ── internal-force evaluator (up +, couples cw + ; mirrors the verification script) ── */
+function FsM(x,f){let Fs=0,M=0;
+  (f.pts||[]).forEach(([xi,F])=>{if(xi<x){Fs+=F;M+=F*(x-xi);}});
+  (f.udl||[]).forEach(([a,b,q])=>{if(x>a){const e=Math.min(x,b),L=e-a;Fs-=q*L;M-=q*L*(x-(a+e)/2);}});
+  (f.lin||[]).forEach(([a,b,q1,q2])=>{if(x>a){const e=Math.min(x,b),n=200,h=(e-a)/n;for(let i=0;i<n;i++){const xm=a+(i+.5)*h,qq=q1+(q2-q1)*(xm-a)/(b-a);Fs-=qq*h;M-=qq*h*(x-xm);}}});
+  (f.cpl||[]).forEach(([xi,m])=>{if(xi<x)M+=m;});
+  return [Fs,M];}
+
+/* ── Fs / M diagram ── labels: [x, 'Fs'|'M', text?, side(-1 left,+1 right,0)] */
+function diag(f,L,o={}){
+  const W=o.w||600, x0=50, BW=500, s=BW/L, X=x=>x0+x*s, eps=1e-6;
+  const br=new Set([0,L]); (f.pts||[]).forEach(p=>br.add(p[0])); (f.udl||[]).forEach(u=>{br.add(u[0]);br.add(u[1]);}); (f.lin||[]).forEach(u=>{br.add(u[0]);br.add(u[1]);}); (f.cpl||[]).forEach(c=>br.add(c[0]));
+  const xs=[]; const N=240; for(let i=0;i<=N;i++) xs.push(L*i/N); br.forEach(b=>{xs.push(b-eps,b+eps);});
+  const X2=xs.filter(x=>x>=0&&x<=L).sort((a,b)=>a-b);
+  const vals=X2.map(x=>FsM(Math.min(Math.max(x,eps),L-eps),f));
+  const panels=o.only==='Fs'?['Fs']:o.only==='M'?['M']:['Fs','M'];
+  const H=o.h||92; let g='', top=14;
+  panels.forEach(pn=>{
+    const idx=pn==='Fs'?0:1; let mx=Math.max(1e-9,...vals.map(v=>Math.abs(v[idx])));
+    const flip=(pn==='M')? (o.flipM?-1:1) : -1; // Fs: + up ; M: + down (tension side)
+    const ys=vals.map(v=>flip*v[idx]); const hi=Math.max(0,...ys), lo=Math.min(0,...ys); const span=Math.max(hi-lo,1e-9);
+    const k=(H-26)/span, base=top+13+(-lo)*k, Yv=v=>base+flip*v*k;
+    let d=`M${X(0)},${base} `; X2.forEach((x,i)=>{d+=`L${f1(X(x))},${f1(Yv(vals[i][idx]))} `;}); d+=`L${X(L)},${base} Z`;
+    g+=`<path d="${d}" fill="${pn==='Fs'?'var(--pos)':'var(--neg)'}" stroke="${pn==='Fs'?'var(--react)':'var(--force)'}" stroke-width="1.6"/>`;
+    g+=L_(X(0),base,X(L),base,1.2,'var(--text3)');
+    g+=T_(12,base+4,pn==='Fs'?'F<tspan baseline-shift="sub" font-size="9">s</tspan>':'M','ax','start');
+    if(!o.nolabels) (o.labels||[]).filter(l=>l[1]===pn).forEach(l=>{const xx=Math.min(Math.max(l[0]+(l[3]||0)*1e-4,eps),L-eps); const v=FsM(xx,f)[idx]; const yy=Yv(v); const up=(flip*v)<0; g+=T_(X(l[0])+(l[3]||0)*16,yy+(up?-6:15),l[2]!==undefined?l[2]:fmt(v),'val',(l[3]||0)<0?'end':(l[3]||0)>0?'start':'middle');});
+    top+=H+16;
+  });
+  if(o.ticks){ o.ticks.forEach(t=>{g+=L_(X(t[0]),top-8,X(t[0]),top-2,1,'var(--text3)')+T_(X(t[0]),top+9,t[1],'ax');}); top+=14; }
+  return `<svg class="fig" viewBox="0 0 ${W} ${top}" role="img" aria-label="internal force diagram">${g}</svg>`;
+}
+
+const fig=s=>`<div class="figwrap">${s}</div>`;
+
+/* ── cross-section figure: rects [x,y,w,h] in mm (y up from bottom); optional linear stress diagram ── */
+function sectionFig(o){
+  const R=o.rects, maxX=Math.max(...R.map(r=>r[0]+r[2])), maxY=Math.max(...R.map(r=>r[1]+r[3]));
+  const s=(o.size||150)/Math.max(maxX,maxY), ox=56, oy=24+maxY*s, X=x=>ox+x*s, Y=y=>oy-y*s;
+  const sw=o.stress?150:0, W=ox+maxX*s+(o.stress?200:130), H=oy+(o.title?34:22);
+  let g='';
+  R.forEach(r=>{ g+=`<rect x="${f1(X(r[0]))}" y="${f1(Y(r[1]+r[3]))}" width="${f1(r[2]*s)}" height="${f1(r[3]*s)}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.5"/>`; });
+  (o.dimsH||[]).forEach(d=>{ g+=dimH(X(d[0]),X(d[1]),Y(d[2])-(d[3]||10),d[4]); });
+  (o.dimsV||[]).forEach(d=>{ g+=dimV(X(d[0])-(d[3]||14),Y(d[1]),Y(d[2]),d[4],-1); });
+  if(o.yc!==undefined){ const yy=Y(o.yc); g+=L_(ox-12,yy,X(maxX)+14+sw,yy,1.2,'var(--accent)','5 4')+T_(X(maxX)+16,yy-5,o.stress?'z':(o.ncLabel||'z (neutral axis)'),'lbl-s','start'); }
+  if(o.stress){ const bx=X(maxX)+90, yt=Y(maxY), yb=Y(0), yn=Y(o.yc), mx=Math.max(Math.abs(o.stress[0]),Math.abs(o.stress[1])), k=46/mx;
+    const xt=bx+k*o.stress[0], xb=bx+k*o.stress[1];
+    g+=`<polygon points="${f1(bx)},${f1(yt)} ${f1(xt)},${f1(yt)} ${f1(bx)},${f1(yn)}" fill="${o.stress[0]<0?'var(--neg)':'var(--pos)'}" stroke="${o.stress[0]<0?'var(--force)':'var(--react)'}" stroke-width="1.4"/>`;
+    g+=`<polygon points="${f1(bx)},${f1(yn)} ${f1(xb)},${f1(yb)} ${f1(bx)},${f1(yb)}" fill="${o.stress[1]<0?'var(--neg)':'var(--pos)'}" stroke="${o.stress[1]<0?'var(--force)':'var(--react)'}" stroke-width="1.4"/>`;
+    g+=L_(bx,yt-6,bx,yb+6,1.2,'var(--text3)');
+    g+=T_(xt+(o.stress[0]<0?-4:4),yt+4,o.sLab[0],'val',o.stress[0]<0?'end':'start')+T_(xb+(o.stress[1]<0?-4:4),yb+4,o.sLab[1],'val',o.stress[1]<0?'end':'start');
+    g+=T_(bx,yb+18,'σ','ax'); }
+  if(o.title) g+=T_(ox+maxX*s/2,H-8,o.title,'lbl-s');
+  return `<svg class="fig" viewBox="0 0 ${f1(W)} ${f1(H)}" role="img" aria-label="cross-section" style="max-width:${o.maxw||460}px;margin:10px auto">${g}</svg>`;
+}
+
+/* ── the dx element in the basics card ── */
+function dxFig(){
+  let g=`<rect x="120" y="70" width="140" height="44" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.5"/>`;
+  for(let i=0;i<=5;i++){ const x=128+i*25; g+=arrowSVG(x,150,x,118,'force',7,1.4); }
+  g+=L_(128,150,253,150,1.4,'var(--force)')+T_(190,168,'q·dx  (q drawn + upward)','lbl-s');
+  const sb=t=>t+'<tspan font-size="9" baseline-shift="sub">s</tspan>';
+  g+=arrowSVG(108,112,108,72,'react',9,2)+T_(108,62,sb('F'));
+  g+=arrowSVG(272,72,272,112,'react',9,2)+T_(278,130,sb('F')+' + d'+sb('F'),'','start');
+  g+=coupleSVG(70,92,'cw','M')+coupleSVG(310,92,'ccw','M + dM');
+  g+=dimH(120,260,30,'dx');
+  return g;
+}
+
+
+
+/* ── system figure: coordinates in "units", y up ── */
+function sysFig(o){
+  const P=[]; const add=(x,y)=>P.push([x,y]);
+  (o.poly||[]).forEach(p=>p.pts.forEach(q=>add(q[0],q[1])));
+  (o.mem||[]).forEach(b=>{add(b[0],b[1]);add(b[2],b[3]);});
+  (o.bars||[]).forEach(b=>{add(b[0],b[1]);add(b[2],b[3]);});
+  (o.sup||[]).forEach(s=>add(s.x,s.y));
+  (o.dots||[]).forEach(d=>add(d[0],d[1]));
+  (o.extra||[]).forEach(d=>add(d[0],d[1]));
+  const xs=P.map(p=>p[0]), ys=P.map(p=>p[1]);
+  const x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  const pad=o.pad||42, s=o.scale||Math.min((o.w||520)/Math.max(x1-x0,1e-6),(o.h||240)/Math.max(y1-y0,1e-6));
+  const W=(x1-x0)*s+2*pad, H=(y1-y0)*s+2*pad+(o.caps?16:0), X=x=>pad+(x-x0)*s, Y=y=>pad+(y1-y)*s;
+  let g='';
+  (o.poly||[]).forEach(p=>{ g+=`<polygon points="${p.pts.map(q=>f1(X(q[0]))+','+f1(Y(q[1]))).join(' ')}" fill="${p.ground?'color-mix(in oklab,#3b82f6 22%,transparent)':'color-mix(in oklab,var(--accent) 16%,transparent)'}" stroke="var(--text)" stroke-width="1.4"/>`;
+    if(p.label){ const cx=p.lx!==undefined?p.lx:p.pts.reduce((a,q)=>a+q[0],0)/p.pts.length, cy=p.ly!==undefined?p.ly:p.pts.reduce((a,q)=>a+q[1],0)/p.pts.length; g+=T_(X(cx),Y(cy)+5,p.label,'',`middle" font-family="DM Serif Display,serif" font-size="15`); } });
+  (o.dash||[]).forEach(d=>{ g+=L_(X(d[0]),Y(d[1]),X(d[2]),Y(d[3]),1.3,'var(--force)','5 4'); });
+  (o.mem||[]).forEach(b=>{ g+=L_(X(b[0]),Y(b[1]),X(b[2]),Y(b[3]),b[4]||3.2,'var(--text)'); });
+  const hinges=[];
+  (o.bars||[]).forEach(b=>{ g+=L_(X(b[0]),Y(b[1]),X(b[2]),Y(b[3]),2,b[5]||'var(--text)'); hinges.push([b[0],b[1]],[b[2],b[3]]); if(b[4]) g+=T_((X(b[0])+X(b[2]))/2+8,(Y(b[1])+Y(b[3]))/2-4,b[4],'lbl-s','start'); });
+  (o.sup||[]).forEach(su=>{ const x=X(su.x), y=Y(su.y);
+    if(su.t==='pin') g+=pinSup(x,y);
+    else if(su.t==='link'){ g+=L_(x,y,x,y+24,1.8)+`<circle cx="${f1(x)}" cy="${f1(y+24)}" r="3.6" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.3"/>`+hatchBelow(x-13,x+13,y+28)+L_(x-13,y+28,x+13,y+28,2.2); hinges.push([su.x,su.y]); }
+    else if(su.t==='linkL'||su.t==='linkR'){ const d=su.t==='linkL'?-1:1; g+=L_(x,y,x+d*24,y,1.8)+`<circle cx="${f1(x+d*24)}" cy="${f1(y)}" r="3.6" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.3"/>`+hatchWall(x+d*28,y-13,y+13,d); hinges.push([su.x,su.y]); }
+    else if(su.t==='gnd'){ g+=hatchBelow(x-13,x+13,y)+L_(x-13,y,x+13,y,2.2); hinges.push([su.x,su.y]); }
+    else if(su.t==='fixed'){ g+=hatchBelow(x-16,x+16,y)+L_(x-16,y,x+16,y,2.6); }
+    else if(su.t==='fixL'){ g+=hatchWall(x,y-18,y+18,-1); }
+    else if(su.t==='fixR'){ g+=hatchWall(x,y-18,y+18,1); }
+  });
+  (o.hinges||[]).forEach(h=>hinges.push(h));
+  hinges.forEach(h=>{ g+=`<circle cx="${f1(X(h[0]))}" cy="${f1(Y(h[1]))}" r="4.2" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.5"/>`; });
+  (o.dots||[]).forEach(d=>{ g+=`<circle cx="${f1(X(d[0]))}" cy="${f1(Y(d[1]))}" r="4.5" fill="var(--force)"/>`+(d[2]?T_(X(d[0])+(d[3]||10),Y(d[1])+(d[4]||-8),d[2],'','start'):''); });
+  (o.labels||[]).forEach(l=>{ g+=T_(X(l[0])+(l[3]||0),Y(l[1])+(l[4]||0),l[2],l[5]||'',l[6]||'middle'); });
+  (o.caps||[]).forEach(c=>{ g+=T_(X(c[0]),H-8,c[1],'lbl-s'); });
+  return `<svg class="fig" viewBox="0 0 ${f1(W)} ${f1(H)}" role="img" aria-label="${o.aria||'structure diagram'}" style="max-width:${o.maxw||Math.round(W)}px;margin:6px auto">${g}</svg>`;
+}
+
+/* ── buckled shapes for the four end conditions ── */
+function buckFig(){
+  const cols=[{n:'pinned–pinned',mu:'μ = 1',f:t=>Math.sin(Math.PI*t),top:'pin',bot:'pin'},{n:'fixed–free',mu:'μ = 2',f:t=>1-Math.cos(Math.PI*t/2),top:'free',bot:'fix'},{n:'fixed–pinned',mu:'μ = 0.7',f:t=>1.3*t*Math.sin(Math.PI*t),top:'pin',bot:'fix'},{n:'fixed–fixed',mu:'μ = 0.5',f:t=>(1-Math.cos(2*Math.PI*t))/2,top:'fix',bot:'fix'}];
+  let g=''; const H=170, top=30, bot=top+H;
+  cols.forEach((c,i)=>{ const x=70+i*130;
+    g+=L_(x,top,x,bot,1.2,'var(--text3)','3 3');
+    let d=''; for(let k=0;k<=40;k++){ const t=k/40, yy=bot-t*H, xx=x+22*c.f(t); d+=(k?'L':'M')+f1(xx)+','+f1(yy)+' '; }
+    g+=`<path d="${d}" fill="none" stroke="var(--force)" stroke-width="2.4"/>`;
+    if(c.bot==='pin') g+=pinSup(x,bot); else g+=hatchBelow(x-16,x+16,bot)+L_(x-16,bot,x+16,bot,2.6);
+    const tx=x+22*c.f(1);
+    if(c.top==='pin') g+=`<circle cx="${f1(tx)}" cy="${top}" r="4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.4"/>`+L_(tx,top,tx+24,top,1.6)+hatchWall(tx+26,top-10,top+10,1);
+    if(c.top==='fix') g+=L_(tx-14,top,tx+14,top,2.6)+L_(tx-14,top-6,tx-14,top+6,1.4)+L_(tx+14,top-6,tx+14,top+6,1.4);
+    g+=arrowSVG(tx,top-26,tx,top-4,'force',8,2)+T_(x,bot+40,c.n,'lbl-s')+T_(x,bot+56,c.mu,'val');
+  });
+  return `<svg class="fig" viewBox="0 0 560 ${bot+66}" role="img" aria-label="buckled shapes" style="max-width:560px;margin:6px auto">${g}</svg>`;
+}
+
+/* ── figures used in the lesson ── */
+const LESSON_FIGS={
+  whyfig:()=>sysFig({maxw:520,h:120,
+    bars:[[0,0,0,2],[0,2,3,2],[3,2,3,0],[8,0,8,2],[8,2,11,2],[11,2,11,0],[8,0,11,2]],
+    dash:[[0,0,0.8,1.83],[0.8,1.83,3.8,1.83],[3.8,1.83,3,0]],
+    sup:[{x:0,y:0,t:'gnd'},{x:3,y:0,t:'gnd'},{x:8,y:0,t:'gnd'},{x:11,y:0,t:'gnd'}],
+    caps:[[1.5,'4 hinged bars: folds'],[9.5,'add a diagonal: stable']]}),
+  rulesfig:()=>sysFig({maxw:560,h:110,
+    poly:[{pts:[[-0.4,0],[2.4,0],[2.4,-0.5],[-0.4,-0.5]],label:'I',ly:-0.3,ground:true},{pts:[[4.6,0],[7.4,0],[7.4,-0.5],[4.6,-0.5]],label:'I',ly:-0.3,ground:true},{pts:[[9.6,0],[12.4,0],[12.4,-0.5],[9.6,-0.5]],label:'I',ly:-0.3,ground:true},
+          {pts:[[5,0],[5.25,0],[6.15,1.8],[5.9,1.9]],label:'II',lx:5.55,ly:1.0},{pts:[[10,0],[10.25,0],[11.15,1.8],[10.9,1.9]],label:'II',lx:10.55,ly:1.0},{pts:[[11,1.9],[11.15,1.75],[12,0],[11.75,0]],label:'III',lx:11.6,ly:1.05}],
+    bars:[[0,0,1,1.9],[1,1.9,2,0],[6,1.85,7,0]],hinges:[[5,0],[10,0],[11,1.85],[12,0],[6,1.85]],
+    labels:[[1,1.9,'A',0,-10],[6,1.85,'A',0,-10],[11,1.85,'A',0,-10]],
+    caps:[[1,'① point + piece'],[6,'② two pieces'],[11,'③ three pieces']]}),
+  msbex:()=>beamFig({L:6,sup:[{x:0,t:'fixL'},{x:6,t:'roller'}],hinge:[2],udl:[{a:0,b:6,label:'q = 5 kN/m'}],letters:[{x:0,t:'A',dx:-18,dy:-30},{x:2,t:'B',dy:24},{x:6,t:'C',dx:16,dy:4}],dims:[[0,'2 m'],[2,'4 m'],[6]]})+diag({pts:[[0,20],[6,10]],udl:[[0,6,5]],cpl:[[0,-30]]},6,{only:'M',labels:[[0,'M','−30',1],[2,'M','0'],[4,'M','10']],ticks:[[0,'A'],[2,'B'],[4,'4'],[6,'C']]}),
+  buckfig:()=>buckFig()
+};
+
+/* ═════════ forces for the evaluator (up +, clockwise couples +) ═════════ */
+const FM1={pts:[[0,13.75],[4,56.25],[9,20]],udl:[[0,9,10]]};
+const FM2={pts:[[0,-1],[1,1.5],[4,-0.75],[7,0.25]]};
+
+/* frames for A3 */
+function frames(){ const sp={mem:[],hinges:[],sup:[],caps:[],labels:[]};
+  [['fixed',false,'(a)'],['fixed',true,'(b)'],['pin',true,'(c)'],['pin',false,'(d)']].forEach((f,i)=>{ const x=i*9;
+    sp.mem.push([x,0,x,4],[x,4,x+6,4],[x+6,4,x+6,0]); if(f[1]) sp.hinges.push([x+3,4]);
+    sp.sup.push({x:x,y:0,t:f[0]},{x:x+6,y:0,t:f[0]}); sp.caps.push([x+3,f[2]]); });
+  sp.maxw=700; sp.h=150; return sysFig(sp); }
+
+const SECS={
+ warm:{eye:'Level 1 · easy',title:'Warm-up: structures, loads and counting',lede:'Vocabulary and counting. If these feel slow, re-read Parts 2 and 3 of the lesson.'},
+ rules:{eye:'Level 2 · easy → medium',title:'The three rules and their traps',lede:'Small systems where one rule decides everything. Each question also shows the "improper" version that breaks the rule.'},
+ sys:{eye:'Level 3 · medium',title:'Analyse a whole system',lede:'Combine counting with the rules. Write your reasoning the way the course does: 分析 (which rule, which pieces), then 结论 (stable or not, how many redundant constraints).'},
+ hardg:{eye:'Level 4 · hard',title:'Instantaneous hinges and hidden traps',lede:'The count says W = 0 and everything looks fine, but the geometry is wrong. Here you need coordinates to prove it.'},
+ buck:{eye:'Level 5 · medium',title:'Stability: when does a column buckle?',lede:'Units: put E in MPa (N/mm²), I in mm⁴ and lengths in mm, and F<sub>cr</sub> comes out in N.'},
+ msb:{eye:'Level 6 · hard → very hard',title:'Statically determinate multi-span beams',lede:'Geometry first (which part is basic, which is attached), then statics in the reverse order. M = 0 at every hinge is your built-in check.'}
+};
+const LV={easy:'easy',med:'medium',hard:'hard',vhard:'very hard'};
+
+const PROBS=[
+/* ═════════ LEVEL 1 ═════════ */
+{id:'w1',sec:'warm',lvl:'easy',num:'W1',title:'Name the structure, name the load',
+ text:`Ch. 1 vocabulary (slides p.11–56). Pick the best answer in each step. The last step is a small calculation with the floor live-load table (slide p.56).`,
+ idea:`Structures are classified by <b>how their members carry load</b>: bending (beams, frames) or pure tension/compression (trusses, arches, cables). Loads are classified by <b>how long they last</b> (dead vs live) and <b>whether they shake the structure</b> (static vs dynamic).`,
+ steps:[
+  {t:'Members that carry load mainly by bending: one face in tension, the other in compression.',choice:{o:[{t:'Beam',ok:true},{t:'Truss',ok:false},{t:'Cable',ok:false}],
+   why:`<b>Beam.</b> Slide p.22: "the force is mainly controlled by the bending moment", with tension on one side and compression on the other. Beams suit small and medium spans (about 10–20 m). Beyond that, bending makes them very deep and heavy.`}},
+  {t:'Straight members pinned at their ends, loads only at the joints, so each member is in pure tension or compression.',choice:{o:[{t:'Rigid frame',ok:false},{t:'Truss',ok:true},{t:'Arch',ok:false}],
+   why:`<b>Truss.</b> With hinges at both ends and no load along its length, each bar is a two-force member (二力杆, from Statics): the force must act along the bar's axis. No bending means the material works efficiently, which is why trusses span much further than beams (slide p.24, "no-bending-moment structure").`}},
+  {t:'Members joined so that the angle between them can\'t change: the joint passes moment from beam to column.',choice:{o:[{t:'Rigid frame (刚架)',ok:true},{t:'Truss',ok:false},{t:'Composite structure',ok:false}],
+   why:`<b>Rigid frame.</b> The rigid joint (刚结点) is what makes it a frame: it removes 3 DOF and transmits moment. In a truss the joints are hinges and transmit no moment.`}},
+  {t:'People, furniture and snow on a roof are…',choice:{o:[{t:'Dead loads',ok:false},{t:'Live loads',ok:true}],
+   why:`<b>Live loads</b> (活载) change during use (slide p.55). Dead load (恒载) is permanent, mainly self-weight.`}},
+  {t:'An earthquake is…',choice:{o:[{t:'A static load',ok:false},{t:'A dynamic load',ok:true}],
+   why:`<b>Dynamic</b> (动载): it makes the structure vibrate, so inertia forces matter. Vehicles and wind are also treated as dynamic. Self-weight, snow and rain are static.`}},
+  {t:'Classroom live load',p:`A classroom floor measures 6 m × 8 m. Using the table on slide p.56, what total live load must the floor be designed for?`,q:[{l:'Total live load',a:96,u:'kN'}],
+   h:`Find the row for classrooms (教室) in the table: it gives a load per square metre. Then think about what you multiply it by.`,
+   r:`The table gives <b>2.0 kN/m²</b> for classrooms and reading rooms. Area = 6 × 8 = 48 m². Total = 2.0 × 48 = <b>96 kN</b>. That's about the weight of 130 students. For comparison, a library stack room (5.0 kN/m²) on the same floor would need 240 kN, which is why libraries usually go on the ground floor.`}
+ ]},
+
+{id:'w2',sec:'warm',lvl:'easy',num:'W2',title:'Count degrees of freedom and constraints',
+ text:`Answer each count. No figure needed: picture the objects described.`,
+ idea:`<b>Point = 2 DOF, rigid piece = 3 DOF.</b> A link removes 1, a hinge 2, a rigid joint 3. A hinge joining n pieces counts as n − 1 hinges.`,
+ steps:[
+  {t:'Free objects',p:``,q:[{l:'DOF of a free point in the plane',a:2,u:''},{l:'DOF of a free rigid bar',a:3,u:''}],
+   h:`How many numbers do you need to say where something is? A point has no orientation; a bar does.`,
+   r:`A point needs its two coordinates (x, y): <b>2</b>. A bar needs the position of one of its points (x, y) <i>and</i> the angle it makes (θ): <b>3</b>. Once you know those three, every point on a rigid bar is known.`},
+  {t:'Supports',p:`How many constraints (removed DOF) does each support provide?`,q:[{l:'Roller / link support',a:1,u:''},{l:'Pin support',a:2,u:''},{l:'Fixed support',a:3,u:''}],
+   h:`List the movements each support blocks: up–down, left–right, rotation. Count only the blocked ones.`,
+   r:`Roller: blocks only the direction of its link → <b>1</b>. Pin: blocks both translations but lets the beam rotate → <b>2</b>. Fixed: blocks both translations and rotation → <b>3</b>. These are exactly the numbers of reaction components you used in Statics (F, then F<sub>x</sub> + F<sub>y</sub>, then F<sub>x</sub> + F<sub>y</sub> + M).`},
+  {t:'Joining bars together',p:`Start from separate bars, then join them.`,q:[{l:'Two bars joined by one hinge: DOF',a:4,u:''},{l:'Three bars meeting at one hinge: DOF',a:5,u:''},{l:'Four bars meeting at one hinge: DOF',a:6,u:''},{l:'Three bars rigidly welded at one joint: DOF',a:3,u:''}],
+   h:`Start from 3 per bar. A hinge joining n bars counts as n − 1 single hinges, each removing 2. A rigid joint glues the bars into one piece.`,
+   r:`Two bars: 6 − 2 = <b>4</b> (the second bar can still rotate about the hinge, slide p.63). Three bars: 9 − 2·2 = <b>5</b>. Four bars: 12 − 2·3 = <b>6</b>. The pattern 3n − 2(n − 1) = n + 2 is the slide's formula. Welded: 9 − 3·2 = <b>3</b>, because three welded bars move as one rigid piece (slide p.64).`},
+  {t:'Redundant constraints',p:`A point is held to the ground by three links that meet at it, no two in line (slide p.65, right figure).`,q:[{l:'DOF of the point',a:0,u:''},{l:'Number of redundant constraints',a:1,u:''}],
+   h:`How many links does it take to fix a point? Compare with how many there are.`,
+   r:`Two non-collinear links already fix the point (DOF = <b>0</b>, rule ①). The third link removes nothing more, so it is <b>1</b> redundant constraint. It does carry force, though, which makes the system statically indeterminate to the first degree.`}
+ ]},
+
+{id:'w3',sec:'warm',lvl:'easy',num:'W3',title:'Use the counting formula W',
+ text:`Compute W = 3m − (2h + r) for each beam. m = rigid pieces (not the ground), h = single hinges between pieces, r = support links.`,
+ fig:()=>beamFig({L:6,sup:[{x:0,t:'pin'},{x:6,t:'roller'}],letters:[{x:3,t:'(a)',dy:-20}]})+beamFig({L:6,sup:[{x:0,t:'fixL'},{x:6,t:'roller'}],hinge:[3],letters:[{x:1.5,t:'(b)',dy:-20}]})+beamFig({L:6,sup:[{x:0,t:'fixL'},{x:6,t:'fixR'}],hinge:[2,4],letters:[{x:1,t:'(c)',dy:-20}]})+beamFig({L:6,sup:[{x:0,t:'pin'},{x:2,t:'roller'},{x:4,t:'roller'},{x:6,t:'roller'}],letters:[{x:1,t:'(d)',dy:-20}]}),
+ idea:`Count m, h and r carefully first: a pin support is r = 2, a fixed support r = 3. A hinge <i>between</i> pieces goes into h. A support doesn't.`,
+ steps:[
+  {t:'(a) simple beam',p:``,q:[{l:'W',a:0,u:''}],h:`One piece. What do a pin and a roller contribute to r?`,
+   r:`m = 1, h = 0, r = 2 + 1 = 3 → W = 3 − 3 = <b>0</b>. It's stable by rule ②, so it is statically determinate.`},
+  {t:'(b) fixed end + middle hinge + roller',p:``,q:[{l:'W',a:0,u:''}],h:`The middle hinge cuts the beam into how many pieces?`,
+   r:`m = 2, h = 1, r = 3 + 1 = 4 → W = 6 − 2 − 4 = <b>0</b>. The left half is a cantilever (fixed, stable). The right half hangs on it by the hinge plus the roller (rule ②). Stable and statically determinate.`},
+  {t:'(c) fixed at both ends, two hinges',p:``,q:[{l:'W',a:-1,u:''},{l:'Redundant constraints (it is stable)',a:1,u:''}],h:`Count pieces between the walls, then the hinges, then 3 per wall.`,
+   r:`m = 3, h = 2, r = 3 + 3 = 6 → W = 9 − 4 − 6 = <b>−1</b>. The system is stable (each outer piece is a cantilever; the middle piece hangs between two hinges, rule ③ with the ground), so it has <b>1</b> redundant constraint. This is the slide's "DOF 9, constraints 10" example.`},
+  {t:'(d) continuous beam on four supports',p:``,q:[{l:'W',a:-2,u:''},{l:'Degree of static indeterminacy',a:2,u:''}],h:`One continuous piece. Add up every support link.`,
+   r:`m = 1, h = 0, r = 2 + 1 + 1 + 1 = 5 → W = 3 − 5 = <b>−2</b>. Stable, with <b>2</b> redundant constraints. A continuous beam is statically indeterminate; putting hinges into it (as in Level 6) is one way to make it determinate.`},
+  {t:'Does W = 0 guarantee a stable structure?',choice:{o:[{t:'Yes, W = 0 means exactly enough constraints',ok:false},{t:'No, the constraints could be badly arranged',ok:true}],
+   why:`<b>No.</b> W only counts constraints; it doesn't know where they are. A beam on three <b>vertical</b> rollers has W = 3 − 3 = 0, but nothing stops it sliding sideways. W &gt; 0 proves a mechanism, but W ≤ 0 only says "maybe stable". The rules decide.`}}
+ ]},
+
+/* ═════════ LEVEL 2 ═════════ */
+{id:'r1',sec:'rules',lvl:'easy',num:'R1',title:'A point held by two links',
+ text:`(a) Point A is held by two links to ground hinges, at an angle to each other. (b) Point B sits between two links that lie on one straight line (like slide p.70).`,
+ fig:()=>sysFig({maxw:600,h:170,poly:[{pts:[[6,-0.3],[6.6,-0.3],[6.6,2.4],[6,2.4]],ground:true},{pts:[[11.4,-0.3],[12,-0.3],[12,2.4],[11.4,2.4]],ground:true}],
+   bars:[[0,0,1.5,2],[1.5,2,3,0],[6.6,2,9,2],[9,2,11.4,2]],sup:[{x:0,y:0,t:'gnd'},{x:3,y:0,t:'gnd'}],
+   labels:[[1.5,2,'A',0,-10],[9,2,'B',0,-10]],caps:[[1.5,'(a)'],[9,'(b)']]}),
+ idea:`Rule ①: two links fix a point <b>if they're not on one line</b>. On one line, the point can move a tiny bit perpendicular to that line, with no first-order stretching.`,
+ steps:[
+  {t:'System (a)',choice:{o:[{t:'Stable, no redundant constraint',ok:true},{t:'Stable, 1 redundant',ok:false},{t:'Unstable',ok:false}],
+   why:`<b>Stable, none redundant.</b> A is the tip of a triangle (two links + the ground between their bases). Three sides fixed, three hinges not collinear → the triangle rule. Count: a point has 2 DOF and the two links remove 2, so W = 0 and nothing is spare.`}},
+  {t:'System (b)',choice:{o:[{t:'Stable, no redundant constraint',ok:false},{t:'Instantaneously unstable (瞬变)',ok:true}],
+   why:`<b>Instantaneously unstable.</b> The two links lie on one line, so the "triangle" is flat: the three hinges are collinear. Moving B up or down by δ stretches each link by only about δ²/(2L), a second-order amount, so the links can't resist the start of the movement. The count W = 0 doesn't catch this.`}},
+  {t:'How big do the forces get?',p:`In (b), each link is 2.4 m long. A load P = 1 kN hangs at B, and B sags until each link makes θ = 1° with the horizontal.`,q:[{l:'Force in each link',a:28.65,u:'kN',tol:.2}],
+   h:`Draw a free-body diagram of point B. Only vertical components of the link forces can hold up P. How big is the vertical component of a force at 1°?`,
+   r:`Vertical equilibrium at B: 2·N·sin θ = P, so N = P/(2 sin 1°) = 1/(2 × 0.017452) = <b>28.6 kN</b>, almost 29 times the load. As θ → 0 the force goes to infinity. This is the real meaning of "instantaneously unstable": the system sags and develops huge forces under a small load. Never use it as a structure.`},
+  {t:'Add a vertical link from A down to the ground in (a). Now:',q:[{l:'Redundant constraints',a:1,u:''}],
+   h:`Was (a) already fixed before you added the link?`,
+   r:`(a) was already stable with W = 0. The new link removes no DOF, so it is <b>1</b> redundant constraint. The point becomes statically indeterminate to the 1st degree: three unknown link forces but only two equations (ΣX, ΣY) at A.`}
+ ]},
+
+{id:'r2',sec:'rules',lvl:'med',num:'R2',title:'Two rigid pieces joined by three links',
+ text:`In each case, piece II (the block) is joined to the ground, piece I, by three links. Decide whether the system is stable.`,
+ fig:()=>sysFig({maxw:700,h:200,
+   poly:[{pts:[[-1,0],[4.5,0],[4.5,-0.5],[-1,-0.5]],label:'I',ly:-0.3,ground:true},{pts:[[0,2],[4,2],[4,2.7],[0,2.7]],label:'II'},
+         {pts:[[6.5,0],[11.5,0],[11.5,-0.5],[6.5,-0.5]],label:'I',ly:-0.3,ground:true},{pts:[[7,2],[11,2],[11,2.7],[7,2.7]],label:'II'},
+         {pts:[[13.5,0],[18.5,0],[18.5,-0.5],[13.5,-0.5]],label:'I',ly:-0.3,ground:true},{pts:[[14,2],[18,2],[18,2.7],[14,2.7]],label:'II'}],
+   bars:[[0.3,2,0.3,0,'1'],[0.3,2,-0.7,0,'2'],[3.7,2,3.7,0,'3'],
+         [7.8,2,7,0,'1'],[9,2,9,0,'2'],[10.2,2,11,0,'3'],
+         [14.5,2,14.5,0,'1'],[16,2,16,0,'2'],[17.5,2,17.5,0,'3']],
+   caps:[[2,'(a)'],[9,'(b)'],[16,'(c)']]}),
+ idea:`Rule ②: three links join two pieces rigidly <b>unless</b> all three lines meet at one point (the piece can rotate about it) or are all parallel (it can slide, i.e. rotate about a point at infinity).`,
+ steps:[
+  {t:'Case (a): links 1 and 2 meet at the block\'s left corner; link 3 is vertical at the right.',choice:{o:[{t:'Stable, no redundant constraint',ok:true},{t:'Unstable',ok:false}],
+   why:`<b>Stable.</b> Links 1 and 2 meet at the corner, so together they act like a pin there (a real hinge, not even a virtual one). Link 3's line is vertical through the right end, which misses that pin. Hinge + link not through the hinge → rule ②. This is just a simply supported beam with its pin drawn as two links.`}},
+  {t:'Case (b): extend the three links. Where do their lines go?',choice:{o:[{t:'They all meet at one point O',ok:true},{t:'They are parallel',ok:false},{t:'They meet at three different points',ok:false}],
+   why:`All three lines pass through <b>O</b> above the block (the dashed lines). Links 1 and 3 form a virtual hinge at O, and link 2's vertical line also passes through O.`+sysFig({maxw:300,h:200,poly:[{pts:[[6.5,0],[11.5,0],[11.5,-0.5],[6.5,-0.5]],label:'I',ly:-0.3,ground:true},{pts:[[7,2],[11,2],[11,2.7],[7,2.7]],label:'II'}],bars:[[7.8,2,7,0,'1'],[9,2,9,0,'2'],[10.2,2,11,0,'3']],dash:[[7.8,2,9,5],[10.2,2,9,5],[9,2.7,9,5]],dots:[[9,5,'O']]})}},
+  {t:'So case (b) is…',choice:{o:[{t:'Stable',ok:false},{t:'Instantaneously unstable: II can rotate a little about O',ok:true}],
+   why:`<b>Instantaneously unstable</b> (slide p.71, 三链杆共点). For a tiny rotation about O, every link moves perpendicular to its own line, so no link changes length to first order. Nothing resists the start of that rotation. Moving any one link so it misses O would make it stable.`}},
+  {t:'Case (c): three vertical parallel links.',choice:{o:[{t:'Stable: three supports is enough',ok:false},{t:'Unstable: II can slide sideways',ok:true}],
+   why:`<b>Unstable</b> (三链杆平行). A vertical link can't stop horizontal movement. II slides sideways (a rotation about a point at infinity). If the links have equal lengths it keeps sliding (a full mechanism, 常变); with unequal lengths it's instantaneously unstable (瞬变). Either way, not a structure. The count W = 3 − 3 = 0 looked fine, a perfect example of why W isn't enough.`}},
+  {t:'How many redundant constraints in (a)?',q:[{l:'Redundant constraints',a:0,u:''}],
+   h:`Compare the number of links with the DOF of piece II.`,
+   r:`II has 3 DOF; three well-arranged links remove 3. <b>0</b> redundant: statically determinate.`}
+ ]},
+
+{id:'r3',sec:'rules',lvl:'med',num:'R3',title:'Three rigid pieces and three hinges',
+ text:`(a) Two inclined bars AC and CB are pinned to the ground at A and B and to each other at C (a three-hinged frame). (b) The same, but C lies on the straight line AB.`,
+ fig:()=>sysFig({maxw:620,h:160,mem:[[0,0,2.5,2.2],[2.5,2.2,5,0],[7,0,9.5,0],[9.5,0,12,0]],hinges:[[2.5,2.2],[9.5,0]],
+   sup:[{x:0,y:0,t:'pin'},{x:5,y:0,t:'pin'},{x:7,y:0,t:'pin'},{x:12,y:0,t:'pin'}],
+   labels:[[0,0,'A',-14,4],[5,0,'B',14,4],[2.5,2.2,'C',0,-10],[7,0,'A',-14,-8],[12,0,'B',14,-8],[9.5,0,'C',0,-10]],caps:[[2.5,'(a)'],[9.5,'(b)']]}),
+ idea:`Rule ③: three pieces (here AC, CB and the ground) joined pairwise by three hinges (A, B, C) form one rigid body <b>if the hinges aren't on one line</b>.`,
+ steps:[
+  {t:'Which three pieces and which three hinges?',choice:{o:[{t:'Pieces AC, CB, ground; hinges A, C, B',ok:true},{t:'Pieces A, B, C; hinges AC, CB',ok:false}],
+   why:`The <b>pieces</b> are the rigid bodies: bar AC, bar CB and the ground. The <b>hinges</b> join them in pairs: A (AC–ground), C (AC–CB), B (CB–ground). Pieces are things; hinges are connections.`}},
+  {t:'Count W for (a)',q:[{l:'W',a:0,u:''}],h:`Two bars, one hinge between them (C). A and B are supports: how many links is a pin support?`,
+   r:`m = 2, h = 1 (C), r = 2 + 2 = 4 → W = 6 − 2 − 4 = <b>0</b>.`},
+  {t:'System (a)',choice:{o:[{t:'Stable, statically determinate',ok:true},{t:'Unstable',ok:false}],
+   why:`<b>Stable and determinate.</b> A, C, B form a real triangle (C is above line AB), so rule ③ holds, and W = 0 means nothing is spare. This is the three-hinged frame or arch: very common, because it's determinate yet efficient.`}},
+  {t:'System (b)',choice:{o:[{t:'Stable',ok:false},{t:'Instantaneously unstable',ok:true}],
+   why:`<b>Instantaneously unstable</b>: the three hinges A, C, B are collinear (三铰共线). C can dip a little with almost no change in the bar lengths, the same thing as R1(b). A very flat three-hinged arch is close to this and develops huge horizontal thrusts. That's why real three-hinged arches need a decent rise.`}}
+ ]},
+
+/* ═════════ LEVEL 3 ═════════ */
+{id:'a1',sec:'sys',lvl:'med',num:'A1',title:'A truss built from triangles',
+ text:`A Warren truss: joints 0–3 on the bottom chord (2 m apart), joints 4–6 on the top. Pin support at joint 0, roller at joint 3.`,
+ fig:()=>sysFig({maxw:520,h:140,bars:[[0,0,2,0],[2,0,4,0],[4,0,6,0],[1,1.5,3,1.5],[3,1.5,5,1.5],[0,0,1,1.5],[1,1.5,2,0],[2,0,3,1.5],[3,1.5,4,0],[4,0,5,1.5],[5,1.5,6,0]],
+   sup:[{x:0,y:0,t:'pin'},{x:6,y:0,t:'link'}],labels:[[0,0,'0',-12,-6],[2,0,'1',0,18],[4,0,'2',0,18],[6,0,'3',12,-6],[1,1.5,'4',0,-10],[3,1.5,'5',0,-10],[5,1.5,'6',0,-10]]}),
+ idea:`For a truss, use <b>W = 2j − (b + r)</b>. Then show the geometry works by building it one binary body at a time: start from one triangle and add each new joint with two bars.`,
+ steps:[
+  {t:'Count',p:``,q:[{l:'Joints j',a:7,u:''},{l:'Bars b',a:11,u:''},{l:'Support links r',a:3,u:''},{l:'W',a:0,u:''}],
+   h:`Count bars by group: bottom chord, top chord, then the diagonals. Each joint has 2 DOF.`,
+   r:`j = <b>7</b>. b = 3 (bottom) + 2 (top) + 6 (diagonals) = <b>11</b>. r = 2 (pin) + 1 (roller) = <b>3</b>. W = 2·7 − (11 + 3) = <b>0</b>.`},
+  {t:'Build it',choice:{o:[{t:'Start from triangle 0-1-4, then add joints 5, 2, 6, 3, each with two new bars',ok:true},{t:'Start from joint 0 on the ground and add the bars one by one',ok:false}],
+   why:`Triangle 0-1-4 is rigid (triangle rule). Joint 5 joins it with bars 4-5 and 1-5 (a binary body, rule ①). Then joint 2 with 1-2 and 5-2, joint 6 with 5-6 and 2-6, joint 3 with 2-3 and 6-3. Each new joint is fixed by two non-collinear bars, so the whole truss is <b>one rigid piece</b>. Finally the pin at 0 plus the roller at 3 attach it to the ground (rule ②, roller line misses the pin). Conclusion: <b>stable, no redundant constraint, statically determinate.</b>`}},
+  {t:'Variant: remove diagonal 1-5',p:``,q:[{l:'New W',a:1,u:''}],
+   h:`One bar fewer. Which term in the formula changes?`,
+   r:`b = 10, so W = 14 − 13 = <b>1</b> &gt; 0: definitely a mechanism. Physically, panel 1-4-5-2 is now a four-sided shape with no diagonal, and it folds like the frame in Lesson Part 1.`},
+  {t:'Variant: keep all bars, but make joint 3 a pin as well',p:``,q:[{l:'New W',a:-1,u:''},{l:'Degree of static indeterminacy',a:1,u:''}],
+   h:`What does a pin add to r compared with a roller? Is the truss still stable?`,
+   r:`r = 4, so W = 14 − 15 = <b>−1</b>. The truss is stable (it was already, and adding a constraint can't make it unstable), so it has <b>1</b> redundant constraint. In practice this means a temperature change would build up horizontal force between the two pins. That's one reason real bridges use a roller at one end.`}
+ ]},
+
+{id:'a2',sec:'sys',lvl:'med',num:'A2',title:'Multi-span beams: where can the hinges go?',
+ text:`(a) A pin at A, rollers at B, D and F; hinges at C and E. (b) A pin at A, rollers at B and E; hinges at C and D, with no support between the two hinges.`,
+ fig:()=>beamFig({L:12,sup:[{x:0,t:'pin'},{x:4,t:'roller'},{x:8,t:'roller'},{x:12,t:'roller'}],hinge:[5,9],letters:[{x:0,t:'A',dx:-14,dy:4},{x:4,t:'B',dx:-18,dy:24},{x:5,t:'C',dy:-14},{x:8,t:'D',dx:-18,dy:24},{x:9,t:'E',dy:-14},{x:12,t:'F',dx:16,dy:4},{x:2,t:'(a)',dy:-28}]})+beamFig({L:12,sup:[{x:0,t:'pin'},{x:4,t:'roller'},{x:12,t:'roller'}],hinge:[5,7],letters:[{x:0,t:'A',dx:-14,dy:4},{x:4,t:'B',dx:-18,dy:24},{x:5,t:'C',dy:-14},{x:7,t:'D',dy:-14},{x:12,t:'E',dx:16,dy:4},{x:2,t:'(b)',dy:-28}]}),
+ idea:`Count first, then assemble from the basic part outward. A hinged piece needs <b>one more support of its own</b> (or a second hinge into something stable) to be held.`,
+ steps:[
+  {t:'Count (a)',q:[{l:'W for (a)',a:0,u:''}],h:`Two hinges cut the beam into how many pieces? Add up the support links: pin, then each roller.`,
+   r:`m = 3 (AC, CE, EF), h = 2, r = 2 + 1 + 1 + 1 = 5 → W = 9 − 4 − 5 = <b>0</b>.`},
+  {t:'Assembly order for (a)',choice:{o:[{t:'ABC is basic; CDE hangs on it (hinge C + roller D); EF hangs on CDE (hinge E + roller F)',ok:true},{t:'EF is basic; everything else hangs on it',ok:false},{t:'All three pieces are basic',ok:false}],
+   why:`ABC sits on a pin + roller, stable by itself → <b>basic part</b>. CDE has only the roller D of its own; with hinge C into ABC it satisfies rule ② → attached. EF likewise hangs on CDE via hinge E + roller F. Conclusion: <b>stable, statically determinate</b>. Loads on EF would flow into CDE and then ABC, but not the other way.`}},
+  {t:'Count (b)',q:[{l:'W for (b)',a:1,u:''}],h:`Same number of pieces and hinges as (a). What's different about the supports?`,
+   r:`m = 3, h = 2, r = 2 + 1 + 1 = 4 → W = 9 − 4 − 4 = <b>1</b> &gt; 0: a mechanism, before even looking at the geometry.`},
+  {t:'Why does (b) fail?',choice:{o:[{t:'Piece CD has two hinges but no support of its own, so C–D–E can fold',ok:true},{t:'The pin at A is in the wrong place',ok:false}],
+   why:`ABC is stable. Treat it (with the ground) as piece I, CD as II and DE as III. I–II: hinge C. II–III: hinge D. III–I: only <b>one</b> link (roller E), but rule ③ needs a hinge (two links) there. One constraint short, so it has 1 DOF: C, D and E can fold downward like a chain. <b>Rule of thumb:</b> never put two hinges in a row without a support between them.`}}
+ ]},
+
+{id:'a3',sec:'sys',lvl:'med',num:'A3',title:'Portal frames: count the redundant constraints',
+ text:`Four portal frames, each with two columns and a beam, rigid corners. (a) Fixed bases. (b) Fixed bases + hinge at midspan. (c) Pinned bases + hinge at midspan. (d) Pinned bases, no hinge. All four are geometrically stable.`,
+ fig:()=>frames(),
+ idea:`A frame with rigid corners is <b>one</b> rigid piece. A hinge splits it into two. Each fixed base gives r = 3, each pin r = 2. Since all four are stable, redundant constraints = −W.`,
+ steps:[
+  {t:'(a) fixed bases',q:[{l:'Degree of static indeterminacy',a:3,u:''}],h:`One piece. Two fixed bases.`,
+   r:`m = 1, r = 6 → W = 3 − 6 = −3 → <b>3</b> redundant. Think of it as a cantilever column (stable) plus a whole second fixed support (3 extra constraints) on the other side.`},
+  {t:'(b) fixed bases + midspan hinge',q:[{l:'Degree of static indeterminacy',a:2,u:''}],h:`How many pieces now? What does the hinge add?`,
+   r:`m = 2, h = 1, r = 6 → W = 6 − 2 − 6 = −2 → <b>2</b>. Inserting a hinge <b>releases one constraint</b> (the moment there is forced to be 0), so the degree drops by 1.`},
+  {t:'(c) pinned bases + midspan hinge',q:[{l:'Degree of static indeterminacy',a:0,u:''}],h:`Same pieces and hinge as (b), but count the pins.`,
+   r:`m = 2, h = 1, r = 4 → W = 0 → <b>0</b>: the <b>three-hinged frame</b>, statically determinate. Hinges A, C, B are not collinear (C is at the top), so rule ③ holds.`},
+  {t:'(d) pinned bases, no hinge',q:[{l:'Degree of static indeterminacy',a:1,u:''}],h:`One piece. Two pins.`,
+   r:`m = 1, r = 4 → W = −1 → <b>1</b> (the two-hinged frame).`},
+  {t:'Which statement is right?',choice:{o:[{t:'Each released constraint (a fixed base → pin, or a new hinge) lowers the degree by one',ok:true},{t:'The degree only depends on the number of supports',ok:false}],
+   why:`Going from (a) to (d) releases the rotation at both bases: 3 → 1. Adding the hinge releases one more: 1 → 0. The degree of indeterminacy counts how many constraints you could remove and still have a stable structure. These numbers matter later: an indeterminate frame needs deformation conditions to solve (Lesson Part 7).`}}
+ ]},
+
+/* ═════════ LEVEL 4 ═════════ */
+{id:'h1',sec:'hardg',lvl:'hard',num:'H1',title:'A beam on three links: find the instantaneous hinge',
+ text:`Beam AB (6 m, along y = 0 from x = 0 to x = 6) is held by three links to ground hinges. Link 1 runs from A(0, 0) down to (−2, −2). Link 2 runs from B(6, 0) down to (8, −2). Link 3 is vertical, from (3, 0) down to (3, −2). Coordinates are in m.`,
+ fig:()=>sysFig({maxw:520,h:200,poly:[{pts:[[0,0],[6,0],[6,0.35],[0,0.35]]}],bars:[[0,0,-2,-2,'1'],[6,0,8,-2,'2'],[3,0,3,-2,'3']],
+   sup:[{x:-2,y:-2,t:'gnd'},{x:8,y:-2,t:'gnd'},{x:3,y:-2,t:'gnd'}],
+   labels:[[0,0,'A',-14,-6],[6,0,'B',14,-6]]}),
+ idea:`Links 1 and 2 together act as a <b>virtual hinge</b> at the intersection O of their lines. Then the beam is "hinge O + link 3", and rule ② asks: does link 3's line pass through O?`,
+ steps:[
+  {t:'Find O',p:`Write the equation of the line through each link's two end points and solve them together.`,q:[{l:'x<sub>O</sub>',a:3,u:'m'},{l:'y<sub>O</sub>',a:3,u:'m'}],
+   h:`Link 1 goes through (0, 0) and (−2, −2): what's its slope? Link 2 goes through (6, 0) and (8, −2). Write each line as y = (slope)·x + (intercept) and set them equal.`,
+   r:`Link 1: slope (−2 − 0)/(−2 − 0) = 1, so <b>y = x</b>. Link 2: slope (−2 − 0)/(8 − 6) = −1, through (6, 0), so <b>y = 6 − x</b>. Setting x = 6 − x gives x = 3, y = 3. So <b>O = (3, 3)</b>, 3 m above the middle of the beam. Extend the three links and you can see it:`+sysFig({maxw:420,h:220,poly:[{pts:[[0,0],[6,0],[6,0.35],[0,0.35]]}],bars:[[0,0,-2,-2,'1'],[6,0,8,-2,'2'],[3,0,3,-2,'3']],sup:[{x:-2,y:-2,t:'gnd'},{x:8,y:-2,t:'gnd'},{x:3,y:-2,t:'gnd'}],dash:[[0,0.35,3,3],[6,0.35,3,3],[3,0.35,3,3]],dots:[[3,3,'O (3, 3)']]})},
+  {t:'Is the system stable?',choice:{o:[{t:'Yes: three links, W = 0',ok:false},{t:'No: link 3\'s line (x = 3) passes through O, so the beam can rotate a little about O',ok:true}],
+   why:`<b>Instantaneously unstable.</b> Link 3 is vertical at x = 3, and its line x = 3 contains O = (3, 3). All three link lines meet at O (三链杆共点). For a tiny rotation about O, each link end moves perpendicular to its own link, so no link stretches to first order. Nothing resists. The count W = 3 − 3 = 0 didn't warn you.`}},
+  {t:'Fix it: move link 3 to x = 4.5 m (still vertical)',p:``,q:[{l:'Horizontal distance from O to the line of link 3',a:1.5,u:'m'}],
+   h:`O doesn't move (links 1 and 2 are unchanged). Link 3's line is now x = 4.5.`,
+   r:`Distance = 4.5 − 3 = <b>1.5 m</b> ≠ 0, so the line misses O. Now it's virtual hinge O + one link not through it, which is rule ②: <b>stable, no redundant constraint, statically determinate</b>. The bigger this distance, the better: link 3 then has a long lever arm about O, so it carries smaller forces.`},
+  {t:'Think about it',choice:{o:[{t:'Tilting link 3 so that its line misses O would also fix it',ok:true},{t:'Only moving link 3 sideways can fix it',ok:false}],
+   why:`What matters is only whether the <b>line</b> of link 3 passes through O. Any change that makes it miss O works: moving it, tilting it, or changing links 1 or 2 so that O moves.`}}
+ ]},
+
+{id:'h2',sec:'hardg',lvl:'vhard',num:'H2',title:'Three pieces, a virtual hinge, and a collinear trap',
+ text:`Rigid piece I is pinned to the ground at A(0, 0). Rigid piece II is pinned to the ground at B(8, 0). I and II are joined by two links: link a from (3, 2) to (5, 1), and link b from (3, 1) to (5, 0.5). Coordinates in m.`,
+ fig:()=>sysFig({maxw:560,h:200,poly:[{pts:[[0,0],[3,0.8],[3,2.2],[1.2,2]],label:'I',lx:1.8,ly:1.2},{pts:[[8,0],[5,0.3],[5,1.2],[7.4,2]],label:'II',lx:6.4,ly:0.9}],
+   bars:[[3,2,5,1,'a'],[3,1,5,0.5,'b']],sup:[{x:0,y:0,t:'pin'},{x:8,y:0,t:'pin'}],
+   labels:[[0,0,'A',-16,-4],[8,0,'B',16,-4]]}),
+ idea:`Three pieces: I, II and the ground. I–ground: hinge A. II–ground: hinge B. I–II: links a and b, a <b>virtual hinge O</b> where their lines cross. Rule ③ needs A, B and O <b>not</b> on one line.`,
+ steps:[
+  {t:'Count first',q:[{l:'W',a:0,u:''}],h:`Two pieces. Count every constraint: each pin support to the ground, plus each link between I and II. A link removes 1 DOF whether it goes to the ground or to another piece.`,
+   r:`m = 2. Constraints: pin A (2) + pin B (2) + link a (1) + link b (1) = 6. W = 6 − 6 = <b>0</b>. Enough constraints. Now check the geometry.`},
+  {t:'Locate O',p:`Find where each link's line crosses the ground line y = 0.`,q:[{l:'Line of link a meets y = 0 at x =',a:7,u:'m'},{l:'Line of link b meets y = 0 at x =',a:7,u:'m'}],
+   h:`Find each slope from its two end points, then ask: starting from (5, …), how far right must you go for y to drop to 0?`,
+   r:`Link a: slope (1 − 2)/(5 − 3) = −0.5. From (5, 1), y drops to 0 after 1/0.5 = 2 m → <b>x = 7</b>. Link b: slope (0.5 − 1)/(5 − 3) = −0.25. From (5, 0.5), y reaches 0 after 0.5/0.25 = 2 m → <b>x = 7</b>. Both lines pass through (7, 0), so <b>O = (7, 0)</b>:`+sysFig({maxw:520,h:190,poly:[{pts:[[0,0],[3,0.8],[3,2.2],[1.2,2]],label:'I',lx:1.8,ly:1.2},{pts:[[8,0],[5,0.3],[5,1.2],[7.4,2]],label:'II',lx:6.4,ly:0.9}],bars:[[3,2,5,1,'a'],[3,1,5,0.5,'b']],sup:[{x:0,y:0,t:'pin'},{x:8,y:0,t:'pin'}],dash:[[5,1,7,0],[5,0.5,7,0],[0,0,8,0]],dots:[[7,0,'O',-4,18]],labels:[[0,0,'A',-16,-4],[8,0,'B',16,-4]]})},
+  {t:'Are A, B and O collinear?',choice:{o:[{t:'Yes: all three lie on y = 0',ok:true},{t:'No',ok:false}],
+   why:`A = (0, 0), B = (8, 0), O = (7, 0): all on the line y = 0. <b>Collinear.</b>`}},
+  {t:'Conclusion',choice:{o:[{t:'Instantaneously unstable',ok:true},{t:'Stable, statically determinate',ok:false},{t:'Stable with one redundant constraint',ok:false}],
+   why:`Rule ③ fails because its condition (three hinges not collinear, slide p.69 ⑤) is broken. The system is <b>instantaneously unstable</b>, even though W = 0 and it looks perfectly reasonable. This is the same trap as slide p.87, where the hinges D, E, F turn out to be collinear.`}},
+  {t:'Fix it: raise pin B to (8, 1); nothing else changes',p:``,q:[{l:'Height of line AB at x = 7',a:0.875,u:'m'}],
+   h:`O stays at (7, 0) because the links didn't move. Write the line through A(0, 0) and the new B(8, 1).`,
+   r:`Line AB: y = x/8, so at x = 7, y = <b>0.875 m</b>. O is at y = 0, which is not on the line. A, B and O now form a real triangle → rule ③ → <b>stable, no redundant constraint, statically determinate</b>.`}
+ ]},
+
+/* ═════════ LEVEL 5 · BUCKLING ═════════ */
+{id:'b1',sec:'buck',lvl:'easy',num:'S1',title:'The spring-and-bar model',
+ text:`A rigid bar of length l = 3 m stands on a pin. A horizontal spring (k = 50 kN/m) holds its top. A vertical load P acts on top. Someone nudges the top sideways by Δ = 0.01 m.`,
+ fig:()=>{ let g=pinSup(120,210)+L_(120,210,120,60,3.2)+`<circle cx="120" cy="60" r="4.2" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.5"/>`;
+   let zz='M124,60 '; for(let i=0;i<8;i++){ zz+=`L${132+i*8},${i%2?54:66} `; } zz+='L200,60'; g+=`<path d="${zz}" fill="none" stroke="var(--text)" stroke-width="1.5"/>`+hatchWall(204,46,74,1);
+   g+=L_(120,210,134,60,1.4,'var(--text3)','4 3')+arrowSVG(120,20,120,54,'force',9,2.2)+T_(132,30,'P','','start')+T_(166,46,'k','lbl-s')+dimV(80,60,210,'l = 3 m',-1)+T_(142,82,'Δ','lbl-s','start');
+   return `<svg class="fig" viewBox="0 0 300 240" style="max-width:300px;margin:6px auto">${g}</svg>`; },
+ idea:`Compare two moments about the base pin: the spring's <b>restoring</b> moment kΔ·l, and the load's <b>overturning</b> moment P·Δ. The column returns if restoring &gt; overturning.`,
+ steps:[
+  {t:'Restoring moment',q:[{l:'kΔ·l',a:1.5,u:'kN·m'}],h:`First find the spring force for this Δ, then its moment about the base.`,
+   r:`Spring force kΔ = 50 × 0.01 = 0.5 kN, lever arm l = 3 m → <b>1.5 kN·m</b>, pulling the bar back to vertical.`},
+  {t:'P = 100 kN',q:[{l:'Overturning moment PΔ',a:1,u:'kN·m'}],h:`The load is now offset sideways from the pin by Δ.`,
+   r:`PΔ = 100 × 0.01 = <b>1.0 kN·m</b> &lt; 1.5, so the spring wins and the bar swings back. <b>Stable</b> equilibrium.`},
+  {t:'P = 200 kN',choice:{o:[{t:'It returns to vertical',ok:false},{t:'It keeps tipping over',ok:true}],
+   why:`PΔ = 2.0 kN·m &gt; 1.5 kN·m: the overturning moment wins, and the more it tips, the bigger PΔ gets (Δ grows). <b>Unstable</b>: the bar falls over.`}},
+  {t:'Critical load',q:[{l:'P<sub>cr</sub>',a:150,u:'kN'}],h:`Set the two moments equal. What happens to Δ?`,
+   r:`kΔl = P<sub>cr</sub>Δ → Δ cancels → P<sub>cr</sub> = k·l = 50 × 3 = <b>150 kN</b>. Because Δ cancels, the answer doesn't depend on how big the nudge was. That's what makes P<sub>cr</sub> a property of the structure. Euler's formula is the same idea with the column's own bending stiffness EI playing the role of the spring.`}
+ ]},
+
+{id:'b2',sec:'buck',lvl:'med',num:'S2',title:'Euler: the same column with four end conditions',
+ text:`A steel column (E = 200 GPa) with a solid circular section, d = 40 mm, length l = 2 m.`,
+ fig:()=>buckFig(),
+ idea:`F<sub>cr</sub> = π²EI/(μl)². Compute the pinned–pinned case once. The others only change μ, so each is that value divided by μ².`,
+ steps:[
+  {t:'Section',q:[{l:'I',a:125663.7,u:'mm⁴',tol:300}],h:`Moment of inertia of a solid circle (you met it in Ch. 4).`,
+   r:`I = πd⁴/64 = π × 40⁴/64 = π × 2 560 000/64 = <b>125 664 mm⁴</b>.`},
+  {t:'Pinned at both ends (μ = 1)',q:[{l:'F<sub>cr</sub>',a:62.01,u:'kN',tol:.4}],
+   h:`Units: E = 200 000 N/mm², l = 2000 mm. Your answer comes out in N; convert to kN at the end.`,
+   r:`F<sub>cr</sub> = π² × 200 000 × 125 664 / 2000² = 9.8696 × 2.513×10¹⁰ / 4×10⁶ ≈ 62 013 N = <b>62.0 kN</b>.`},
+  {t:'The other end conditions',q:[{l:'Fixed–free (μ = 2)',a:15.50,u:'kN',tol:.15},{l:'Fixed–pinned (μ = 0.7)',a:126.56,u:'kN',tol:.8},{l:'Fixed–fixed (μ = 0.5)',a:248.05,u:'kN',tol:1.5}],
+   h:`You don't need to redo the whole formula: what number do you divide 62.0 kN by?`,
+   r:`Divide by μ²: fixed–free 62.0/4 = <b>15.5 kN</b>. Fixed–pinned 62.0/0.49 = <b>126.6 kN</b>. Fixed–fixed 62.0/0.25 = <b>248 kN</b>. Same column, same steel: a <b>16× range</b> just from how the ends are held. In the figure, μl is the length of one half-wave of the buckled shape: the shorter the half-wave, the stronger the column.`},
+  {t:'A flagpole is fixed at the base and free at the top. To get the same F<sub>cr</sub> as a pinned–pinned column of length L, the flagpole can be…',choice:{o:[{t:'L/2 long',ok:true},{t:'2L long',ok:false},{t:'L/4 long',ok:false}],
+   why:`Same F<sub>cr</sub> needs the same effective length μl. Flagpole: 2·l<sub>pole</sub> = 1·L → l<sub>pole</sub> = <b>L/2</b>. A free end is so weak that the pole buckles like a pinned column twice as long.`}}
+ ]},
+
+{id:'b3',sec:'buck',lvl:'hard',num:'S3',title:'Which way does it buckle, and how do you brace it?',
+ text:`A timber post (E = 10 GPa), 100 × 50 mm rectangular section, length 3 m, pinned at both ends.`,
+ fig:()=>sectionFig({rects:[[0,0,100,50]],yc:25,size:150,maxw:340,dimsH:[[0,100,50,10,'100']],dimsV:[[0,0,50,14,'50']]}),
+ idea:`A column buckles about the axis where it is <b>weakest</b>, the one with the smaller I. Bracing in only one direction shortens the effective length for that direction only.`,
+ steps:[
+  {t:'The two moments of inertia',q:[{l:'I about the axis parallel to the 100 mm side (bending across the 50 mm depth)',a:1.0417,u:'× 10⁶ mm⁴',tol:.01},{l:'I about the other axis (bending across the 100 mm depth)',a:4.1667,u:'× 10⁶ mm⁴',tol:.02}],
+   h:`bh³/12, where h is the dimension in the direction of bending. Which dimension gets cubed in each case?`,
+   r:`Bending across the 50 mm depth: I = 100 × 50³/12 = <b>1.042 × 10⁶ mm⁴</b>. Across the 100 mm depth: I = 50 × 100³/12 = <b>4.167 × 10⁶ mm⁴</b>. A ratio of 4 (= (100/50)²).`},
+  {t:'Critical load',q:[{l:'F<sub>cr</sub>',a:11.42,u:'kN',tol:.1}],h:`Which I goes into Euler's formula?`,
+   r:`Use the <b>smaller</b> I: F<sub>cr</sub> = π² × 10 000 × 1.042×10⁶ / 3000² ≈ 11 420 N = <b>11.4 kN</b>. It buckles by bending across its thin 50 mm direction, like a ruler you push from both ends.`},
+  {t:'Brace it at mid-height, in the weak direction only',p:`A horizontal strut stops sideways movement at mid-height, but only in the weak direction.`,q:[{l:'New F<sub>cr</sub> in the weak direction',a:45.69,u:'kN',tol:.3},{l:'F<sub>cr</sub> in the strong direction (unbraced, 3 m)',a:45.69,u:'kN',tol:.3}],
+   h:`The brace splits the weak-direction buckle into two half-waves. What does that do to the effective length, and to (μl)²?`,
+   r:`Weak direction: effective length 1.5 m, so F<sub>cr</sub> = 4 × 11.42 = <b>45.7 kN</b>. Strong direction: π² × 10 000 × 4.167×10⁶ / 3000² = <b>45.7 kN</b>. <b>Exactly equal!</b> The factor 4 from halving the length matches the factor 4 between the two I values.`},
+  {t:'So what does the braced post carry?',choice:{o:[{t:'45.7 kN: both directions now fail at the same load, which is the ideal design',ok:true},{t:'91.4 kN: the two directions add up',ok:false}],
+   why:`The post fails in whichever direction comes first, so the capacity is the smaller of the two: <b>45.7 kN</b>, four times the unbraced value. When both directions give the same F<sub>cr</sub>, no material is wasted, which is the design goal. Adding more bracing in the weak direction alone wouldn't help, because the strong direction would now govern.`}}
+ ]},
+
+/* ═════════ LEVEL 6 · MULTI-SPAN BEAMS ═════════ */
+{id:'m1',sec:'msb',lvl:'hard',num:'M1',title:'A Gerber beam under uniform load',
+ text:`A is a pin, B a roller, C a hinge, D a roller. AB = 4 m, BC = 1 m (overhang), CD = 4 m. q = 10 kN/m over the whole 9 m.`,
+ fig:()=>beamFig({L:9,sup:[{x:0,t:'pin'},{x:4,t:'roller'},{x:9,t:'roller'}],hinge:[5],udl:[{a:0,b:9,label:'q = 10 kN/m'}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:4,t:'B',dx:-18,dy:24},{x:5,t:'C',dy:24},{x:9,t:'D',dx:16,dy:4}],dims:[[0,'4 m'],[4,'1 m'],[5,'4 m'],[9]]}),
+ idea:`Geometry first: which part stands on its own? Then statics in the reverse order: the attached part first, and its hinge force becomes a load on the basic part.`,
+ steps:[
+  {t:'Basic or attached?',choice:{o:[{t:'ABC is basic (pin + roller); CD is attached (hinge C + roller D)',ok:true},{t:'CD is basic; ABC hangs on it',ok:false}],
+   why:`ABC rests on a pin and a roller: stable by itself (rule ②) → <b>basic</b>. CD has only the roller D of its own; it needs hinge C to stand → <b>attached</b>. So: calculate CD first, then ABC.`}},
+  {t:'The attached span CD',q:[{l:'R<sub>D</sub>',a:20,u:'kN'},{l:'Force the hinge exerts on CD (upward)',a:20,u:'kN'}],
+   h:`With hinge C at one end and roller D at the other, what kind of beam is CD on its own?`,
+   r:`CD is a <b>simple beam</b> of span 4 m (a hinge can't hold moment, just like a pin). Total load 10 × 4 = 40 kN, symmetric → <b>R<sub>D</sub> = 20 kN</b> and the hinge pushes CD up with <b>20 kN</b>. By Newton's third law, CD pushes the tip of ABC <b>down</b> with 20 kN.`},
+  {t:'The basic part ABC',p:`ABC carries q over 5 m plus 20 kN downward at C (x = 5).`,q:[{l:'R<sub>B</sub>',a:56.25,u:'kN'},{l:'R<sub>A</sub>',a:13.75,u:'kN'}],
+   h:`Take moments about A. Two loads: the resultant of q on ABC (where does it act?) and the point load at C.`,
+   r:`ΣM<sub>A</sub> = 0: R<sub>B</sub>·4 = (10 × 5)(2.5) + 20 × 5 = 125 + 100 = 225 → <b>R<sub>B</sub> = 56.25 kN</b>. ΣY: R<sub>A</sub> = 50 + 20 − 56.25 = <b>13.75 kN</b>. Global check: 13.75 + 56.25 + 20 = 90 = 10 × 9 ✓.`},
+  {t:'Moments',q:[{l:'M<sub>B</sub>',a:-25,u:'kN·m'},{l:'Largest sagging M in AB',a:9.453,u:'kN·m',tol:.05},{l:'Largest sagging M in CD',a:20,u:'kN·m'},{l:'M<sub>C</sub>',a:0,u:'kN·m'}],
+   h:`For M<sub>B</sub>, cut just right of B and look at the overhang side: what's on it? For the peak in AB, where is F<sub>s</sub> = 0?`,
+   r:`<b>M<sub>B</sub></b> from the right: the 1 m overhang carries q (10 kN at 0.5 m) and the 20 kN hinge force at 1 m: M<sub>B</sub> = −(10 × 0.5 + 20 × 1) = <b>−25 kN·m</b> (hogging).<br><b>In AB</b>: F<sub>s</sub> = 13.75 − 10x = 0 at x = 1.375 m, so M = ½ × 1.375 × 13.75 = <b>9.45 kN·m</b>.<br><b>In CD</b>: simple-beam peak ql²/8 = 10 × 16/8 = <b>20 kN·m</b> at its middle.<br><b>M<sub>C</sub> = 0</b> at the hinge ✓.`},
+  {t:'Draw it, then compare',p:``,diagram:true,
+   r:()=>diag(FM1,9,{labels:[[0,'Fs','13.75',1],[4,'Fs','−26.25',-1],[4,'Fs','30',1],[5,'Fs','20'],[9,'Fs','−20',-1],[1.375,'M','9.45'],[4,'M','−25'],[5,'M','0'],[7,'M','20']],ticks:[[0,'A'],[1.375,'1.375'],[4,'B'],[5,'C'],[7,'7'],[9,'D']]})+`<p>Notice F<sub>s</sub> passes through the hinge without a jump (a hinge transmits force), while M is forced to 0 there.</p>`},
+  {t:'Why build it this way?',choice:{o:[{t:'The overhang\'s hogging moment at B lowers the moments in span AB, compared with two separate simple beams',ok:true},{t:'It makes the beam statically indeterminate and therefore stronger',ok:false}],
+   why:`A simple 4 m span under q = 10 would have 20 kN·m at midspan. Here AB peaks at only 9.45 kN·m because the overhang and the hung span pull the AB moments down (hogging at B). The beam is still <b>statically determinate</b>: no thermal stresses or settlement problems, easy to calculate. That's the Gerber beam's appeal, and why it shows up in bridges like the one on slide p.92.`}}
+ ]},
+
+{id:'m2',sec:'msb',lvl:'vhard',num:'M2',title:'The slide example: load P at the free end F',
+ text:`Slide p.94. From left: free end F with load P; roller E (a from F); hinge D (2a from E); roller C (a from D); hinge B (2a from C); fixed end A (a from B). Find all reactions and the moment diagram, in terms of P and a.`,
+ fig:()=>beamFig({L:7,sup:[{x:1,t:'roller'},{x:4,t:'roller'},{x:7,t:'fixR'}],hinge:[3,6],pts:[{x:0,label:'P',dx:10}],letters:[{x:0,t:'F',dx:-12,dy:4},{x:1,t:'E',dx:-18,dy:24},{x:3,t:'D',dy:24},{x:4,t:'C',dx:-18,dy:24},{x:6,t:'B',dy:24},{x:7,t:'A',dx:16,dy:-30}],dims:[[0,'a'],[1,'2a'],[3,'a'],[4,'2a'],[6,'a'],[7]]}),
+ idea:`The slide's two steps: (1) <b>assemble</b> from the fixed end A leftward (装 ←); (2) <b>calculate</b> in the reverse order, starting from the far left piece (拆 →). Each hinge passes a force, equal and opposite, to the next piece. Answers: type the number in front of P or Pa (up +).`,
+ steps:[
+  {t:'Assembly order',choice:{o:[{t:'AB (fixed) is basic → BCD hangs on it (hinge B + roller C) → DEF hangs on BCD (hinge D + roller E)',ok:true},{t:'DEF is basic because the load is on it',ok:false},{t:'BCD is basic because it has a roller',ok:false}],
+   why:`AB is a cantilever from the wall: stable alone → <b>basic</b>. BCD has one roller (C) of its own plus hinge B into AB → rule ② → attached to AB. DEF has roller E plus hinge D into BCD → attached to BCD. Where the load sits doesn't decide what's basic; only the supports do.`}},
+  {t:'Piece DEF first',p:`DEF carries P at F; it rests on roller E and hangs on hinge D.`,q:[{l:'R<sub>E</sub> (up +)',a:1.5,u:'× P'},{l:'Force on DEF at D (up +)',a:-0.5,u:'× P'}],
+   h:`Take moments about the hinge D, so the unknown hinge force drops out. How far from D are E and F?`,
+   r:`ΣM<sub>D</sub> = 0: R<sub>E</sub> × 2a = P × 3a → <b>R<sub>E</sub> = 1.5P</b> (up). ΣY: V<sub>D</sub> = P − 1.5P = <b>−0.5P</b>. The hinge has to <b>pull DEF down</b>: E acts like the pivot of a see-saw, with P on one side and the hinge holding the other side down.`},
+  {t:'Piece BCD next',p:`At D, BCD feels the opposite of what DEF felt.`,q:[{l:'Force on BCD at D (up +)',a:0.5,u:'× P'},{l:'R<sub>C</sub> (up +)',a:-0.75,u:'× P'},{l:'Force on BCD at B (up +)',a:0.25,u:'× P'}],
+   h:`Newton's third law gives the force at D. Then moments about B (C is 2a from B, D is 3a from B).`,
+   r:`At D, BCD is pushed <b>up with 0.5P</b>. ΣM<sub>B</sub>: R<sub>C</sub> × 2a + 0.5P × 3a = 0 (both turning the same way about B) → <b>R<sub>C</sub> = −0.75P</b>, i.e. the roller at C must <b>pull down</b> (a link support can push or pull). ΣY: V<sub>B</sub> = −(0.5P − 0.75P) = <b>+0.25P</b>: the hinge pushes BCD up.`},
+  {t:'Finally the cantilever AB',p:`BCD pushes down on the tip B of the cantilever.`,q:[{l:'R<sub>A</sub> (up +)',a:0.25,u:'× P'},{l:'|M<sub>A</sub>|',a:0.25,u:'× Pa'}],
+   h:`Third law at B again. Then the cantilever has a single point load at its tip, at distance a from the wall.`,
+   r:`AB gets <b>0.25P downward</b> at B. Cantilever: <b>R<sub>A</sub> = 0.25P</b> (up) and fixed-end moment 0.25P × a = <b>0.25Pa</b>, hogging (top in tension at the wall).`},
+  {t:'Check',q:[{l:'R<sub>E</sub> + R<sub>C</sub> + R<sub>A</sub>',a:1,u:'× P'}],h:`Add the three vertical reactions you found, with their signs.`,
+   r:`1.5P − 0.75P + 0.25P = <b>1.0P</b> = the applied load ✓. Notice how the effect <b>dies out</b> along the chain: 0.5P passes through D, then only 0.25P through B. That's typical: the load is mostly carried near where it's applied.`},
+  {t:'Moments at the control points',q:[{l:'M<sub>E</sub>',a:-1,u:'× Pa'},{l:'M<sub>D</sub>',a:0,u:'× Pa'},{l:'M<sub>C</sub>',a:0.5,u:'× Pa'},{l:'M<sub>B</sub>',a:0,u:'× Pa'},{l:'M<sub>A</sub>',a:-0.25,u:'× Pa'}],
+   h:`Use the shortcut "sum of moments of the forces on one side of the cut". From the left, at each point include P and every reaction you've passed. The two hinges are free checks.`,
+   r:`From the left (x measured from F): M<sub>E</sub> = −P·a = <b>−Pa</b>. M<sub>D</sub> = −P·3a + 1.5P·2a = <b>0</b> ✓ (hinge). M<sub>C</sub> = −P·4a + 1.5P·3a = <b>+0.5Pa</b>. M<sub>B</sub> = −P·6a + 1.5P·5a − 0.75P·2a = <b>0</b> ✓ (hinge). M<sub>A</sub> = −P·7a + 1.5P·6a − 0.75P·3a = <b>−0.25Pa</b> ✓ (matches step 4). Both hinge checks passing means your reactions are right.`},
+  {t:'Draw it, then compare',p:``,diagram:true,
+   r:()=>diag(FM2,7,{labels:[[0.5,'Fs','−P'],[2,'Fs','0.5P'],[5,'Fs','−0.25P'],[1,'M','−Pa'],[3,'M','0'],[4,'M','0.5Pa'],[6,'M','0'],[7,'M','−0.25Pa',-1]],ticks:[[0,'F'],[1,'E'],[3,'D'],[4,'C'],[6,'B'],[7,'A']]})+`<p>The M diagram is made of straight lines (no distributed load), alternating in sign and shrinking from left to right, crossing zero exactly at the hinges D and B. F<sub>s</sub> is constant between supports and continuous through the hinges.</p>`}
+ ]}
+];
+
+/* ═════════ rendering ═════════ */
+const STORE='dc-week9-structural-v1';
+let solved={}; try{ solved=JSON.parse(localStorage.getItem(STORE)||'{}'); }catch(e){}
+const save=()=>{ try{ localStorage.setItem(STORE,JSON.stringify(solved)); }catch(e){} };
+let TOTAL=0;
+function parseNum(s){ s=(s||'').trim().replace(/−/g,'-').replace(/,/g,'.').replace(/\s/g,''); if(!s) return NaN; if(/^-?\d+(\.\d+)?\/\d+(\.\d+)?$/.test(s)){const [a,b]=s.split('/');return a/b;} return Number(s); }
+function okNum(v,a,tol){ const t=tol!==undefined?tol:Math.max(Math.abs(a)*0.012,0.011); return Math.abs(v-a)<=t+1e-9; }
+
+function render(){
+  TOTAL=0; const host=document.getElementById('probs'); host.innerHTML=''; let lastSec='';
+  PROBS.forEach(p=>{
+    if(p.sec!==lastSec){ const S=SECS[p.sec]; const h=document.createElement('div'); h.innerHTML=`<div class="sec-eyebrow" id="sec-${p.sec}" style="margin-top:64px">${S.eye}</div><div class="sec-title">${S.title}</div><p class="sec-lede">${S.lede}</p>`; host.appendChild(h); lastSec=p.sec; }
+    const d=document.createElement('div'); d.className='problem'; d.id='p-'+p.id;
+    const stepsHTML=p.steps.map((s,si)=>{
+      let inner='';
+      if(s.q){ TOTAL+=s.q.length; inner+=`<div class="parts-list">${s.q.map((q,k)=>`<div class="prow"><span class="plab">${'abcdefgh'[k]}</span><span class="pq">${q.l}</span><input inputmode="decimal" data-s="${si}" data-k="${k}"><span class="unit">${q.u}</span><span class="mark"></span></div>`).join('')}</div>`; }
+      if(s.choice){ TOTAL+=1; inner+=`<div class="choice">${s.choice.o.map((o,k)=>`<button data-s="${si}" data-k="${k}">${o.t}</button>`).join('')}</div><div class="choice-why"></div>`; }
+      const btns=(s.h?`<button class="ans-btn hint-btn">Hint</button>`:'')+(s.r?`<button class="ans-btn show-btn">${s.diagram?'Show the answer':'Show this step'}</button>`:'');
+      return `<div class="step" data-s="${si}"><div class="step-h"><span class="step-n">STEP ${si+1}</span><span class="step-t">${s.t}</span><span class="step-ok"></span></div>
+        ${s.p?`<div class="step-p">${s.p}</div>`:''}${inner}
+        ${btns?`<div class="tools">${btns}</div>`:''}${s.h?`<div class="hint">${s.h}</div>`:''}${s.r?`<div class="reveal"></div>`:''}</div>`;
+    }).join('');
+    d.innerHTML=`<div class="problem-header"><span class="problem-num">${p.num}</span><span class="problem-topic">${p.title}</span><span class="lvl ${p.lvl}">${LV[p.lvl]}</span><span class="pstate"></span></div>
+      <div class="problem-body"><div class="ptext">${p.text}</div>${p.fig?`<div class="figwrap">${p.fig()}</div>`:''}
+      <div class="idea"><span class="tag">Key idea</span>${p.idea}</div><div class="steps">${stepsHTML}</div></div>`;
+    host.appendChild(d); wire(p,d);
+  });
+  updScore();
+}
+function wire(p,d){
+  d.querySelectorAll('.step').forEach(st=>{
+    const si=+st.dataset.s, s=p.steps[si];
+    const hb=st.querySelector('.hint-btn'); if(hb) hb.onclick=()=>{ const h=st.querySelector('.hint'); h.classList.toggle('open'); hb.textContent=h.classList.contains('open')?'Hide hint':'Hint'; };
+    const sb=st.querySelector('.show-btn'); if(sb) sb.onclick=()=>{ const r=st.querySelector('.reveal'); if(!r.innerHTML) r.innerHTML=typeof s.r==='function'?s.r():s.r; r.classList.toggle('open'); sb.textContent=r.classList.contains('open')?'Hide':(s.diagram?'Show the answer':'Show this step'); };
+    st.querySelectorAll('input').forEach(inp=>{
+      const k=+inp.dataset.k, q=s.q[k], key=p.id+'-'+si+'-'+k, mk=inp.parentElement.querySelector('.mark');
+      const check=()=>{ const v=parseNum(inp.value); if(isNaN(v)){inp.classList.remove('ok','bad');mk.textContent='';return;}
+        const ok=okNum(v,q.a,q.tol); inp.classList.toggle('ok',ok); inp.classList.toggle('bad',!ok); mk.textContent=ok?'✓':'✗'; mk.style.color=ok?'#16a34a':'#dc2626';
+        if(ok) solved[key]=inp.value; else delete solved[key]; save(); updScore(); };
+      if(solved[key]){ inp.value=solved[key]; check(); }
+      inp.addEventListener('keydown',e=>{ if(e.key==='Enter') check(); }); inp.addEventListener('change',check);
+    });
+    if(s.choice){ const why=st.querySelector('.choice-why'), key=p.id+'-'+si+'-c';
+      const pick=(b)=>{ const o=s.choice.o[+b.dataset.k]; st.querySelectorAll('.choice button').forEach(x=>x.classList.remove('right','wrong')); b.classList.add(o.ok?'right':'wrong');
+        why.innerHTML=o.ok?s.choice.why:'<b>Not quite.</b> Have another look at the key idea and try again.'; why.classList.add('open'); if(o.ok){solved[key]=1;} save(); updScore(); };
+      st.querySelectorAll('.choice button').forEach(b=>b.onclick=()=>pick(b));
+      if(solved[key]){ const b=[...st.querySelectorAll('.choice button')].find(b=>s.choice.o[+b.dataset.k].ok); if(b) pick(b); }
+    }
+  });
+}
+function updScore(){
+  const n=Object.keys(solved).length; document.getElementById('score').textContent=n+' / '+TOTAL+' checks';
+  document.getElementById('scorebar').style.width=(TOTAL?100*n/TOTAL:0)+'%';
+  PROBS.forEach(p=>{ const d=document.getElementById('p-'+p.id); if(!d) return; let need=0,c=0;
+    p.steps.forEach((s,si)=>{ const st=d.querySelector(`.step[data-s="${si}"]`); let sn=0,sc=0;
+      if(s.q) s.q.forEach((q,k)=>{sn++; if(solved[p.id+'-'+si+'-'+k]) sc++;}); if(s.choice){sn++; if(solved[p.id+'-'+si+'-c']) sc++;}
+      need+=sn; c+=sc; const ok=st.querySelector('.step-ok'); if(sn){ ok.textContent=sc===sn?'✓ done':(sc?sc+' / '+sn:''); ok.classList.toggle('done',sc===sn);} });
+    const ps=d.querySelector('.pstate'); ps.textContent=need&&c===need?'✓ solved':(c?c+' / '+need:''); ps.classList.toggle('done',need>0&&c===need); });
+  if(window.GuidedSidebar) GuidedSidebar.refresh();
+}
+function resetAll(){ solved={}; save(); render(); }
+document.querySelectorAll('[data-fig]').forEach(el=>{ el.innerHTML=LESSON_FIGS[el.dataset.fig](); });
+render();
+window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
+</script>
+<script src="js/guided-sidebar.js"></script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>

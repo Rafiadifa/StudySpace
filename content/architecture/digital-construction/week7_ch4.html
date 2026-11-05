@@ -158,14 +158,14 @@
     <p class="sec-lede">Chapter 3 gave you rules like "ΔM = area under F<sub>s</sub>". Chapter 4 gives you σ = My/I<sub>z</sub>. None of these is a new law. Each one is just <b>equilibrium (ΣY = 0, ΣM = 0)</b> applied to a tiny piece, followed by calculus. If you see where they come from, you don't have to memorise them.</p>
 
     <div class="primer">
-      <div class="pcard">
+      <div class="pcard" data-side="1 · Loads are densities">
         <h4>1 · A load is a density, so totals are integrals</h4>
         <p>q(x) is measured in kN/m: force <i>per metre</i>. A tiny piece dx carries force q·dx. Add up all the pieces:</p>
         <div class="eqn">total force &nbsp;Q = ∫ q dx = area of the load diagram<br>where it acts &nbsp;x̄ = ∫ x·q dx ÷ ∫ q dx = centroid of that area</div>
         <p>That's why a uniform load ql acts at the middle, and a triangle q<sub>0</sub>l/2 acts <b>l/3 from the big end</b>. You only use the resultant for <b>reactions</b>. Inside the beam you still need the real q(x).</p>
       </div>
 
-      <div class="pcard">
+      <div class="pcard" data-side="2 · The slice dx">
         <h4>2 · Cut out a slice dx and balance it</h4>
         <div class="figwrap"><svg class="fig" viewBox="0 0 380 190" role="img" aria-label="beam element dx with shear and moment on both faces" id="dxfig"></svg></div>
         <p><b>ΣY = 0:</b> F<sub>s</sub> + q·dx − (F<sub>s</sub> + dF<sub>s</sub>) = 0, so</p>
@@ -174,7 +174,7 @@
         <div class="eqn">dM/dx = F<sub>s</sub> &nbsp;&nbsp;and so&nbsp;&nbsp; d²M/dx² = q</div>
       </div>
 
-      <div class="pcard">
+      <div class="pcard" data-side="3 · Integrate back">
         <h4>3 · Integrate back: the diagrams are antiderivatives</h4>
         <div class="eqn">F<sub>s</sub>(x) = F<sub>s</sub>(a) + ∫<sub>a</sub><sup>x</sup> q dx<br>M(x) = M(a) + ∫<sub>a</sub><sup>x</sup> F<sub>s</sub> dx &nbsp;(= area under F<sub>s</sub>)</div>
         <p>The <b>constants of integration come from the supports</b>: M = 0 at a pin, roller or free end, and F<sub>s</sub> at the left end equals the reaction there. A point force is a load squeezed into zero width, so F<sub>s</sub> <b>jumps</b> by that force. A couple makes M <b>jump</b> (clockwise on the left of the cut → +).</p>
@@ -187,7 +187,7 @@
         <p>Each integration raises the degree by one. Largest M: set the derivative to zero, dM/dx = F<sub>s</sub> = 0. Same as finding a maximum in calculus.</p>
       </div>
 
-      <div class="pcard">
+      <div class="pcard" data-side="4 · From M to σ">
         <h4>4 · Chapter 4: from the moment M to the stress σ</h4>
         <ol>
           <li><b>Geometry.</b> Plane sections stay plane, so the beam bends into an arc of radius ρ. A fibre at distance y from the neutral layer has length (ρ + y)dθ instead of ρ dθ, so its strain is <b>ε = y/ρ</b>.</li>
@@ -201,7 +201,7 @@
         <p style="margin-top:4px">Sagging M (+): the bottom is in tension and the top in compression. σ = 0 on the neutral axis.</p>
       </div>
 
-      <div class="pcard">
+      <div class="pcard" data-side="5 · Section integrals">
         <h4>5 · The section integrals (截面几何性质)</h4>
         <table class="rtable">
           <tr><th>Quantity</th><th>Integral</th><th>Meaning</th></tr>
@@ -215,7 +215,7 @@
         <p>Composite shapes: add the parts (or subtract holes), each moved to the common centroid.</p>
       </div>
 
-      <div class="pcard">
+      <div class="pcard" data-side="6 · Shear + procedure">
         <h4>6 · Shear stress, and the procedure</h4>
         <div class="eqn">τ = F<sub>s</sub>·S<sub>z</sub>* / (I<sub>z</sub>·b)</div>
         <p>S<sub>z</sub>* is the static moment of the part of the section beyond the level you're checking, and b is the width at that level. τ is largest at the neutral axis. For a rectangle: <b>τ<sub>max</sub> = 1.5·F<sub>s</sub>/A</b>.</p>
@@ -784,6 +784,7 @@ function updScore(){
       if(s.q) s.q.forEach((q,k)=>{sn++; if(solved[p.id+'-'+si+'-'+k]) sc++;}); if(s.choice){sn++; if(solved[p.id+'-'+si+'-c']) sc++;}
       need+=sn; c+=sc; const ok=st.querySelector('.step-ok'); if(sn){ ok.textContent=sc===sn?'✓ done':(sc?sc+' / '+sn:''); ok.classList.toggle('done',sc===sn);} });
     const ps=d.querySelector('.pstate'); ps.textContent=need&&c===need?'✓ solved':(c?c+' / '+need:''); ps.classList.toggle('done',need>0&&c===need); });
+  if(window.GuidedSidebar) GuidedSidebar.refresh();
 }
 function resetAll(){ solved={}; save(); render(); }
 document.getElementById('dxfig').innerHTML=dxFig();
@@ -791,6 +792,7 @@ document.getElementById('primerSec').innerHTML=sectionFig(Object.assign({},RECT,
 render();
 window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
 </script>
+<script src="js/guided-sidebar.js"></script>
 
   <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
 </body>
