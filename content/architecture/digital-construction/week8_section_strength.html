@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Construction · Week 8 Section Strength</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <style>
+    :root { --force:#c2410c; --react:var(--dc); --pos:rgba(15,118,110,.18); --neg:rgba(194,65,12,.16); }
+    html[data-theme="dark"] { --force:#fb923c; --pos:rgba(45,212,191,.2); --neg:rgba(251,146,60,.18); }
+    .sec-title { font-family:'DM Serif Display',serif; font-size:1.8rem; letter-spacing:-.02em; color:var(--text); margin:56px 0 6px; }
+    .sec-eyebrow { font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+    .sec-lede { color:var(--text2); font-size:.9rem; line-height:1.6; max-width:760px; margin:6px 0 18px; }
+
+    .primer { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:18px; }
+    .pcard { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:18px 20px; font-size:.86rem; line-height:1.6; color:var(--text2); }
+    .pcard h4 { margin:0 0 8px; font-family:'DM Sans',sans-serif; font-size:.95rem; color:var(--text); }
+    .pcard ol, .pcard ul { margin:6px 0 0 18px; padding:0; }
+    .pcard b { color:var(--text); font-weight:600; }
+    .rtable { width:100%; border-collapse:collapse; font-size:.82rem; margin-top:6px; }
+    .rtable th, .rtable td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .rtable th { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text3); font-weight:500; }
+
+    .score-chip { position:sticky; top:64px; z-index:9; display:flex; gap:12px; align-items:center; background:var(--bg); border-bottom:1px solid var(--border); padding:10px 0; font-family:'DM Mono',monospace; font-size:.72rem; color:var(--text2); }
+    .score-chip .bar { flex:1; height:4px; background:var(--bg3); border-radius:99px; overflow:hidden; max-width:260px; }
+    .score-chip .bar i { display:block; height:4px; background:var(--accent); width:0; transition:width .3s; }
+    .score-chip button { margin-left:auto; background:none; border:1px solid var(--border); color:var(--text3); font:inherit; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:5px; cursor:pointer; }
+
+    .lvl { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; padding:2px 8px; border-radius:99px; border:1px solid var(--border); color:var(--text3); }
+    .lvl.hard { color:var(--force); border-color:var(--force); }
+    .lvl.vhard { color:#fff; background:var(--force); border-color:var(--force); }
+    .pstate { margin-left:auto; font-family:'DM Mono',monospace; font-size:.66rem; color:var(--text3); }
+    .pstate.done { color:#16a34a; }
+    .ptext { font-size:.93rem; color:var(--text); line-height:1.65; max-width:820px; }
+    .ptext .note { color:var(--text2); font-size:.84rem; }
+    .fig { display:block; width:100%; height:auto; margin:14px 0; }
+    .figwrap { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:6px 12px; margin:14px 0; overflow-x:auto; }
+    .figwrap svg { min-width:320px; }
+    svg text { font-family:'DM Sans',sans-serif; font-size:13px; fill:var(--text); }
+    svg .lbl-s { font-size:11px; fill:var(--text2); }
+    svg .ax { font-family:'DM Mono',monospace; font-size:10px; fill:var(--text3); letter-spacing:.06em; }
+    svg .val { font-family:'DM Mono',monospace; font-size:11px; fill:var(--text); }
+
+    .parts-list { display:grid; gap:10px; margin:16px 0 6px; }
+    .prow { display:flex; flex-wrap:wrap; gap:10px; align-items:center; font-size:.88rem; color:var(--text2); }
+    .prow .plab { font-family:'DM Mono',monospace; color:var(--accent); min-width:26px; }
+    .prow .pq { flex:1 1 300px; }
+    .prow input { width:110px; font:inherit; font-family:'DM Mono',monospace; font-size:.85rem; padding:7px 10px; border-radius:8px; border:1px solid var(--border); background:var(--bg2); color:var(--text); }
+    .prow input.ok { border-color:#16a34a; background:rgba(22,163,74,.08); }
+    .prow input.bad { border-color:#dc2626; background:rgba(220,38,38,.06); }
+    .prow .unit { font-family:'DM Mono',monospace; font-size:.75rem; color:var(--text3); min-width:46px; }
+    .prow .mark { font-family:'DM Mono',monospace; font-size:.8rem; min-width:18px; }
+    .tools { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+    .hint { display:none; margin-top:10px; font-size:.86rem; color:var(--text2); border-left:2px solid var(--accent); padding:4px 12px; line-height:1.55; }
+    .hint.open { display:block; }
+    details.sol { margin-top:14px; border:1px solid var(--border); border-radius:10px; background:var(--bg3); }
+    details.sol summary { cursor:pointer; padding:10px 14px; font-family:'DM Mono',monospace; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text2); }
+    details.sol .solbody { padding:4px 16px 16px; font-size:.87rem; line-height:1.7; color:var(--text2); }
+    details.sol .solbody b { color:var(--text); }
+    details.sol .solbody .eq { font-family:'DM Mono',monospace; font-size:.82rem; color:var(--text); background:var(--bg2); border-radius:6px; padding:2px 6px; }
+    .key { display:inline-block; margin-top:6px; padding:4px 10px; border-radius:6px; background:color-mix(in oklab,var(--accent) 12%,transparent); color:var(--text); font-weight:500; }
+    .mcq-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:10px; margin-top:12px; }
+    .mcq-opt { text-align:left; font:inherit; color:var(--text2); background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:8px 10px 6px; cursor:pointer; }
+    .mcq-opt:hover:not(:disabled){ border-color:var(--accent); }
+    .mcq-opt:disabled { cursor:default; }
+    .mcq-opt.right { border-color:#16a34a; box-shadow:0 0 0 2px rgba(22,163,74,.25); }
+    .mcq-opt.wrong { border-color:#dc2626; box-shadow:0 0 0 2px rgba(220,38,38,.2); }
+    .mcq-opt svg text { font-size:19px; }
+    .mcq-opt svg .ax { font-size:15px; }
+    .mcq-opt .ol { font-family:'DM Mono',monospace; font-size:.72rem; color:var(--text3); }
+    @media (max-width:640px){ .main{padding:0 16px;} .prow input{width:96px;} }
+  
+    .idea { background:color-mix(in oklab,var(--accent) 7%,transparent); border:1px solid color-mix(in oklab,var(--accent) 30%,transparent); border-radius:12px; padding:14px 18px; font-size:.88rem; line-height:1.65; color:var(--text2); margin:14px 0 6px; max-width:860px; }
+    .idea b { color:var(--text); }
+    .idea .tag { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:4px; }
+    .steps { display:grid; gap:12px; margin-top:18px; }
+    .step { border:1px solid var(--border); border-radius:12px; background:var(--bg2); padding:14px 18px; }
+    .step-h { display:flex; gap:10px; align-items:baseline; }
+    .step-n { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--accent); letter-spacing:.06em; }
+    .step-t { font-weight:600; color:var(--text); font-size:.93rem; }
+    .step-ok { margin-left:auto; font-family:'DM Mono',monospace; font-size:.66rem; color:var(--text3); }
+    .step-ok.done { color:#16a34a; }
+    .step-p { font-size:.88rem; color:var(--text2); line-height:1.6; margin-top:6px; }
+    .reveal { display:none; margin-top:12px; font-size:.87rem; line-height:1.7; color:var(--text2); background:var(--bg3); border-radius:10px; padding:12px 16px; }
+    .reveal.open { display:block; }
+    .reveal b { color:var(--text); }
+    .choice { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .choice button { font:inherit; font-size:.86rem; color:var(--text2); background:var(--bg); border:1px solid var(--border); border-radius:9px; padding:8px 14px; cursor:pointer; }
+    .choice button.right { border-color:#16a34a; background:rgba(22,163,74,.08); color:var(--text); }
+    .choice button.wrong { border-color:#dc2626; background:rgba(220,38,38,.07); }
+    .choice-why { display:none; margin-top:8px; font-size:.86rem; color:var(--text2); line-height:1.6; }
+    .choice-why.open { display:block; }
+    .subpart { font-family:'DM Serif Display',serif; font-size:1.25rem; color:var(--text); margin:30px 0 4px; }
+    .how { font-size:.86rem; color:var(--text2); line-height:1.7; max-width:820px; }
+    .how li { margin:3px 0; }
+  
+    .lvl.easy { color:#16a34a; border-color:rgba(22,163,74,.5); }
+    .lvl.med { color:var(--accent); border-color:var(--accent); }
+    .eqn { font-family:'DM Mono',monospace; font-size:.82rem; color:var(--text); background:var(--bg3); border-radius:8px; padding:8px 12px; margin:8px 0; line-height:1.7; overflow-x:auto; }
+    .roadmap { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin:14px 0 6px; }
+    .roadmap a { display:block; text-decoration:none; background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text2); font-size:.84rem; line-height:1.45; }
+    .roadmap a:hover { border-color:var(--accent); }
+    .roadmap a b { display:block; color:var(--text); font-size:.9rem; }
+    .roadmap a span { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); }
+    .pcard .figwrap { margin:10px 0 4px; }
+    .pcard .figwrap svg { min-width:0; }
+    .twofig { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
+    .twofig svg { flex:1 1 260px; max-width:360px; }
+  
+    .lesson-card { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:22px 26px; margin:18px 0; font-size:.9rem; line-height:1.75; color:var(--text2); max-width:900px; }
+    .lesson-card h3 { font-family:'DM Serif Display',serif; font-weight:400; font-size:1.35rem; color:var(--text); margin:0 0 4px; letter-spacing:-.01em; }
+    .lesson-card .kick { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+    .lesson-card h4 { font-size:.95rem; color:var(--text); margin:18px 0 4px; }
+    .lesson-card b { color:var(--text); }
+    .lesson-card p { margin:8px 0; }
+    .lesson-card ul, .lesson-card ol { margin:6px 0 6px 20px; padding:0; }
+    .lesson-card li { margin:3px 0; }
+    .ex { border-left:3px solid var(--accent); background:color-mix(in oklab,var(--accent) 6%,transparent); border-radius:0 10px 10px 0; padding:12px 16px; margin:14px 0; }
+    .ex .tag { display:block; font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
+    .warn { border-left:3px solid var(--force); background:color-mix(in oklab,var(--force) 6%,transparent); border-radius:0 10px 10px 0; padding:12px 16px; margin:14px 0; }
+    .warn .tag { display:block; font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--force); margin-bottom:4px; }
+    .lesson-card .figwrap svg { min-width:0; }
+    .figcap { font-size:.78rem; color:var(--text3); text-align:center; margin:-4px 0 8px; }
+    .reveal ol, .reveal ul { margin:6px 0 6px 20px; padding:0; }
+    .reveal p { margin:6px 0; }
+    .hint::before { content:'Hint · '; font-family:'DM Mono',monospace; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+    .choice button svg { display:block; width:min(320px,100%); height:auto; margin:0; }
+    .ptext .note { display:inline-block; margin-top:6px; }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem("studyhub_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body class="subject-dc">
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topbar">
+    <span class="topbar-title"><a href="../../../hub/architecture.html" style="color:inherit;text-decoration:none">Rafi's Study Hub</a></span>
+    <span class="topbar-sub">/ digital construction / week 8</span>
+    <span class="topbar-date">08 NOV 2026</span>
+  </div>
+
+  <div class="hero">
+    <h1>Week 8 · <em>from the shape of a section to whether the beam survives</em></h1>
+    <p class="hero-meta">Everything the Week 8 assignment needs: where the centroid is, what the static moment and moment of inertia really measure, and how to check an unsymmetric beam against separate tension and compression limits. A short lesson comes first, then the four homework problems guided step by step, then twelve extra problems, easy to very hard.</p>
+    <div class="exam-pills">
+      <span class="pill pill-dc">静矩 · static moment</span>
+      <span class="pill pill-dc">形心 · centroid</span>
+      <span class="pill pill-dc">惯性矩 · moment of inertia</span>
+      <span class="pill pill-dc">强度校核 · strength check</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="score-chip"><span id="score">0 / 0 checks</span><span class="bar"><i id="scorebar"></i></span><button onclick="resetAll()">Reset</button></div>
+
+    <div class="sec-eyebrow" style="margin-top:36px">How to use this page</div>
+    <ol class="how">
+      <li>Read the lesson. Its worked examples use <b>different numbers</b> from the homework, so nothing is spoiled.</li>
+      <li>Try each homework step on paper, type the number, and press <b>Enter</b>. Fractions such as 1/12 are accepted.</li>
+      <li>Stuck? <b>Hint</b> points you to the idea without the answer. <b>Show this step</b> gives the worked reasoning for that step only.</li>
+      <li>Use the <b>sidebar</b> (or <b>☰ Questions</b> on a small screen) to jump around. A ✓ appears when a problem is fully solved.</li>
+      <li>Course conventions apply: M sagging + (下拉为正, bottom in tension), the M diagram is drawn on the tension side, reactions up +.</li>
+    </ol>
+
+    <!-- ═════════════ LESSON ═════════════ -->
+    <div class="sec-eyebrow" style="margin-top:56px">Read first</div>
+    <div class="sec-title">The lesson</div>
+    <p class="sec-lede">Seven short parts. They build directly on Chapter 4 from your Week 7 page, and go slower on the points this assignment tests.</p>
+
+    <div class="lesson-card" data-side="1 · The chain of ideas">
+      <span class="kick">Part 1</span>
+      <h3>The chain of ideas this week</h3>
+      <p>A beam check is a chain, and each homework problem practises one link:</p>
+      <table class="rtable">
+        <tr><th>Link</th><th>Question it answers</th><th>Homework</th></tr>
+        <tr><td>Static moment S, centroid y<sub>c</sub></td><td>Where is the neutral axis?</td><td>Problem 1</td></tr>
+        <tr><td>Moment of inertia I</td><td>How much does the shape resist bending?</td><td>Problem 2</td></tr>
+        <tr><td>σ = My/I, tension and compression limits</td><td>Does this particular beam survive?</td><td>Problem 3</td></tr>
+        <tr><td>Section modulus W</td><td>Which way round should the beam go?</td><td>Problem 4</td></tr>
+      </table>
+      <p>Keep one fact in mind: <b>the neutral axis passes through the centroid</b>. You derived it last week from ∫σ dA = 0. So the centroid is not just a geometry exercise. It decides how far the top and bottom fibres are from the axis, and therefore which one is stressed most.</p>
+    </div>
+
+    <div class="lesson-card" data-side="2 · Static moment 静矩">
+      <span class="kick">Part 2</span>
+      <h3>Static moment (静矩): the balance of an area</h3>
+      <div class="eqn">S<sub>z</sub> = ∫ y dA = A · y<sub>c</sub></div>
+      <p>Cut the area into tiny pieces, multiply each by its signed distance y from the axis, and add. For a shape with a known centroid, you don't need the integral: it is the <b>area × the distance from the axis to that area's own centroid</b>.</p>
+      <p>Think of the section as a flat plate on a knife edge along the axis. S<sub>z</sub> measures how much it wants to tip. Three consequences:</p>
+      <ul>
+        <li>S<sub>z</sub> has <b>a sign</b>. Area on the positive-y side counts +, area on the negative side counts −. Units are length³.</li>
+        <li>The centroid axis is where the plate <b>balances</b>, so S<sub>z</sub> about any centroidal axis is <b>exactly 0</b>.</li>
+        <li>Cut a section along a centroidal axis into two parts. Their static moments must cancel: <b>equal size, opposite sign</b>, however different the two parts look.</li>
+      </ul>
+      <div class="figwrap" data-fig="shade"></div>
+      <p class="figcap">The two parts of a section on either side of its centroid axis have different shapes, but equal and opposite static moments.</p>
+      <div class="ex"><span class="tag">Worked example</span>
+        A rectangle 100 mm wide and 60 mm tall. About its base: S = (100 × 60) × 30 = <b>180 000 mm³</b>. About its own mid-height axis: the top half gives (100 × 30) × (+15) = +45 000 and the bottom half gives (100 × 30) × (−15) = −45 000, so the total is <b>0</b> ✓.
+      </div>
+      <p>The part-section static moment comes back in shear stress: S<sub>z</sub>* in τ = F<sub>s</sub>S<sub>z</sub>*/(I<sub>z</sub>b) is exactly this kind of quantity.</p>
+      <div class="warn"><span class="tag">Sign depends on the axis direction</span>
+        If y points down (as in the figure for homework Problem 3), the signs of every part flip. The fact that the two parts are opposite does not change.
+      </div>
+    </div>
+
+    <div class="lesson-card" data-side="3 · Finding a centroid">
+      <span class="kick">Part 3</span>
+      <h3>Finding the centroid of a composite section</h3>
+      <div class="eqn">y<sub>c</sub> = Σ A<sub>i</sub> y<sub>i</sub> / Σ A<sub>i</sub></div>
+      <ol>
+        <li>If the section has a line of symmetry, the centroid lies on it. Only one coordinate is left to find.</li>
+        <li>Split the section into rectangles or triangles whose centroids you know.</li>
+        <li>Pick <b>one</b> reference line (the bottom edge is easiest) and measure every y<sub>i</sub> from it.</li>
+        <li>Add up. Treat a <b>hole as a negative area</b>.</li>
+      </ol>
+      <div class="ex"><span class="tag">Worked example</span>
+        A narrow block 40 wide × 60 tall sits on a base plate 100 wide × 20 tall (mm). Base plate: A = 2000, y = 10. Block: A = 2400, y = 20 + 30 = 50. So y<sub>c</sub> = (2000 × 10 + 2400 × 50)/4400 = 140 000/4400 = <b>31.8 mm</b> from the bottom. Sanity check: it must lie between 10 and 50, and closer to the larger area.
+      </div>
+      <div class="warn"><span class="tag">Common slip</span>
+        y<sub>i</sub> is measured to the centroid of each part, from the <b>common reference line</b>. Forgetting to add the 20 mm base plate height to the block's 30 mm is the most common mistake.
+      </div>
+    </div>
+
+    <div class="lesson-card" data-side="4 · Moment of inertia 惯性矩">
+      <span class="kick">Part 4</span>
+      <h3>Moment of inertia (惯性矩) by strips and by shifting</h3>
+      <div class="eqn">I<sub>z</sub> = ∫ y² dA &nbsp;&nbsp;&nbsp;&nbsp; I<sub>z</sub> = I<sub>c</sub> + a²·A</div>
+      <p>Because y is squared, I is <b>never negative</b> and it rewards area placed far from the axis. To find it for a new shape, slice the shape into thin horizontal strips parallel to the axis: dA = (strip width) × dy.</p>
+      <div class="ex"><span class="tag">Worked example: rectangle about its base</span>
+        Every strip has width b, so I<sub>base</sub> = ∫₀<sup>h</sup> y²·b dy = b·[y³/3]₀<sup>h</sup> = <b>bh³/3</b>. Check by shifting from the centroid: bh³/12 + (h/2)²·bh = bh³/12 + 3bh³/12 = bh³/3 ✓.
+      </div>
+      <h4>Sliding strips changes nothing</h4>
+      <p>I depends only on <b>how much area sits at each height</b>. Slide a strip sideways and its y and its area stay the same. So a slanted parallelogram has the same I about a horizontal axis as a rectangle with the same base and height.</p>
+      <div class="figwrap" data-fig="slide"></div>
+      <p class="figcap">Same strip widths at the same heights, so the same I about any horizontal axis.</p>
+      <div class="warn"><span class="tag">The parallel-axis trap</span>
+        I = I<sub>c</sub> + a²A only works when one of the two axes passes through the <b>centroid</b>. To go between two non-centroidal axes, go through the centroid: first subtract to reach I<sub>c</sub>, then add to reach the new axis. The centroidal value is always the <b>smallest</b> I among parallel axes.
+      </div>
+    </div>
+
+    <div class="lesson-card" data-side="5 · Bending stress">
+      <span class="kick">Part 5</span>
+      <h3>Bending stress, quickly</h3>
+      <div class="eqn">σ = M·y / I<sub>z</sub></div>
+      <p>Stress is 0 on the neutral axis and grows linearly to the outermost fibre. Sagging M has <b>tension at the bottom</b>. Hogging M has <b>tension at the top</b>.</p>
+      <p><b>Units:</b> use N·mm, mm and mm⁴, and the answer is in N/mm² = MPa. So 1 kN·m = 10⁶ N·mm.</p>
+      <div class="ex"><span class="tag">Worked example</span>
+        M = 20 kN·m, I<sub>z</sub> = 100 × 10⁶ mm⁴, and a point 80 mm from the neutral axis: σ = 20×10⁶ × 80 / (100×10⁶) = <b>16 MPa</b>.
+      </div>
+    </div>
+
+    <div class="lesson-card" data-side="6 · Unsymmetric sections">
+      <span class="kick">Part 6</span>
+      <h3>Unsymmetric sections: four numbers, not one</h3>
+      <p>When the neutral axis is not at mid-height, the top and bottom fibres are at different distances. If the material also has different limits in tension and compression (cast iron and concrete are much weaker in tension), one σ<sub>max</sub> isn't enough.</p>
+      <div class="figwrap" data-fig="stress"></div>
+      <p class="figcap">The same inverted T under the two signs of moment. The far fibre always has the larger stress, but what it carries flips between compression and tension.</p>
+      <p><b>The procedure:</b> take the largest sagging moment and the largest hogging moment. At each one, find which fibre is in tension and which in compression. That gives four stresses to compare with the two limits.</p>
+      <div class="ex"><span class="tag">Worked example</span>
+        I<sub>z</sub> = 10 × 10⁶ mm⁴, y<sub>top</sub> = 100, y<sub>bottom</sub> = 40. Moments: +5 kN·m and −4 kN·m.
+        <table class="rtable">
+          <tr><th>Section</th><th>Tension</th><th>Compression</th></tr>
+          <tr><td>Sagging, M = 5</td><td>bottom: 5×10⁶ × 40/10×10⁶ = 20 MPa</td><td>top: 5×10⁶ × 100/10×10⁶ = 50 MPa</td></tr>
+          <tr><td>Hogging, M = 4</td><td>top: 4×10⁶ × 100/10×10⁶ = <b>40 MPa</b></td><td>bottom: 4×10⁶ × 40/10×10⁶ = 16 MPa</td></tr>
+        </table>
+        The largest tension is at the <b>smaller</b> moment, because there the tension is on the far fibre.
+      </div>
+    </div>
+
+    <div class="lesson-card" data-side="7 · Strength + orientation">
+      <span class="kick">Part 7</span>
+      <h3>Three kinds of strength problem, and the section modulus</h3>
+      <table class="rtable">
+        <tr><th>Task</th><th>You know</th><th>You find</th></tr>
+        <tr><td>Check (校核)</td><td>loads, section, limits</td><td>Is σ<sub>max</sub> ≤ [σ]?</td></tr>
+        <tr><td>Design (设计截面)</td><td>loads, limits</td><td>W<sub>z</sub> ≥ M<sub>max</sub>/[σ], then the dimensions</td></tr>
+        <tr><td>Allowable load (许用荷载)</td><td>section, limits</td><td>M<sub>max</sub> ≤ [σ]·W<sub>z</sub>, then the load</td></tr>
+      </table>
+      <p>For a rectangle, <b>W = bh²/6</b>, where h is the dimension in the direction of bending. Depth is squared, so turning a plank on edge helps a lot, even though the area doesn't change.</p>
+      <div class="figwrap" data-fig="orient"></div>
+      <div class="ex"><span class="tag">Worked example</span>
+        A 50 × 150 mm plank. On edge: W = 50 × 150²/6 = 187 500 mm³. Flat: W = 150 × 50²/6 = 62 500 mm³. On edge is <b>3 times</b> stronger, and 3 is the ratio of the long side to the short side.
+      </div>
+    </div>
+
+    <div id="probs"></div>
+    <p style="font-size:.8rem;color:var(--text3);margin:48px 0 80px">Every value here was checked numerically. Your checks are saved in this browser.</p>
+  </div>
+
+  <div class="footer-note">RAFI ADIFA MAULANA · STUDY HUB · 2026</div>
+
+<script>
+/* ═════════════ helpers ═════════════ */
+const f1=n=>+(+n).toFixed(1);
+const fmt=v=>{const r=Math.round(v*100)/100; return (r<0?'−':'')+Math.abs(r).toString();};
+function arrowSVG(x1,y1,x2,y2,cls='force',hl=9,sw=2){
+  const a=Math.atan2(y2-y1,x2-x1), bx=x2-hl*Math.cos(a), by=y2-hl*Math.sin(a), px=Math.sin(a)*hl*.42, py=-Math.cos(a)*hl*.42;
+  const col=cls==='force'?'var(--force)':cls==='react'?'var(--react)':'var(--text3)';
+  return `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(bx)}" y2="${f1(by)}" stroke="${col}" stroke-width="${sw}"/><polygon points="${f1(x2)},${f1(y2)} ${f1(bx+px)},${f1(by+py)} ${f1(bx-px)},${f1(by-py)}" fill="${col}"/>`;
+}
+const L_=(x1,y1,x2,y2,w=1.4,c='var(--text)',dash='')=>`<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke="${c}" stroke-width="${w}" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+const T_=(x,y,s,cls='',anchor='middle')=>`<text x="${f1(x)}" y="${f1(y)}" text-anchor="${anchor}" class="${cls}">${s}</text>`;
+function hatchBelow(x1,x2,y){let s=L_(x1,y,x2,y);for(let x=x1+3;x<=x2;x+=7)s+=L_(x,y,x-6,y+7,1,'var(--text3)');return s}
+function hatchWall(x,y1,y2,side){let s=L_(x,y1,x,y2,1.8);for(let y=y1+2;y<=y2;y+=7)s+=L_(x,y,x+(side<0?-7:7),y+6,1,'var(--text3)');return s}
+function pinSup(x,y){return `<polygon points="${x},${y} ${x-11},${y+18} ${x+11},${y+18}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.4"/>`+hatchBelow(x-17,x+17,y+18)+`<circle cx="${x}" cy="${y}" r="4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.4"/>`}
+function rollerSup(x,y){return `<polygon points="${x},${y} ${x-10},${y+14} ${x+10},${y+14}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.4"/><circle cx="${x-5}" cy="${y+18}" r="3.4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.2"/><circle cx="${x+5}" cy="${y+18}" r="3.4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.2"/>`+hatchBelow(x-16,x+16,y+22)+`<circle cx="${x}" cy="${y}" r="4" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.4"/>`}
+function dimH(x1,x2,y,label){return L_(x1,y-6,x1,y+6,1,'var(--text3)')+L_(x2,y-6,x2,y+6,1,'var(--text3)')+arrowSVG((x1+x2)/2,y,x1,y,'dim',6,1)+arrowSVG((x1+x2)/2,y,x2,y,'dim',6,1)+T_((x1+x2)/2,y-5,label,'lbl-s')}
+function dimV(x,y1,y2,label,side=-1){return L_(x-6,y1,x+6,y1,1,'var(--text3)')+L_(x-6,y2,x+6,y2,1,'var(--text3)')+arrowSVG(x,(y1+y2)/2,x,y1,'dim',6,1)+arrowSVG(x,(y1+y2)/2,x,y2,'dim',6,1)+T_(x+side*8,(y1+y2)/2+4,label,'lbl-s',side<0?'end':'start')}
+function coupleSVG(cx,cy,dir,label){ // dir 'cw' or 'ccw' (screen)
+  const r=16, a0=dir==='cw'?200:-20, a1=dir==='cw'?-20:200, R=Math.PI/180;
+  const p=(a)=>[cx+r*Math.cos(a*R), cy-r*Math.sin(a*R)];
+  const [sx,sy]=p(a0),[ex,ey]=p(a1);
+  const sweep=dir==='cw'?1:0;
+  const tang=dir==='cw'? (a1-90)*R : (a1+90)*R;
+  const tx=ex+8*Math.cos(tang), ty=ey-8*Math.sin(tang);
+  return `<path d="M${f1(sx)},${f1(sy)} A${r},${r} 0 1 ${sweep} ${f1(ex)},${f1(ey)}" fill="none" stroke="var(--force)" stroke-width="2"/>`+arrowSVG(ex-(tx-ex)*.1,ey-(ty-ey)*.1,tx,ty,'force',8,0.1)+T_(cx,cy-r-8,label,'lbl-s');
+}
+
+/* ── beam figure ── */
+function beamFig(sp){
+  const W=600, x0=50, BW=500, Y=sp.y||104, s=BW/sp.L, X=x=>x0+x*s;
+  let g='';
+  (sp.udl||[]).forEach(u=>{const xa=X(u.a),xb=X(u.b),up=!!u.up,top=up?Y+40:Y-40,tip=up?Y+5:Y-5; g+=L_(xa,top,xb,top,1.4,'var(--force)'); const n=Math.max(2,Math.round((xb-xa)/22)); for(let i=0;i<=n;i++){const xx=xa+(xb-xa)*i/n; g+=arrowSVG(xx,top,xx,tip,'force',7,1.4);} g+=T_((xa+xb)/2,up?top+14:top-7,u.label,'lbl-s');});
+  (sp.lin||[]).forEach(u=>{const xa=X(u.a),xb=X(u.b),h1=u.q1*40,h2=u.q2*40; g+=L_(xa,Y-5-h1,xb,Y-5-h2,1.4,'var(--force)'); const n=Math.max(3,Math.round((xb-xa)/24)); for(let i=0;i<=n;i++){const t=i/n,xx=xa+(xb-xa)*t,h=h1+(h2-h1)*t; if(h>6) g+=arrowSVG(xx,Y-5-h,xx,Y-5,'force',6,1.3);} g+=T_(xb-10,Y-52,u.label,'lbl-s','end');});
+  g+=`<rect x="${X(0)}" y="${Y-4}" width="${BW}" height="8" rx="1.5" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.6"/>`;
+  (sp.sup||[]).forEach(su=>{const x=X(su.x); if(su.t==='pin') g+=pinSup(x,Y+4); else if(su.t==='roller') g+=rollerSup(x,Y+4); else if(su.t==='fixL') g+=hatchWall(x,Y-26,Y+26,-1); else if(su.t==='fixR') g+=hatchWall(x,Y-26,Y+26,1);});
+  (sp.hinge||[]).forEach(h=>{g+=`<circle cx="${X(h)}" cy="${Y}" r="5" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.6"/>`;});
+  (sp.pts||[]).forEach(p=>{const x=X(p.x); g+=arrowSVG(x,Y-58,x,Y-5,'force',9,2.2)+T_(x+(p.dx||0),Y-64,p.label,'lbl-s');});
+  (sp.cpl||[]).forEach(c=>{g+=coupleSVG(X(c.x),Y,c.dir,c.label);});
+  (sp.letters||[]).forEach(l=>{g+=T_(X(l.x)+(l.dx||0),Y+(l.dy||-12),l.t,'', 'middle');});
+  if(sp.dims){const d=sp.dims, yy=Y+(sp.dimY||48); for(let i=0;i<d.length-1;i++) g+=dimH(X(d[i][0]),X(d[i+1][0]),yy,d[i][1]); }
+  return `<svg class="fig" viewBox="0 0 ${W} ${Y+(sp.dimY||48)+20}" role="img" aria-label="beam figure">${g}</svg>`;
+}
+
+/* ── internal-force evaluator (up +, couples cw + ; mirrors the verification script) ── */
+function FsM(x,f){let Fs=0,M=0;
+  (f.pts||[]).forEach(([xi,F])=>{if(xi<x){Fs+=F;M+=F*(x-xi);}});
+  (f.udl||[]).forEach(([a,b,q])=>{if(x>a){const e=Math.min(x,b),L=e-a;Fs-=q*L;M-=q*L*(x-(a+e)/2);}});
+  (f.lin||[]).forEach(([a,b,q1,q2])=>{if(x>a){const e=Math.min(x,b),n=200,h=(e-a)/n;for(let i=0;i<n;i++){const xm=a+(i+.5)*h,qq=q1+(q2-q1)*(xm-a)/(b-a);Fs-=qq*h;M-=qq*h*(x-xm);}}});
+  (f.cpl||[]).forEach(([xi,m])=>{if(xi<x)M+=m;});
+  return [Fs,M];}
+
+/* ── Fs / M diagram ── labels: [x, 'Fs'|'M', text?, side(-1 left,+1 right,0)] */
+function diag(f,L,o={}){
+  const W=o.w||600, x0=50, BW=500, s=BW/L, X=x=>x0+x*s, eps=1e-6;
+  const br=new Set([0,L]); (f.pts||[]).forEach(p=>br.add(p[0])); (f.udl||[]).forEach(u=>{br.add(u[0]);br.add(u[1]);}); (f.lin||[]).forEach(u=>{br.add(u[0]);br.add(u[1]);}); (f.cpl||[]).forEach(c=>br.add(c[0]));
+  const xs=[]; const N=240; for(let i=0;i<=N;i++) xs.push(L*i/N); br.forEach(b=>{xs.push(b-eps,b+eps);});
+  const X2=xs.filter(x=>x>=0&&x<=L).sort((a,b)=>a-b);
+  const vals=X2.map(x=>FsM(Math.min(Math.max(x,eps),L-eps),f));
+  const panels=o.only==='Fs'?['Fs']:o.only==='M'?['M']:['Fs','M'];
+  const H=o.h||92; let g='', top=14;
+  panels.forEach(pn=>{
+    const idx=pn==='Fs'?0:1; let mx=Math.max(1e-9,...vals.map(v=>Math.abs(v[idx])));
+    const flip=(pn==='M')? (o.flipM?-1:1) : -1; // Fs: + up ; M: + down (tension side)
+    const ys=vals.map(v=>flip*v[idx]); const hi=Math.max(0,...ys), lo=Math.min(0,...ys); const span=Math.max(hi-lo,1e-9);
+    const k=(H-26)/span, base=top+13+(-lo)*k, Yv=v=>base+flip*v*k;
+    let d=`M${X(0)},${base} `; X2.forEach((x,i)=>{d+=`L${f1(X(x))},${f1(Yv(vals[i][idx]))} `;}); d+=`L${X(L)},${base} Z`;
+    g+=`<path d="${d}" fill="${pn==='Fs'?'var(--pos)':'var(--neg)'}" stroke="${pn==='Fs'?'var(--react)':'var(--force)'}" stroke-width="1.6"/>`;
+    g+=L_(X(0),base,X(L),base,1.2,'var(--text3)');
+    g+=T_(12,base+4,pn==='Fs'?'F<tspan baseline-shift="sub" font-size="9">s</tspan>':'M','ax','start');
+    if(!o.nolabels) (o.labels||[]).filter(l=>l[1]===pn).forEach(l=>{const xx=Math.min(Math.max(l[0]+(l[3]||0)*1e-4,eps),L-eps); const v=FsM(xx,f)[idx]; const yy=Yv(v); const up=(flip*v)<0; g+=T_(X(l[0])+(l[3]||0)*16,yy+(up?-6:15),l[2]!==undefined?l[2]:fmt(v),'val',(l[3]||0)<0?'end':(l[3]||0)>0?'start':'middle');});
+    top+=H+16;
+  });
+  if(o.ticks){ o.ticks.forEach(t=>{g+=L_(X(t[0]),top-8,X(t[0]),top-2,1,'var(--text3)')+T_(X(t[0]),top+9,t[1],'ax');}); top+=14; }
+  return `<svg class="fig" viewBox="0 0 ${W} ${top}" role="img" aria-label="internal force diagram">${g}</svg>`;
+}
+
+const fig=s=>`<div class="figwrap">${s}</div>`;
+
+/* ── cross-section figure: rects [x,y,w,h] in mm (y up from bottom); optional linear stress diagram ── */
+function sectionFig(o){
+  const R=o.rects, maxX=Math.max(...R.map(r=>r[0]+r[2])), maxY=Math.max(...R.map(r=>r[1]+r[3]));
+  const s=(o.size||150)/Math.max(maxX,maxY), ox=56, oy=24+maxY*s, X=x=>ox+x*s, Y=y=>oy-y*s;
+  const sw=o.stress?150:0, W=ox+maxX*s+(o.stress?200:130), H=oy+(o.title?34:22);
+  let g='';
+  R.forEach(r=>{ g+=`<rect x="${f1(X(r[0]))}" y="${f1(Y(r[1]+r[3]))}" width="${f1(r[2]*s)}" height="${f1(r[3]*s)}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.5"/>`; });
+  (o.dimsH||[]).forEach(d=>{ g+=dimH(X(d[0]),X(d[1]),Y(d[2])-(d[3]||10),d[4]); });
+  (o.dimsV||[]).forEach(d=>{ g+=dimV(X(d[0])-(d[3]||14),Y(d[1]),Y(d[2]),d[4],-1); });
+  if(o.yc!==undefined){ const yy=Y(o.yc); g+=L_(ox-12,yy,X(maxX)+14+sw,yy,1.2,'var(--accent)','5 4')+T_(X(maxX)+16,yy-5,o.stress?'z':(o.ncLabel||'z (neutral axis)'),'lbl-s','start'); }
+  if(o.stress){ const bx=X(maxX)+90, yt=Y(maxY), yb=Y(0), yn=Y(o.yc), mx=Math.max(Math.abs(o.stress[0]),Math.abs(o.stress[1])), k=46/mx;
+    const xt=bx+k*o.stress[0], xb=bx+k*o.stress[1];
+    g+=`<polygon points="${f1(bx)},${f1(yt)} ${f1(xt)},${f1(yt)} ${f1(bx)},${f1(yn)}" fill="${o.stress[0]<0?'var(--neg)':'var(--pos)'}" stroke="${o.stress[0]<0?'var(--force)':'var(--react)'}" stroke-width="1.4"/>`;
+    g+=`<polygon points="${f1(bx)},${f1(yn)} ${f1(xb)},${f1(yb)} ${f1(bx)},${f1(yb)}" fill="${o.stress[1]<0?'var(--neg)':'var(--pos)'}" stroke="${o.stress[1]<0?'var(--force)':'var(--react)'}" stroke-width="1.4"/>`;
+    g+=L_(bx,yt-6,bx,yb+6,1.2,'var(--text3)');
+    g+=T_(xt+(o.stress[0]<0?-4:4),yt+4,o.sLab[0],'val',o.stress[0]<0?'end':'start')+T_(xb+(o.stress[1]<0?-4:4),yb+4,o.sLab[1],'val',o.stress[1]<0?'end':'start');
+    g+=T_(bx,yb+18,'σ','ax'); }
+  if(o.title) g+=T_(ox+maxX*s/2,H-8,o.title,'lbl-s');
+  return `<svg class="fig" viewBox="0 0 ${f1(W)} ${f1(H)}" role="img" aria-label="cross-section" style="max-width:${o.maxw||460}px;margin:10px auto">${g}</svg>`;
+}
+
+/* ═════════ Week 8 figures ═════════ */
+const sub=t=>`<tspan baseline-shift="sub" font-size="9">${t}</tspan>`;
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+let hatchN=0;
+const hatchDef=c=>{const id='wh'+(++hatchN);return [id,`<defs><pattern id="${id}" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="${c}" stroke-width="1.5"/></pattern></defs>`];};
+
+/* HW1 T-section */
+function tFig(o={}){
+  const s=320,X=x=>120+x*s,Y=y=>262-y*s,yc=0.27513;
+  const pts=a=>a.map(p=>f1(X(p[0]))+','+f1(Y(p[1]))).join(' ');
+  const [h1,d1]=hatchDef('var(--accent)'), [h2,d2]=hatchDef('var(--force)');
+  let g=d1+d2;
+  g+=`<polygon points="${pts([[0,0],[.6,0],[.6,.14],[.45,.14],[.45,.64],[.15,.64],[.15,.14],[0,.14]])}" fill="var(--bg3)"/>`;
+  g+=`<polygon points="${pts([[0,0],[.6,0],[.6,.14],[.45,.14],[.45,yc],[.15,yc],[.15,.14],[0,.14]])}" fill="url(#${h1})"/>`;
+  if(o.above) g+=`<polygon points="${pts([[.15,yc],[.45,yc],[.45,.64],[.15,.64]])}" fill="url(#${h2})"/>`;
+  g+=`<polygon points="${pts([[0,0],[.6,0],[.6,.14],[.45,.14],[.45,.64],[.15,.64],[.15,.14],[0,.14]])}" fill="none" stroke="var(--text)" stroke-width="1.7"/>`;
+  g+=arrowSVG(X(0)-30,Y(yc),X(.6)+96,Y(yc),'dim',8,1.4)+T_(X(.6)+88,Y(yc)-8,'z₀','');
+  g+=`<circle cx="${X(.3)}" cy="${f1(Y(yc))}" r="4" fill="var(--text)"/>`+T_(X(.3)-1,Y(yc)-9,'C','');
+  if(o.plain){
+    g+=T_(X(.6)+8,Y(.45),'upper part: S > 0','lbl-s','start')+T_(X(.6)+8,Y(.09),'lower part: S < 0','lbl-s','start');
+  } else {
+    g+=dimH(X(.15),X(.45),Y(.64)-14,'b₁ = 0.3')+dimH(X(0),X(.6),Y(0)+24,'b₂ = 0.6')+dimV(X(0)-46,Y(.64),Y(.14),'h₁ = 0.5',-1)+dimV(X(0)-46,Y(.14),Y(0),'h₂ = 0.14',-1)+dimV(X(.6)+32,Y(yc),Y(0),'y'+sub('c'),1);
+  }
+  return `<svg class="fig" viewBox="0 0 ${o.plain?470:420} 320" style="max-width:${o.plain?470:420}px;margin:10px auto" role="img" aria-label="T-shaped cross-section with the area below the centroid axis shaded">${g}</svg>`;
+}
+
+/* HW2 triangle */
+function triFig(o={}){
+  let g=`<polygon points="70,220 310,220 270,40" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.8"/>`;
+  if(o.strip){
+    const lf=p=>70+(220-p)/180*200, rt=p=>310-(220-p)/180*40;
+    g+=`<polygon points="${f1(lf(136))},136 ${f1(rt(136))},136 ${f1(rt(124))},124 ${f1(lf(124))},124" fill="color-mix(in oklab,var(--accent) 45%,transparent)" stroke="var(--accent)"/>`;
+    g+=T_(lf(130)-8,134,'strip, width w(y)','lbl-s','end')+dimV(346,220,130,'y',1)+L_(rt(130),130,346,130,1,'var(--text3)','3 3');
+  }
+  g+=arrowSVG(40,160,424,160,'dim',8,1.4)+T_(414,150,'z₀','');
+  g+=arrowSVG(40,220,424,220,'dim',8,1.4)+T_(414,210,'z₁','');
+  g+=`<circle cx="216.7" cy="160" r="4" fill="var(--text)"/>`+T_(216,150,'C','');
+  g+=dimV(38,40,220,'h',-1)+dimH(70,310,250,'b');
+  return `<svg class="fig" viewBox="0 0 440 272" style="max-width:430px;margin:10px auto" role="img" aria-label="triangle with centroid axis z0 and base axis z1">${g}</svg>`;
+}
+
+/* polygon section, optional rectangular hole. Coordinates in mm, y up */
+function polySec(o){
+  const P=o.pts,maxX=Math.max(...P.map(p=>p[0])),maxY=Math.max(...P.map(p=>p[1])),s=(o.size||170)/Math.max(maxX,maxY),ox=56,oy=26+maxY*s,X=x=>ox+x*s,Y=y=>oy-y*s;
+  let g=`<polygon points="${P.map(p=>f1(X(p[0]))+','+f1(Y(p[1]))).join(' ')}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.6"/>`;
+  if(o.hole){const r=o.hole; g+=`<rect x="${f1(X(r[0]))}" y="${f1(Y(r[1]+r[3]))}" width="${f1(r[2]*s)}" height="${f1(r[3]*s)}" fill="var(--bg2)" stroke="var(--text)" stroke-width="1.4"/>`;}
+  (o.dimsH||[]).forEach(d=>{g+=dimH(X(d[0]),X(d[1]),Y(d[2])-d[3],d[4]);});
+  (o.dimsV||[]).forEach(d=>{g+=dimV(X(d[0])-(d[3]||14),Y(d[1]),Y(d[2]),d[4],-1);});
+  (o.dimsR||[]).forEach(d=>{g+=dimV(X(maxX)+(d[2]||16),Y(d[0]),Y(d[1]),d[3],1);});
+  if(o.yc!==undefined){const yy=Y(o.yc); g+=L_(ox-12,yy,X(maxX)+14,yy,1.2,'var(--accent)','5 4')+T_(X(maxX)+16,yy-5,o.zLabel||'z','lbl-s','start');}
+  return `<svg class="fig" viewBox="0 0 ${f1(X(maxX)+120)} ${f1(oy+(o.below||34))}" style="max-width:${o.maxw||420}px;margin:10px auto" role="img" aria-label="cross-section">${g}</svg>`;
+}
+
+/* inverted T used for stress pictures: y2 = 38, y1 = 72 drawn to scale */
+const ITEE={rects:[[0,0,130,22],[55,22,20,88]]};
+const iteeStress=(st,lab,extra={})=>sectionFig(Object.assign({},ITEE,{yc:38,size:112,maxw:400,stress:st,sLab:lab},extra));
+const iteeDim=(flip)=>sectionFig(flip?{rects:[[0,88,130,22],[55,0,20,88]],yc:72,size:130,maxw:340,ncLabel:'z',title:'flipped: flange on top',dimsV:[[0,72,110,14,'38'],[0,0,72,14,'72']]}:Object.assign({},ITEE,{yc:38,size:130,maxw:340,ncLabel:'z',title:'inverted T, mm',dimsV:[[0,38,110,14,'72'],[0,0,38,14,'38']]}));
+
+function slideFig(){
+  const row=(x0,skew)=>{let g='';const H=120,b=120,top=26;
+    g+=`<polygon points="${x0},${top+H} ${x0+b},${top+H} ${x0+b+skew},${top} ${x0+skew},${top}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.6"/>`;
+    for(let i=1;i<6;i++){const t=i/6,y=top+H-t*H,x=x0+skew*t;g+=L_(x,y,x+b,y,1,'var(--text3)');}
+    return g;};
+  return `<svg class="fig" viewBox="0 0 520 172" style="max-width:520px;margin:10px auto" role="img" aria-label="a rectangle and a slanted parallelogram sliced into the same strips">${row(40,0)+row(240,120)+T_(100,166,'rectangle','lbl-s')+T_(360,166,'same strips, slid sideways','lbl-s')}</svg>`;
+}
+function logFig(){
+  const cx=130,cy=130,R=100,b=R*2/Math.sqrt(3),h=Math.sqrt(4*R*R-b*b);
+  let g=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.6"/>`;
+  g+=`<rect x="${f1(cx-b/2)}" y="${f1(cy-h/2)}" width="${f1(b)}" height="${f1(h)}" fill="var(--bg2)" stroke="var(--accent)" stroke-width="2"/>`;
+  g+=L_(cx-b/2,cy+h/2,cx+b/2,cy-h/2,1.2,'var(--force)','5 4')+T_(cx+24,cy-6,'D','');
+  g+=T_(cx,cy+h/2+18,'b','')+T_(cx+b/2+10,cy+4,'h','','start');
+  return `<svg class="fig" viewBox="0 0 260 256" style="max-width:260px;margin:10px auto" role="img" aria-label="rectangle cut from a circular log">${g}</svg>`;
+}
+
+const LESSON_FIGS={
+  shade:()=>tFig({plain:true,above:true}),
+  slide:()=>slideFig(),
+  stress:()=>`<div class="twofig">${iteeStress([-72,38],['C (large)','T'],{title:'sagging, M > 0'})}${iteeStress([72,-38],['T (large)','C'],{title:'hogging, M < 0'})}</div>`,
+  orient:()=>`<div class="twofig">${sectionFig({rects:[[0,0,50,150]],yc:75,size:130,maxw:260,ncLabel:'z',title:'on edge',dimsV:[[0,0,150,14,'150']]})}${sectionFig({rects:[[0,0,150,50]],yc:25,size:130,maxw:260,ncLabel:'z',title:'flat',dimsV:[[0,0,50,14,'50']]})}</div>`
+};
+
+const BEAM_H3={L:800,sup:[{x:0,t:'pin'},{x:600,t:'roller'}],pts:[{x:300,label:'F₁ = 40 kN',dx:42},{x:800,label:'F₂ = 15 kN',dx:-42}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:300,t:'D',dy:24},{x:600,t:'B',dx:-18,dy:24},{x:800,t:'C',dx:14,dy:4}],dims:[[0,'300 mm'],[300,'300 mm'],[600,'200 mm'],[800]]};
+const F_H3={pts:[[0,15],[.3,-40],[.6,40],[.8,-15]]};
+const F_V1={pts:[[0,4/3],[3,8/3]],udl:[[0,4,1]]};
+
+const SECS={
+ hw:{eye:'Homework · guided',title:'Week 8 assignment',lede:'The four assigned problems, one decision at a time. Try each step on paper before typing it.'},
+ warm:{eye:'Level 1 · easy',title:'Warm-up: one shape at a time',lede:'Single shapes, so the only thing to get right is the definitions.'},
+ sec:{eye:'Level 2 · medium',title:'Composite sections',lede:'Shapes the homework didn\'t cover: a triangle combined with a rectangle, and a section with a hole.'},
+ str:{eye:'Level 3 · medium',title:'Reading the stress',lede:'Numbers first, then pictures. Which diagram is right says more about your understanding than any formula.'},
+ chk:{eye:'Level 4 · hard',title:'Check, allowable load, design',lede:'The three kinds of strength problem. Two of them reuse the homework beam, so you can see how sensitive its result is.'},
+ vh:{eye:'Level 5 · very hard',title:'Synthesis',lede:'Every link of the chain in one problem, then two design questions with an elegant answer.'}
+};
+const LV={easy:'easy',med:'medium',hard:'hard',vhard:'very hard'};
+
+const STRESS_OPTS=(rightTop)=>{
+  const hog=rightTop>0;
+  return [
+    {t:iteeStress(hog?[72,-38]:[-72,38],hog?['+72','−38']:['−72','+38']),ok:true},
+    {t:iteeStress(hog?[-72,38]:[72,-38],hog?['−72','+38']:['+72','−38']),ok:false},
+    {t:iteeStress(hog?[38,-72]:[-38,72],hog?['+38','−72']:['−38','+72']),ok:false},
+    {t:iteeStress(hog?[55,-55]:[-55,55],hog?['+55','−55']:['−55','+55'],{yc:55}),ok:false}
+  ];
+};
+
+const PROBS=[
+/* ═════════ HOMEWORK ═════════ */
+{id:'h1',sec:'hw',lvl:'med',num:'HW1',title:'T-section: centroid and static moments',
+ text:`Symmetric section with b₁ = 0.3 m, b₂ = 0.6 m, h₁ = 0.5 m, h₂ = 0.14 m. (1) Find y<sub>c</sub>. (2) Find the static moment of the shaded area about z₀. (3) Compare it with the static moment of the area above z₀.<br><span class="note">在图示的对称形截面中，求形心位置 y<sub>c</sub>；求阴影部分对 z₀ 轴的静矩；比较 z₀ 轴以上部分与阴影部分的静矩。</span>`,
+ fig:()=>tFig(),
+ idea:`Split the T into a web and a flange, and measure every y from the bottom edge. Then the shaded area is <b>not</b> just the flange: find out where z₀ cuts the section first.`,
+ steps:[
+  {t:'The two rectangles',q:[{l:'Web area',a:.15,u:'m²',tol:.001},{l:'Flange area',a:.084,u:'m²',tol:.0005},{l:'Web centroid height, from the bottom',a:.39,u:'m',tol:.002},{l:'Flange centroid height, from the bottom',a:.07,u:'m',tol:.001}],
+   h:`The web starts on top of the flange, so its centroid is not simply half of h₁ above the bottom edge.`,
+   r:`Web: 0.3 × 0.5 = <b>0.15 m²</b>, centroid at 0.14 + 0.25 = <b>0.39 m</b>. Flange: 0.6 × 0.14 = <b>0.084 m²</b>, centroid at <b>0.07 m</b>.`},
+  {t:'Part (1): the centroid',q:[{l:'y<sub>c</sub>',a:.27513,u:'m',tol:.001}],
+   h:`ΣA<sub>i</sub>y<sub>i</sub> / ΣA<sub>i</sub>, with the four numbers from step 1.`,
+   r:`y<sub>c</sub> = (0.15 × 0.39 + 0.084 × 0.07)/(0.15 + 0.084) = (0.0585 + 0.00588)/0.234 = 0.06438/0.234 = <b>0.275 m</b>.`},
+  {t:'Where does z₀ cut the section?',choice:{o:[{t:'Through the web, so the shaded area is the flange plus a piece of web',ok:true},{t:'Exactly along the top of the flange',ok:false},{t:'Through the flange',ok:false}],
+   why:`y<sub>c</sub> = 0.275 m is more than h₂ = 0.14 m, so z₀ is <b>inside the web</b>. The shaded area is the whole flange <b>plus</b> a strip of web 0.275 − 0.14 = 0.135 m tall.`}},
+  {t:'Part (2): static moment of the shaded area',p:`Use sizes here. Every part of the shaded area is on the same side of z₀, so the two contributions add.`,q:[{l:'Height of the web piece',a:.13513,u:'m',tol:.001},{l:'Area of the web piece',a:.04054,u:'m²',tol:.0004},{l:'Distance from z₀ to the web piece\'s centroid',a:.06756,u:'m',tol:.001},{l:'Distance from z₀ to the flange\'s centroid',a:.20513,u:'m',tol:.001},{l:'|S| of the shaded area',a:1.997,u:'× 10⁻² m³',tol:.02}],
+   h:`Each contribution is area × the distance from z₀ to <b>that piece's own</b> centroid. The web piece touches z₀, so its centroid is halfway up the piece.`,
+   r:`Web piece: 0.3 × 0.1351 = 0.0405 m², arm 0.0676 m, so 0.00274 m³. Flange: 0.084 m², arm 0.2751 − 0.07 = 0.2051 m, so 0.01723 m³. Total <b>|S| = 0.01997 ≈ 2.0 × 10⁻² m³</b>. With y upward from z₀, the shaded area is below the axis, so S = <b>−2.0 × 10⁻² m³</b>.`},
+  {t:'Part (3): the area above z₀',q:[{l:'Height of the part above z₀',a:.36487,u:'m',tol:.001},{l:'|S| of the part above',a:1.997,u:'× 10⁻² m³',tol:.02}],
+   h:`Total height is h₁ + h₂. It's one rectangle, and its arm is half its height.`,
+   r:`Height 0.64 − 0.2751 = 0.3649 m. S = 0.3 × 0.3649 × 0.3649/2 = <b>0.01997 ≈ 2.0 × 10⁻² m³</b>, the same size as the shaded area.`},
+  {t:'So how are the two static moments related?',choice:{o:[{t:'Equal in size and opposite in sign',ok:true},{t:'Equal in size and the same sign',ok:false},{t:'Different sizes, because the areas are different',ok:false}],
+   why:`z₀ passes through the centroid, so the static moment of the <b>whole</b> section about it is 0. The two parts therefore cancel: <b>|S| is equal and the signs are opposite</b>, even though the areas are 0.1245 m² and 0.1095 m². Which one is positive depends only on which way you point the y axis. That gives you a quick check: the upper rectangle is much easier to calculate than the shaded T.`}},
+  {t:'See both parts',p:``,diagram:true,r:()=>tFig({above:true})}
+ ]},
+
+{id:'h2',sec:'hw',lvl:'med',num:'HW2',title:'Triangle: I about z₀ and about z₁',
+ text:`Find the moments of inertia of the triangle about z₁ (along the base) and about the centroidal axis z₀ (parallel to the base), in terms of b and h.<br><span class="note">求图示三角形截面对过形心的 z₀ 轴（平行于底边）与 z₁ 轴的惯性矩。</span>`,
+ fig:()=>triFig(),
+ idea:`Start with the axis that makes the integral easy: the base z₁, where y runs from 0 to h. Then use parallel axes to reach the centroid. The apex isn't above the middle of the base here, so ask yourself whether that matters.`,
+ steps:[
+  {t:'Strip width at height y above the base',choice:{o:[{t:'w(y) = b(1 − y/h)',ok:true},{t:'w(y) = b·y/h',ok:false},{t:'w(y) = b/2',ok:false}],
+   why:`Check the two ends: at y = 0 the width must be b, and at the apex y = h it must be 0. It's linear between them, so <b>w = b(1 − y/h)</b>. This holds for any triangle, wherever the apex is.`}},
+  {t:'I about the base z₁',p:`Write your answer as a multiple of bh³. Fractions such as 1/5 are accepted.`,q:[{l:'I<sub>z₁</sub> ÷ bh³',a:1/12,u:'',tol:.0005}],
+   h:`I = ∫₀<sup>h</sup> y²·w(y) dy. Expand the bracket first, and you have two simple powers of y to integrate.`,
+   r:`I<sub>z₁</sub> = ∫₀<sup>h</sup> y²·b(1 − y/h) dy = b[y³/3 − y⁴/(4h)]₀<sup>h</sup> = b(h³/3 − h³/4) = <b>bh³/12</b>.`},
+  {t:'Where is the centroid?',q:[{l:'Area ÷ bh',a:.5,u:'',tol:.003},{l:'Distance from the base to C, ÷ h',a:1/3,u:'',tol:.003}],
+   h:`S<sub>z₁</sub> = ∫₀<sup>h</sup> y·w(y) dy gives the static moment. Divide it by the area.`,
+   r:`A = <b>bh/2</b>. S<sub>z₁</sub> = b(h²/2 − h²/3) = bh²/6, so y<sub>c</sub> = (bh²/6)/(bh/2) = <b>h/3</b> above the base.`},
+  {t:'I about the centroid z₀',q:[{l:'I<sub>z₀</sub> ÷ bh³',a:1/36,u:'',tol:.0003}],
+   h:`I<sub>z₁</sub> = I<sub>z₀</sub> + a²A. Which of these is the one you know? And should the centroidal value come out larger or smaller?`,
+   r:`I<sub>z₀</sub> = I<sub>z₁</sub> − a²A = bh³/12 − (h/3)²(bh/2) = bh³/12 − bh³/18 = 3bh³/36 − 2bh³/36 = <b>bh³/36</b>.`},
+  {t:'If the apex moved sideways (same b and h), I about z₀ would…',choice:{o:[{t:'stay exactly the same',ok:true},{t:'increase',ok:false},{t:'decrease',ok:false}],
+   why:`Moving the apex only slides the horizontal strips sideways. Their widths and heights don't change, so ∫y²dA doesn't change. <b>The formulas hold for any triangle</b>, which is why this slanted one gives the same result as an isosceles one.`}}
+ ]},
+
+{id:'h3',sec:'hw',lvl:'hard',num:'HW3',title:'Overhanging beam with an inverted T: check the strength',
+ text:`F₁ = 40 kN, F₂ = 15 kN, y₁ = 72 mm, y₂ = 38 mm, z is the neutral axis, I<sub>z</sub> = 5.73 × 10⁶ mm⁴, [σ<sub>t</sub>] = 45 MPa (tension), [σ<sub>c</sub>] = 175 MPa (compression). Check the strength of the beam.<br><span class="note">Note: the English text says "cantilever", but the Chinese 伸臂梁 and the figure show a beam on two supports with an overhang. In the problem, [σ₁] is the tension limit and [σ₂] the compression limit.</span>`,
+ fig:()=>beamFig(BEAM_H3)+iteeDim(false),
+ idea:`The section is unsymmetric and the two limits differ, so check <b>both</b> the largest sagging and the largest hogging moment, top and bottom. That's four stresses (lesson Part 6).`,
+ steps:[
+  {t:'Reactions',q:[{l:'R<sub>B</sub> (up +)',a:40,u:'kN'},{l:'R<sub>A</sub> (up +)',a:15,u:'kN'}],
+   h:`Take moments about A, so R<sub>A</sub> drops out. Then ΣY.`,
+   r:`ΣM<sub>A</sub> = 0: R<sub>B</sub> × 600 = 40 × 300 + 15 × 800 = 24 000, so <b>R<sub>B</sub> = 40 kN</b>. ΣY: R<sub>A</sub> = 55 − 40 = <b>15 kN</b>.`},
+  {t:'The two critical moments',p:`Sagging +, hogging −.`,q:[{l:'M<sub>D</sub>',a:4.5,u:'kN·m'},{l:'M<sub>B</sub>',a:-3,u:'kN·m'}],
+   h:`For M<sub>B</sub>, look at the short overhang on the right: only one force acts there.`,
+   r:`From the left: M<sub>D</sub> = 15 × 0.3 = <b>+4.5 kN·m</b> (sagging). From the right: M<sub>B</sub> = −15 × 0.2 = <b>−3 kN·m</b> (hogging).`},
+  {t:'Draw the diagrams, then compare',p:``,diagram:true,
+   r:()=>diag(F_H3,.8,{labels:[[.15,'Fs','15'],[.45,'Fs','−25'],[.7,'Fs','15'],[.3,'M','4.5'],[.6,'M','−3']],ticks:[[0,'A'],[.3,'D'],[.6,'B'],[.8,'C']]})},
+  {t:'Section D (sagging: bottom in tension)',q:[{l:'σ<sub>t</sub> at the bottom',a:29.84,u:'MPa',tol:.3},{l:'σ<sub>c</sub> at the top',a:56.54,u:'MPa',tol:.4}],
+   h:`Convert M to N·mm. Which distance goes with the bottom fibre, and which with the top?`,
+   r:`Bottom (y₂ = 38): σ<sub>t</sub> = 4.5×10⁶ × 38 / 5.73×10⁶ = <b>29.8 MPa</b>. Top (y₁ = 72): σ<sub>c</sub> = 4.5×10⁶ × 72 / 5.73×10⁶ = <b>56.5 MPa</b>.`},
+  {t:'Section B (hogging: top in tension)',q:[{l:'σ<sub>t</sub> at the top',a:37.70,u:'MPa',tol:.3},{l:'σ<sub>c</sub> at the bottom',a:19.90,u:'MPa',tol:.3}],
+   h:`Same section, but which side is in tension has flipped. Pair each fibre with its own distance.`,
+   r:`Top (72): σ<sub>t</sub> = 3×10⁶ × 72 / 5.73×10⁶ = <b>37.7 MPa</b>. Bottom (38): σ<sub>c</sub> = 3×10⁶ × 38 / 5.73×10⁶ = <b>19.9 MPa</b>.`},
+  {t:'Where is the largest tension in the beam?',choice:{o:[{t:'At B, top fibre, even though |M| is smaller there',ok:true},{t:'At D, bottom fibre, because |M| is largest there',ok:false}],
+   why:`37.7 MPa at B beats 29.8 MPa at D. At B the tension is on the <b>far</b> fibre (72 mm), and at D on the <b>near</b> one (38 mm). That beats the smaller moment: 3 × 72 = 216 against 4.5 × 38 = 171.`}},
+  {t:'Verdict',q:[{l:'Largest tensile stress',a:37.70,u:'MPa',tol:.3},{l:'Largest compressive stress',a:56.54,u:'MPa',tol:.4}],
+   h:`Pick the largest of each type from steps 4 and 5, and compare with its own limit.`,
+   r:`σ<sub>t,max</sub> = 37.7 MPa ≤ [σ<sub>t</sub>] = 45 MPa ✓. σ<sub>c,max</sub> = 56.5 MPa ≤ [σ<sub>c</sub>] = 175 MPa ✓. <b>The beam is safe.</b> Tension governs: it uses 84 % of its limit, while compression uses only 32 %.`},
+  {t:'See the two stress distributions',p:``,diagram:true,r:()=>`<div class="twofig">${iteeStress([-56.54,29.84],['−56.5','+29.8'],{title:'section D (sagging)'})}${iteeStress([37.70,-19.90],['+37.7','−19.9'],{title:'section B (hogging)'})}</div>`}
+ ]},
+
+{id:'h4',sec:'hw',lvl:'med',num:'HW4',title:'The same plank two ways: q<sub>a</sub> / q<sub>b</sub>',
+ text:`A timber beam with a 20 cm × 40 cm rectangular section is simply supported over span l under uniform load q. With 40 cm as the depth the allowable load is q<sub>a</sub>, and with 20 cm as the depth it is q<sub>b</sub>. Based on bending stress, find q<sub>a</sub>/q<sub>b</sub>.<br><span class="note">将 20 cm × 40 cm 矩形木梁用于图示结构，从弯曲正应力强度出发，求 q<sub>a</sub>/q<sub>b</sub>。</span>`,
+ fig:()=>beamFig({L:6,sup:[{x:0,t:'pin'},{x:6,t:'roller'}],udl:[{a:0,b:6,label:'q'}],dims:[[0,'l'],[6]]})+`<div class="twofig">${sectionFig({rects:[[0,0,20,40]],yc:20,size:120,maxw:260,ncLabel:'z',title:'case a: depth 40 cm',dimsV:[[0,0,40,14,'40']]})}${sectionFig({rects:[[0,0,40,20]],yc:10,size:120,maxw:260,ncLabel:'z',title:'case b: depth 20 cm',dimsV:[[0,0,20,14,'20']]})}</div>`,
+ idea:`The material, span and load pattern are the same in both cases. So write the strength condition once, in general, and see what is left in the ratio.`,
+ steps:[
+  {t:'Largest moment',p:`Write M<sub>max</sub> as a multiple of ql².`,q:[{l:'M<sub>max</sub> ÷ ql²',a:.125,u:'',tol:.001}],
+   h:`The standard result for a simply supported beam under full uniform load, at midspan.`,
+   r:`M<sub>max</sub> = <b>ql²/8</b>, at midspan.`},
+  {t:'Section moduli',q:[{l:'W<sub>a</sub> (depth 40)',a:5333.3,u:'cm³',tol:30},{l:'W<sub>b</sub> (depth 20)',a:2666.7,u:'cm³',tol:15}],
+   h:`W = bh²/6, where h is the depth in the direction of the load.`,
+   r:`W<sub>a</sub> = 20 × 40²/6 = <b>5333 cm³</b>. W<sub>b</sub> = 40 × 20²/6 = <b>2667 cm³</b>.`},
+  {t:'How does the allowable load depend on W?',choice:{o:[{t:'q is proportional to W',ok:true},{t:'q is proportional to 1/W',ok:false},{t:'q does not depend on W',ok:false}],
+   why:`Strength condition: ql²/(8W) ≤ [σ], so q<sub>allow</sub> = 8[σ]W/l². Only W differs between the two cases, so <b>q ∝ W</b>.`}},
+  {t:'The ratio',q:[{l:'q<sub>a</sub> / q<sub>b</sub>',a:2,u:'',tol:.02}],
+   h:`[σ], l and the 8 are all the same, so they cancel.`,
+   r:`q<sub>a</sub>/q<sub>b</sub> = W<sub>a</sub>/W<sub>b</sub> = 5333/2667 = <b>2</b>. In general, for the same rectangle, the ratio is (long side)/(short side).`}
+ ]},
+
+/* ═════════ L1 ═════════ */
+{id:'e1',sec:'warm',lvl:'easy',num:'E1',title:'Static moment of a rectangle about three axes',
+ text:`A rectangle 200 mm wide and 300 mm tall.`,
+ fig:()=>sectionFig({rects:[[0,0,200,300]],yc:150,size:170,maxw:340,ncLabel:'z (centroid)',dimsH:[[0,200,300,6,'200']],dimsV:[[0,0,300,14,'300']]}),
+ idea:`S = area × the distance from the axis to that area's own centroid.`,
+ steps:[
+  {t:'Whole rectangle',q:[{l:'S about the bottom edge',a:9,u:'× 10⁶ mm³'},{l:'S about the centroid axis z',a:0,u:'× 10⁶ mm³'}],
+   h:`How far is the rectangle's centroid from each axis?`,r:`About the bottom edge: 60 000 × 150 = <b>9 × 10⁶ mm³</b>. About z the distance is 0, so S = <b>0</b>.`},
+  {t:'Top half only, about z',q:[{l:'|S|',a:2.25,u:'× 10⁶ mm³'}],
+   h:`The top half has its own, smaller, area and its own centroid.`,r:`200 × 150 = 30 000 mm², arm 75 mm: <b>2.25 × 10⁶ mm³</b>. The bottom half gives the same size with the opposite sign.`}
+ ]},
+{id:'e2',sec:'warm',lvl:'easy',num:'E2',title:'A triangle about three parallel axes',
+ text:`A triangle with b = 120 mm and h = 90 mm. Use what you found in HW2.`,
+ fig:()=>polySec({pts:[[0,0],[120,0],[40,90]],yc:30,size:190,zLabel:'z₀',dimsH:[[0,120,0,-22,'120']],dimsV:[[0,0,90,14,'90']]}),
+ idea:`Remember the warning in Part 4: the parallel-axis theorem always has one end at the centroid.`,
+ steps:[
+  {t:'The two standard axes',q:[{l:'I about the centroid axis z₀',a:2.43,u:'× 10⁶ mm⁴',tol:.02},{l:'I about the base',a:7.29,u:'× 10⁶ mm⁴',tol:.05}],
+   h:`bh³/36 and bh³/12.`,r:`120 × 90³/36 = <b>2.43 × 10⁶</b>. 120 × 90³/12 = <b>7.29 × 10⁶ mm⁴</b>.`},
+  {t:'An axis through the apex, parallel to the base',q:[{l:'I about the apex axis',a:21.87,u:'× 10⁶ mm⁴',tol:.15}],
+   h:`Start from the centroid axis. How far is the apex from it?`,
+   r:`The apex is 2h/3 = 60 mm from z₀. I = 2.43×10⁶ + 60² × 5400 = 2.43×10⁶ + 19.44×10⁶ = <b>21.87 × 10⁶ mm⁴</b>, which is bh³/4. Jumping from the base instead, 7.29×10⁶ + 90² × 5400 = 51.03×10⁶, is <b>wrong</b>, because the base isn't a centroidal axis.`}
+ ]},
+
+/* ═════════ L2 ═════════ */
+{id:'s1',sec:'sec',lvl:'med',num:'S1',title:'House-shaped section: rectangle + triangle',
+ text:`A 120 × 80 mm rectangle with an isosceles triangle on top (base 120 mm, height 60 mm). Total height 140 mm.`,
+ fig:()=>polySec({pts:[[0,0],[120,0],[120,80],[60,140],[0,80]],size:190,dimsH:[[0,120,0,-22,'120']],dimsV:[[0,0,80,14,'80'],[0,80,140,14,'60']]}),
+ idea:`Same recipe as a T, but the top part uses the triangle's results: centroid h/3 from its base, and own I = bh³/36.`,
+ steps:[
+  {t:'Centroid',q:[{l:'Rectangle area',a:9600,u:'mm²'},{l:'Triangle area',a:3600,u:'mm²'},{l:'Triangle centroid, from the bottom',a:100,u:'mm'},{l:'y<sub>c</sub>',a:56.36,u:'mm',tol:.3}],
+   h:`The triangle's base is at height 80, and the centroid is one third of its height above that base.`,
+   r:`y<sub>tri</sub> = 80 + 60/3 = <b>100 mm</b>. y<sub>c</sub> = (9600 × 40 + 3600 × 100)/13 200 = 744 000/13 200 = <b>56.36 mm</b>.`},
+  {t:'Moment of inertia',q:[{l:'Rectangle: own I + a²A',a:7.691,u:'× 10⁶ mm⁴',tol:.05},{l:'Triangle: own I + a²A',a:7.575,u:'× 10⁶ mm⁴',tol:.05},{l:'I<sub>z</sub>',a:15.265,u:'× 10⁶ mm⁴',tol:.1}],
+   h:`a is the distance from each part's centroid to the common centroid at 56.36 mm.`,
+   r:`Rectangle: 120 × 80³/12 = 5.12×10⁶, plus 9600 × 16.36² = 2.57×10⁶: <b>7.69 × 10⁶</b>. Triangle: 120 × 60³/36 = 0.72×10⁶, plus 3600 × 43.64² = 6.85×10⁶: <b>7.57 × 10⁶</b>. I<sub>z</sub> = <b>15.27 × 10⁶ mm⁴</b>.`},
+  {t:'Section moduli',q:[{l:'W<sub>top</sub>',a:182.5,u:'× 10³ mm³',tol:1.5},{l:'W<sub>bottom</sub>',a:270.8,u:'× 10³ mm³',tol:2}],
+   h:`The top fibre is at the tip of the triangle. What's its distance from the neutral axis?`,
+   r:`y<sub>top</sub> = 140 − 56.36 = 83.64 mm, so W<sub>top</sub> = <b>182.5 × 10³</b>. y<sub>bottom</sub> = 56.36 mm, so W<sub>bottom</sub> = <b>270.8 × 10³ mm³</b>. The narrow tip is the critical fibre, even though there's hardly any material there.`}
+ ]},
+{id:'s2',sec:'sec',lvl:'med',num:'S2',title:'A section with an off-centre opening',
+ text:`A 200 × 300 mm rectangle with a 100 mm wide × 120 mm tall opening, centred left to right, with the opening's centre 200 mm above the bottom edge.`,
+ fig:()=>polySec({pts:[[0,0],[200,0],[200,300],[0,300]],hole:[50,140,100,120],size:190,dimsH:[[0,200,0,-22,'200'],[50,150,140,8,'100']],dimsV:[[0,0,300,14,'300']],dimsR:[[140,260,16,'120']]}),
+ idea:`Treat the opening as a <b>negative area</b>, in both the centroid and in I. Each part still has its own a², measured to the <b>new</b> centroid.`,
+ steps:[
+  {t:'Before calculating: the centroid will move…',choice:{o:[{t:'down, because material was removed above mid-height',ok:true},{t:'up, toward the opening',ok:false},{t:'nowhere, the rectangle is still symmetric',ok:false}],
+   why:`Removing area above the middle leaves more below it, so the balance point moves <b>down</b>, away from the opening.`}},
+  {t:'Centroid',q:[{l:'Net area',a:48000,u:'mm²'},{l:'y<sub>c</sub>',a:137.5,u:'mm',tol:.5}],
+   h:`ΣAy with the opening counted as −12 000 mm² at y = 200.`,
+   r:`A = 60 000 − 12 000 = <b>48 000 mm²</b>. y<sub>c</sub> = (60 000 × 150 − 12 000 × 200)/48 000 = 6.6×10⁶/48 000 = <b>137.5 mm</b>.`},
+  {t:'Moment of inertia',q:[{l:'Full rectangle about the new axis',a:459.375,u:'× 10⁶ mm⁴',tol:2},{l:'Opening about the new axis',a:61.275,u:'× 10⁶ mm⁴',tol:.5},{l:'I<sub>z</sub>',a:398.1,u:'× 10⁶ mm⁴',tol:2}],
+   h:`Don't reuse the rectangle's bh³/12 alone: its own centroid is no longer on the axis.`,
+   r:`Rectangle: 200 × 300³/12 = 450×10⁶, plus 60 000 × 12.5² = 9.375×10⁶: <b>459.4 × 10⁶</b>. Opening: 100 × 120³/12 = 14.4×10⁶, plus 12 000 × 62.5² = 46.875×10⁶: <b>61.3 × 10⁶</b>. Subtract: <b>398.1 × 10⁶ mm⁴</b>. The opening removes 20 % of the area, but I only falls from 450 × 10⁶ to 398.1 × 10⁶, about 12 %.`}
+ ]},
+
+/* ═════════ L3 ═════════ */
+{id:'b1',sec:'str',lvl:'med',num:'B1',title:'A deep rectangular section',
+ text:`A 150 mm wide × 300 mm deep section carries a sagging moment M = 45 kN·m.`,
+ fig:()=>sectionFig({rects:[[0,0,150,300]],yc:150,size:170,maxw:340,ncLabel:'z',dimsH:[[0,150,300,6,'150']],dimsV:[[0,0,300,14,'300']]}),
+ idea:`σ = My/I. Keep N and mm throughout, and decide tension or compression from the sign of M.`,
+ steps:[
+  {t:'Section properties',q:[{l:'I<sub>z</sub>',a:337.5,u:'× 10⁶ mm⁴',tol:2},{l:'W<sub>z</sub>',a:2.25,u:'× 10⁶ mm³',tol:.02}],h:`bh³/12, then divide by the distance to the outer fibre.`,r:`I = 150 × 300³/12 = <b>337.5 × 10⁶ mm⁴</b>. W = I/150 = <b>2.25 × 10⁶ mm³</b>.`},
+  {t:'Stresses',q:[{l:'σ<sub>max</sub>',a:20,u:'MPa'},{l:'|σ| 75 mm above the neutral axis',a:10,u:'MPa'}],h:`The stress varies linearly. How far out is 75 mm, as a fraction of the way to the top?`,r:`σ<sub>max</sub> = 45×10⁶ / 2.25×10⁶ = <b>20 MPa</b>. At 75 mm, halfway out: <b>10 MPa</b>.`},
+  {t:'The point 75 mm above the neutral axis is in…',choice:{o:[{t:'compression',ok:true},{t:'tension',ok:false},{t:'neither',ok:false}],why:`Sagging puts the bottom in tension and the top in compression, so a point above the axis is in <b>compression</b>.`}}
+ ]},
+{id:'b2',sec:'str',lvl:'med',num:'B2',title:'Pick the correct stress diagram',
+ text:`An inverted T (y₁ = 72 mm above the neutral axis, y₂ = 38 mm below it). The numbers are in proportion to distance from the axis, and tension is drawn to the right as +.`,
+ idea:`Three things to check on every diagram: is the zero at the <b>centroid</b>, is the <b>far fibre</b> largest, and is the tension on the <b>correct side</b>?`,
+ steps:[
+  {t:'The section carries a <b>hogging</b> moment. Which diagram is correct?',choice:{o:STRESS_OPTS(1),
+   why:`Hogging puts the <b>top in tension</b>. The neutral axis is at the centroid, not at mid-height, and the top fibre is farther from it, so the top has the larger stress: +72 at the top and −38 at the bottom.`}},
+  {t:'Now it carries a <b>sagging</b> moment. Which diagram is correct?',choice:{o:STRESS_OPTS(-1),
+   why:`Sagging puts the <b>bottom in tension</b>. The largest stress is still at the far top fibre, but it's now compression: −72 at the top and +38 at the bottom.`}}
+ ]},
+
+/* ═════════ L4 ═════════ */
+{id:'c1',sec:'chk',lvl:'hard',num:'C1',title:'What if HW3 was installed upside down?',
+ text:`Same beam, same loads and same limits as HW3, but the T is flipped so that the flange is on top: y<sub>top</sub> = 38 mm and y<sub>bottom</sub> = 72 mm. I<sub>z</sub> doesn't change.`,
+ fig:()=>beamFig(BEAM_H3)+iteeDim(true),
+ idea:`The moments don't change. Only the pairing between tension and distance does.`,
+ steps:[
+  {t:'New stresses',q:[{l:'Section D: bottom tension',a:56.54,u:'MPa',tol:.4},{l:'Section D: top compression',a:29.84,u:'MPa',tol:.3},{l:'Section B: top tension',a:19.90,u:'MPa',tol:.3},{l:'Section B: bottom compression',a:37.70,u:'MPa',tol:.3}],
+   h:`M<sub>D</sub> = +4.5 and M<sub>B</sub> = −3 kN·m as before. Only the distances swap.`,
+   r:`D: 4.5×10⁶ × 72/5.73×10⁶ = <b>56.5 MPa</b> tension at the bottom, and 4.5×10⁶ × 38/5.73×10⁶ = <b>29.8 MPa</b> compression at the top. B: 3×10⁶ × 38/5.73×10⁶ = <b>19.9 MPa</b> tension at the top, and 3×10⁶ × 72/5.73×10⁶ = <b>37.7 MPa</b> compression at the bottom.`},
+  {t:'Verdict for the flipped beam',choice:{o:[{t:'Not safe: 56.5 MPa exceeds the 45 MPa tension limit',ok:true},{t:'Safe: all four values are below 175 MPa',ok:false}],
+   why:`Tension must be compared with [σ<sub>t</sub>] = 45 MPa: 56.5 &gt; 45, so it <b>fails</b>. The original direction passed with 37.7 MPa. Orientation decided the result: with a material weak in tension, put the wide part on the tension side of the <b>largest</b> moment, so the tensile fibre there is the near one.`}}
+ ]},
+{id:'c2',sec:'chk',lvl:'hard',num:'C2',title:'How large can F₂ get?',
+ text:`Same beam and section as HW3. Keep F₁ = 40 kN and increase F₂. Find the largest F₂ that is safe.`,
+ fig:()=>beamFig({L:800,sup:[{x:0,t:'pin'},{x:600,t:'roller'}],pts:[{x:300,label:'F₁ = 40 kN',dx:42},{x:800,label:'F₂ = ?',dx:-30}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:300,t:'D',dy:24},{x:600,t:'B',dx:-18,dy:24},{x:800,t:'C',dx:14,dy:4}],dims:[[0,'300 mm'],[300,'300 mm'],[600,'200 mm'],[800]]}),
+ idea:`Write each moment in terms of F₂. HW3 told you which fibre was closest to its limit, but check that it stays the governing one.`,
+ steps:[
+  {t:'Moments in terms of F₂',p:`Answer the coefficient of F₂ (with its sign), in kN·m per kN.`,q:[{l:'M<sub>B</sub> = □ × F₂',a:-.2,u:'',tol:.002},{l:'R<sub>A</sub> = 20 + □ × F₂',a:-1/3,u:'',tol:.004}],
+   h:`M<sub>B</sub> from the overhang side. For R<sub>A</sub>, take moments about B.`,
+   r:`M<sub>B</sub> = <b>−0.2F₂</b>. ΣM<sub>B</sub> = 0: R<sub>A</sub> × 600 = 40 × 300 − F₂ × 200, so R<sub>A</sub> = 20 − F₂/3, a coefficient of <b>−1/3</b>.`},
+  {t:'The tension limit at B',q:[{l:'F₂,max',a:17.906,u:'kN',tol:.1}],
+   h:`Top fibre at B: |M<sub>B</sub>|·y₁/I<sub>z</sub> = 45 MPa. Solve for F₂.`,
+   r:`0.2F₂ × 10⁶ × 72 / 5.73×10⁶ = 45, so F₂ = 45 × 5.73×10⁶ / (0.2 × 10⁶ × 72) = <b>17.9 kN</b>.`},
+  {t:'Confirm the other three stresses at F₂ = 17.9 kN',q:[{l:'M<sub>D</sub>',a:4.209,u:'kN·m',tol:.03},{l:'D: top compression',a:52.89,u:'MPa',tol:.4},{l:'D: bottom tension',a:27.92,u:'MPa',tol:.3},{l:'B: bottom compression',a:23.75,u:'MPa',tol:.3}],
+   h:`M<sub>D</sub> = 0.3 × R<sub>A</sub>, using the R<sub>A</sub> expression from step 1.`,
+   r:`R<sub>A</sub> = 20 − 17.906/3 = 14.03 kN, so M<sub>D</sub> = <b>4.21 kN·m</b>. D: top compression <b>52.9 MPa</b>, bottom tension <b>27.9 MPa</b>. B: bottom compression <b>23.8 MPa</b>. All are within limits, so <b>F₂,max = 17.9 kN</b>.`},
+  {t:'As F₂ grows, the sagging moment at D…',choice:{o:[{t:'falls, because F₂ levers up the left span',ok:true},{t:'rises, because there is more load on the beam',ok:false}],
+   why:`M<sub>D</sub> = 0.3(20 − F₂/3) = 6 − 0.1F₂. A load on the overhang pivots the beam about B and lifts span AB. It <b>helps</b> D and <b>hurts</b> B. Adding load doesn't always raise every internal force.`}}
+ ]},
+{id:'c3',sec:'chk',lvl:'hard',num:'C3',title:'A cantilever: design, then allowable load',
+ text:`A timber cantilever, 2 m long, carries a tip load P = 12 kN. [σ] = 12 MPa. The depth is fixed at h = 300 mm by the architecture.`,
+ fig:()=>beamFig({L:2,sup:[{x:0,t:'fixL'}],pts:[{x:2,label:'P',dx:12}],letters:[{x:0,t:'A',dx:-20,dy:44},{x:2,t:'B',dx:14,dy:4}],dims:[[0,'2 m'],[2]]}),
+ idea:`Rectangle and one limit, so only |M|<sub>max</sub> matters. First run the strength condition forwards, then backwards.`,
+ steps:[
+  {t:'Design: find the width',q:[{l:'|M|<sub>max</sub>',a:24,u:'kN·m'},{l:'W needed',a:2,u:'× 10⁶ mm³',tol:.02},{l:'b<sub>min</sub>',a:133.33,u:'mm',tol:.8}],
+   h:`The largest moment of a tip-loaded cantilever is at the wall. W = bh²/6, with h known.`,
+   r:`|M|<sub>max</sub> = 12 × 2 = <b>24 kN·m</b>. W ≥ 24×10⁶/12 = <b>2 × 10⁶ mm³</b>. b × 300²/6 = 15 000b ≥ 2×10⁶, so b ≥ <b>133.3 mm</b>.`},
+  {t:'Allowable load: the workshop supplies b = 150 mm',q:[{l:'W',a:2.25,u:'× 10⁶ mm³',tol:.02},{l:'P<sub>allow</sub>',a:13.5,u:'kN',tol:.1}],
+   h:`M<sub>allow</sub> = [σ]·W, and M = P × 2 m.`,
+   r:`W = 150 × 300²/6 = <b>2.25 × 10⁶ mm³</b>. M<sub>allow</sub> = 12 × 2.25×10⁶ = 27 kN·m, so P = 27/2 = <b>13.5 kN</b>.`},
+  {t:'At the wall, which face is in tension?',choice:{o:[{t:'Top',ok:true},{t:'Bottom',ok:false}],why:`A downward tip load makes the cantilever curve downward: hogging, with the <b>top in tension</b>. The M diagram is drawn on the top side.`}}
+ ]},
+
+/* ═════════ L5 ═════════ */
+{id:'v1',sec:'vh',lvl:'vhard',num:'V1',title:'The whole chain: section → beam → q<sub>max</sub>',
+ text:`A cast-iron beam: A is a pin, B a roller, AB = 3 m, overhang BC = 1 m, uniform load q over all 4 m. Inverted T: flange 200 × 30 mm at the bottom, web 30 × 170 mm above it (total height 200 mm). [σ<sub>t</sub>] = 40 MPa, [σ<sub>c</sub>] = 120 MPa. Find q<sub>max</sub>.`,
+ fig:()=>beamFig({L:4,sup:[{x:0,t:'pin'},{x:3,t:'roller'}],udl:[{a:0,b:4,label:'q'}],letters:[{x:0,t:'A',dx:-14,dy:4},{x:3,t:'B',dx:-18,dy:24},{x:4,t:'C',dx:14,dy:4}],dims:[[0,'3 m'],[3,'1 m'],[4]]})+sectionFig({rects:[[0,0,200,30],[85,30,30,170]],size:170,maxw:340,dimsH:[[0,200,0,-16,'200']],dimsV:[[0,0,30,14,'30'],[0,30,200,14,'170']]}),
+ idea:`Everything scales with q, so calculate each stress <b>per unit of q</b>. Four stresses give four limits on q, and the smallest one is the answer.`,
+ steps:[
+  {t:'Section',q:[{l:'y<sub>bottom</sub> (centroid from the bottom)',a:60.95,u:'mm',tol:.3},{l:'y<sub>top</sub>',a:139.05,u:'mm',tol:.3},{l:'I<sub>z</sub>',a:40.30,u:'× 10⁶ mm⁴',tol:.2}],
+   h:`The web centroid is at 30 + 85 = 115 mm from the bottom.`,
+   r:`Flange: 6000 mm², y = 15. Web: 5100 mm², y = 115. y<sub>c</sub> = 676 500/11 100 = <b>60.95 mm</b>, so y<sub>top</sub> = <b>139.05 mm</b>. I = (0.45 + 12.67) + (12.28 + 14.90) = <b>40.30 × 10⁶ mm⁴</b> (own I + a²A for each).`},
+  {t:'Moments, per unit of q',q:[{l:'R<sub>A</sub> ÷ q',a:4/3,u:'m',tol:.01},{l:'Largest sagging M ÷ q',a:8/9,u:'m²',tol:.008},{l:'M<sub>B</sub> ÷ q',a:-.5,u:'m²',tol:.005}],
+   h:`Moments about B give R<sub>A</sub>. The sagging peak is where F<sub>s</sub> = 0.`,
+   r:`The resultant 4q acts at x = 2 m, which is 1 m left of B. ΣM<sub>B</sub> = 0: R<sub>A</sub> × 3 = 4q × 1, so R<sub>A</sub> = 4q/3 = <b>1.333q</b>. F<sub>s</sub> = 0 at x = 4/3 m, and M = R<sub>A</sub>²/(2q) = <b>0.889q</b>. M<sub>B</sub> = −q × 1 × 0.5 = <b>−0.5q</b>.`},
+  {t:'Draw the moment diagram (q = 1), then compare',p:``,diagram:true,r:()=>diag(F_V1,4,{only:'M',labels:[[4/3,'M','0.889q'],[3,'M','−0.5q']],ticks:[[0,'A'],[4/3,'1.33'],[3,'B'],[4,'C']]})},
+  {t:'Four stresses, in MPa per kN/m of q',q:[{l:'Sagging: bottom tension',a:1.344,u:'',tol:.012},{l:'Sagging: top compression',a:3.067,u:'',tol:.025},{l:'Hogging: top tension',a:1.725,u:'',tol:.015},{l:'Hogging: bottom compression',a:.756,u:'',tol:.008}],
+   h:`Example: the sagging bottom tension is 0.889 × 10⁶ × 60.95 / 40.30×10⁶.`,
+   r:`Sagging (M = 0.889q): bottom <b>1.344q</b> tension, top <b>3.067q</b> compression. Hogging (M = 0.5q): top <b>1.725q</b> tension, bottom <b>0.756q</b> compression.`},
+  {t:'The answer',q:[{l:'q<sub>max</sub>',a:23.19,u:'kN/m',tol:.15}],
+   h:`Divide each limit by its coefficient. Which of the four values of q is the one that counts?`,
+   r:`40/1.344 = 29.8. 120/3.067 = 39.1. 40/1.725 = <b>23.2</b>. 120/0.756 = 158.7. The smallest controls: <b>q<sub>max</sub> = 23.2 kN/m</b>, set by tension at the top of support B.`},
+  {t:'The same beam with the T flipped (flange on top) would carry…',q:[{l:'q<sub>max</sub> flipped',a:13.04,u:'kN/m',tol:.1}],
+   h:`The distances swap. So sagging bottom tension now uses 139.05 mm.`,
+   r:`Sagging bottom tension becomes 0.889 × 10⁶ × 139.05/40.30×10⁶ = 3.067q, so q = 40/3.067 = <b>13.0 kN/m</b>. This one governs, and the flipped beam carries 44 % less. The largest moment is sagging here, so the flange belongs at the bottom.`}
+ ]},
+{id:'v2',sec:'vh',lvl:'vhard',num:'V2',title:'Design a section where both limits are reached together',
+ text:`An inverted T under sagging moment. Web 30 × 170 mm, flange thickness 30 mm (total height 200 mm). Material: [σ<sub>t</sub>] = 40 MPa and [σ<sub>c</sub>] = 120 MPa. Choose the flange width b so the bottom reaches its tension limit at exactly the same moment as the top reaches its compression limit.`,
+ fig:()=>sectionFig({rects:[[0,0,240,30],[105,30,30,170]],size:170,maxw:340,dimsV:[[0,0,30,14,'30'],[0,30,200,14,'170']],title:'flange width b = ?'}),
+ idea:`Stress is proportional to distance, so σ<sub>t</sub>/σ<sub>c</sub> = y<sub>bottom</sub>/y<sub>top</sub>. Setting that equal to the ratio of limits tells you where the centroid has to be. Then solve for b.`,
+ steps:[
+  {t:'Where must the centroid be?',q:[{l:'y<sub>bottom</sub> / y<sub>top</sub>',a:1/3,u:'',tol:.004},{l:'y<sub>bottom</sub>',a:50,u:'mm',tol:.3},{l:'y<sub>top</sub>',a:150,u:'mm',tol:.3}],
+   h:`The two distances are in the ratio of the limits, and they add up to 200 mm.`,
+   r:`y<sub>bottom</sub>/y<sub>top</sub> = 40/120 = <b>1/3</b>. With a total of 200 mm: y<sub>bottom</sub> = <b>50 mm</b>, y<sub>top</sub> = <b>150 mm</b>.`},
+  {t:'Solve for the flange width',q:[{l:'b',a:315.71,u:'mm',tol:1.5}],
+   h:`y<sub>c</sub> formula with the flange area 30b at y = 15 and the web area 5100 at y = 115. Set it equal to 50 and solve the linear equation.`,
+   r:`(30b × 15 + 5100 × 115)/(30b + 5100) = 50 → 450b + 586 500 = 1500b + 255 000 → 1050b = 331 500 → <b>b = 315.7 mm</b>.`},
+  {t:'Capacity',q:[{l:'I<sub>z</sub>',a:46.14,u:'× 10⁶ mm⁴',tol:.25},{l:'M<sub>allow</sub> from tension',a:36.91,u:'kN·m',tol:.25},{l:'M<sub>allow</sub> from compression',a:36.91,u:'kN·m',tol:.25}],
+   h:`M<sub>allow</sub> = [σ]·I/y, using the matching limit and distance for each fibre.`,
+   r:`I = (0.710 + 11.60) + (12.28 + 21.55) = <b>46.14 × 10⁶ mm⁴</b>. Tension: 40 × 46.14×10⁶/50 = <b>36.9 kN·m</b>. Compression: 120 × 46.14×10⁶/150 = <b>36.9 kN·m</b>, the same ✓.`},
+  {t:'Why is equal capacity the design goal here?',choice:{o:[{t:'Neither limit has unused margin, so the material is used well for this moment sign',ok:true},{t:'It makes the section safe under hogging as well',ok:false}],
+   why:`Both fibres reach their limits together, so neither has unused margin. But this only applies to <b>sagging</b>. Under hogging, the far top fibre would be in tension and fail at about a third of that moment: 40 × 46.14×10⁶/150 = 12.3 kN·m.`}}
+ ]},
+{id:'v3',sec:'vh',lvl:'vhard',num:'V3',title:'The strongest beam you can cut from a log',
+ text:`A rectangular beam is cut from a circular log of diameter D = 300 mm. Which b and h give the largest W? This one uses your calculus.`,
+ fig:()=>logFig(),
+ idea:`The diagonal of the rectangle is the diameter, so h² = D² − b². Write W in terms of b alone, then set dW/db = 0.`,
+ steps:[
+  {t:'Write W as a function of b',choice:{o:[{t:'W = b(D² − b²)/6',ok:true},{t:'W = b²(D² − b²)/6',ok:false},{t:'W = b·√(D² − b²)/6',ok:false}],
+   why:`W = bh²/6 and h² = D² − b², so <b>W = b(D² − b²)/6</b>. Using h² directly avoids the square root.`}},
+  {t:'Maximise',q:[{l:'b',a:173.21,u:'mm',tol:1},{l:'h',a:244.95,u:'mm',tol:1.2},{l:'h / b',a:Math.SQRT2,u:'',tol:.012}],
+   h:`Differentiate (D²b − b³)/6 with respect to b, and set the result to zero.`,
+   r:`dW/db = (D² − 3b²)/6 = 0, so b = D/√3 = <b>173.2 mm</b>. h = √(D² − b²) = D√(2/3) = <b>244.9 mm</b>. h/b = <b>√2 ≈ 1.41</b>, independent of D.`},
+  {t:'Compare with the largest square',q:[{l:'W<sub>best</sub>',a:1.732,u:'× 10⁶ mm³',tol:.012},{l:'W of the inscribed square',a:1.591,u:'× 10⁶ mm³',tol:.012},{l:'W<sub>best</sub> / W<sub>square</sub>',a:1.0887,u:'',tol:.006}],
+   h:`The inscribed square has side D/√2. For a square, W = a³/6.`,
+   r:`W<sub>best</sub> = 173.2 × 244.9²/6 = <b>1.732 × 10⁶ mm³</b>. Square: side 212.1 mm, W = 212.1³/6 = <b>1.591 × 10⁶ mm³</b>. Ratio <b>1.089</b>: about 9 % stronger, while using less of the log, because the best rectangle's area is 42 426 mm² and the square's is 45 000 mm².`}
+ ]}
+];
+
+
+/* ═════════ rendering ═════════ */
+const STORE='dc-week8-section-strength-v1';
+let solved={}; try{ solved=JSON.parse(localStorage.getItem(STORE)||'{}'); }catch(e){}
+const save=()=>{ try{ localStorage.setItem(STORE,JSON.stringify(solved)); }catch(e){} };
+let TOTAL=0;
+function parseNum(s){ s=(s||'').trim().replace(/−/g,'-').replace(/,/g,'.').replace(/\s/g,''); if(!s) return NaN; if(/^-?\d+(\.\d+)?\/\d+(\.\d+)?$/.test(s)){const [a,b]=s.split('/');return a/b;} return Number(s); }
+function okNum(v,a,tol){ const t=tol!==undefined?tol:Math.max(Math.abs(a)*0.012,0.011); return Math.abs(v-a)<=t+1e-9; }
+
+function render(){
+  TOTAL=0; const host=document.getElementById('probs'); host.innerHTML=''; let lastSec='';
+  PROBS.forEach(p=>{
+    if(p.sec!==lastSec){ const S=SECS[p.sec]; const h=document.createElement('div'); h.innerHTML=`<div class="sec-eyebrow" id="sec-${p.sec}" style="margin-top:64px">${S.eye}</div><div class="sec-title">${S.title}</div><p class="sec-lede">${S.lede}</p>`; host.appendChild(h); lastSec=p.sec; }
+    const d=document.createElement('div'); d.className='problem'; d.id='p-'+p.id;
+    const stepsHTML=p.steps.map((s,si)=>{
+      let inner='';
+      if(s.q){ TOTAL+=s.q.length; inner+=`<div class="parts-list">${s.q.map((q,k)=>`<div class="prow"><span class="plab">${'abcdefgh'[k]}</span><span class="pq">${q.l}</span><input inputmode="decimal" data-s="${si}" data-k="${k}"><span class="unit">${q.u}</span><span class="mark"></span></div>`).join('')}</div>`; }
+      if(s.choice){ TOTAL+=1; inner+=`<div class="choice">${shuf(s.choice.o.map((o,k)=>`<button data-s="${si}" data-k="${k}">${o.t}</button>`)).join('')}</div><div class="choice-why"></div>`; }
+      const btns=(s.h?`<button class="ans-btn hint-btn">Hint</button>`:'')+(s.r?`<button class="ans-btn show-btn">${s.diagram?'Show the answer':'Show this step'}</button>`:'');
+      return `<div class="step" data-s="${si}"><div class="step-h"><span class="step-n">STEP ${si+1}</span><span class="step-t">${s.t}</span><span class="step-ok"></span></div>
+        ${s.p?`<div class="step-p">${s.p}</div>`:''}${inner}
+        ${btns?`<div class="tools">${btns}</div>`:''}${s.h?`<div class="hint">${s.h}</div>`:''}${s.r?`<div class="reveal"></div>`:''}</div>`;
+    }).join('');
+    d.innerHTML=`<div class="problem-header"><span class="problem-num">${p.num}</span><span class="problem-topic">${p.title}</span><span class="lvl ${p.lvl}">${LV[p.lvl]}</span><span class="pstate"></span></div>
+      <div class="problem-body"><div class="ptext">${p.text}</div>${p.fig?`<div class="figwrap">${p.fig()}</div>`:''}
+      <div class="idea"><span class="tag">Key idea</span>${p.idea}</div><div class="steps">${stepsHTML}</div></div>`;
+    host.appendChild(d); wire(p,d);
+  });
+  updScore();
+}
+function wire(p,d){
+  d.querySelectorAll('.step').forEach(st=>{
+    const si=+st.dataset.s, s=p.steps[si];
+    const hb=st.querySelector('.hint-btn'); if(hb) hb.onclick=()=>{ const h=st.querySelector('.hint'); h.classList.toggle('open'); hb.textContent=h.classList.contains('open')?'Hide hint':'Hint'; };
+    const sb=st.querySelector('.show-btn'); if(sb) sb.onclick=()=>{ const r=st.querySelector('.reveal'); if(!r.innerHTML) r.innerHTML=typeof s.r==='function'?s.r():s.r; r.classList.toggle('open'); sb.textContent=r.classList.contains('open')?'Hide':(s.diagram?'Show the answer':'Show this step'); };
+    st.querySelectorAll('input').forEach(inp=>{
+      const k=+inp.dataset.k, q=s.q[k], key=p.id+'-'+si+'-'+k, mk=inp.parentElement.querySelector('.mark');
+      const check=()=>{ const v=parseNum(inp.value); if(isNaN(v)){inp.classList.remove('ok','bad');mk.textContent='';return;}
+        const ok=okNum(v,q.a,q.tol); inp.classList.toggle('ok',ok); inp.classList.toggle('bad',!ok); mk.textContent=ok?'✓':'✗'; mk.style.color=ok?'#16a34a':'#dc2626';
+        if(ok) solved[key]=inp.value; else delete solved[key]; save(); updScore(); };
+      if(solved[key]){ inp.value=solved[key]; check(); }
+      inp.addEventListener('keydown',e=>{ if(e.key==='Enter') check(); }); inp.addEventListener('change',check);
+    });
+    if(s.choice){ const why=st.querySelector('.choice-why'), key=p.id+'-'+si+'-c';
+      const pick=(b)=>{ const o=s.choice.o[+b.dataset.k]; st.querySelectorAll('.choice button').forEach(x=>x.classList.remove('right','wrong')); b.classList.add(o.ok?'right':'wrong');
+        why.innerHTML=o.ok?s.choice.why:'<b>Not quite.</b> Have another look at the key idea and try again.'; why.classList.add('open'); if(o.ok){solved[key]=1;} save(); updScore(); };
+      st.querySelectorAll('.choice button').forEach(b=>b.onclick=()=>pick(b));
+      if(solved[key]){ const b=[...st.querySelectorAll('.choice button')].find(b=>s.choice.o[+b.dataset.k].ok); if(b) pick(b); }
+    }
+  });
+}
+function updScore(){
+  const n=Object.keys(solved).length; document.getElementById('score').textContent=n+' / '+TOTAL+' checks';
+  document.getElementById('scorebar').style.width=(TOTAL?100*n/TOTAL:0)+'%';
+  PROBS.forEach(p=>{ const d=document.getElementById('p-'+p.id); if(!d) return; let need=0,c=0;
+    p.steps.forEach((s,si)=>{ const st=d.querySelector(`.step[data-s="${si}"]`); let sn=0,sc=0;
+      if(s.q) s.q.forEach((q,k)=>{sn++; if(solved[p.id+'-'+si+'-'+k]) sc++;}); if(s.choice){sn++; if(solved[p.id+'-'+si+'-c']) sc++;}
+      need+=sn; c+=sc; const ok=st.querySelector('.step-ok'); if(sn){ ok.textContent=sc===sn?'✓ done':(sc?sc+' / '+sn:''); ok.classList.toggle('done',sc===sn);} });
+    const ps=d.querySelector('.pstate'); ps.textContent=need&&c===need?'✓ solved':(c?c+' / '+need:''); ps.classList.toggle('done',need>0&&c===need); });
+  if(window.GuidedSidebar) GuidedSidebar.refresh();
+}
+function resetAll(){ solved={}; save(); render(); }
+document.querySelectorAll('[data-fig]').forEach(el=>{ el.innerHTML=LESSON_FIGS[el.dataset.fig](); });
+render();
+window.addEventListener('scroll',()=>{ const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100; document.getElementById('pbar').style.width=pct+'%'; });
+</script>
+<script src="js/guided-sidebar.js"></script>
+
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>
