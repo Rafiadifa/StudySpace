@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Construction · Week 9 Homework Solutions</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]}};</script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root { --force:#c2410c; --react:var(--dc); }
+    html[data-theme="dark"] { --force:#fb923c; }
+    .main { padding-bottom:72px; }
+    .jump { display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 28px; }
+    .jump a { border:1px solid var(--border); border-radius:99px; padding:7px 12px; color:var(--text2); text-decoration:none; font-size:.8rem; }
+    .jump a:hover { border-color:var(--accent); color:var(--text); }
+    .intro,.solution { max-width:940px; }
+    .intro { color:var(--text2); line-height:1.7; }
+    .solution { margin:30px 0; padding:22px clamp(16px,3vw,28px); background:var(--bg2); border:1px solid var(--border); border-radius:16px; }
+    .solution h2 { font:400 1.55rem 'DM Serif Display',serif; color:var(--text); margin:0 0 8px; }
+    .solution h3 { font-size:1rem; color:var(--text); margin:24px 0 6px; }
+    .solution p,.solution li { color:var(--text2); line-height:1.7; }
+    .solution ul,.solution ol { padding-left:22px; }
+    .eq { overflow-x:auto; margin:11px 0; padding:11px 14px; border-radius:9px; background:var(--bg3); color:var(--text); font: .87rem/1.8 'DM Mono',monospace; }
+    .answer { padding:12px 15px; border-left:3px solid var(--accent); background:color-mix(in oklab,var(--accent) 7%,transparent); border-radius:0 9px 9px 0; color:var(--text); line-height:1.7; margin:14px 0; }
+    .fig { display:block; width:100%; height:auto; margin:14px 0; background:var(--bg); border:1px solid var(--border); border-radius:12px; }
+    .fig text { fill:var(--text); font:13px 'DM Sans',sans-serif; }
+    .fig .small { fill:var(--text2); font:11px 'DM Mono',monospace; }
+    .fig .beam { stroke:var(--text); stroke-width:4; }
+    .fig .axis { stroke:var(--text3); stroke-width:1.4; }
+    .fig .load { stroke:var(--force); stroke-width:1.6; fill:none; }
+    .fig .moment { stroke:var(--dc); stroke-width:2.5; fill:none; }
+    .fig .shade { fill:color-mix(in oklab,var(--dc) 18%,transparent); stroke:none; }
+    .sign { font-weight:600; color:var(--text); }
+    .note { font-size:.85rem; color:var(--text3)!important; }
+    @media(max-width:600px){ .solution{padding:18px 14px}.eq{font-size:.78rem} }
+  </style>
+  <script>(function(){try{var t=localStorage.getItem('studyhub_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body class="subject-dc">
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topbar">
+    <span class="topbar-title"><a href="../../../hub/architecture.html" style="color:inherit;text-decoration:none">Rafi's Study Hub</a></span>
+    <span class="topbar-sub">/ digital construction / week 9</span>
+    <span class="topbar-date">18 NOV 2026</span>
+  </div>
+  <div class="hero">
+    <h1>Week 9 · <em>complete homework solutions</em></h1>
+    <p class="hero-meta">Worked solutions to all three assignment problems: the midspan bending stresses, the cantilever strength check, and rectangular beam sizing. Diagrams use the course convention: positive bending is sagging, and the bending moment diagram is drawn on the tension side.</p>
+    <div class="exam-pills">
+      <span class="pill pill-dc">弯矩图 · bending moment</span>
+      <span class="pill pill-dc">正应力 · normal stress</span>
+      <span class="pill pill-dc">截面设计 · section design</span>
+    </div>
+  </div>
+  <main class="main">
+    <p class="intro">The assignment states symbolic dimensions (l,b,h,q) in Problem 1, so that result is given in terms of those variables. The later problems have numerical data and are evaluated numerically below. Tensile stress is positive; compression is negative.</p>
+    <nav class="jump" aria-label="Jump to solution">
+      <a href="#p1">Problem 1 · Midspan stress</a><a href="#p2">Problem 2 · Cantilever</a><a href="#p3">Problem 3 · Beam design</a>
+    </nav>
+
+    <section class="solution" id="p1">
+      <h2>Problem 1 · Simply supported beam under full-span uniform load</h2>
+      <p>A simply supported beam of span (l) carries a uniform load (q) over its full length. Find the bending moment diagram and normal stresses at (C_1,C_2,C_3) on the midspan section.</p>
+      <h3>1. Reactions and internal forces</h3>
+      <p>The loading and support arrangement are symmetric, so vertical equilibrium gives equal reactions:</p>
+      <div class="eq">R<sub>A</sub> = R<sub>B</sub> = ql/2</div>
+      <p>Take (x) from A. For a cut at (x), the left-side free body gives:</p>
+      <div class="eq">V(x) = ql/2 − qx<br>M(x) = (ql/2)x − qx²/2 = qx(l − x)/2, &nbsp; 0 ≤ x ≤ l</div>
+      <svg class="fig" viewBox="0 0 720 365" role="img" aria-label="Uniformly loaded simply supported beam, linear shear diagram, and parabolic sagging moment diagram">
+        <defs><marker id="w9arr" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="var(--force)"/></marker></defs>
+        <text x="22" y="30" class="small">BEAM</text><line x1="100" y1="58" x2="620" y2="58" class="beam"/>
+        <path d="M100 44V57 M140 44V57 M180 44V57 M220 44V57 M260 44V57 M300 44V57 M340 44V57 M380 44V57 M420 44V57 M460 44V57 M500 44V57 M540 44V57 M580 44V57 M620 44V57" class="load" marker-end="url(#w9arr)"/>
+        <text x="360" y="25" text-anchor="middle">q ↓</text>
+        <path d="M100 62L84 82H116Z M620 62L604 82H636Z" fill="var(--bg3)" stroke="var(--text)" stroke-width="1.5"/><line x1="75" y1="84" x2="125" y2="84" class="axis"/><line x1="595" y1="84" x2="645" y2="84" class="axis"/>
+        <text x="100" y="108" text-anchor="middle">A</text><text x="360" y="108" text-anchor="middle">C</text><text x="620" y="108" text-anchor="middle">B</text><text x="360" y="126" class="small" text-anchor="middle">span l</text>
+        <text x="22" y="160" class="small">V</text><line x1="100" y1="184" x2="620" y2="184" class="axis"/><path d="M100 150L620 218" class="moment"/><circle cx="360" cy="184" r="4" fill="var(--dc)"/><text x="100" y="143" text-anchor="middle">+ql/2</text><text x="620" y="240" text-anchor="middle">−ql/2</text><text x="368" y="176" class="small">0</text>
+        <text x="22" y="270" class="small">M (positive sagging; bottom tension)</text><line x1="100" y1="260" x2="620" y2="260" class="axis"/><path d="M100 260 Q360 334 620 260" class="moment"/><path d="M100 260 Q360 334 620 260 L620 260 L100 260Z" class="shade"/><text x="360" y="351" text-anchor="middle">+ql²/8</text><text x="100" y="286" text-anchor="middle">0</text><text x="620" y="286" text-anchor="middle">0</text>
+      </svg>
+      <p>The shear crosses zero at (x=l/2), so the bending moment is maximum at C:</p>
+      <div class="eq">M<sub>C</sub> = M<sub>max</sub> = ql²/8</div>
+      <h3>2. Cross-section and point coordinates</h3>
+      <p>For the rectangle, (I_z=bh^3/12). The assignment’s section sketch takes (y) positive downward. Therefore (C_1) is at (y=-h/2), (C_2) is on the neutral axis at (y=0), and (C_3) is at (y=+h/4).</p>
+      <svg class="fig" viewBox="0 0 480 280" role="img" aria-label="Rectangular cross-section showing C1 at the top, C2 on the neutral axis at the right edge, C3 one quarter height below the neutral axis, and positive y downward">
+        <rect x="145" y="40" width="190" height="190" fill="var(--bg2)" stroke="var(--text)" stroke-width="2"/><line x1="115" y1="135" x2="365" y2="135" class="axis"/><text x="370" y="140">z</text><line x1="240" y1="24" x2="240" y2="247" class="axis" marker-end="url(#w9arr)"/><text x="251" y="260">y (+)</text>
+        <circle cx="145" cy="40" r="5" fill="var(--force)"/><text x="105" y="37">C₁</text><circle cx="335" cy="135" r="5" fill="var(--dc)"/><text x="347" y="140">C₂</text><circle cx="145" cy="183" r="5" fill="var(--dc)"/><text x="105" y="188">C₃</text><text x="235" y="28" text-anchor="middle" class="small">h</text><text x="240" y="153" text-anchor="middle" class="small">neutral axis z</text><text x="240" y="250" text-anchor="middle" class="small">C₃ is h/4 below z</text>
+      </svg>
+      <h3>3. Normal stresses at C</h3>
+      <p>Use the course flexure equation (sigma=My/I_z), with tensile stress positive. Substituting (M_C=ql^2/8) and (I_z=bh^3/12):</p>
+      <div class="eq">σ<sub>C₁</sub> = (ql²/8)(−h/2)/(bh³/12) = <b>−3ql²/(4bh²)</b> &nbsp; compression<br>σ<sub>C₂</sub> = (ql²/8)(0)/(bh³/12) = <b>0</b><br>σ<sub>C₃</sub> = (ql²/8)(h/4)/(bh³/12) = <b>+3ql²/(8bh²)</b> &nbsp; tension</div>
+      <div class="answer"><b>Answer:</b> (C_1) is in compression, (C_2) has zero bending stress because it lies on the neutral axis, and (C_3) is in tension. The stress magnitude at (C_1) is twice that at (C_3).</div>
+    </section>
+
+    <section class="solution" id="p2">
+      <h2>Problem 2 · Cantilever timber beam with an end load</h2>
+      <p>Given (l=2	ext{ m}), (F=10	ext{ kN}), circular diameter (d=300	ext{ mm}), and allowable bending stress ([sigma]=10	ext{ MPa}).</p>
+      <h3>1. Bending moment diagram</h3>
+      <p>The maximum moment occurs at the fixed end. With (x) measured from the wall, its magnitude is (F(l-x)). The bending is hogging, so the top side is in tension; draw the moment diagram on that side.</p>
+      <div class="eq">|M<sub>max</sub>| = Fl = (10 kN)(2 m) = <b>20 kN·m</b></div>
+      <svg class="fig" viewBox="0 0 720 260" role="img" aria-label="Cantilever beam with downward end load and triangular hogging bending moment diagram on the upper tension side">
+        <defs><marker id="w9arr2" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="var(--force)"/></marker></defs>
+        <text x="20" y="35" class="small">BEAM</text><line x1="110" y1="90" x2="620" y2="90" class="beam"/><path d="M110 50V130 M100 55L110 50L120 55 M100 70L110 65L120 70 M100 85L110 80L120 85 M100 100L110 95L120 100 M100 115L110 110L120 115 M100 130L110 125L120 130" class="axis"/><line x1="620" y1="45" x2="620" y2="82" class="load" marker-end="url(#w9arr2)"/><text x="638" y="62">F</text><text x="360" y="115" text-anchor="middle">l = 2 m</text><text x="110" y="151" text-anchor="middle">fixed</text><text x="620" y="151" text-anchor="middle">free</text>
+        <text x="20" y="188" class="small">M (upper tension side)</text><line x1="110" y1="226" x2="620" y2="226" class="axis"/><path d="M110 174L620 226L110 226Z" class="shade"/><path d="M110 174L620 226" class="moment"/><text x="110" y="166" text-anchor="middle">−20 kN·m</text><text x="620" y="247" text-anchor="middle">0</text>
+      </svg>
+      <h3>2. Circular section modulus and maximum stress</h3>
+      <div class="eq">W = I/c = πd³/32 = π(300 mm)³/32 = 2.651 × 10⁶ mm³<br>|M<sub>max</sub>| = 20 kN·m = 20 × 10⁶ N·mm<br>σ<sub>max</sub> = |M<sub>max</sub>|/W = (20 × 10⁶)/(2.651 × 10⁶) = <b>7.55 MPa</b></div>
+      <div class="answer"><b>Strength check:</b> (7.55	ext{ MPa}<10	ext{ MPa}), so the timber beam <b>satisfies the bending normal-stress criterion</b>. The calculated stress is about (75.5\%) of the allowable stress.</div>
+    </section>
+
+    <section class="solution" id="p3">
+      <h2>Problem 3 · Design a rectangular section</h2>
+      <p>Given a simply supported beam with (l=2	ext{ m}), (q=15	ext{ kN/m}), (h:b=2:1), and ([sigma]=160	ext{ MPa}).</p>
+      <h3>1. Reactions, shear, and bending moment</h3>
+      <div class="eq">R<sub>A</sub> = R<sub>B</sub> = ql/2 = (15)(2)/2 = <b>15 kN</b></div>
+      <p>For (x) measured from A in metres:</p>
+      <div class="eq">V(x) = 15 − 15x &nbsp; kN<br>M(x) = 15x − 7.5x² &nbsp; kN·m, &nbsp;0 ≤ x ≤ 2</div>
+      <svg class="fig" viewBox="0 0 720 355" role="img" aria-label="Problem 3 shear diagram from plus 15 kilonewtons to minus 15 kilonewtons and a positive parabolic moment diagram peaking at 7.5 kilonewton metres">
+        <text x="24" y="30" class="small">SHEAR V (kN)</text><line x1="110" y1="105" x2="620" y2="105" class="axis"/><path d="M110 60L620 150" class="moment"/><text x="110" y="52" text-anchor="middle">+15</text><text x="365" y="103" class="small">0 at x = 1 m</text><text x="620" y="170" text-anchor="middle">−15</text><text x="110" y="125" text-anchor="middle" class="small">A</text><text x="365" y="125" text-anchor="middle" class="small">midspan</text><text x="620" y="125" text-anchor="middle" class="small">B</text>
+        <text x="24" y="212" class="small">M (positive sagging; bottom tension)</text><line x1="110" y1="230" x2="620" y2="230" class="axis"/><path d="M110 230Q365 310 620 230L620 230L110 230Z" class="shade"/><path d="M110 230Q365 310 620 230" class="moment"/><text x="365" y="329" text-anchor="middle">+7.5 at x = 1 m</text><text x="110" y="252" text-anchor="middle">0</text><text x="620" y="252" text-anchor="middle">0</text>
+      </svg>
+      <p>Since (dM/dx=V), the moment reaches an extreme where (V=0). Thus the maximum occurs at midspan:</p>
+      <div class="eq">M<sub>max</sub> = M(1) = <b>7.5 kN·m</b> = 7.5 × 10⁶ N·mm</div>
+      <h3>2. Required section modulus and dimensions</h3>
+      <p>For a rectangle with vertical depth (h), (W_z=bh^2/6). The strength condition requires:</p>
+      <div class="eq">W<sub>required</sub> = M<sub>max</sub>/[σ] = (7.5 × 10⁶ N·mm)/(160 N/mm²) = <b>46,875 mm³</b></div>
+      <p>Substitute (h=2b):</p>
+      <div class="eq">W<sub>z</sub> = b(2b)²/6 = 2b³/3 ≥ 46,875<br>b³ ≥ 70,312.5 mm³<br><b>b<sub>min</sub> = 41.27 mm, &nbsp; h<sub>min</sub> = 82.55 mm</b></div>
+      <p>These are the theoretical minimum dimensions. Round upward for a practical choice; for example, (b=45	ext{ mm}), (h=90	ext{ mm}) preserves the required ratio.</p>
+      <div class="eq">W<sub>z</sub> = (45)(90²)/6 = 60,750 mm³<br>σ<sub>max</sub> = (7.5 × 10⁶)/60,750 = <b>123.46 MPa</b> &lt; 160 MPa</div>
+      <div class="answer"><b>Answer:</b> the theoretical minimum is approximately (41.27	ext{ mm} 	imes 82.55	ext{ mm}) (width × depth). A reasonable rounded-up design is <b>45 mm × 90 mm</b>, which satisfies the bending-strength criterion.</div>
+    </section>
+    <p class="note">Sign convention: sagging moment is positive and produces bottom tension/top compression. The moment diagrams above are placed on the tension side; the signed stresses in Problem 1 use the downward-positive (y)-axis shown in the assignment section sketch.</p>
+  </main>
+  <div class="footer-note">RAFI ADIFA MAULANA · STUDY HUB · 2026</div>
+  <button class="theme-toggle" aria-label="Toggle dark mode" onclick="(function(){var h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('studyhub_theme',n);}catch(e){}})()"></button>
+</body>
+</html>
